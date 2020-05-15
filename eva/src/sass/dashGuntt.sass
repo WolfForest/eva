@@ -1,0 +1,101 @@
+.dash-guntt
+    position: relative
+
+    // text[text-anchor='start']
+    //     fill: white
+
+    .guntt-block
+        margin-top: 5px
+
+    .legend-block
+        display: flex
+        flex-flow: column nowrap
+        justify-content: flex-start
+        align-items: flex-start
+        position: absolute
+        right: 15px
+        width: 70px
+
+        .legends-itself
+            display: flex
+            flex-flow: row nowrap
+            justify-content: flex-start
+            align-items: center
+            margin-bottom: 5px
+
+            .circle
+                width: 10px
+                height: 10px
+                border-radius: 50%
+                margin-right: 10px
+                margin-top: 2px
+
+            .text
+                font-size: 14px
+
+    .tooltipGuntt
+        padding: 5px
+        border-radius: 5px
+        position: absolute
+        top: 0
+        left: 0
+        transition: all 0.4s ease
+        opacity: 0
+
+    .row-toolrip
+        white-space: nowrap
+        display: block
+        width: 100%
+        text-align: left
+        font-size: 11px
+
+    
+
+
+
+.errormsg
+    font-size: 18px
+    padding: 30px 0
+
+@media screen and (max-width: 2560px) and (min-width: 1920px)
+
+    .dash-guntt 
+        
+        .legend-block 
+            
+            .legends-itself 
+                
+                .text
+                    font-size: 16px
+
+        .ids-caption
+            font-size: 14px
+
+        .text-bar
+            font-size: 14px
+
+        .text-x
+
+            tspan
+                font-size: 12px
+
+        .errormsg
+            font-size: 18px
+
+@media screen and (max-width: 1600px) 
+
+    .dash-guntt 
+        
+        .legend-block 
+            
+            .legends-itself 
+                
+                .text
+                    font-size: 12px
+
+
+@media screen and (max-width: 1400px) 
+
+        .errormsg
+            font-size: 12px
+

@@ -1,0 +1,217 @@
+.dash-select 
+    margin-top: 15px
+    position: relative
+    
+    .select-with-data
+        display: flex
+        flex-flow: row nowrap
+        justify-content: flex-start
+        align-items: flex-start
+
+        .source
+            display: flex
+            flex-flow: column nowrap
+            justify-content: flex-start
+            align-items: flex-start
+            overflow: hidden
+            transition: all 0.4s ease
+            transition: width 0s ease
+            opacity: 0
+            visibility: hidden
+            height: 100px
+            width: 100%
+            position: absolute
+            width: 100%
+            left: 60px
+
+            .select-parent
+                width: 100%
+                padding-top: 5px
+
+                // .v-input__slot
+                //     min-height: 40px
+                
+                // .v-select__slot
+
+                //     .v-label
+                //         font-size: 14px
+                //         top: 15px
+
+                //     .v-label--active
+                //         top: 18px 
+
+                //     .v-select__selections
+                //         padding: 4px 0
+
+                //     .v-input__append-inner
+                //         margin-top: 10px
+
+        .target
+            position: relative
+
+        .select
+            width: 100%
+            transition: all 0.4s ease
+            transition: width 0s ease
+            opacity: 0
+            height: 65px
+            visibility: hidden
+            overflow: hidden
+            position: absolute
+            width: 100%
+            left: 60px
+            padding-top: 5px
+
+        .select_show
+            opacity: 1
+            visibility: visible
+            //height: 65px 
+
+        .arrow-block
+            // width: 100%
+            // text-align: left
+            margin-right: 20px
+
+            .arrows-select
+                width: 20px
+                height: 20px
+
+        .source_show
+            opacity: 1
+            visibility: visible
+            //height: 100px
+
+        .v-input__slot
+            min-height: 40px !important
+        
+        .v-select__slot
+
+            .v-label
+                font-size: 14px !important
+                top: 15px !important
+                color: inherit
+
+            .v-label--active
+                top: 18px  !important
+
+            .v-select__selections
+                padding: 4px 0 !important
+                color: inherit
+
+            .v-input__append-inner
+                margin-top: 10px !important
+
+            .v-icon
+                color: inherit
+
+    .error-msg
+        color: rgba(0,0,0,0.38)
+        font-size: 14px
+
+.v-input
+
+    .v-label
+        line-height: 15px
+
+
+@media screen and (max-width: 2560px)  and (min-width: 1920px)
+
+    .dash-select 
+        margin-top: 25px
+
+        .select-with-data
+
+            .source
+                height: 150px
+
+            .v-input__slot
+                min-height: 55px !important
+
+            .v-select__slot
+
+                .v-label
+                    font-size: 16px !important
+                    top: 22px !important
+
+                .v-label--active
+                    top: 18px !important
+
+                .v-select__selections
+                    font-size: 20px
+
+
+                .v-input__append-inner
+                    margin-top: 17px !important
+
+                    svg
+                        font-size: 20px
+                        width: 20px
+                        height: 20px
+
+
+@media screen and (max-width: 1600px)
+
+    .dash-select 
+        margin-top: 0
+
+        .select-with-data
+
+            .v-input__slot
+                min-height: 34px !important
+
+            .v-select__slot
+
+                .v-label
+                    font-size: 12px !important
+                    top: 10px !important
+
+                .v-label--active
+                    top: 18px !important
+
+                .v-select__selections
+                    font-size: 14px
+
+                    .v-select__selection--comma
+                        margin: 0
+
+                    input
+                        padding: 0
+
+                .v-input__append-inner
+                    margin-top: 6px !important
+
+                    svg
+                        font-size: 20px
+                        width: 20px
+                        height: 20px
+
+@media screen and (max-width: 1400px)
+
+    .dash-select 
+        margin-top: 0px
+
+        .select-with-data
+            
+            .source
+                height: 80px
+
+                .v-input__slot
+                    min-height: 25px !important
+
+                .v-select__slot
+
+                    .v-label
+                        font-size: 11px !important
+                        top: 8px !important
+
+                    .v-label--active
+                        top: 18px !important
+
+                    .v-select__selections
+                        padding: 0 !important
+                        font-size: 12px
+
+
+                    .v-input__append-inner
+                        margin-top: 3px !important
+                        margin-bottom: 3px !important

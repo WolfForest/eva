@@ -1,0 +1,78 @@
+<!-- Модальное окно для создания дашборда -->
+
+<template>
+    <v-dialog  v-model="active"  width="550"  persistent @keydown="checkEsc($event)" > 
+        <div class="delete-modal-block"  >
+            <v-card :style="{background:color.backElement}">
+                <v-card-text class="headline "><div class="create-title" :style="{color:color.text}">Вы точно хотите удалить <p>{{nameFrom}}</p> ?</div></v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn small :color="color.controls" class="create-btn" @click="deleteBtn">Удалить</v-btn>
+                <v-btn small :color="color.controlsActive" class="create-btn" @click="cancelModal">Отмена</v-btn>
+                </v-card-actions>
+            </v-card>
+        </div>
+    </v-dialog>
+</template>
+
+<script> 
+
+
+export default {
+    props: {
+        modalFrom: null,
+        colorFrom: null,
+        nameFrom: null,
+    },
+    data () {
+        return {
+
+        }
+    },
+      computed: {
+           active: function() {  // тут понимаем нужно ли открыть окно с созданием или нет  
+               return this.modalFrom
+           },
+           color: function() {
+               return this.colorFrom
+           },
+           name: function() {
+               return this.nameFrom
+           }
+     },
+      methods: {  
+          deleteBtn: function () { 
+              this.$emit('deleteElem');
+          },
+          cancelModal: function() {  // есл инажали на отмену создания
+                this.$emit('closeModal');  // передаем в родителя чтобы выключили модалку
+          },
+         checkEsc: function(event) {
+              if (event.code =="Escape") {
+                  this.cancelModal();
+              }
+          },
+          changeStyle: function() {
+                if (this.active) {
+                    let dialog = document.querySelector('.v-dialog');
+                    dialog.style.boxShadow = `0 3px 1px -2px ${this.color.border},0 2px 2px 0 ${this.color.border},0 1px 5px 0 ${this.color.border}`; 
+                    dialog.querySelectorAll('.v-input__slot').forEach( item => {
+                        item.style.boxShadow = `0 3px 1px -2px ${this.color.border},0 2px 2px 0 ${this.color.border},0 1px 5px 0 ${this.color.border}`; 
+                    })
+                    dialog.querySelectorAll('input').forEach( item => {
+                        item.style.color = this.color.text;
+                    })
+                }
+          },
+    },
+    updated() {
+       this.changeStyle();
+    }
+}
+</script>
+
+<style lang="sass" >   // подключаем стили для этого компонента
+
+    @import '../sass/modalDeleteFromMain.sass'
+    
+</style>

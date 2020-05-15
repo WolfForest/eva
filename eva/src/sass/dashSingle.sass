@@ -1,0 +1,50 @@
+.dash-single
+    left: 10px
+    right: 10px
+    position: absolute
+    bottom: 10px
+    top: 30px
+    display: flex
+    flex-flow: row nowrap
+    justify-content: center
+    align-items: center
+    overflow: auto
+
+    .number-block
+        border: none !important
+        transition: all 0.4s ease
+        width: 100%
+        cursor: pointer
+
+        .number
+            font-family: Roboto,sans-serif
+            font-weight: normal
+            font-size: 20px
+
+            .number-itself
+                font-size: inherit
+                text-align: center
+                line-height: 20px
+
+            .number-sub
+                font-size: 14px
+                text-align: center
+                margin-top: 10px
+
+
+@media screen and (max-width: 2560px) and (min-width: 1920px)
+    
+    .errormsg
+        font-size: 18px
+
+
+
+
+@media screen and (max-width: 1400px) 
+
+    .dash-single
+        top: 40px
+        bottom: 0px
+
+    .errormsg
+        font-size: 12px

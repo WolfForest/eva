@@ -1,0 +1,69 @@
+.dash-tile
+    overflow: auto
+    margin:  0
+    display: flex
+    flex-flow: row wrap
+    justify-content: flex-start
+    align-items: center
+
+    .tile-block
+
+        .tile
+            display: flex
+            flex-flow: column nowrap
+            justify-content: center
+            align-items: center 
+            margin: 5px
+            border-radius: 5px
+            cursor: pointer
+
+            p
+                font-size: 14px
+                margin: 0 
+                padding: 5px
+                color: white
+
+.errormsg
+    font-size: 16px
+
+@media screen and (max-width: 2560px) and (min-width: 1920px)
+
+    .dash-tile 
+        
+        .tile-block 
+            
+            .tile 
+                
+                p
+                    font-size: 18px
+
+    
+    .errormsg
+        font-size: 18px
+
+
+@media screen and (max-width: 1600px) 
+
+    .dash-tile 
+        
+        .tile-block 
+            
+            .tile 
+                
+                p
+                    font-size: 12px
+
+
+@media screen and (max-width: 1400px) 
+
+    .dash-tile 
+        
+        .tile-block 
+            
+            .tile 
+                
+                p
+                    font-size: 10px
+
+    .errormsg
+        font-size: 12px

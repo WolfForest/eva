@@ -1,0 +1,88 @@
+.expansion-panels
+    margin-bottom: 20px
+
+    label
+        background: white
+
+.v-input__append-inner
+    margin-top: 10px !important
+
+.reports-card
+    height: 480px
+    display: flex
+    flex-flow: column nowrap
+    justify-content: space-between
+    align-items: flex-start
+
+    .textarea-block
+        padding: 30px 30px 0
+
+        .times-block
+            display: flex
+            flex-flow: row nowrap
+            justify-content: flex-start
+            align-items: center
+
+            .time-block
+                position: relative
+                width: 300px
+
+                .dtpicker-report
+                    position: absolute
+                    top: 30px
+                    width: 24px
+                    right: 10px
+                    cursor: pointer
+
+                    .datepicker
+                        top: -60px !important
+                        left: -160px !important
+
+                &:nth-child(2)
+                    margin-left: 20px
+
+                    .datepicker
+                        left: auto !important
+                        right: 85px !important
+
+        .textarea-item
+            margin: 20px 0
+            width: 300px
+
+            .v-input__slot
+                min-height: 40px
+
+                .v-label
+                    top: 14px
+                    color: inherit
+
+                input
+                    color: inherit
+
+                .v-label--active
+                    top: 18px
+        
+        .expansion-panels
+            width: 400px
+
+            .v-expansion-panel-header
+                min-height: 50px
+
+            .order-expansion
+
+                .v-expansion-panel-content__wrap
+                    display: flex
+                    flex-flow: row wrap
+                    justify-content: flex-start
+                    align-items: center
+                    padding: 0 24px 10px
+
+                    .textarea-item
+                        width: 150px
+                        margin: 10px 0
+
+                        &:nth-child(even)
+                            margin-left: 20px
+
+    .reports-action
+        width: 100%

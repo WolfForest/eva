@@ -1,0 +1,123 @@
+.schedule-block
+    padding: 30px
+    position: relative        
+
+    .zagolovok
+        font-size: 25px
+        text-align: center
+
+    .tab-block
+        margin: 30px 0
+
+        .v-tabs
+
+            .v-item-group
+
+                .v-tab--active
+                    color: inherit !important
+
+            .v-input
+
+                fieldset
+                    border-width: 1px !important
+
+                input
+                    color: inherit
+                
+
+        .every
+            display: flex
+            flex-flow: row nowrap
+            justify-content: flex-start
+            align-items: center
+            margin-top: 40px
+
+            p
+                margin: 0
+                padding: 0
+                font-size: 18px
+
+            .textarea-item
+                margin: 0 20px
+
+                .v-input__slot
+                    min-height: 40px
+
+            .choose-time
+                display: flex
+                flex-flow: row nowrap
+                justify-content: flex-start
+                align-items: center
+
+                .time
+                    color: white
+                    margin: 0 10px
+                    cursor: pointer
+
+        .time-select
+            font-size: 16px
+            margin-top: 40px
+            margin-bottom: 5px
+            color: rgba(0,0,0,0.5)
+
+        .range
+            display: flex
+            flex-flow: row nowrap
+            justify-content: flex-start
+            align-items: center
+            margin-top: 10px
+
+            p
+                margin: 0
+                padding: 0
+                font-size: 18px
+                white-space: nowrap
+
+            .picker-text
+                padding: 0 40px
+
+                .v-input__slot
+                    margin-bottom: 0
+
+        .last
+            display: flex
+            flex-flow: row nowrap
+            justify-content: flex-start
+            align-items: center
+            margin-top: 20px 
+
+            .textarea-item
+                margin-right:  20px
+
+                .v-input__slot
+                    min-height: 40px
+
+            .choose-time
+                display: flex
+                flex-flow: row nowrap
+                justify-content: flex-start
+                align-items: center
+
+                .time
+                    color: white
+                    margin: 0 10px
+                    cursor: pointer
+
+    .picker-time
+        position: absolute
+        top: 30px
+        width: 40%
+        left: 50%
+        transform: translateX(-50%)
+
+        .v-picker__title__btn
+            font-size: 40px
+            height: 40px
+
+
+.disable
+    opacity: 0.5
+
+
+
+

@@ -1,0 +1,152 @@
+.card-search
+    height: 580px
+    position: relative
+
+    .textarea-block 
+        padding: 30px 
+        padding-top: 15px
+        padding-bottom: 0
+
+        .times-block
+            display: flex
+            flex-flow: row nowrap
+            justify-content: flex-start
+            align-items: center
+
+            .time-block
+                position: relative
+                width: 300px
+
+                .dtpicker-search
+                    position: absolute
+                    top: 30px
+                    width: 24px
+                    right: 10px
+                    cursor: pointer
+
+                    .datepicker
+                        top: -225px !important
+                        left: -160px !important
+
+                &:nth-child(2)
+                    margin-left: 20px
+
+                    .datepicker
+                        top: -225px !important
+                        left: auto !important
+                        right: 85px !important
+                
+
+        .textarea-item
+            margin: 20px 0
+            width: 300px
+
+            .v-input__slot
+                min-height: 40px
+
+                .v-label
+                    top: 14px
+                    color: inherit
+
+                input
+                    color: inherit
+
+                .v-label--active
+                    top: 18px
+        
+        .expansion-panels
+            width: 400px
+
+            .v-expansion-panel-header
+                min-height: 50px
+
+            .order-expansion
+
+                .v-expansion-panel-content__wrap
+                    display: flex
+                    flex-flow: row wrap
+                    justify-content: flex-start
+                    align-items: center
+                    padding: 0 24px 10px
+
+                    .textarea-item
+                        width: 150px
+                        margin: 10px 0
+
+                        &:nth-child(even)
+                            margin-left: 20px
+                            
+
+        .code-search
+
+            .v-input__slot
+                height: 150px !important
+
+                .v-label
+                    color: inherit
+
+                input
+                    color: inherit
+
+                textarea
+                    color: inherit
+                    line-height: 20px
+                    font-size: 14px
+
+.searchBtn
+    display: flex
+    flex-flow: row nowrap
+    justify-content: flex-end
+    align-items: center
+    width: 100%
+    position: absolute
+    bottom: 10px
+    right: 10px
+
+
+    .errorMsg
+        width: 100%
+        text-align: center
+        margin-left: 100px
+        font-size: 15px
+        opacity: 0
+        transition: all 0.4s ease
+
+
+    .errorMsgShow
+        opacity: 1
+
+
+.warning-block
+        position: absolute
+        bottom: 70px
+        right: 10px
+        padding: 10px 5px
+        color: rgba(0,0,0,0.8)
+        border: 2px solid rgba(0,0,0,.2)
+        border-radius: 4px
+        display: flex
+        width: 550px
+        background: white
+        transition: all 0.4s ease
+        opacity: 0
+        visibility: hidden
+        z-index: -1
+        display: flex
+        flex-flow: row nowrap
+        justify-content: space-between
+        align-items: center
+
+        .warning-text
+            font-size: 12px  
+            margin-left: 5px
+
+        .warning-btn
+            margin: 0 5px
+            color: white
+
+.show
+    opacity: 1
+    z-index: 1
+    visibility: visible
+

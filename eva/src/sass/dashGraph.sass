@@ -1,0 +1,94 @@
+.dash-graph-block
+    position: relative
+    padding: 0 !important
+
+    .change-direct
+        position: absolute
+        top: 30px
+        right: 30px
+        cursor: pointer
+        width: 30px 
+        height: 30px
+    
+    .tooltipName
+        transition: all 0.4s ease
+        position: absolute
+        top: 100px
+        left: 100px
+        font-size: 10px
+        opacity: 0
+        color: white
+        padding: 5px 5px
+        border-radius: 5px
+
+    .changeName
+        transition: all 0.4s ease
+        position: absolute
+        top: 20px
+        left: 20px
+        font-size: 10px
+        opacity: 0
+        visibility: hidden
+        border-radius: 5px
+        display: flex
+        flex-flow: row nowrap
+        justify-content: flex-start
+        align-items: center
+
+        .accept-btn
+            color: white
+            width: 30px
+            height: 100%
+            padding: 5px
+            cursor: pointer
+
+            .save
+                color: white
+
+        .v-input__control
+            min-height: 30px
+
+            .v-input__slot
+                min-height: 30px
+                width: 150px
+
+    .showchange
+        opacity: 1
+        visibility: visible
+
+    .joint-element
+        cursor: pointer
+
+    .saveTree
+        transition: all 0.4s ease
+        position: absolute
+        bottom: 50px
+        right: 50px
+        font-size: 12px
+        opacity: 0
+        color: white
+        padding: 7px 8px
+        border-radius: 5px
+        cursor: pointer
+
+    .errormsg
+        font-size: 18px
+        padding: 40px 0
+
+    .nodata
+      margin: 30px 0
+
+
+@media screen and (max-width: 2560px) and (min-width: 1920px)
+
+  .dash-graph-block
+
+    .nodata
+      font-size: 18px
+
+@media screen and (max-width: 1400px) 
+
+  .dash-graph-block
+
+    .nodata
+      font-size: 12px

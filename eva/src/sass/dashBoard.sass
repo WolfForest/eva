@@ -1,0 +1,558 @@
+$teal: teal
+$blue: #1976d2
+$coral: #FF6D70
+$transition: all 0.4s ease 
+
+
+@keyframes show
+    0%
+        opacity: 0
+    100%
+        opacity: 1
+
+@keyframes loading
+    from
+        transform: translateX(-100%)
+    to
+        transform: translateX(100%)
+
+
+%flex
+    display: flex
+    flex-flow: row nowrap
+    align-items: center
+
+.dash-layout
+    width: 100%
+    height: 100%
+    opacity: 0 
+    visibility: hidden
+    transition: all 0.4s ease
+    position: relative
+
+    .dash-block
+        width: 100%
+        height: 100%
+        border: 1px solid rgba(0, 0, 0, 0.3)
+        position: relative
+        overflow: hidden
+
+        .fakeblock
+            height: 35px
+
+        .loading-block
+            overflow: hidden
+            height: 2px
+
+            .loading-divider
+                position: relative
+                width: 100%
+                border-bottom: 1px solid
+
+                .loading-bar
+                    position: absolute
+                    top: 0
+                    left: 0
+                    width: 100%
+                    height: 2px
+                    transform: translateX(-100%)
+                    transition: all 0.4s ease
+
+            .loading
+                opacity: 0.5 !important
+
+                .loading-bar
+                    animation: loading 1.5s ease infinite 
+
+            .noBorder
+                border: 0px
+
+        .card-title
+            @extend %flex
+            justify-content: space-between
+            overflow: hidden
+            transition: all 0.4s ease
+            height: 0
+            padding: 0
+
+        
+            .name-dash
+                @extend %flex
+                justify-content: flex-start
+                transition: all 0.4s ease
+
+                .icon
+                    min-width: 20px
+                    min-height: 20px
+                    width: 20px
+                    height: 20px
+                    margin-bottom: 3px
+
+                .chart
+                    margin-right: 5px
+
+                .dash-capture
+                    display: flex
+                    flex-flow: row nowrap
+                    justify-content: flex-start
+                    align-items: center
+
+                    .dash-title
+                        cursor: default
+                        font-size: 1rem
+                    
+
+                    .dash-edit-title
+                        padding: 0
+                        margin: 0
+                        font-size: 1rem
+
+                        .v-input__slot
+                            margin-bottom: 0 
+                            min-height: 30px !important
+
+                            input
+                                color: inherit
+
+                    .dash-block-id
+                        margin-left: 5px
+                        line-height: 1rem
+                        margin-top: 3px
+                        font-size: .665rem
+                        cursor: default
+                        opacity: 0.7
+
+                    .dash-block-sid
+                        margin-left: 8px
+                        line-height: 1rem
+                        margin-top: 4px
+                        font-size: .665rem
+                        cursor: default
+                        opacity: 0.7
+                        border-bottom: 1px dotted
+
+                    
+                        
+
+
+            // .fixed_name_dash
+            //     position: absolute
+            //     bottom: 0
+            //     animation: 1s ease show
+            //     border: 1px solid rgba(0,0,0,0.3)
+            //     box-shadow: 0 0 1px rgba(0,0,0,0.4)
+            //     padding: 3px
+            //     right: 0
+            //     border-radius: 4px 0 0 0
+            //     background-color: white
+            //     z-index: 3
+
+            //     .dash-title
+            //         font-size: 1rem
+
+            //     .dash-block-id
+            //         font-size: 0.665rem
+            //         margin-left: 5px
+            //         margin-top: 3px
+
+            //     .icon
+            //         width: 20px
+            //         height: 20px
+            //         margin-right: 5px
+
+
+
+            .settings-dash-block
+                display: flex
+                flex-flow: row nowrap
+                justify-content: flex-start
+                align-items: center
+                
+                .settings-dash
+                    @extend %flex
+                    transition: all 0.4s ease
+                    // transform: translateX(200px)
+
+                    .pencil
+                        cursor: pointer
+                        width: 20px
+                        height: 20px
+
+                    .check
+                        cursor: pointer
+                        width: 20px
+                        height: 20px
+
+                    .arrow-all
+                        margin-right: 10px
+                        width: 20px
+                        height: 20px
+
+                    .resize
+                        margin-right: 10px
+                        width: 20px
+                        height: 20px
+
+                    .datasource
+                        margin-right: 10px
+                        width: 20px
+                        height: 20px
+
+                    .delete
+                        width: 20px
+                        height: 20px
+                        margin-right: 10px
+                        margin-left: 10px
+
+                    .option
+                        margin-left: 10px
+                        width: 20px
+                        height: 20px
+
+                .settings_move
+                    transform: translateX(0px)
+
+                .gear-move
+                    z-index: 1
+                    background: white
+                    padding: 0 10px
+
+                    .gear
+                        fill: $teal
+                        transition: all 0.4s ease
+                        
+
+
+                    .open_gear
+                        fill: #FF6D70 
+                        transform: rotate(180deg)
+
+        .open_title
+            height: 0
+            padding: 0
+            height: 35px
+            padding: 5px 0 5px 10px
+
+
+        .divider
+            width: 100%
+            height: 15px
+            border-radius: 0px 0px 4px 4px
+            background: $teal
+            cursor: pointer
+            display: flex
+            flex-flow: column
+            justify-content: center
+            align-items: center
+
+            .divider-icon
+                fill: white
+
+        .divider_open
+            height: 20px
+            border-radius: 0px 0px 10px 10px
+
+        .card-text
+            padding: 0 20px
+            text-align: center
+
+            .selectDS
+                padding: 10px 20px
+                font-size: 16px
+                border-radius: 10px
+                margin-top: 30px
+
+        .element-itself
+
+            .v-card 
+                background: inherit
+                color: inherit
+
+        .options
+            overflow: hidden
+            transition: all 0.4s ease
+            position: absolute
+            width: 90%
+            top: 35px
+            z-index: 2
+            overflow: auto
+            left: 50%
+            transform: translateX(-50%)
+            height: 0px
+            opacity: 0
+            border-radius: 0 0 4px 4px
+            
+
+            .title-optios
+                text-align: left
+                padding: 10px
+                opacity: 0.6
+
+            .options-block
+                display: flex
+                flex-flow: column nowrap
+                justify-content: flex-start
+                align-items: flex-start
+                padding: 15px 0
+                min-width: 450px
+
+                .option-item
+                    display: flex
+                    flex-flow: row nowrap
+                    justify-content: center
+                    align-items: center
+                    width: 100%
+
+                    .item
+                        height: 70px
+                        display: flex
+                        flex: column nowrap
+                        justify-content: center
+                        align-items: center
+                        width: 30%
+
+
+                    .name-option
+                        border-right: 1px solid rgba(0,0,0,0.3)
+                        font-size: 14px
+
+
+                    .discribe-option
+                        border-right: 1px solid rgba(0,0,0,0.3)
+                        font-size: 14px
+
+                    .status-option
+                        font-size: 14px
+
+                        .v-input__slot
+                            margin: 0
+                            margin-top: 5px
+
+                    .main
+                        font-weight: bold
+                        font-size: 15px
+                        text-align: center
+                        padding: 5px
+                        height: 35px
+                        opacity: 0.4
+                
+                .switch
+                    margin: 10px 20px
+
+                    .v-input__slot
+
+                        .v-input--switch__track
+                            color: white
+                            border: 1px solid black
+
+                        .v-label
+                            color: inherit
+        .open_options
+            opacity: 1
+                
+
+[data-id="picker"]
+    z-index: 2 !important
+
+[data-id="select"]
+    z-index: 2 !important
+
+[data-id="table"]
+    z-index: 1 !important
+
+[data-id="graph"]
+    z-index: 1 !important
+
+.show_board
+    opacity: 1
+    visibility: visible
+
+
+@media screen and (max-width: 2560px) and (min-width: 1920px)
+
+    .dash-layout
+
+        .dash-block
+
+            .card-title
+            
+                .name-dash
+
+                    .dash-title
+                        font-size: 1.2rem
+                    
+                    .dash-block-id
+                        font-size: 0.8rem
+
+                    .icon
+                        min-width: 25px
+                        min-height: 25px
+                        width: 25px
+                        height: 25px
+
+                .settings-dash-block
+                    display: flex
+                    flex-flow: row nowrap
+                    justify-content: flex-start
+                    align-items: center
+                    
+                    .settings-dash
+
+                        .pencil
+                            cursor: pointer
+                            width: 25px
+                            height: 25px
+
+                        .check
+                            cursor: pointer
+                            width: 25px
+                            height: 25px
+
+                        .arrow-all
+                            margin-right: 15px
+                            width: 25px
+                            height: 25px
+
+                        .resize
+                            margin-right: 15px
+                            width: 25px
+                            height: 25px
+
+                        .datasource
+                            margin-right: 15px
+                            width: 25px
+                            height: 25px
+
+                        .delete
+                            width: 25px
+                            height: 25px
+                            margin-right: 15px
+                            margin-left: 15px
+
+                        .option
+                            margin-left: 15px
+                            width: 25px
+                            height: 25px
+
+
+@media screen and (max-width: 1600px)
+                
+    .dash-layout
+
+        .dash-block
+
+            .card-title
+                height: 25px
+                padding: 0 0 0 10px
+            
+                .name-dash
+
+                    .dash-capture
+                        //flex-flow: column nowrap
+
+                        .dash-title
+                            font-size: 0.8rem
+                            line-height: 0.9rem
+                            margin-left: 5px
+                        
+                        .dash-block-id
+                            font-size: 0.7rem
+                            line-height: 0.8rem
+                            margin-top: 3px
+
+                        .dash-block-sid
+                            font-size: 0.7rem
+                            line-height: 0.8rem
+                            margin-top: 3px
+                            margin-left: 5px
+
+                    .icon
+                        min-width: 15px
+                        min-height: 15px
+                        width: 15px
+                        height: 15px
+
+                .settings-dash-block
+                    display: flex
+                    flex-flow: row nowrap
+                    justify-content: flex-start
+                    align-items: center
+                    
+                    .settings-dash
+
+                        .pencil
+                            cursor: pointer
+                            width: 15px
+                            height: 15px
+
+                        .check
+                            cursor: pointer
+                            width: 15px
+                            height: 15px
+
+                        .arrow-all
+                            margin-right: 5px
+                            width: 15px
+                            height: 15px
+
+                        .resize
+                            margin-right: 5px
+                            width: 15px
+                            height: 15px
+
+                        .datasource
+                            margin-right: 5px
+                            width: 15px
+                            height: 15px
+
+                        .delete
+                            width: 15px
+                            height: 15px
+                            margin-right: 5px
+                            margin-left: 5px
+
+                        .option
+                            margin-left: 5px
+                            width: 15px
+                            height: 15px
+
+                    
+@media screen and (max-width: 1400px)
+
+    .dash-layout 
+        
+        .dash-block 
+            
+            .card-title 
+
+                .name-dash 
+
+                    .dash-capture
+                        //flex-flow: column nowrap
+
+                        .dash-title
+                            font-size: 0.7rem
+                            line-height: 0.8rem
+                            margin-left: 5px
+                        
+                        .dash-block-id
+                            font-size: 0.55rem
+                            line-height: 0.6rem
+                            margin-top: 3px
+
+                        .dash-block-sid
+                            font-size: 0.55rem
+                            line-height: 0.6rem
+                            margin-top: 3px
+                            margin-left: 5px
+
+            .card-text 
+                
+                .selectDS
+                    font-size: 12px
+                    padding: 10px
+                    margin-top: 20px
+
+            .open_title
+                height: 25px
+

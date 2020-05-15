@@ -1,0 +1,55 @@
+@font-face 
+    font-family: 'Lora'
+    font-style: normal
+    src: local('Lora'), require('../fonts/Lora-Regular.ttf') format('ttf'), require('../fonts/Lora-Bold.ttf') format('ttf'), require('../fonts/Lora-BoldItalic.ttf') format('ttf'), require('../fonts/Lora-Italic.ttf') format('ttf'),
+
+.v-application
+    font-family: 'Lora', serif
+
+.application-aut
+    background: rgba(0,0,0,0.1) !important
+
+.container-app
+    padding: 0
+    
+.aut-container
+    display: flex
+    flex-flow: column
+    justify-content: center
+    align-items: center
+    height: 100vh
+
+    .card-aut
+        width: 30vw
+        display: flex
+        flex-flow: column nowrap
+        justify-content: flex-start
+        align-items: center
+        color: rgb(51, 51, 51)
+        max-width: 400px
+
+        .title-aut
+            text-transform: uppercase
+
+        .field-aut
+            margin: 15px 0
+
+        .error-msg
+            color: #FF6D70
+            font-size: 16px
+            text-align: center
+            transition: all 0.4s ease
+            height: 0
+            opacity: 0
+            overflow: hidden
+
+        .errormsgshow
+            height: 30px
+            opacity: 1
+
+        .btn-aut
+            color: white
+
+
+            
+

@@ -1,0 +1,280 @@
+
+
+@font-face 
+    font-family: 'Lora'
+    font-style: normal
+    src: local('Lora'), require('../fonts/Lora-Regular.ttf') format('ttf'), require('../fonts/Lora-Bold.ttf') format('ttf'), require('../fonts/Lora-BoldItalic.ttf') format('ttf'), require('../fonts/Lora-Italic.ttf') format('ttf'),
+
+
+@keyframes rotateRight
+    0%
+        transform:  rotate(0deg)
+    100%
+        transform:  rotate(360deg)
+
+@keyframes rotateLeft
+    0%
+        transform:  rotate(360deg) 
+    100%
+        transform:  rotate(0deg)
+
+.v-application
+    font-family: 'Lora', serif
+
+.divider-settings
+    width: 100%
+    height: 1px 
+    opacity: 0.2
+
+.container-dash
+    padding: 0
+// .title-main
+
+//     .title-text
+//         position: absolute
+//         top: 70px
+//         left: 50%
+//         transform: translateX(-50%)
+//         z-index: 2
+//         display: flex
+//         flex-flow: row nowrap
+//         justify-content: center
+
+
+//         p
+//             padding: 0
+//             margin: 0
+//             color: rgba(255,255,255)
+//             font-weight: bold
+//             font-size: 100px
+//             text-align: center
+//             padding: 5px 0
+//             text-shadow: 1px 1px 2px rgba(0,0,0,0.7)
+//             margin-right: 20px
+
+//         .small
+//             font-size: 25px
+//             font-weight: normal
+            
+
+//     .img-title
+//         position: absolute
+//         top: 0
+//         right: 0
+//         height: 100%
+//         width: 100%
+//         z-index: 1
+
+//         img
+//             height: 100%
+//             width: 100%
+//             object-fit: cover
+            
+.aut-app-main
+    color: #333 !important
+
+    .aut-panel
+        display: flex
+        flex-flow: row nowrap
+        justify-content: space-between
+        align-items: center
+        padding: 15px 0
+
+        .title-main
+            font-size: 20px
+            color: rgba(0,0,0,0.4)
+            font-weight: bold
+            margin-left: 20px
+
+        .manage-btn
+            display: flex
+            flex-flow: row nowrap
+            justify-content: flex-end
+            align-items: center
+
+            .id-user
+                margin-right: 10px
+
+            .icon-aut
+                margin-right: 10px    
+
+
+.main-container
+
+    h2
+        font-size: 20px
+        text-align: center
+        margin: 30px auto
+        font-weight: bold
+
+    .dashboards
+        margin: 30px 0
+        padding: 30px
+        // display: flex
+        // flex-flow: row wrap
+        // justify-content: flex-start 
+
+        .tools
+            display: flex
+            flex-flow: row nowrap
+            justify-content: flex-start 
+            margin-left: 20px 
+
+            .dash-block
+                margin: 0 17px
+
+        .dash-block
+            width: 320px
+            height: 100%
+            border-radius: 4px
+            cursor: pointer
+            transition: all 0.4s ease
+            // margin: 40px 
+            overflow: hidden
+
+            &:before
+                opacity: 0
+
+            .card-title
+                padding: 10px
+                display: flex
+                flex-flow: row nowrap
+                justify-content: space-between
+                align-items: center
+                min-height: 52px
+
+                .title-block
+                
+                    .layout-title
+                        font-size: 1.5rem
+                        font-weight: 700
+                        line-height: 2rem
+                        margin: 0
+                        padding: 0
+                        text-transform: capitalize 
+
+                    .layout-edit-title
+                        font-size: 1.5rem
+                        font-weight: 700
+                        line-height: 2rem
+                        margin: 0
+                        padding: 0
+                        cursor: default
+
+                .controls-block
+                    display: flex
+                    flex-flow: row nowrap
+                    justify-content: flex-start
+                    align-items: center
+
+                    .pencil
+                        cursor: pointer
+                        margin-right: 10px
+
+                    .check
+                        cursor: pointer
+                        margin-right: 10px
+
+                    .delete
+                        cursor: pointer
+
+            .dash-text
+                padding: 40px 70px
+
+                img
+                    width: 100%
+                    height: 100%
+                    object-fit: cover
+
+
+            .card-text
+                display: flex
+                flex-flow: column nowrap
+                justify-content: flex-start
+                align-items: center
+                height: 250px
+
+                p
+                    font-size: 1.2rem
+                    font-weight: 400
+                    line-height: 1.8rem
+                    margin-bottom: 20px
+                    margin-top: 40px
+
+                .plus
+                    width: 35px
+                    height: 35px
+            
+            // &:hover
+            //     box-shadow: 0px 0px 4px 3px  #FF6D70
+
+    .gear
+        position: fixed
+        top: 30px 
+        right: 30px
+        transition: all 0.4s ease
+        cursor: pointer
+        width: 30px
+        height: 30px
+    
+    .rightRotate
+        transform: translateX(0px) rotate(0deg)
+        //animation: rotateRight  1.5s  ease-in-out
+        
+
+    .leftRotate
+        transform: translateX(-300px) rotate(-360deg)
+        //animation: rotateLeft  1.5s  ease-in-out
+        
+
+.main-card-dash
+    margin-top: 100px
+
+    .groups-of-dash
+        display: flex
+        flex-flow: row wrap
+        justify-content: flex-start
+        align-items: center
+        padding: 40px
+
+        .plus-icon
+            right: 70px
+        
+        .dash-group
+            width: 200px
+            height: 200px
+            margin: 20px
+            cursor: pointer
+            
+
+            .dash-group-title
+                display: flex
+                flex-flow: row nowrap
+                justify-content: space-between
+                align-items: center
+                padding: 0
+                height: 35px
+
+                .title-color
+                    border: 20px solid transparent
+                    border-right: 20px solid transparent !important
+                    border-bottom: 20px solid transparent !important
+
+                .control-group
+                    margin-right: 10px
+                    cursor: pointer
+
+            .dash-group-text
+                display: flex
+                flex-flow: column nowrap
+                justify-content: center
+                align-items: center
+                padding: 0
+                height: 165px
+
+                .group-text
+                    font-size: 20px
+                    color: rgba(0,0,0,0.8)
+                    padding: 0
+                    margin: 0
+                    text-transform: capitalize

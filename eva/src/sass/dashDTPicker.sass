@@ -1,0 +1,439 @@
+.dash-picker
+    dipslay: flex
+    flex-flow: column nowrap
+    align-items: flex-start
+    justify-content: center
+    width: 320px
+    padding: 0 !important
+    margin-left: 20px
+    
+
+    .DTpicker
+        margin: 20px 0
+        cursor: pointer
+        transition: all 0.4s ease
+        height: 40px
+        overflow: hidden
+        width: 100%
+        margin-bottom: 10px
+
+        .DTPicker-btn
+            display: flex
+            flex-flow: row nowrap
+            justify-content: space-between
+            align-itmes: center
+            border-radius: 4px 
+            padding: 10px
+
+            p
+                color: white
+                margin: 0
+                padding: 0
+                font-size: 14px
+
+            .picker-arrow
+                width: 20px
+                height: 20px
+                fill: white
+        
+
+        .DTPicker-elem
+            display: flex
+            flex-flow: column nowrap
+            justify-content: flex-start
+            align-items: flex-start
+            transition: all 0.4s ease 
+            opacity: 0
+            z-index: 0
+            padding: 10px
+            background: white
+            border: 1px solid rgba(0,0,0,0.4)
+            border-radius: 0 0 4px 4px
+            box-shadow: 0 0 2px 0px rgba(0,0,0,0.4)
+
+            hr
+                margin: 5px 0
+                width: 100%
+                opacity: 0.4
+                
+            .name-of-picker
+                font-size: 14px
+                font-weight: bold
+                margin: 5px 0
+
+            .dtpicker
+                margin: 10px 0
+                width: 300px
+                margin-right: 20px
+                color: inherit
+                background: inherit
+
+                .field
+                    background: inherit 
+
+                    label
+                        color: inherit
+                        background: inherit !important
+
+                    .custom-button
+                        color: inherit
+                        background: inherit 
+
+                        .custom-button-content
+                            color: inherit !important
+                            fill: inherit !important
+
+                .datepicker
+                    
+                    .pickers-container
+                        background: inherit
+                        color: inherit
+                        border-color: inherit
+
+                        .time-picker-column-item
+                            color: inherit
+
+                        .custom-button
+                            background-color: inherit
+                            border: 1px solid
+
+                        .datepicker-button 
+
+                            svg
+                                fill: inherit
+
+                        .datepicker-day-text
+                            color: inherit
+                        
+                        .datepicker-today
+                            background: transparent
+                            border: 1px solid
+
+                        .datepicker-container
+                            border-color: inherit
+
+                            .calendar
+                                border-color: inherit
+
+                                .datepicker-controls 
+                                    border-color: inherit
+
+                                    .datepicker-container-label
+                                        border-color: inherit
+
+                                        span
+                                            border-color: inherit
+
+                                            .custom-button
+                                                border-color: inherit
+
+                    .datepicker-buttons-container
+                        background: inherit
+                        border-top: 1px solid
+                        border-color: inherit
+
+                        .datepicker-button
+                            background: inherit
+                            border: 1px solid
+                            border-color: inherit
+
+            .choose-period
+                display: flex
+                flex-flow: row nowrap
+                justify-content: space-between
+                align-items: center
+                cursor: default
+                margin-bottom: 10px
+
+                p
+                    font-size: 13px
+                    margin: 0
+                    padding: 0
+                    margin-right: 20px 
+                    opacity: 0.5
+
+                .v-input__slot
+                    min-height: 30px
+                    width: 60%
+
+                    .v-text-field__slot
+
+                        input
+                            color: inherit
+
+            .choose-time
+                width: 100%
+                display: flex
+                flex-flow: row nowrap
+                justify-content: space-around
+                align-items: center
+                margin: 10px 0
+                z-index: 2
+
+                .time
+                    color: white
+
+
+            .custom-picker 
+                
+                .v-input__append-inner
+                    margin-top: 8px
+                    cursor: pointer
+
+                .v-input__slot
+                    min-height: 40px
+
+                    .v-label
+                        top: 14px
+                        color: inherit
+
+                    .v-label--active
+                        top: 18px
+                        color: inherit
+
+                    .v-icon
+                        color: inherit
+
+                    input
+                        color: inherit
+
+            .v-label
+                font-size: 14px
+                color: rgba(0,0,0,0.4)
+
+            .has-value
+
+                label
+                    transform: translateY(-12px)
+                    background-color: white
+                    padding: 0 3px
+
+            .set-btn
+                color: white
+                margin: 5px
+                margin-top: 10px
+                margin-left: 170px
+
+
+    .show_picker_elem
+        height: 120px
+        overflow: unset 
+
+        .DTPicker-btn
+            border-radius:  4px 4px 0 0
+
+        .DTPicker-elem
+            opacity: 1
+            z-index: 4
+
+    .current-date
+            border-radius: 4px
+            border: 1px solid rgba(0,0,0,0.3)
+            padding: 10px
+            font-size: 14px
+            text-align: left
+            color: rgba(0,0,0,0.65)
+            transition: all 0.4s ease
+            opacity: 0
+            z-index: 1
+
+    .show_curent
+        opacity: 1
+
+@media screen and (max-width: 2560px) and (min-width: 1920px)
+
+    .dash-picker
+        width: 92%
+
+        .DTpicker 
+            margin: 20px 0
+            height: 55px
+
+            .DTPicker-elem 
+                
+                .dtpicker
+                    width: 100%
+
+                    input
+                        font-size: 16px
+                        height: 55px
+
+                    .v-input__append-inner
+                        margin-top: 15px !important
+
+                        svg
+                            font-size: 25px
+                            width: 25px
+                            height: 25px
+
+                    .custom-button-content
+                        font-size: 16px
+
+                    .v-input__slot
+                        min-height: 55px
+
+                        .v-label
+                            top: 20px
+
+                .set-btn
+                    margin-left: 295px
+
+                .name-of-picker
+                    font-size: 16px
+
+                .choose-period
+
+                    .v-text-field__slot
+                        font-size: 16px
+
+                        input
+                            max-height: 38px
+
+                .v-label
+                    font-size: 16px
+
+                .choose-time
+
+                    span
+                        font-size: 16px
+                        padding: 0 18px
+                        height: 40px
+            
+            .DTPicker-btn 
+                padding: 15px
+                
+                p
+                    font-size: 16px
+
+                .picker-arrow
+                    width: 25px
+                    height: 25px
+
+        .current-date
+            font-size: 16px
+            padding: 15px
+
+
+@media screen and (max-width: 1600px)
+
+    .dash-picker
+        width: 87%
+
+        .DTpicker 
+            margin: 5px 0
+
+            .DTPicker-elem 
+                
+                .dtpicker
+                    width: 100%
+
+                    input
+                        font-size: 12px
+
+                    .v-input__append-inner
+                        margin-top: 8px !important
+
+                        svg
+                            font-size: 15px
+                            width: 15px
+                            height: 15px
+
+                .set-btn
+                    margin-left: 115px
+
+                .name-of-picker
+                    font-size: 12px
+
+                .choose-period
+
+                    .v-text-field__slot
+                        font-size: 12px
+
+                        input
+                            max-height: 30px
+
+                .v-label
+                    font-size: 12px
+
+                .choose-time
+
+                    span
+                        font-size: 12px
+            
+            .DTPicker-btn 
+                
+                p
+                    font-size: 12px
+
+                .picker-arrow
+                    width: 15px
+                    height: 15px
+
+        .current-date
+            font-size: 12px
+
+    
+@media screen and (max-width: 1400px)
+
+    .dash-picker
+        width: 93%
+        margin-left: 10px
+
+        .DTpicker 
+            margin: 5px 0
+            height: 28px
+
+            .DTPicker-elem 
+                
+                .dtpicker
+                    width: 100%
+
+                    input
+                        font-size: 10px
+
+                    .v-input__append-inner
+                        margin-top: 8px !important
+
+                        svg
+                            font-size: 12px
+                            width: 12px
+                            height: 12px
+
+                    .field-label
+                        font-size: 9px
+
+                .set-btn
+                    margin-left: 90px
+
+                .name-of-picker
+                    font-size: 10px
+
+                .choose-period
+
+                    .v-text-field__slot
+                        font-size: 10px
+
+                        input
+                            max-height: 30px
+
+                .v-label
+                    font-size: 10px
+
+                .choose-time
+
+                    span
+                        font-size: 10px
+            
+            .DTPicker-btn
+                padding: 6px 
+                
+                p
+                    font-size: 10px
+
+                .picker-arrow
+                    width: 12px
+                    height: 12px
+
+        .current-date
+            font-size: 10px
+            padding: 6px
