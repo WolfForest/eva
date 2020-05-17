@@ -59,6 +59,7 @@ export default {
             linkCanvasShow: false,
             tooltipPress: false,
             tooltipBody: '',
+            tooltipOptions: false
         } 
     },
      computed: {  // осоновные параметры, которые чатсо меняются и которы следует отслеживать
@@ -88,42 +89,51 @@ export default {
            tockens.forEach( item => {
                tokenObj[item.name] = item.value;
            })
-           this.tooltipBody = '';
 
-           if (options.tooltip.texts.length != 0) {
-               options.tooltip.texts.forEach( item => {
+           this.tooltipOptions == true ? this.tooltipBody = '' : false;
+           this.tooltipOptions = false;
 
-                    Object.keys(tokenObj).forEach( token => {
-                        if (item.indexOf(`$${token}$`) != -1) {
-                            reg = new RegExp( `\\$${token}\\$`, "g");
-                            item =  item.replace(reg, tokenObj[token]);
-                        }
-                    })   
-                    this.tooltipBody += `<p>${item}</p>`;
-               })
-              this.tooltipBody += `<div class="white-space"></div>`; 
+
+           if (options.tooltip) {
+                if (options.tooltip.texts.length != 0) {
+                    options.tooltip.texts.forEach( item => {
+
+                        Object.keys(tokenObj).forEach( token => {
+                            if (item.indexOf(`$${token}$`) != -1) {
+                                reg = new RegExp( `\\$${token}\\$`, "g");
+                                item =  item.replace(reg, tokenObj[token]);
+                            }
+                        })   
+                        this.tooltipBody += `<p>${item}</p>`;
+                    })
+                    this.tooltipBody += `<div class="white-space"></div>`; 
+                    this.tooltipOptions = true;
+                }
+
+                if (options.tooltip.links.length != 0) {
+                    options.tooltip.links.forEach( item => {
+                        itemn = {...{},...item};
+                        Object.keys(tokenObj).forEach( token => {
+                            if (itemn.url.indexOf(`$${token}$`) != -1) {
+                                reg = new RegExp( `\\$${token}\\$`, "g");
+                                itemn.url =  itemn.url.replace(reg, tokenObj[token]);
+                            }
+                        }) 
+                        this.tooltipBody += `<a href="${itemn.url}" target="_blank">${itemn.name}<span></span></a>`;
+                    })
+                    this.tooltipBody += `<div class="white-space"></div>`;
+                    this.tooltipOptions = true
+                }
+
+                if (options.tooltip.buttons.length != 0) {
+                    options.tooltip.buttons.forEach( item => {
+                        this.tooltipBody += `<button data-id="${item.id}" class="tooltip-button" style="color: white; background: ${this.color.controls}">${item.name}</button>`;
+                    })
+                    this.tooltipOptions = true
+                }
+
+
            }
-
-           if (options.tooltip.links.length != 0) {
-               options.tooltip.links.forEach( item => {
-                    itemn = {...{},...item};
-                    Object.keys(tokenObj).forEach( token => {
-                        if (itemn.url.indexOf(`$${token}$`) != -1) {
-                            reg = new RegExp( `\\$${token}\\$`, "g");
-                            itemn.url =  itemn.url.replace(reg, tokenObj[token]);
-                        }
-                    }) 
-                    this.tooltipBody += `<a href="${itemn.url}" target="_blank">${itemn.name}<span></span></a>`;
-               })
-               this.tooltipBody += `<div class="white-space"></div>`;
-           }
-
-            if (options.tooltip.buttons.length != 0) {
-               options.tooltip.buttons.forEach( item => {
-                    this.tooltipBody += `<button data-id="${item.id}" class="tooltip-button" style="color: white; background: ${this.color.controls}">${item.name}</button>`;
-               })
-           }
-
 
            return options.change
         }
@@ -346,7 +356,8 @@ export default {
            
            if(id && id.indexOf('overlay') !=-1) {
                token = id.split('overlay_')[1];
-               this.tooltipBody == '' ? this.tooltipBody = token : false;
+
+               this.tooltipOptions == false ? this.tooltipBody = token : false;
 
                 // выходит справа 
                if ((event.layerX + 40 + tooltipSize.width) > csvgSize.width) {
