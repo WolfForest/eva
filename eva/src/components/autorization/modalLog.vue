@@ -5,11 +5,11 @@
                 <div class="log-body" v-html="text"></div>
             </v-card-text>
              <v-card-actions class="btn-log">
-                <v-btn small color="teal" class="log-btn" @click="clearLog(clear)">{{clear}}</v-btn>
+                <v-btn small :color="colorFrom.controlsSystem" class="log-btn" @click="clearLog(clear)">{{clear}}</v-btn>
                 <div class="errorSaveBlock" :style="{color:colorError,opacity:opacityError}">{{msgError}}</div>
                 <div class="right-btn">
-                    <v-btn small color="teal" class="log-btn" @click="sendToBack">Сохранить</v-btn>
-                    <v-btn small color="#FF6D70" class="log-btn" @click="cancelModal">Закрыть</v-btn>
+                    <v-btn small :color="colorFrom.controlsSystem" class="log-btn" @click="sendToBack">Сохранить</v-btn>
+                    <v-btn small :color="colorFrom.controls" class="log-btn" @click="cancelModal">Закрыть</v-btn>
                 </div>
             </v-card-actions>
         </v-card>
@@ -25,6 +25,7 @@ import {  } from '@mdi/js'
 export default {
     props: {
         modalActive: null,
+        colorFrom: null,
     },
     data () {
         return {

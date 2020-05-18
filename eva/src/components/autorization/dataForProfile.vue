@@ -1,7 +1,7 @@
 <template>
     <div class="field-profile more-data" :data-active="active" >
         <div class="headline">{{alldata[essence][`${subessence}Name`]}}</div>
-            <v-tabs   v-model="alldata[essence].tab[subessence]" color='teal' @change="switchTab">
+            <v-tabs   v-model="alldata[essence].tab[subessence]" :color='colorFrom.controls' @change="switchTab">
                 <v-tabs-slider></v-tabs-slider>
                 <v-tab  :href="`#tab-1`" >
                     {{alldata[essence][`${subessence}TabName`].tab1}}
@@ -18,7 +18,7 @@
                         v-if="loaders[essence][subessence]"
                         class="skeleton-loader"
                     ></v-skeleton-loader>
-                    <v-text-field v-model="searchText" v-if="!loaders[essence][subessence]" :append-icon="search"  label="Поиск" class="search-row" color="teal"  single-line hide-details ></v-text-field>
+                    <v-text-field v-model="searchText" v-if="!loaders[essence][subessence]" :append-icon="search"  label="Поиск" class="search-row" :color='colorFrom.controls'  single-line hide-details ></v-text-field>
                     <div class="table-profile-block" v-if="!loaders[essence][subessence]">
                             <v-data-table
                             hide-default-header
@@ -33,7 +33,7 @@
                         </v-data-table>
                     </div>
                     <div class="control-btn">
-                        <v-btn small  color="#FF6D70" class="control-btn-itself" @click="deleteSelected(subessence)" >{{alldata[essence][`${subessence}DeleteName`].del1}}</v-btn>
+                        <v-btn small  :color='colorFrom.controlsActive' class="control-btn-itself" @click="deleteSelected(subessence)" >{{alldata[essence][`${subessence}DeleteName`].del1}}</v-btn>
                     </div> 
                 </v-tab-item>
 
@@ -44,7 +44,7 @@
                         v-if="loaders[essence][`all${subessence}`]"
                         class="skeleton-loader"
                     ></v-skeleton-loader>
-                     <v-text-field v-model="searchText" v-if="!loaders[essence][`all${subessence}`]" :append-icon="search"  label="Поиск" class="search-row" color="teal"  single-line hide-details ></v-text-field>
+                     <v-text-field v-model="searchText" v-if="!loaders[essence][`all${subessence}`]" :append-icon="search"  label="Поиск" class="search-row" :color='colorFrom.controls'  single-line hide-details ></v-text-field>
                     <div class="table-profile-block" v-if="!loaders[essence][`all${subessence}`]">
                             <v-data-table
                             hide-default-header
@@ -59,7 +59,7 @@
                         </v-data-table>
                     </div>
                     <div class="control-btn">
-                        <v-btn small  color="teal" class="control-btn-itself" @click="addSelected(subessence)">{{alldata[essence][`${subessence}DeleteName`].del2}}</v-btn>
+                        <v-btn small  :color='colorFrom.controls' class="control-btn-itself" @click="addSelected(subessence)">{{alldata[essence][`${subessence}DeleteName`].del2}}</v-btn>
                     </div> 
                 </v-tab-item>
             </v-tabs>
@@ -78,7 +78,8 @@ export default {
         create: null,
         activeFrom: null,
         dataFrom: null,
-        nameGroupFrom: null
+        nameGroupFrom: null,
+        colorFrom: null,
     },
     data () {
         return {

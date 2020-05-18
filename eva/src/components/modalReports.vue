@@ -7,15 +7,15 @@
                     <!-- <v-text-field  color="teal" class="textarea-item" outlined label="Sid"  placeholder="Sid" clearable v-model="search.sid" hide-details></v-text-field> -->
                     <div class="times-block">
                         <div class="time-block">
-                            <v-text-field  color="teal"  class="textarea-item" outlined label="Временной интервал: начало"  v-model="search.parametrs.tws" hide-details></v-text-field>
-                            <DTPicker v-model="tws"    :no-value-to-custom-elem="true"  format="YYYY-MM-DD HH:mm"     color="#FF6D70" button-color="teal" class="dtpicker-report" >
-                                <v-icon class="picker-report" color="teal" >{{pickerIcon}}</v-icon> 
+                            <v-text-field  :color="colorFrom.controls"  class="textarea-item" outlined label="Временной интервал: начало"  v-model="search.parametrs.tws" hide-details></v-text-field>
+                            <DTPicker v-model="tws"    :no-value-to-custom-elem="true"  format="YYYY-MM-DD HH:mm"     color="#FF6D70" button-color="colorFrom.controls" class="dtpicker-report" >
+                                <v-icon class="picker-report" :color="colorFrom.controls" >{{pickerIcon}}</v-icon> 
                             </DTPicker>
                         </div>
                         <div class="time-block">
-                            <v-text-field  color="teal"  class="textarea-item" outlined label="Временной интервал: конец"  v-model="search.parametrs.twf" hide-details></v-text-field>
-                            <DTPicker v-model="twf"   :no-value-to-custom-elem="true"  format="YYYY-MM-DD HH:mm"   color="#FF6D70" button-color="teal" class="dtpicker-report" >
-                                <v-icon class="picker-report" color="teal" >{{pickerIcon}}</v-icon> 
+                            <v-text-field  :color="colorFrom.controls"  class="textarea-item" outlined label="Временной интервал: конец"  v-model="search.parametrs.twf" hide-details></v-text-field>
+                            <DTPicker v-model="twf"   :no-value-to-custom-elem="true"  format="YYYY-MM-DD HH:mm"   color="#FF6D70" button-color="colorFrom.controls" class="dtpicker-report" >
+                                <v-icon class="picker-report" :color="colorFrom.controls" >{{pickerIcon}}</v-icon> 
                             </DTPicker>
                         </div>
                     </div>
@@ -24,18 +24,18 @@
                             <v-expansion-panel-header>Дополнительные параметры</v-expansion-panel-header>
                             <v-expansion-panel-content class="order-expansion">
                                 <!-- <v-text-field  color="teal"   class="textarea-item" outlined label="Username"  v-model="search.parametrs.username" hide-details></v-text-field> -->
-                                <v-text-field  color="teal"  class="textarea-item" outlined label="Timeout"  v-model="search.parametrs.timeout" hide-details></v-text-field>
-                                <v-text-field  color="teal"  class="textarea-item" outlined label="Cache_ttl"  v-model="search.parametrs.cache_ttl" hide-details></v-text-field>
-                                <v-text-field color="teal"   class="textarea-item" outlined label="Field_extraction"  v-model="search.parametrs.field_extraction" hide-details></v-text-field>
-                                <v-text-field  color="teal"  class="textarea-item" outlined label="Preview"  v-model="search.parametrs.preview" hide-details></v-text-field>
+                                <v-text-field  :color="colorFrom.controls"  class="textarea-item" outlined label="Timeout"  v-model="search.parametrs.timeout" hide-details></v-text-field>
+                                <v-text-field  :color="colorFrom.controls"  class="textarea-item" outlined label="Cache_ttl"  v-model="search.parametrs.cache_ttl" hide-details></v-text-field>
+                                <v-text-field :color="colorFrom.controls"   class="textarea-item" outlined label="Field_extraction"  v-model="search.parametrs.field_extraction" hide-details></v-text-field>
+                                <v-text-field  :color="colorFrom.controls"  class="textarea-item" outlined label="Preview"  v-model="search.parametrs.preview" hide-details></v-text-field>
                             </v-expansion-panel-content>
                         </v-expansion-panel>
                     </v-expansion-panels>  
             </div>
             <v-card-actions class="reports-action">
             <v-spacer></v-spacer>
-            <v-btn small color="teal" class="create-btn" @click="setSearch">Подтвердить</v-btn>
-            <v-btn small color="#FF6D70" class="create-btn" @click="cancelModal">Отмена</v-btn>
+            <v-btn small :color="colorFrom.controlsSystem" class="create-btn" @click="setSearch">Подтвердить</v-btn>
+            <v-btn small :color="colorFrom.controlsActive" class="create-btn" @click="cancelModal">Отмена</v-btn>
             </v-card-actions>
         </v-card>
        
@@ -52,6 +52,7 @@ export default {
     props: {
         searchFrom: null,
         modalFrom: null,
+        colorFrom: null,
     },
     data () {
         return {

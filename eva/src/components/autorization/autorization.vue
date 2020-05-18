@@ -6,12 +6,12 @@
                 <v-card class="card-aut"  ref="authForm">
                     <v-card-title class="title-aut">Авторизация</v-card-title>
                     <v-card-text class="text-aut">
-                        <v-text-field label="Логин" color="teal" class="field-aut" v-model="user.username" outlined  hide-details clearable></v-text-field>
-                        <v-text-field label="Пароль" color="teal"  class="field-aut"  v-model="user.password" type="password" outlined  hide-details clearable></v-text-field>
-                        <div class="error-msg" :class="{errormsgshow:msg}">{{msgText}}</div>
+                        <v-text-field label="Логин" :color="color.controls" class="field-aut" v-model="user.username" outlined  hide-details clearable></v-text-field>
+                        <v-text-field label="Пароль" :color="color.controls"  class="field-aut"  v-model="user.password" type="password" outlined  hide-details clearable></v-text-field>
+                        <div class="error-msg" :style="{color:color.controlsActive}" :class="{errormsgshow:msg}">{{msgText}}</div>
                     </v-card-text>
                     <v-card-actions>
-                            <v-btn class="btn-aut" color="teal" @click="sendAut">  Подтвердить </v-btn>
+                            <v-btn class="btn-aut" :color="color.controlsSystem" @click="sendAut">  Подтвердить </v-btn>
                     </v-card-actions>
                     <div class="example" v-html="msgg"></div>
                 </v-card>
@@ -34,6 +34,16 @@ export default {
             msg: false,
             msgText: '',
             msgg: '',
+            color: {
+                back: '#ffffff',
+                backElement: 'white',
+                text: '#4a4a4a',
+                controls: '#6e96c5',
+                controlsSystem: '#004799',
+                controlsActive: '#41C4FF',
+                panel: '#2B68B1',
+                border: '#00000033',
+            },
         } 
     },
      computed: { 

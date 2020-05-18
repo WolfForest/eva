@@ -3,15 +3,15 @@
         <v-card v-if="passway" class="passcard">
             <v-card-text class="card-text-profile">
                 <div class="headline">Изменить пароль</div>
-                <v-text-field label="Старый пароль" color="teal"  class="field-profile"  v-model="oldpass" type="password" outlined  hide-details clearable></v-text-field>
-                <v-text-field label="Новый пароль" color="teal"  class="field-profile"  v-model="newpass" type="password" outlined  hide-details clearable></v-text-field>
+                <v-text-field label="Старый пароль" :color="colorFrom.controls"  class="field-profile"  v-model="oldpass" type="password" outlined  hide-details clearable></v-text-field>
+                <v-text-field label="Новый пароль" :color="colorFrom.controls"  class="field-profile"  v-model="newpass" type="password" outlined  hide-details clearable></v-text-field>
 
             </v-card-text>
             <div class="msg-profile" :class="{openMsg:openMsg}" :style="{color:colorMsg}">{{msg}}</div>
             <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn small  color="teal" class="profile-btn" @click="changeBtn('pass')">Изменить</v-btn>
-            <v-btn small color="#FF6D70" class="profile-btn" @click="cancelModal">Отмена</v-btn>
+            <v-btn small  :color="colorFrom.controlsSystem" class="profile-btn" @click="changeBtn('pass')">Изменить</v-btn>
+            <v-btn small :color="colorFrom.controlsActive" class="profile-btn" @click="cancelModal">Отмена</v-btn>
             </v-card-actions>
         </v-card>
         <v-card v-if="!passway" class="profile-tab">
@@ -20,11 +20,11 @@
                 <div class="headline">{{titleModal}}</div>
 
                 <div class="profile-block" v-if="showBlock.users">
-                    <v-text-field label="Логин пользователя" color="teal"  class="field-profile"  v-model="userData.username"  outlined  hide-details clearable></v-text-field>
-                    <v-text-field label="Пароль пользователя" color="teal"  autocomplete="new-password" class="field-profile" placeholder="********"  v-model="userData.pass" type="password" outlined  hide-details clearable></v-text-field>
+                    <v-text-field label="Логин пользователя" :color="colorFrom.controls"  class="field-profile"  v-model="userData.username"  outlined  hide-details clearable></v-text-field>
+                    <v-text-field label="Пароль пользователя" :color="colorFrom.controls"  autocomplete="new-password" class="field-profile" placeholder="********"  v-model="userData.pass" type="password" outlined  hide-details clearable></v-text-field>
                     
                     <!--  v-for="item in Object.keys(user.tab)" :key="item" -->
-                    <data-profile v-for="item in Object.keys(user.tab)" :key="item"  essence="user" :dataFrom="dataRest" @changeData="changeData"  :subessence="item" :create="create"  :activeFrom="activeFrom" ></data-profile>
+                    <data-profile v-for="item in Object.keys(user.tab)" :key="item" :colorFrom="colorFrom"  essence="user" :dataFrom="dataRest" @changeData="changeData"  :subessence="item" :create="create"  :activeFrom="activeFrom" ></data-profile>
 
                     <!-- <v-select  :items="roles" color="teal" v-model="user.role" hide-details  outlined class="select-profile field-profile"   label="Роль пользователя" ></v-select> 
                     <v-textarea color="teal" outlined hide-details class="field-profile" no-resize height="130px" rows="5" label="Группы пользователя" v-model="user.groups" placeholder="data science; data engeneer"></v-textarea>
@@ -32,24 +32,24 @@
                 </div>
 
                 <div class="profile-block" v-if="showBlock.roles">
-                    <v-text-field label="Название роли" color="teal"  class="field-profile"  v-model="curItem.name"  outlined  hide-details clearable></v-text-field>
+                    <v-text-field label="Название роли" :color="colorFrom.controls"  class="field-profile"  v-model="curItem.name"  outlined  hide-details clearable></v-text-field>
                     <data-profile v-for="item in Object.keys(role.tab)" :key="item"  essence="role"  :dataFrom="dataRest" @changeData="changeData" :subessence="item" :create="create" :activeFrom="activeFrom" ></data-profile>
                 </div>
 
                 <div class="profile-block" v-if="showBlock.permissions">
-                    <v-text-field label="Название привилегии" color="teal"  class="field-profile"  v-model="curItem.name"  outlined  hide-details clearable></v-text-field>
+                    <v-text-field label="Название привилегии" :color="colorFrom.controls"  class="field-profile"  v-model="curItem.name"  outlined  hide-details clearable></v-text-field>
                     <data-profile v-for="item in Object.keys(permission.tab)" :key="item"  essence="permission" :dataFrom="dataRest" @changeData="changeData" :subessence="item" :create="create" :activeFrom="activeFrom" ></data-profile>
                 </div>
 
                 <div class="profile-block" v-if="showBlock.groups">
-                    <v-text-field label="Название группы" color="teal"  class="field-profile"  v-model="curItem.name"  outlined  hide-details clearable></v-text-field>
+                    <v-text-field label="Название группы" :color="colorFrom.controls"  class="field-profile"  v-model="curItem.name"  outlined  hide-details clearable></v-text-field>
                     <div class="zagolovok-values">Изменить цвет группы</div>
                     <v-color-picker class="colorPicker" v-model="curItem.color"></v-color-picker>
                     <data-profile v-for="item in Object.keys(group.tab)" :key="item"  essence="group" :dataFrom="dataRest" @changeData="changeData" :subessence="item" :create="create" :activeFrom="activeFrom" ></data-profile>
                 </div>
 
                  <div class="profile-block" v-if="showBlock.indexes">
-                    <v-text-field label="Название индекса" color="teal"  class="field-profile"  v-model="curItem.name"  outlined  hide-details clearable></v-text-field>             
+                    <v-text-field label="Название индекса" :color="colorFrom.controls"  class="field-profile"  v-model="curItem.name"  outlined  hide-details clearable></v-text-field>             
                     <data-profile v-for="item in Object.keys(index.tab)" :key="item"  essence="index" :dataFrom="dataRest" @changeData="changeData" :subessence="item" :create="create" :activeFrom="activeFrom" ></data-profile>
                 </div>
             </v-card-text>
@@ -62,8 +62,8 @@
             <div class="msg-profile" :class="{openMsg:openMsg}" :style="{color:colorMsg}">{{msg}}</div> 
             <v-card-actions class="action-btn">
             <v-spacer></v-spacer>
-            <v-btn small  color="teal" class="profile-btn" @click="changeBtn(create)">{{btnMsg}}</v-btn>
-            <v-btn small color="#FF6D70" class="profile-btn" @click="cancelModal">Отмена</v-btn>
+            <v-btn small  :color="colorFrom.controlsSystem" class="profile-btn" @click="changeBtn(create)">{{btnMsg}}</v-btn>
+            <v-btn small :color="colorFrom.controlsActive" class="profile-btn" @click="cancelModal">Отмена</v-btn>
             </v-card-actions>
         </v-card>
       
@@ -83,6 +83,7 @@ export default {
         userFrom: null,
         keyFrom: null,
         curItemFrom: null,
+        colorFrom: null,
     },
     data () {
         return {

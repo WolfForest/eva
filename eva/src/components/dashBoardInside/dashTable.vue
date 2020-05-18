@@ -300,7 +300,7 @@ export default {
              }
              table.addEventListener('mouseover', event => {
                  if(event.target.tagName.toLowerCase() == 'td' && !event.target.parentElement.classList.contains('event')) {
-                        event.target.parentElement.style =`background: ${this.color.controlsActive} !important;color:${this.color.back}`;
+                        event.target.parentElement.style =`background: ${this.color.controls} !important;color:${this.color.back}`;
                  }
              })
              table.addEventListener('mouseout', event => {

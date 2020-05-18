@@ -5,7 +5,7 @@
            <v-container  class="main-container container-dash" >
             <v-card class="main-card-dash">
                 <v-card-text>
-                    <v-tabs   v-model="tab" class="tab-dash" color='teal' >
+                    <v-tabs   v-model="tab" class="tab-dash" :color='color.controls' >
                         <v-tabs-slider></v-tabs-slider>
                         <v-tab  :href="`#tab-1`"  @click="deleteCookie" >
                             Группы
@@ -18,15 +18,15 @@
                                     <v-card-title  class="dash-group-title">
                                         <div class="title-color" :style="{borderColor:allGroups[i-1].color}"></div>
                                         <div class="controls-group">
-                                            <v-tooltip bottom color="#FF6D70" >
+                                            <v-tooltip bottom :color='color.controlsActive' >
                                                 <template v-slot:activator="{ on }">
-                                                    <v-icon class="edit control-group" v-if="adminRool" color="teal"  v-on="on" @click="() => {modalCreateGroup=true; createGroupFlag=true;actionBtn=false; curGroup=i-1 }">{{pencil}}</v-icon>
+                                                    <v-icon class="edit control-group" v-if="adminRool" :color='color.controls'  v-on="on" @click="() => {modalCreateGroup=true; createGroupFlag=true;actionBtn=false; curGroup=i-1 }">{{pencil}}</v-icon>
                                                 </template>
                                                 <span>Редактировать</span>
                                             </v-tooltip>
-                                            <v-tooltip bottom color="#FF6D70" >
+                                            <v-tooltip bottom :color='color.controlsActive' >
                                                 <template v-slot:activator="{ on }">
-                                                    <v-icon class="delete control-group" v-if="adminRool"  v-on="on" color="teal" @click="() => {nameDelete = allGroups[i-1].name, modalDelete=true,elemDelete='group',curGroup=i-1}" >{{trash}}</v-icon>
+                                                    <v-icon class="delete control-group" v-if="adminRool"  v-on="on" :color='color.controls' @click="() => {nameDelete = allGroups[i-1].name, modalDelete=true,elemDelete='group',curGroup=i-1}" >{{trash}}</v-icon>
                                                 </template>
                                                 <span>Удалить</span>
                                             </v-tooltip>
@@ -37,7 +37,7 @@
                                     </v-card-text>
                                 </v-card>
                                 <v-btn
-                                    color="teal"
+                                    :color='color.controls'
                                     fab
                                     dark
                                     small
@@ -51,7 +51,7 @@
                                  <v-icon>{{plus}}</v-icon>
                                 </v-btn>
                                  <v-btn
-                                    color="teal"
+                                    :color='color.controls'
                                     fab 
                                     dark  
                                     small
@@ -70,13 +70,13 @@
                                     <div class="controls-group">
                                         <v-tooltip bottom color="#FF6D70"  >
                                             <template v-slot:activator="{ on }">
-                                                <v-icon class="edit control-group" color="teal" v-if="adminRool" v-on="on" @click="() => {modalCreateGroup=true; createGroupFlag=false;actionBtn=false; curGroup=i-1 }">{{pencil}}</v-icon>
+                                                <v-icon class="edit control-group" :color='color.controls' v-if="adminRool" v-on="on" @click="() => {modalCreateGroup=true; createGroupFlag=false;actionBtn=false; curGroup=i-1 }">{{pencil}}</v-icon>
                                             </template>
                                             <span>Редактировать</span>
                                         </v-tooltip>
                                         <v-tooltip bottom color="#FF6D70" >
                                             <template v-slot:activator="{ on }">
-                                                <v-icon class="delete control-group" v-if="adminRool" v-on="on" color="teal"  @click="() => {nameDelete = allDashs[i-1].name, modalDelete=true,elemDelete='dash',curDash=i-1}">{{trash}}</v-icon>
+                                                <v-icon class="delete control-group" v-if="adminRool" v-on="on" :color='color.controls'  @click="() => {nameDelete = allDashs[i-1].name, modalDelete=true,elemDelete='dash',curDash=i-1}">{{trash}}</v-icon>
                                             </template>
                                             <span>Удалить</span>
                                         </v-tooltip>
@@ -87,7 +87,7 @@
                                 </v-card-text>
                             </v-card>
                              <v-btn
-                                    color="teal"
+                                    :color='color.controls'
                                     fab 
                                     dark  
                                     small
@@ -101,7 +101,7 @@
                                 <v-icon>{{plus}}</v-icon>
                             </v-btn>
                              <v-btn
-                                    color="teal"
+                                    :color='color.controls'
                                     fab 
                                     dark  
                                     small
@@ -151,11 +151,13 @@ export default {
             modalCreateGroup: false,
             element: 'dash',
             color: {
-                back: 'white',
+                back: '#ffffff',
                 backElement: 'white',
-                text: '#333',
-                controls: 'teal',
-                controlsActive: '#FF6D70',
+                text: '#4a4a4a',
+                controls: '#6e96c5',
+                controlsSystem: '#004799',
+                controlsActive: '#41C4FF',
+                panel: '#2B68B1',
                 border: '#00000033',
             },
             createGroupFlag: false,

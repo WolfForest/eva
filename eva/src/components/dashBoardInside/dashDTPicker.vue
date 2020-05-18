@@ -7,7 +7,7 @@
             </div>
             <div class="DTPicker-elem" :style="{boxShadow : `0 5px 5px -3px ${colorSet.border},0 8px 10px 1px ${colorSet.border},0 3px 14px 2px ${colorSet.border}`, background : colorSet.back, color : colorSet.text, border : `1px solid ${colorSet.border}`}">
                 <div class="name-of-picker" :style="{color:colorSet.controls}"> Выбор времени</div>
-                <hr :style="{color:colorSet.text}">
+                <!-- <hr :style="{color:colorSet.text}"> -->
                     <div class="choose-period">
                     <p :style="{color:colorSet.text}">Последние</p>
                     <v-text-field  class="textarea-item" outlined  @input="setLast($event)" :color="colorSet.text" :style="{color:colorSet.text}" v-model="last.every" hide-details></v-text-field>
@@ -18,17 +18,17 @@
                         <v-chip :color='colorSet[color.second]' class="time" @click="setTime('second')">Секунд</v-chip>
                     </div>
                 <div class="name-of-picker" :style="{color:colorSet.controls}"> Выбор времени и даты</div>
-                <hr :style="{color:colorSet.text}">
+                <!-- <hr :style="{color:colorSet.text}"> -->
                 <DTPicker v-model="start" label="Начальная дата и время" format="YYYY-MM-DD HH:mm"   :color="colorSet.controlsActive" :button-color="colorSet.controls" class="dtpicker" @validate="setTocken('dt')"></DTPicker>
                 <DTPicker v-model="end" label="Конечная дата и время" format="YYYY-MM-DD HH:mm"  :color="colorSet.controlsActive" :button-color="colorSet.controls" class="dtpicker" @validate="setTocken('dt')"></DTPicker>
                 <div class="name-of-picker" :style="{color:colorSet.controls}"> Диапазон даты</div>
-                <hr :style="{color:colorSet.text}">
+                <!-- <hr :style="{color:colorSet.text}"> -->
                 <DTPicker v-model="range" range  label="Диапазон дат" format="YYYY-MM-DD"  color="#FF6D70" button-color="teal" class="dtpicker range-picker" @validate="setTocken('range')"></DTPicker>
                 <div class="name-of-picker" :style="{color:colorSet.controls}">Ввод даты и времени вручную</div>
-                <hr :style="{color:colorSet.text}">
+                <!-- <hr :style="{color:colorSet.text}"> -->
                 <v-text-field  label="Начальная дата" counter="500" clearable :append-icon="check" :color="colorSet[start_custom.color]" @blur="start_custom.color='controlsActive'" v-model="start_custom.value" hide-details  outlined  class="dtpicker custom-picker" @click:append="customDate('begin')"></v-text-field>
                 <v-text-field  label="Конечная дата" counter="500" clearable :append-icon="check" :color="colorSet[end_custom.color]" @blur="end_custom.color='controlsActive'" v-model="end_custom.value" hide-details  outlined  class="dtpicker custom-picker"  @click:append="customDate('end')"></v-text-field>
-                <v-btn small color="teal" class="set-btn" @click="setDate">Установить</v-btn>
+                <v-btn small :color="colorFrom.controlsSystem" class="set-btn" @click="setDate">Установить</v-btn>
             </div>
         </div>
         <div class="current-date" :class="{show_curent:show_curent}" >{{curDate}}</div>

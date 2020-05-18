@@ -2,12 +2,12 @@
    <v-app class="aplication" :style="{background:color.back}">
        <header-top @permissions="setPermissions" @checkOver="checkOver" :class="{openHeader:!openProfile}"></header-top>
        <div class="body-block" v-if="prepared">
-            <dash-panel-bord  :idDashFrom="idDash" :colorFrom="color" :class="{openProfile:openProfile}" @changeMode="changeMode" @openProfile="event => {this.openProfile = event}" @openSettings="openSettings" ></dash-panel-bord>
+            <dash-panel-bord  :idDashFrom="idDash" :colorFrom="color" :style="{top:top}" @changeMode="changeMode" @openProfile="event => {this.openProfile = event}" @openSettings="openSettings" ></dash-panel-bord>
             <!-- <v-divider style="margin-top: 60px"></v-divider> -->
             <v-card class="already-block" v-if="alreadyShow" :style="{color:color.text,background:color.back,boxShadow:` 0 0 5px 5px ${color.border}`}">
                     <div class="text-already" >Существует более новая версия дашборда. Хотите обновить?</div>
                     <div class="btn-already">
-                    <v-btn small :color="color.controls" class="create-btn" @click="updateDash">Да</v-btn>
+                    <v-btn small :color="color.controlsSystem" class="create-btn" @click="updateDash">Да</v-btn>
                     <v-btn small :color="color.controlsActive" class="create-btn" @click="alreadyShow = false">Нет</v-btn>
                     </div>
             </v-card>
@@ -36,12 +36,15 @@ export default {
            showSetting: false,
            rotate: '',
            color: {
-                // back: 'white',
-                // backElement: 'white',
-                // text: '#333',
-                // controls: 'teal',
-                // controlsActive: '#FF6D70',
-                // border: '#00000033',
+                back: '#fafafa',
+                backElement: '#ffffff',
+                text: '#4a4a4a',
+                controls: '#6e96c5',
+                controlsSystem: '#004799',
+                controlsActive: '#41C4FF',
+                controlsInsideDash: '#BCBCBC',
+                panel: '#2B68B1',
+                border: '#00000033',
             },
             adminRoot: false,
             openProfile: false,
@@ -64,6 +67,17 @@ export default {
               } 
               return elements
           },
+          top: function() {
+              if (this.openProfile) {
+                  if (screen.width < 1400) {
+                      return '40px'
+                  } else {
+                      return '50px'
+                  }
+              } else {
+                  return '0px'
+              }
+          }
      },
       methods: {
         //   makeScreen: async function() {  // функция которая делает скриншот страницы
@@ -141,8 +155,8 @@ export default {
                 }
                     })
             //setTimeout( () => {
-                this.color =  this.$store.getters.getColor;
-                this.color.change = this.colorChange; 
+              //  this.color =  this.$store.getters.getColor;
+              //  this.color.change = this.colorChange; 
                 // this.color =   {
                 //     back: 'black',
                 //     backElement: 'black',

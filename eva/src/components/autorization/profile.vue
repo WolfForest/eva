@@ -6,7 +6,7 @@
                 <v-card class="card-aut-table">
                     <v-card-text>
 
-                    <v-tabs   v-model="tab" color='teal'  @change="getData" >
+                    <v-tabs   v-model="tab" :color='color.controls'  @change="getData" >
                         <v-tabs-slider></v-tabs-slider>
                         <v-tab  :href="`#tab-${i}`" v-for="i in tabs.length" :key="i" >
                             {{tabs[i-1]}}
@@ -31,15 +31,15 @@
                                     <div class="square-profile" :style={backgroundColor:item.color}></div>
                                 </template>
                                 <template v-slot:item.actions="{ item }">
-                                    <v-tooltip bottom color="#FF6D70"  >
+                                    <v-tooltip bottom :color='color.controlsActive'  >
                                         <template v-slot:activator="{ on }">
-                                            <v-icon class="editUser icon-aut" color="teal" v-if="i == 1 ? true : showPencilRoot" v-model="item.actions" v-on="on" @click="editUser('edit',item,i)">{{pencil}}</v-icon>
+                                            <v-icon class="editUser icon-aut" :color='color.controls' v-if="i == 1 ? true : showPencilRoot" v-model="item.actions" v-on="on" @click="editUser('edit',item,i)">{{pencil}}</v-icon>
                                         </template>
                                         <span>Редактировать</span>
                                     </v-tooltip>
-                                    <v-tooltip bottom color="#FF6D70"  >
+                                    <v-tooltip bottom :color='color.controlsActive'  >
                                         <template v-slot:activator="{ on }">
-                                            <v-icon class="editUser icon-aut" color="teal" v-if="adminRool" v-model="item.actions" v-on="on" @click="openDelete(item,i)">{{trash}}</v-icon>
+                                            <v-icon class="editUser icon-aut" :color='color.controls' v-if="adminRool" v-model="item.actions" v-on="on" @click="openDelete(item,i)">{{trash}}</v-icon>
                                         </template>
                                         <span>Удалить</span>
                                     </v-tooltip>
@@ -47,7 +47,7 @@
                               
                                 </v-data-table>
                                 <v-btn
-                                    color="teal"
+                                    :color='color.controls'
                                     fab
                                     dark
                                     small
@@ -72,8 +72,8 @@
            </v-container> 
         </v-content>
         <footer-bottom></footer-bottom>
-        <modal-profile :activeFrom ="activeModal" :create="createSome" :keyFrom="keyFrom"  :curItemFrom="curItem" :passway="permission"  :userFrom="user" @cancelModal="closeModal"></modal-profile>
-        <modal-delete-profile :activeDelete ="activeDelete" :dataFrom="dataDelete" @cancelModal="closeModal"></modal-delete-profile>
+        <modal-profile :activeFrom ="activeModal" :colorFrom="color" :create="createSome" :keyFrom="keyFrom"  :curItemFrom="curItem" :passway="permission"  :userFrom="user" @cancelModal="closeModal"></modal-profile>
+        <modal-delete-profile :activeDelete ="activeDelete" :colorFrom="color" :dataFrom="dataDelete" @cancelModal="closeModal"></modal-delete-profile>
     </v-app>
 </template>
 
@@ -106,7 +106,17 @@ export default {
             dataDelete: {},
             user: {},
             curItem: {},
-            permission: true
+            permission: true,
+            color: {
+                back: '#ffffff',
+                backElement: 'white',
+                text: '#4a4a4a',
+                controls: '#6e96c5',
+                controlsSystem: '#004799',
+                controlsActive: '#41C4FF',
+                panel: '#2B68B1',
+                border: '#00000033',
+            },
         } 
     },
      computed: { 

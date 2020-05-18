@@ -11,7 +11,7 @@
         </div>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn small :color="color.controls" class="delete-btn" @click="startDS">Подтвердить</v-btn>
+          <v-btn small :color="color.controlsSystem" class="delete-btn" @click="startDS">Подтвердить</v-btn>
           <v-btn small :color="color.controlsActive" class="delete-btn" @click="cancelModal">Отмена</v-btn>
         </v-card-actions>
       </v-card>

@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.5.1 [arrowCsvg]'
+            version: 'v 1.6.1 [cssChange]'
         } 
     },
      computed: { 

@@ -54,7 +54,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn small :color="colorDeliver.controlsActive" class="delete-btn" :class="{disable:disabledStop}" @click="cancelSchedule">{{msg}}</v-btn>
-          <v-btn small :color="colorDeliver.controls" class="delete-btn" :disabled="disabledStart" @click="startSchedule">Подтвердить</v-btn>
+          <v-btn small :color="colorDeliver.controlsSystem" class="delete-btn" :disabled="disabledStart" @click="startSchedule">Подтвердить</v-btn>
           <v-btn small :color="colorDeliver.controlsActive" class="delete-btn" @click="cancel">Отмена</v-btn>
         </v-card-actions>
       </v-card>

@@ -6,8 +6,8 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn small  color="teal" class="profile-btn" @click="deleteEssence">Удалить</v-btn>
-                <v-btn small color="#FF6D70" class="profile-btn" @click="cancelModal">Отмена</v-btn>
+                <v-btn small  :color="colorFrom.controlsSystem" class="profile-btn" @click="deleteEssence">Удалить</v-btn>
+                <v-btn small :color="colorFrom.controlsActive" class="profile-btn" @click="cancelModal">Отмена</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -22,6 +22,7 @@ export default {
     props: {
         activeDelete: null,
         dataFrom: null,
+        colorFrom: null,
     },
     data () {
         return {

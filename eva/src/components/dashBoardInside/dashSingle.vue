@@ -3,7 +3,7 @@
         <v-card class="number-block" v-show="!noMsg"  outlined :loading="dataLoading" :lookSize="changeSize" @click="setClick">
             <div class="number"  :style="{fontSize:`${fontSize}px`}" >
                 <div class="number-itself" :style={color:color}>{{number}}</div>
-                <div class="number-sub">{{subnumber}}</div>
+                <div class="number-sub" :style="{color:colorFrom.text}">{{subnumber}}</div>
             </div>
         </v-card>
         <div class="errormsg" v-show="noMsg">{{msgText}}</div>
@@ -21,6 +21,7 @@ export default {
         dataRestFrom: null,
         dataLoadingFrom: null,
         widthFrom: null,
+        colorFrom: null,
     },
     data () {
         return {
@@ -75,7 +76,7 @@ export default {
         },
         color: function() {
                 let options = this.$store.getters.getOptions({idDash: this.idDash, id: this.id});
-                let color = '#333';
+                let color = this.colorFrom.controls;
                 if(options.color){
                     color = options.color;
                 }  

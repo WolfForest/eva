@@ -6,7 +6,7 @@
         <v-card-text class="headline "><div :style="{color:color.text}" class="delete-title">Вы точно хотите удалить <span :style="{color:color.text}"  class="delete-name">{{deleteName}}</span> <span :style="{color:color.text}"  v-if="idTitle" class="delete-id">{{deleteId}}</span> ? </div></v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn small  :color="color.controls" class="delete-btn" @click="deleteBtn">Удалить</v-btn>
+          <v-btn small  :color="color.controlsSystem" class="delete-btn" @click="deleteBtn">Удалить</v-btn>
           <v-btn small :color="color.controlsActive" class="delete-btn" @click="cancelModal">Отмена</v-btn>
         </v-card-actions>
       </v-card>

@@ -1,45 +1,45 @@
 <template >
-    <div class="header-block" :style="{background: color.back}">
+    <div class="header-block" :style="{background: color.controlsSystem, height: height }">
         <div class="aut-panel">
             <div class="nav-btn">
-                <div class="title-main">EVA</div>
-                <v-tooltip bottom color="#FF6D70" >
+                <div class="title-main" :style="{color:color.back, opacity: '0.4'}">EVA</div>
+                <v-tooltip bottom :color="color.controlsActive" >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="home"  color="teal" v-on="on" @click="toHome">{{home}}</v-icon>
+                        <v-icon class="home"  :color="color.back" v-on="on" @click="toHome">{{home}}</v-icon>
                     </template>
                     <span>На главную</span>
                 </v-tooltip>
-                <v-tooltip bottom color="#FF6D70" >
+                <v-tooltip bottom :color="color.controlsActive" >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="undo"  color="teal" v-on="on" @click="toBackward">{{undo}}</v-icon>
+                        <v-icon class="undo"  :color="color.back" v-on="on" @click="toBackward">{{undo}}</v-icon>
                     </template>
                     <span>Назад</span>
                 </v-tooltip>
             </div>
            <div class="manage-btn">
-                <div class="id-user">{{login}} | </div>
-                <v-tooltip bottom color="#FF6D70" >
+                <div class="id-user" :style="{color:color.back}">{{login}} | </div>
+                <v-tooltip bottom :color="color.controlsActive" >
                     <template v-slot:activator="{ on }">
                         <v-icon class="edit icon-aut" :color="colorError" v-on="on" @click="openLogs()">{{log}}</v-icon>
                     </template>
                     <span>Просмотреть логи</span>
                 </v-tooltip>
-                <v-tooltip bottom color="#FF6D70" v-if="!inside" >
+                <v-tooltip bottom :color="color.controlsActive" v-if="!inside" >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="edit icon-aut" color="teal" v-on="on" @click="edit">{{userEdit}}</v-icon>
+                        <v-icon class="edit icon-aut" :color="color.back" v-on="on" @click="edit">{{userEdit}}</v-icon>
                     </template>
                     <span>Редактировать профиль</span>
                 </v-tooltip>
-                <v-tooltip bottom color="#FF6D70"  >
+                <v-tooltip bottom :color="color.controlsActive"  >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="exit icon-aut" color="teal" v-on="on" @click="exit">{{door}}</v-icon>
+                        <v-icon class="exit icon-aut" :color="color.back" v-on="on" @click="exit">{{door}}</v-icon>
                     </template>
                     <span>Выйти из профиля</span>
                 </v-tooltip>
            </div>   
         </div>
         <v-divider></v-divider> 
-        <modal-log :modalActive="modalActive"  @cancelModal="modalActive=false" ></modal-log>
+        <modal-log :modalActive="modalActive" :colorFrom="color"  @cancelModal="modalActive=false" ></modal-log>
     </div>    
 </template>
 
@@ -66,17 +66,35 @@ export default {
             modalActive:false,
             home: mdiHomeVariantOutline,
             undo: mdiUndoVariant,
+            color: {
+                back: '#ffffff',
+                backElement: 'white',
+                text: '#4a4a4a',
+                controls: '#6e96c5',
+                controlsSystem: '#004799',
+                controlsActive: '#41C4FF',
+                panel: '#2B68B1',
+                border: '#00000033',
+            },
         } 
     },
      computed: { 
-         color: function() {
-             return this.$store.getters.getColor
-         },
+        //  color: function() {
+        //      return this.$store.getters.getColor
+        //  },
          colorError: function() {
+
              if (this.$store.getters.getColorError) {
-                 return '#FF6D70'
+                 return this.color.controlsActive
              } else {
-                 return 'teal'
+                 return this.color.back
+             }
+         },
+         height: function() {
+             if (screen.width < 1400) {
+                 return '40px'
+             } else {
+                 return '50px'
              }
          }
      },  

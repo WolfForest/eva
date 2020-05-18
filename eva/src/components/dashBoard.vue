@@ -11,7 +11,7 @@
                         <v-text-field clearable v-if="!props.edit" :color="color.text" :style="{color:color.text}" class="dash-edit-title" v-model="props.name"   hide-details v-show="dataMode"></v-text-field>             
                     </div>
                </div>
-               <div class="settings-dash-block" v-show="dataMode">
+               <div class="settings-dash-block">
                     <div class="settings-dash" :class="{settings_move:props.open_gear}">
                              <v-tooltip bottom :color="color.controlsActive"> 
                                 <template v-slot:activator="{ on }">
@@ -33,7 +33,7 @@
                             </v-tooltip>
                             <v-tooltip bottom  :color="color.controlsActive" v-if="props.edit_icon">
                                 <template v-slot:activator="{ on }">
-                                    <v-icon class=" pencil" :color="color.controls" v-on="on" @click="() => {props.edit=false; props.edit_icon=false; }">{{props.mdiPencil}}</v-icon> 
+                                    <v-icon class=" pencil" :color="color.controlsInsideDash" v-on="on" @click="() => {props.edit=false; props.edit_icon=false; }">{{props.mdiPencil}}</v-icon> 
                                 </template>
                                 <span>Переименовать</span>
                             </v-tooltip>
@@ -51,7 +51,7 @@
                             </v-tooltip>
                             <v-tooltip bottom :color="color.controlsActive">
                                 <template v-slot:activator="{ on }">
-                                    <v-icon class=" delete" v-on="on" :color="color.controls"  @click="deleteDashBoard(props)">{{props.mdiTrashCanOutline}}</v-icon>
+                                    <v-icon class=" delete" v-on="on" :color="color.controlsInsideDash"  @click="deleteDashBoard(props)">{{props.mdiTrashCanOutline}}</v-icon>
                                 </template>
                                 <span>Удалить</span>
                             </v-tooltip>
@@ -152,8 +152,8 @@ export default {
                 resize_elem: true,
                 datasource_elem: true,
                 showOptions: true,
-                arrow_coral: 'controls',
-                resize_arrow_coral: 'controls',
+                arrow_coral: 'controlsInsideDash',
+                resize_arrow_coral: 'controlsInsideDash',
                 code_coral: 'fill:teal',
                 transition: true,
                 element: '',
@@ -283,14 +283,14 @@ export default {
              if (!this.showElement){
                         return 'controlsActive';
                     } else {
-                        return  'controls';
+                        return  'controlsInsideDash';
                     }
         },
         setColorOp: function() {  // переключаем цвет иконок
              if (!this.props.showOptions){
                         return 'controlsActive';
                     } else {
-                        return  'controls';
+                        return  'controlsInsideDash';
                     }
         },
         showElement: function() {  // понимаем нужно ли переключать элемент между выбором ИС и самими данными 
@@ -348,7 +348,7 @@ export default {
                       this.$emit('moveElem');  // так как это переключается у родителя, мы вынуждены вызывать событие на родителе и передавтаь туда данные
                       props.move_elem = !props.move_elem;
                 } else {
-                    props.arrow_coral = 'controls';
+                    props.arrow_coral = 'controlsInsideDash';
                     this.$emit('moveElem');
                     this.$emit('sendMove');
                     props.move_elem = !props.move_elem;
@@ -361,7 +361,7 @@ export default {
                     this.$emit('resizeElem');
                     props.resize_elem = !props.resize_elem;
                 } else {
-                    props.resize_arrow_coral = 'controls';
+                    props.resize_arrow_coral = 'controlsInsideDash';
                     props.transition = !props.transition;
                     this.$emit('resizeElem');
                     this.$emit('sendSize');

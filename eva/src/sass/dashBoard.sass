@@ -33,9 +33,10 @@ $transition: all 0.4s ease
     .dash-block
         width: 100%
         height: 100%
-        border: 1px solid rgba(0, 0, 0, 0.3)
+        border: 2px solid rgba(0, 0, 0, 0.2)
         position: relative
         overflow: hidden
+        box-shadow: none !important
 
         .fakeblock
             height: 35px
@@ -43,6 +44,8 @@ $transition: all 0.4s ease
         .loading-block
             overflow: hidden
             height: 2px
+            width: 96%
+            margin: 0 auto
 
             .loading-divider
                 position: relative
@@ -100,6 +103,7 @@ $transition: all 0.4s ease
                     .dash-title
                         cursor: default
                         font-size: 1rem
+                        font-weight: bold
                     
 
                     .dash-edit-title
@@ -110,6 +114,9 @@ $transition: all 0.4s ease
                         .v-input__slot
                             margin-bottom: 0 
                             min-height: 30px !important
+
+                            .v-input__append-inner
+                                margin-top: 5px !important
 
                             input
                                 color: inherit
@@ -531,22 +538,23 @@ $transition: all 0.4s ease
                         //flex-flow: column nowrap
 
                         .dash-title
-                            font-size: 0.7rem
+                            font-size: 0.8rem
                             line-height: 0.8rem
                             margin-left: 5px
                         
                         .dash-block-id
-                            font-size: 0.55rem
+                            font-size: 0.65rem
                             line-height: 0.6rem
                             margin-top: 3px
 
                         .dash-block-sid
-                            font-size: 0.55rem
+                            font-size: 0.65rem
                             line-height: 0.6rem
                             margin-top: 3px
                             margin-left: 5px
 
             .card-text 
+                padding: 0 10px
                 
                 .selectDS
                     font-size: 12px

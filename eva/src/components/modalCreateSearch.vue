@@ -44,7 +44,7 @@
             </div> 
             <v-card-actions class = "searchBtn">
             <div class="errorMsg" :style="{color:this.color.controlsActive}" :class="{errorMsgShow:errorMsgShow}">{{errorMsg}}</div>
-            <v-btn small :color="color.controls" class="create-btn" @click="addSearch">{{createBtn}}</v-btn>
+            <v-btn small :color="color.controlsSystem" class="create-btn" @click="addSearch">{{createBtn}}</v-btn>
             <v-btn small :color="color.controlsActive" class="create-btn" @click="cancelModal">{{cancelBtn}}</v-btn>
             </v-card-actions>
              <!-- <div class="warning-block" :class="{show:show}" :style="{boxShadow : `0 3px 1px -2px ${this.color.border},0 2px 2px 0 ${this.color.border},0 1px 5px 0 ${this.color.border}`, background: color.back, color: color.text}">

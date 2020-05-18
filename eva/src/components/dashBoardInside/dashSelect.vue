@@ -6,11 +6,11 @@
                     <v-icon class=" arrow-up arrows-select" :color="color.controlsActive" v-if="open" @click="openSelect">{{up}}</v-icon>
                 </div>
                 <div class="source"  :class="{source_show:source_show}" :style="{width:widthInput}">
-                    <v-select  :items="this.dataRest" :color="color.text"  v-model="elem" :data-elem="dataelem" hide-details  outlined class="select-parent"  @change="getItem('elem')"   :loading="dataLoading" @focus="setColorSelect($event)" label="Столбец данных" ></v-select> 
-                    <v-select  :items="this.dataRest" :color="color.text" v-model="elemlink" :data-elem="dataelemlink" hide-details  outlined class="select-parent"  @change="getItem('elemlink')"  :loading="dataLoading" @focus="setColorSelect($event)" label="Связанный столбец данных" ></v-select> 
+                    <v-select  :items="this.dataRest" :color="color.controls"  v-model="elem" :data-elem="dataelem" hide-details  outlined class="select-parent"  @change="getItem('elem')"   :loading="dataLoading" @focus="setColorSelect($event)" label="Столбец данных" ></v-select> 
+                    <v-select  :items="this.dataRest" :color="color.controls" v-model="elemlink" :data-elem="dataelemlink" hide-details  outlined class="select-parent"  @change="getItem('elemlink')"  :loading="dataLoading" @focus="setColorSelect($event)" label="Связанный столбец данных" ></v-select> 
                 </div>
                 <!-- <div class="target" :style="{width:widthInput}"> -->
-                     <v-select  :items="this.dataRestDeep"  :style="{width:widthInput}" :multiple="multiple"   :class="{select_show:select_show}" v-model="elemDeep[String(multiple)]" :color="color.text" :data-elem="dataelemDeep" hide-details  outlined class="select"  @change="setTocken"  @focus="setColorSelect($event)"   label="Значение" ></v-select> 
+                     <v-select  :items="this.dataRestDeep"  :style="{width:widthInput}" :multiple="multiple"   :class="{select_show:select_show}" v-model="elemDeep[String(multiple)]" :color="color.controls" :data-elem="dataelemDeep" hide-details  outlined class="select"  @change="setTocken"  @focus="setColorSelect($event)"   label="Значение" ></v-select> 
                 <!-- </div> -->
                
         </div>

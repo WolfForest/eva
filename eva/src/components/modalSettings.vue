@@ -147,7 +147,7 @@
             </div>
             <v-card-actions class="actions-settings">
             <v-spacer></v-spacer>
-            <v-btn small :color="color.controls" class="create-btn" @click="setOptions">Подтвердить</v-btn>
+            <v-btn small :color="color.controlsSystem" class="create-btn" @click="setOptions">Подтвердить</v-btn>
             <v-btn small :color="color.controlsActive" class="create-btn" @click="cancelModal">Отмена</v-btn>
             </v-card-actions>
         </v-card>
