@@ -32,6 +32,7 @@ export default {
                     capture: []
                 },
             ],
+            captures: {},
             noMsg: false,
             msgText: '',
             otstupBottom: 50
@@ -58,9 +59,8 @@ export default {
                 this.dataRestFrom.forEach( (item) => {
                         data.push({...{},...item})
                 })
-                this.actions[0].capture = Object.keys(data[0]);
-                this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
-            }
+                this.captures = Object.keys(data[0]);
+            }   
             if (screen.width <= 1600) {
                 this.otstupBottom = 35;
             }
@@ -80,7 +80,12 @@ export default {
             return size
         }
      },  
-
+    watch: {
+        captures: function (captures) {
+           this.actions[0].capture =  captures;
+           this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
+        },
+    },
      methods: {
         setClick: function(item) {
 
