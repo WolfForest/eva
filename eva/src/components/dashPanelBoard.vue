@@ -903,12 +903,15 @@ export default {
                     
                 // }
                 
-                let size = this.checkPos({top: coord.top, left: coord.left, width: this.newDashBoard[type].width, height: this.newDashBoard[type].height});
+                //let size = this.checkPos({top: coord.top, left: coord.left, width: this.newDashBoard[type].width, height: this.newDashBoard[type].height});
+                  let size ={top: coord.top, left: coord.left};
                // let top,left;
                // size.top+pageYOffset ? top = size.top+pageYOffset : top = size.top;
                 
-                this.$set(this.newDashBoard[type],'top',this.calcSizePx(size.top+pageYOffset,'height'));
-                this.$set(this.newDashBoard[type],'left',this.calcSizePx(size.left,'width'));
+                //this.$set(this.newDashBoard[type],'top',this.calcSizePx(size.top+pageYOffset,'height'));
+                //this.$set(this.newDashBoard[type],'left',this.calcSizePx(size.left,'width'));
+                this.$set(this.newDashBoard[type],'top',size.top+pageYOffset);
+                this.$set(this.newDashBoard[type],'left',size.left);
                 this.$set(this.newDashBoard[type],'should',false);
                 this.$set(this.newDashBoard[type],'search',-1);
                 this.$set(this.newDashBoard[type],'switch',false);
