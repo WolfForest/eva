@@ -366,7 +366,7 @@ export default {
                    direction = 'right';
                } 
 
-                // выходи сверху
+                // выходит сверху
 
                if ((event.layerY - 50) < 0) {
                    tooltipTop = event.layerY + 50;
