@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - back to pixel when resize and remove
 
+## [1.6.2] [doubleTile]
+### Fix
+
+- fix bug with double tile on dashboards
+
 ## [1.6.1] [cssChange]
 ### Changed
 
