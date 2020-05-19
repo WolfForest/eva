@@ -211,7 +211,7 @@ export default {
                },
                disappear: true,
                timeFormat: '',
-               sizeTile: '',
+               sizeTile: {},
                hideLoad: false,
             }
         }
@@ -316,8 +316,15 @@ export default {
                 if (this.props.options.timeFormat) {
                     this.props.timeFormat = this.props.options.timeFormat;
                 }
-                if (this.props.options.size) {
-                    this.props.sizeTile = this.props.options.size;
+                if (this.props.options.widthTile) {
+                    this.$set(this.props.sizeTile,'width',this.props.options.widthTile);
+                } else {
+                    this.$set(this.props.sizeTile,'width','');
+                }
+                if (this.props.options.heightTile) {
+                    this.$set(this.props.sizeTile,'height',this.props.options.heightTile);
+                }  else {
+                    this.$set(this.props.sizeTile,'height','');
                 }
 
             // }  else {

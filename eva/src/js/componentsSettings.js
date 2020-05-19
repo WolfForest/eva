@@ -63,7 +63,7 @@ export default {
                 height: 450
             },
             tile: {
-                width: 500,
+                width: 450,
                 height: 400
             },  
             csvg: {
@@ -98,7 +98,7 @@ export default {
             button: ['visible','level','color','backgroundcolor','name'],
             textarea: ['visible','level'],
             guntt: ['visible','level','timeFormat'],
-            tile: ['visible','level','size'],
+            tile: ['visible','level','widthTile','heightTile'],
             csvg: ['visible','level','tooltip']
         },
         reporstElements: ['table','lineChart','multiLine','barchart','graph','guntt','tile','csvg'],

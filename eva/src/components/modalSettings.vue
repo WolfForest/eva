@@ -89,11 +89,18 @@
                               <v-text-field clearable  placeholder="%Y-%m-%d %H:%M:%S"  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.timeFormat"   hide-details></v-text-field>
                         </div>
                     </div>
-                    <div class="option-item" v-if="checkOptions('size')">
-                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}">size</div>
-                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Введите размер плитки</div>
+                    <div class="option-item" v-if="checkOptions('widthTile')">
+                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}">widthTile</div>
+                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Введите ширину плитки</div>
                         <div class="status-option item">
-                              <v-text-field clearable  placeholder="100"  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.size"   hide-details></v-text-field>
+                              <v-text-field clearable  placeholder="100"  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.widthTile"   hide-details></v-text-field>
+                        </div>
+                    </div>
+                    <div class="option-item" v-if="checkOptions('heightTile')">
+                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}">heightTile</div>
+                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Введите высоту плитки</div>
+                        <div class="status-option item">
+                              <v-text-field clearable  placeholder="100"  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.heightTile"   hide-details></v-text-field>
                         </div>
                     </div>
                     <div class="option-item" v-if="checkOptions('fontSize')">

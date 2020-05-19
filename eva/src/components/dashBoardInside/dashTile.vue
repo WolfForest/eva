@@ -1,8 +1,8 @@
 <template >
     <div class="tile-template">
         <div class="dash-tile" :style="{height:`${height-otstupBottom}px`}" v-show="!noMsg">
-            <div class="tile-block" v-for="i in dataRest.length" :key="i"  @click="setClick(dataRest[i-1])">
-                <div class="tile" :style="{backgroundColor:dataRest[i-1].color,width:sizeTile,height:sizeTile}">
+            <div class="tile-block" >
+                <div class="tile" v-for="i in dataRest.length" :key="i"  @click="setClick(dataRest[i-1])" :style="{backgroundColor:dataRest[i-1].color,width:widthTile,height:heightTile}">
                     <p  v-html="checkName(dataRest[i-1].caption)"></p>
                 </div>
             </div>
@@ -35,8 +35,11 @@ export default {
             captures: {},
             noMsg: false,
             msgText: '',
-            otstupBottom: 50
-
+            otstupBottom: 50,
+            // sizeTile: {
+            //     width: '100px',
+            //     height: '100px'
+            // },
         } 
     },
      computed: {  // осоновные параметры, которые чатсо меняются и которы следует отслеживать
@@ -72,13 +75,26 @@ export default {
         height: function() {
             return this.heightFrom
         },
-        sizeTile: function() {
-            let size = this.sizeTileFrom;
-            if (size == '') {
-                size = '100px';
-            }
-            return size
-        }
+        widthTile: function() {
+            return this.setSize('width')
+        },
+         heightTile: function() {
+            return this.setSize('height')
+        },
+        // sizeTile: function() {
+        //     let size = this.sizeTileFrom;
+        //     console.log(size);
+        //     if (!size.width || size.width == '') {
+        //         size.width = '100px';
+        //     } else {
+        //         console.log(size.width);
+        //     }
+        //     if (!size.height || size.height == '') {
+        //         size.height = '100px';
+        //     }
+        //     console.log(size);
+        //     return size
+        // }
      }, 
      watch: {
         captures: function (captures) {
@@ -120,6 +136,19 @@ export default {
         },
         checkName: function(name) {
             return name.replace('\\n','<br>');
+        },
+        setSize: function(sizeFrom) {
+            let size = '';
+            if (this.sizeTileFrom[sizeFrom] == '') {
+                size = '100px';
+            } else {
+                if (this.sizeTileFrom[sizeFrom].indexOf('px') != -1) {
+                    size = this.sizeTileFrom[sizeFrom];
+                } else {
+                    size = `${this.sizeTileFrom[sizeFrom]}px`
+                }
+            }
+            return size
         }
         
     },
