@@ -48,19 +48,19 @@ export default {
         },
         dataRest: function() {
             let data = [];
-            if (!this.dataRestFrom.length || this.dataRestFrom.length == 0) {
+             if (!this.dataRestFrom.length || this.dataRestFrom.length == 0) {
                 this.noMsg = true;
                 this.msgText = "Нет данных для отображения";
             } else if (!this.dataRestFrom[0].caption || !this.dataRestFrom[0].color) {
                 this.noMsg = true;
                 this.msgText = "Ожидается поле caption и color";
-            } else {
-                this.noMsg = false;
-                this.dataRestFrom.forEach( (item) => {
+             } else {
+                 this.noMsg = false;
+                 this.dataRestFrom.forEach( (item) => {
                         data.push({...{},...item})
                 })
-                this.captures = Object.keys(data[0]);
-            }   
+                 this.captures = Object.keys(this.dataRestFrom[0]);
+             }
             if (screen.width <= 1600) {
                 this.otstupBottom = 35;
             }
@@ -79,8 +79,8 @@ export default {
             }
             return size
         }
-     },  
-    watch: {
+     }, 
+     watch: {
         captures: function (captures) {
            this.actions[0].capture =  captures;
            this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });

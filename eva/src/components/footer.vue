@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.6.2 [doubleTile]'
+            version: 'v 1.7.1 [backToPixel]'
         } 
     },
      computed: { 

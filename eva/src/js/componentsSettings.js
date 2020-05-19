@@ -19,56 +19,56 @@ export default {
         ],
         size: {
             picker: {
-                width: '19%',
-                height: '18%'
+                width: 365,
+                height: 195
             },
             select: {
-                width: '25%',
-                height: '19%'
+                width: 480,
+                height: 205
             },
             lineChart: {
-                width: '36%',
-                height: '37%'
+                width: 700,
+                height: 400
             },
             graph: {
-                width: '52%',
-                height: '55%'
+                width: 1000,
+                height: 600
             },
             table: {
-                width: "26%",
-                height: "44%"
+                width: 500,
+                height: 480
             },
             single: {
-                width: '18%',
-                height: '18%'
+                width: 345,
+                height: 195
             },
             guntt: {
-                width: '30%',
-                height: '25%'
+                width: 580,
+                height: 270
             },
             multiLine: {
-                width: '36%',
-                height: '37%'
+                width: 700,
+                height: 400
             },
             button: {
-                width: '18%',
-                height: '9%'
+                width: 345,
+                height: 100
             },
             textarea: {
-                width: '26%',
-                height: '42%'
+                width: 500,
+                height: 450
             },
             barchart: {
-                width: '36%',
-                height: '42%'
+                width: 700,
+                height: 450
             },
             tile: {
-                width: '26%',
-                height: '37%'
+                width: 500,
+                height: 400
             },  
             csvg: {
-                width: '26%',
-                height: '37%'
+                width: 500,
+                height: 400
             }  
         },
         icons: {

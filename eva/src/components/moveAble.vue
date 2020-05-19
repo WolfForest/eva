@@ -80,7 +80,7 @@ export default {
             if (left < 0) {
               this.props.left = 20;
             } 
-            if ((left+this.props.width)>  clientWidth) {
+            if ((left+this.props.width) >  clientWidth) {
               this.props.left = clientWidth - this.props.width - 20
             } 
     },
@@ -94,22 +94,23 @@ export default {
               }
       },
       moveSwitch() {  // переключает возможность транспортировки
-      
         this.props.draggable = !this.props.draggable;
       },
       sendMove() {  // отправляем позицию элемнета в хранилище
-        let left = this.calcSizePx(this.props.left,'width');
-        let top = this.calcSizePx(this.props.top,'height');
-        this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
+        // let left = this.calcSizePx(this.props.left,'width');
+        // let top = this.calcSizePx(this.props.top,'height');
+        // this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
+        this.$store.commit('setPosDash', {top: this.props.top,left: this.props.left, id: this.id, idDash: this.idDash});
       },
       resizeSwitch() {  // переключаем возможность изменения размеров элемента
         this.props.resizable = !this.props.resizable;
         this.props.vue_drag_none = !this.props.vue_drag_none;
       },
       sizeSwitch() {  // отправляем размер элемента
-       let width = this.calcSizePx(this.$el.offsetWidth,'width');
-       let height = this.calcSizePx(this.$el.offsetHeight,'height');
-       this.$store.commit('setSizeDash', {width: width, height: height, id: this.id, idDash: this.idDash});
+      //  let width = this.calcSizePx(this.$el.offsetWidth,'width');
+      //  let height = this.calcSizePx(this.$el.offsetHeight,'height');
+      //  this.$store.commit('setSizeDash', {width: width, height: height, id: this.id, idDash: this.idDash});
+      this.$store.commit('setSizeDash', {width: this.$el.offsetWidth, height: this.$el.offsetHeight, id: this.id, idDash: this.idDash});
       },
       calcSizeProc(size,key) {
         let newSize = size;
@@ -130,7 +131,7 @@ export default {
        let width = this.calcSizeProc(size.width,'width');
        let height = this.calcSizeProc(size.height,'height');
        this.props.width = width;
-       this.props.height = height;
+       this.props.height =height;
   }
 }
 </script>
