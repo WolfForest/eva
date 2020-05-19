@@ -125,16 +125,13 @@ export default {
     },
     created() {
        let pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
-       //this.props.left = this.calcSizeProc(pos.left,'width');
-       //this.props.top = this.calcSizeProc(pos.top,'height');
-       this.props.left = pos.left;
-       this.props.top = pos.top;
+       this.props.left = this.calcSizeProc(pos.left,'width');
+       this.props.top = this.calcSizeProc(pos.top,'height');
        let size = this.$store.getters.getSizeDash({idDash: this.idDash, id: this.id});
-      //  let width = this.calcSizeProc(size.width,'width');
-      //  let height = this.calcSizeProc(size.height,'height');
-      
-       this.props.width = size.width;
-       this.props.height = size.height;
+       let width = this.calcSizeProc(size.width,'width');
+       let height = this.calcSizeProc(size.height,'height');
+       this.props.width = width;
+       this.props.height =height;
   }
 }
 </script>
