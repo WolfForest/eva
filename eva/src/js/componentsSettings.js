@@ -63,7 +63,7 @@ export default {
                 height: 450
             },
             tile: {
-                width: 450,
+                width: 470,
                 height: 400
             },  
             csvg: {
