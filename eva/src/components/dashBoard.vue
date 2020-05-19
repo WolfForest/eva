@@ -73,7 +73,7 @@
                 <button class="selectDS" :style="{color: 'white', background: color.controls}" @click="chooseDS()">Выберите источник данных</button>
             </v-card-text>
              <!-- В этой строке подключается элемент визуализации -->
-            <v-card-text class="card-text element-itself" :colorFrom="color" :is="currentElem" :style="{color:color.text, background:'transparent'}"  :idFrom="element"   :idDashFrom="idDash"   v-show="showElement" :dataRestFrom="props.dataRestFilter" :dataModeFrom="dataMode" :shouldFrom="shouldGet" :prepareFrom="prepareData"  @hideDS="hideDS($event)" @setLoading="setLoading($event)" @hideLoading="props.hideLoad = true" :timeFormatFrom="props.timeFormat"  :sizeTileFrom="props.sizeTile"  :widthFrom="width" :heightFrom="height"  > </v-card-text>
+            <v-card-text class="card-text element-itself" :colorFrom="color" :is="currentElem" :style="{color:color.text, background:'transparent'}"  :idFrom="element"   :idDashFrom="idDash"   v-show="showElement" :dataRestFrom="props.dataRestFilter" :dataModeFrom="dataMode" :shouldFrom="shouldGet" :prepareFrom="prepareData"  @hideDS="hideDS($event)" @setLoading="setLoading($event)" @hideLoading="props.hideLoad = true" :timeFormatFrom="props.timeFormat"  :sizeTileFrom="props.sizeTile" :tooltipFrom="props.tooltip"  :widthFrom="width" :heightFrom="height"  > </v-card-text>
              <!-- ------------>
             <!-- <v-card-text class="card-text options" ref="option" :style="{background: color.backElement,color:color.text, border: `1px solid ${color.border}`}" :class="{open_options:!props.showOptions}" >
                  <div class="title-optios" :style="{color:color.text}">Настройки</div>
@@ -213,6 +213,7 @@ export default {
                timeFormat: '',
                sizeTile: {},
                hideLoad: false,
+               tooltip: {},
             }
         }
     },
@@ -326,6 +327,23 @@ export default {
                 }  else {
                     this.$set(this.props.sizeTile,'height','');
                 }
+                if (this.props.options.tooltip) {
+                    //console.log('asdasd')
+                    //let options = {...{},...this.props.options.tooltip};
+                    // this.props.tooltip.texts = [];
+                    // this.props.tooltip.links = [];
+                    // this.props.tooltip.buttons = [];
+                    Object.keys(this.props.options.tooltip).forEach( item => {
+                        this.$set(this.props.tooltip,item,this.props.options.tooltip[item]);
+                        // this.props.tooltip[item] = this.props.options.tooltip[item];
+                    })
+                } else {
+                    this.$set(this.props.tooltip,'texts',[]);
+                    this.$set(this.props.tooltip,'links',[]);
+                    this.$set(this.props.tooltip,'buttons',[]);
+                }
+
+                
 
             // }  else {
             //     this.props.options.change = !this.props.options.change;

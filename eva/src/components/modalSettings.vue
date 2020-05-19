@@ -229,12 +229,15 @@ export default {
                     this.options.size = this.options.size;
                 }
             }
-            let options = {...{},...this.options};
+                 let options = {...{},...this.options};
             if (this.element == 'csvg') {
-                options.tooltip = this.tooltip;
+                this.options.tooltip = this.tooltip;
+                // this.options.tooltip.texts = JSON.parse(JSON.stringify(this.tooltip.texts));
+                // this.options.tooltip.links = JSON.parse(JSON.stringify(this.tooltip.links));
+                // this.options.tooltip.buttons = JSON.parse(JSON.stringify(this.tooltip.buttons));
             }
 
-            this.$store.commit('setOptions',  { idDash: this.idDash, id: this.element, options: options });
+            this.$store.commit('setOptions',  { idDash: this.idDash, id: this.element, options: this.options });
             this.cancelModal();
           },
           cancelModal: function() {  // если нажали на отмену создания
@@ -487,9 +490,10 @@ export default {
                          this.optionsItems.forEach( item => {
                                 if (Object.keys(options).includes(item)) {
                                     if (item == 'tooltip') {
-                                        this.$set(this.tooltip,'texts',options[item].texts);
-                                        this.$set(this.tooltip,'links',options[item].links);
-                                        this.$set(this.tooltip,'buttons',options[item].buttons);
+                                        this.tooltip = {};
+                                        this.$set(this.tooltip,'texts', [...[],...options[item].texts]);
+                                        this.$set(this.tooltip,'links', [...[],...options[item].links]);
+                                        this.$set(this.tooltip,'buttons',[...[],...options[item].buttons]);
                                     } else {
                                         this.$set(this.options,item,options[item]);
                                     }
