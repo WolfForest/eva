@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.10.1 [borderTile]'
+            version: 'v 1.11.1 [addCaptureToSvg]'
         } 
     },
      computed: { 
