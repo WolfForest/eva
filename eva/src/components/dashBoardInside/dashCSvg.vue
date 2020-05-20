@@ -195,9 +195,11 @@ export default {
                 let response = await  this.$store.getters.getSvg(svg);
                 if (response != '') {
                         this.$emit('setLoading',false);
-                        this.svg = this.checkToken(response);
+                        //this.svg = this.checkToken(response);
+                        this.svg = response;
                         this.noMsg = 1;
                         this.checkSize();
+                        this.checkCapture();
                 } else {
                     this.msgText = "Изображение получить не удалось";
                     this.noMsg = 2;
@@ -226,16 +228,57 @@ export default {
             }
            
         },
-        checkToken: function(svg) {
-            let reg = '';
-            Object.keys(this.dataFrom).forEach(item => {
-                if (item != 'svg_filename') {
-                    reg = new RegExp( `\\$${item}\\$`, "g");
-                    svg = svg.replace(reg,this.dataFrom[item]);
-                } 
-            }) 
-            return svg
+        checkCapture: async function() {
+            let captures = this.prepareCapture();
+            let id = '';
+            let timeOut = setTimeout( function tick() {
+
+                    if ( this.$refs.csvg.querySelector('svg') != null ) {
+                        clearTimeout(timeOut);
+                         this.$refs.csvg.querySelector('svg').querySelectorAll('[id^="overlay_"]').forEach( item => {
+                             
+                             id =  item.getAttribute('id').split('overlay_')[1];
+                             if(captures[id]) {
+                                Object.keys(captures[id]).forEach( capture => {
+                                    if (captures[id][capture] != null) {
+                                        if (capture != 'id' && capture != 'svg_filename' && capture != 'tag_value') {
+                                            // if (capture == 'tag_value') {
+                                            //     console.log(item)
+                                            //     item.innerHTML(captures[id][capture])
+                                            // } else {
+                                            //     item.setAttribute(capture, captures[id][capture])
+                                            // }
+                                            item.setAttribute(capture, captures[id][capture])
+                                            console.log(item)
+                                        }
+                                    }
+                                    
+                                    
+                                })
+                             }
+                         })
+                    }  else {
+                        timeOut = setTimeout(tick, 100); 
+                    }
+            }.bind(this), 0);
+        }, 
+        prepareCapture: function() {
+           let captures = {};
+           this.dataRestFrom.forEach( item => {
+               captures[item.id] = item;
+           })
+           return captures
         },
+        // checkToken: function(svg) {
+        //     let reg = '';
+        //     Object.keys(this.dataFrom).forEach(item => {
+        //         if (item != 'svg_filename') {
+        //             reg = new RegExp( `\\$${item}\\$`, "g");
+        //             svg = svg.replace(reg,this.dataFrom[item]);
+        //         } 
+        //     }) 
+        //     return svg
+        // },
         checkTokenInTooltip: function(text) {
             let tockens = this.$store.getters.getTockens(this.idDash);
             let reg = '';
