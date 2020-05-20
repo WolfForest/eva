@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.8.1 [improveTile]'
+            version: 'v 1.10.1 [borderTile]'
         } 
     },
      computed: { 

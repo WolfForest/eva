@@ -79,7 +79,7 @@ export default {
         } 
     },
      computed: { 
-        //  color: function() {
+        // color: function() {
         //      return this.$store.getters.getColor
         //  },
          colorError: function() {
@@ -88,13 +88,13 @@ export default {
                  return this.color.controlsActive
              } else {
                  return this.color.back
-             }
+             } 
          },
          height: function() {
              if (screen.width < 1400) {
                  return '40px'
              } else {
-                 return '50px'
+                 return "50px"
              }
          }
      },  
@@ -143,7 +143,7 @@ export default {
              document.cookie = `eva-dashPage=''; max-age=0 ; path=/`;
              document.cookie = `eva_token=''; max-age=0 ; path=/`;
              this.$store.commit('clearState');
-             this.$router.push(`/`);
+             this.$router.push(`/`); 
          },
          edit: function() {
 

@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.1] [borderTile]
+### Added
+
+- border in Tile
+
+## [1.9.1] [svgTooltipClickToken]
+### Added
+
+- add click to button in tooltip
+
 ## [1.8.1] [improveTile]
 ### Changed
 

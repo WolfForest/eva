@@ -2,7 +2,7 @@
     <div class="tile-template">
         <div class="dash-tile" :style="{height:`${height-otstupBottom}px`}" v-show="!noMsg">
             <div class="tile-block" >
-                <div class="tile" v-for="i in dataRest.length" :key="i"  @click="setClick(dataRest[i-1])" :style="{backgroundColor:dataRest[i-1].color,width:widthTile,height:heightTile}">
+                <div class="tile" v-for="i in dataRest.length" :key="i"  @click="setClick(dataRest[i-1])" :style="{backgroundColor:dataRest[i-1].color,border: `3px inset ${borderColor(dataRest[i-1].border)}`,width:widthTile,height:heightTile}">
                     <p  v-html="checkName(dataRest[i-1].caption)"></p>
                 </div>
             </div>
@@ -67,6 +67,7 @@ export default {
             if (screen.width <= 1600) {
                 this.otstupBottom = 35;
             }
+            console.log(data)
             return data
         },
         color: function() {
@@ -149,6 +150,13 @@ export default {
                 }
             }
             return size
+        },
+        borderColor: function(border) {
+            if (border == '1') {
+                 return this.colorFrom.controlsSystem 
+            } else { 
+                return 'transparent'
+            };
         }
         
     },
