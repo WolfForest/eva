@@ -249,7 +249,6 @@ export default {
                                             //     item.setAttribute(capture, captures[id][capture])
                                             // }
                                             item.setAttribute(capture, captures[id][capture])
-                                            console.log(item)
                                         }
                                     }
                                     

@@ -154,9 +154,11 @@ export default {
         borderColor: function(border) {
             if (border == '1') {
                  return this.colorFrom.controlsSystem 
-            } else { 
+            } else if (border == '0' || border == null) { 
                 return 'transparent'
-            };
+            } else {
+                return border
+            }
         }
         
     },
