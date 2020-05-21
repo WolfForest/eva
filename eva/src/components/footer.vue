@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.12.1 [setTickMultiLine]'
+            version: 'v 1.13.1 [styleTooltipGantt]'
         } 
     },
      computed: { 
