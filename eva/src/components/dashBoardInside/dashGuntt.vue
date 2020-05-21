@@ -371,6 +371,8 @@ export default {
 
                 let tooltipBlock = this.$refs.tooltip;
 
+               
+
                 lines.on('mouseover', function(event) {
 
                                 let tooltip = '';
@@ -379,27 +381,33 @@ export default {
                                     tooltip = transformDescription(event.description)
                                 } else {
                                     Object.keys(event).forEach( key => {
-                                        tooltip += `${key}: ${event[key]}<br>`;
+                                        tooltip += `<p class="row-toolrip"><span>${key}</span>: ${event[key]}</p>`;
                                     })
                                 }
 
-
-                                let x = (this.x.animVal.value + this.width.animVal.value/2)  + "px";
-                                let y = this.y.animVal.value -10 + "px";
+                                
+                                //let x = (this.x.animVal.value + this.width.animVal.value/2)  + "px";
+                               // let y = this.y.animVal.value -10 + "px";
+                                moveTooltip();
 
                                  tooltipBlock.innerHTML = tooltip;
-                                 tooltipBlock.style.top = y;
-                                 tooltipBlock.style.left = x;
                                  tooltipBlock.style.opacity = '0.9';
+                                 tooltipBlock.style.visibility = 'visible';
                                 // tooltipBlock.style.display = "block";
+                            }).on('mousemove', function() {
+                                moveTooltip();
+
                             }).on('mouseout', function() {
                                 tooltipBlock.style.opacity = '0';
+                                tooltipBlock.style.visibility = 'hidden';
                                 // var output = document.getElementById("tag");
                                 // output.style.display = "none";
 
                             }).on('click', function (d)  { 
                                 return that.setClick(d)
                             });
+
+                
                         
                 // let otsupText = 0;
 
@@ -437,12 +445,18 @@ export default {
                 texts.on('mouseover', function(event) {
 
                                  tooltipBlock.style.opacity = '0.9';
+                                 tooltipBlock.style.visibility = 'visible';
+                            }).on('mousemove', function() {
+                                moveTooltip();
                             }).on('mouseout', function() {
                                  tooltipBlock.style.opacity = '0';
+                                 tooltipBlock.style.visibility = 'hidden';
 
                             }).on('click', function (d)  {
                                 return that.setClick(d)
                             });;
+
+            
 
 
             // подписи слева
@@ -525,12 +539,25 @@ export default {
             // легенда
 
 
-
+            function moveTooltip() {
+                let x = d3.event.layerX + 10;
+                let y = d3.event.layerY -10 - tooltipBlock.offsetHeight;
+                if (y < 0) {
+                    y = 0;
+                    x += 5;
+                }
+                if(x-20+tooltipBlock.offsetWidth>width-otstupRight) {
+                    x = d3.event.layerX - 10 - tooltipBlock.offsetWidth;
+                }
+            
+                tooltipBlock.style.top = y+'px';
+                tooltipBlock.style.left = x+'px';
+            }
 
             function transformDescription(text) {
                 let rows = text.split('\\n');
                 rows = rows.map( item => {
-                    return `<span class="row-toolrip">${item}</span>`
+                    return `<p class="row-toolrip">${item}</p>`
                 })
                 //rows = '<div class = "tooltip-guntt">' + rows.join('') + '</div>';
                 return rows.join('')  
@@ -633,7 +660,6 @@ export default {
         // },
     },
     mounted() {
-
     } 
 }
 
