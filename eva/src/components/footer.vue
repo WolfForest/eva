@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.11.1 [addCaptureToSvg]'
+            version: 'v 1.12.1 [setTickMultiLine]'
         } 
     },
      computed: { 
