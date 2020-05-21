@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.15.1 [scrollTable]'
+            version: 'v 1.16.1 [tooltipMultiLine]'
         } 
     },
      computed: { 

@@ -170,10 +170,7 @@ export default {
                     d3.select(this.$el.querySelector('.dash-graph')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
                     return false  // завершаем создание графика
                 }
-
-                
-                
-
+             
                 let x = null;
                 let maxX = 0,minX =0;
                 if (time) {
@@ -311,6 +308,8 @@ export default {
                             .style('border-color',colors[1])
                             .text('');
 
+                    let toolTopBlock = tooltip.nodes()[0];
+
                     // создаем дополнительную линию при наведении на точку
                     let lineDot = svg.append("g") 
                         .append("line")
@@ -338,6 +337,7 @@ export default {
                                     
                     AllLinesWithBreak = [];
 
+                    let mustSee = [];
                     
                     metricsName.forEach( (item,i) => {
 
@@ -345,7 +345,6 @@ export default {
                             let dotDate = null;
                             let linesWithBreak = [];
                             let onelinesWithBreak = [];
-                            let mustSee = [];
                             let allDotHover = [];
                             if (extraDot.length > 0) {
                                 extraDot.forEach( (item,j) => {
@@ -354,7 +353,6 @@ export default {
                                     }
                                 })
                             }
-                           
                             if(nullValue == -1) {
 
                                     data.forEach( line => {
@@ -366,6 +364,8 @@ export default {
                                              onelinesWithBreak.push(line);
                                          }
                                     })
+
+                                    
                                      onelinesWithBreak.length == 1 ? mustSee.push(onelinesWithBreak[0]) : false;
                                      linesWithBreak.push(onelinesWithBreak);
                                      AllLinesWithBreak.push(linesWithBreak);
@@ -443,6 +443,10 @@ export default {
                                                 .style("left","auto")
                                                 .style("right",(width - event.layerX+100)+"px");
                                         }
+                                        if(event.layerY-40+toolTopBlock.offsetHeight > height) {
+                                            tooltip
+                                                .style("top", (event.layerY-10-toolTopBlock.offsetHeight)+"px")
+                                        }
 
                                         lineDot
                                             .attr("opacity","0.7")
@@ -458,6 +462,7 @@ export default {
                                                 
                                             }
                                         });
+                                        
 
 
                                         this.style="opacity:1"
@@ -469,7 +474,15 @@ export default {
                                             if (nullValue == -1) {
                                                 opacity = 0;
                                             }
-                                            mustSee.forEach( item => {
+                                          //  console.log(extraDot)
+
+                                            allDotHover.forEach( dot => {
+                                                //console.log(dot['__data__'])
+                                                if (extraDot.indexOf(dot['__data__']) == -1) {
+                                                    dot.style=`opacity:0`;
+                                                }
+                                            })
+                                             mustSee.forEach( item => {
                                                 if (item[metricsName[i]] == d[metricsName[i]]) {
                                                     opacity =  1
                                                 }
@@ -483,9 +496,7 @@ export default {
                                             lineDot
                                                 .attr("opacity","0")
 
-                                            allDotHover.forEach( dot => {
-                                                dot.style=`opacity:0`;
-                                            })
+                                            
 
                                             })  // при уводе мышки исчезает, только если это не точка выходящяя порог
 
@@ -524,6 +535,8 @@ export default {
                                     .style("background",this.color.backElement)
                                     .style('border-color',colors[1])
                                     .text('');
+
+                        let toolTopBlock = tooltip.nodes()[0];
 
                          
                          // создаем дополнительную линию при наведении на точку
@@ -703,6 +716,10 @@ export default {
                                                 .style("left","auto")
                                                 .style("right",(width - event.layerX+100)+"px");
                                         }
+                                        if(event.layerY-40+toolTopBlock.offsetHeight > height) {
+                                            tooltip
+                                                .style("top", (event.layerY-10-toolTopBlock.offsetHeight)+"px")
+                                        }
                                         lineDot
                                             .attr("opacity","0.7")
                                             .attr("x1",  x(d[xMetric]*secondTransf) )
@@ -730,6 +747,12 @@ export default {
                                             if (nullValue == -1) {
                                                 opacity = 0;
                                             }
+                                            allDotHover.forEach( dot => {
+                                                if (extraDot.indexOf(dot['__data__']) == -1) {
+                                                    dot.style=`opacity:0`;
+                                                }
+                                            })
+
                                             mustSee.forEach( item => {
                                                 if (item[metric] == d[metric]) {
                                                     opacity =  1
@@ -744,9 +767,6 @@ export default {
                                             lineDot
                                                 .attr("opacity","0")
 
-                                            allDotHover.forEach( dot => {
-                                                dot.style=`opacity:0`;
-                                            })
 
                                             })  // при уводе мышки исчезает, только если это не точка выходящяя порог
 
@@ -940,16 +960,20 @@ export default {
                                     }
                                 })
                         })
+                       
                         
                         nullArr = nullArr.filter( item => {
                             if (count[item] == 1) {
                                 return item
                             }
                         })
+                        
                         if(nullArr.length > 0) {
                             nullArr.forEach( key=> {
+                                
                                 Object.values(data).filter( item => {
-                                  if (Number(item[key])) {
+                                    
+                                  if (Number(item[key]) || Number(item[key]) == 0) {
                                       value.push({...item,...{column:key}});
                                   }
                                 });
