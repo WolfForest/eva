@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.16.1 [tooltipMultiLine]'
+            version: 'v 1.17.1 [legendMulti]'
         } 
     },
      computed: { 

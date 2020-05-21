@@ -12,16 +12,45 @@
 .multiLine-block
     margin: 5px 0 0 0
     padding: 0 !important
+    position: relative
 
     .dash-multi
 
         .dot
           cursor: pointer
 
-        .legend
-          padding: 5px
-          border: 1px solid rgba(0,0,0,0.4)
-          border-radius: 4px
+        // .legend
+        //   padding: 5px
+        //   border: 1px solid rgba(0,0,0,0.4)
+        //   border-radius: 4px
+
+    .legend-block
+      position: absolute
+      top: 0
+      left: 0
+      display: flex
+      flex-flow: row wrap
+      justify-content: flex-end
+      align-items: center
+      padding: 0 20px 0 50px
+      width: 100%
+
+      .legend-line
+        display: flex
+        flex-flow: row wrap
+        justify-content: flex-start
+        align-items: center
+        margin-left: 20px
+
+        .circle
+          border-radius: 50%
+          width: 10px
+          height: 10px
+          margin-right: 10px
+
+        .text
+          font-size: 14px
+
 
     div[class*="tooltip"]
       border: 1px solid

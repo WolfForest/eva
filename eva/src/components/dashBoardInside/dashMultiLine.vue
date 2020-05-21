@@ -8,7 +8,13 @@
                 <div class="dynamic"></div>
             </div>
             <p> Загружаю данные... </p>
-      </div>
+        </div>
+        <div class="legend-block" ref="legends">
+            <div class="legend-line" v-for="item in props.legends" :key="item.label">
+                <div class="circle" :style="{backgroundColor:item.color}"></div>
+                <div class="text" :style="{color:color.text}">{{item.label}}</div>    
+            </div>
+        </div>
       </div>  
 </template>
 
@@ -49,6 +55,7 @@ export default {
                    capture: ['start','end']
                    },
                ],
+               legends: []
                
             }
         }
@@ -66,6 +73,9 @@ export default {
         },
         color: function() {
             return this.colorFrom
+        },
+        colorLegends: function() {
+            return [this.colorFrom.controls,this.colorFrom.controlsActive,'#660099','#3366FF','#e5194a','#fbbe18','#26295a'];
         },
         dataLoading: function() {
              return this.dataLoadingFrom
@@ -99,7 +109,16 @@ export default {
                                         this.props.nodata = false; // то убираем соощение о отсутствии данных
                                         this.props.result = this.dataRest;  // заносим все данные в переменную
                                         let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
-                                        this.createLineChart(this.props,this,sizeLine,time,united); // и собственно создаем график
+                                        let legends = new Promise((resolve, reject) => {
+                                            this.createLegends(resolve);
+                                        });
+                                        legends
+                                            .then(
+                                                result => {
+                                                    this.createLineChart(this.props,this,sizeLine,time,united,result); // и собственно создаем график
+                                                },
+                                            );
+                                        
                                     } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
                                         this.props.nodata = true;  // показываем сообщение о некорректности данных
                                         this.props.result = [];  // очищаем массив результатов
@@ -115,20 +134,21 @@ export default {
 
     },
      methods: {
-         createLineChart: function (props,that,sizeLine,time,united) {  // создает график
+         createLineChart: function (props,that,sizeLine,time,united,otstupTop) {  // создает график
 
              let colors = [this.color.controls,this.color.text,this.color.controlsActive]; // основные используемые цвета
-             let colorLine = [this.color.controls,this.color.controlsActive,'#660099','#3366FF','#e5194a','#fbbe18','#26295a'];
+             let colorLine = this.colorLegends;
           
              let otstupBottom = 50;
              if (screen.width <= 1600) {
                  otstupBottom = 40;
              }
-             // устанавливаем размер и отступы графика 
-             let margin = {top: 10, right: 20, bottom: 20, left: 40},
-                            width = sizeLine.width - margin.left - margin.right - 20,
-                            height = sizeLine.height - margin.top - margin.bottom - otstupBottom;
 
+             
+                // устанавливаем размер и отступы графика 
+                let margin = {top: otstupTop-10, right: 20, bottom: 20, left: 40},
+                        width = sizeLine.width - margin.left - margin.right - 20,
+                        height = sizeLine.height - margin.top - margin.bottom - otstupBottom;
                 
 
                 let graphics = d3.select(this.$el.querySelector('.dash-multi')).selectAll('svg').nodes(); // получаем область в которой будем рисовтаь график 
@@ -140,9 +160,6 @@ export default {
                 // полготавливаем данные
 
                 let data = props.result;
-
-                
-
 
                 let secondTransf = 1000;
 
@@ -157,11 +174,7 @@ export default {
                     if (i != 0) {
                         return item
                     }
-                });
-
-               
-
-                
+                });          
 
                 if(metricsName.length == 0){ // если метрик вообще не найдено
                     this.props.nodata = true;  // показываем сообщение о некорректности данных
@@ -170,6 +183,7 @@ export default {
                     d3.select(this.$el.querySelector('.dash-graph')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
                     return false  // завершаем создание графика
                 }
+
              
                 let x = null;
                 let maxX = 0,minX =0;
@@ -253,23 +267,27 @@ export default {
                         .attr("x", 0)
                         .attr("y", 0);
 
-                 let legend =  svg
-                        .append('g')  // доволяем легенду
-                        .attr('class', 'legend')
-                        .attr('transform', `translate(${-100},0)`); 
+                //  let legend =  svg
+                //         .append('g')  // доволяем легенду
+                //         .attr('class', 'legend')
+                //         .attr('transform', `translate(${-100},0)`); 
 
-                metricsName.forEach( (item,i) => {
-                    legend.append("circle")  // кружок легенды
-                            .style("fill", colorLine[i])
-                            .style('stroke', colorLine[i])
-                            .attr('r', 5)
-                            .attr('transform', `translate(${width-(i*130)},0)`);
-                    legend.append('text')   // текст легенды (название метрики)
-                            .attr('transform', `translate(${width-(i*130)+15},5)`)
-                            .attr('data-name', metricsName[i])  
-                            .style('fill', colors[1])
-                            .text(checkName(metricsName[i]));  // здесь вызываем функцию которая проверяет не слишком ли длинное название и сокращает его
-                });
+                // metricsName.forEach( (item,i) => {
+                //     legend.append("circle")  // кружок легенды
+                //             .style("fill", colorLine[i])
+                //             .style('stroke', colorLine[i])
+                //             .attr('r', 5)
+                //             .attr('transform', `translate(${width-(i*130)},0)`);
+                //     legend.append('text')   // текст легенды (название метрики)
+                //             .attr('transform', `translate(${width-(i*130)+15},5)`)
+                //             .attr('data-name', metricsName[i])  
+                //             .style('fill', colors[1])
+                //             .text(checkName(metricsName[i]));  // здесь вызываем функцию которая проверяет не слишком ли длинное название и сокращает его
+                // });
+
+
+                
+
 
                 
                 let line,brush,y,AllLinesWithBreak;
@@ -663,8 +681,6 @@ export default {
                                 dotDate = [extraDot[nullValue]];
                             }
 
-                            
-
                               svg
                                 .append("g")
                                 .selectAll('dot')
@@ -984,6 +1000,30 @@ export default {
         
                     
          }, 
+         createLegends: function(resolve){
+                let colorLine = this.colorLegends;
+                let metricsName = Object.keys(this.props.result[0]).filter( (item,i) => {
+                    if (i != 0) {
+                        return item
+                    }
+                });
+                if (metricsName.length > 0) {
+                    metricsName.forEach( (item,i) => {
+                        this.props.legends.push({color: colorLine[i],label:metricsName[i]})
+                    })
+
+                    let  readyLegends = setTimeout( function tick()  {
+                        if (this.$refs.legends.offsetHeight > 0){
+                            clearTimeout(readyLegends);
+                            resolve(this.$refs.legends.offsetHeight)
+                        } else {
+                            readyLegends = setTimeout(tick, 100); 
+                        }
+                    }.bind(this),0); 
+                }
+                
+
+         },
          setClick: function(point, action) {
              
               let tockens = this.$store.getters.getTockens(this.idDash);
