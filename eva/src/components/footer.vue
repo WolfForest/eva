@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.13.1 [styleTooltipGantt]'
+            version: 'v 1.14.1 [levelDatePicker]'
         } 
     },
      computed: { 

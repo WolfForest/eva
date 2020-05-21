@@ -9,9 +9,10 @@
                 @dragging="onDrag"
                 @resizing="onResize" 
                 @dragstop="dragStopped" 
+                :style={zIndex:props.zIndex}
                 >
   
-     <dash-board :dataModeFrom="dataMode" :colorFrom="color" :width="props.width"  :height="props.height"  :idDashFrom="idDash" :dataPageFrom="dataPageFrom" :dataElemFrom="id" @moveElem="moveSwitch" @resizeElem="resizeSwitch" @sendMove="sendMove" @sendSize="sizeSwitch"  ></dash-board>
+     <dash-board :dataModeFrom="dataMode" :colorFrom="color" :width="props.width"  :height="props.height"  :idDashFrom="idDash" :dataPageFrom="dataPageFrom" :dataElemFrom="id" @moveElem="moveSwitch" @resizeElem="resizeSwitch" @SetLevel="props.zIndex = $event" @sendMove="sendMove" @sendSize="sizeSwitch"  ></dash-board>
 
     </vue-draggable-resizable>
   
@@ -39,6 +40,7 @@ export default {
         top: 0,
         left: 0,
         vue_drag: false,
+        zIndex: 1,
       }
     }
   },

@@ -1,5 +1,5 @@
 <template>
-   <div class="dash-layout" :options="String(options)" :class="{show_board:props.differentOptions.visible}" :style="{boxShadow:` 0 0 5px 5px ${props.optionsBoxShadow}`, zIndex:props.options.level}" > 
+   <div class="dash-layout" :options="String(options)" :class="{show_board:props.differentOptions.visible}" :style="{boxShadow:` 0 0 5px 5px ${props.optionsBoxShadow}`}" > 
        <v-card  class="dash-block"  :style="{background:color.backElement, boxShadow:`0 3px 1px -2px ${this.color.border},0 2px 2px 0 ${this.color.border},0 1px 5px 0 ${this.color.border}`}">   
            <v-card-title class="card-title open_title" v-show="props.disappear">
                <div class="name-dash" >
@@ -342,6 +342,8 @@ export default {
                     this.$set(this.props.tooltip,'links',[]);
                     this.$set(this.props.tooltip,'buttons',[]);
                 }
+
+                this.$emit('SetLevel',this.props.options.level)
 
                 
 
