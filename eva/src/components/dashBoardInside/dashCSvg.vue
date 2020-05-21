@@ -230,32 +230,29 @@ export default {
         },
         checkCapture: async function() {
             let captures = this.prepareCapture();
-            let id = '';
+            let elem = '';
             let timeOut = setTimeout( function tick() {
 
                     if ( this.$refs.csvg.querySelector('svg') != null ) {
                         clearTimeout(timeOut);
-                         this.$refs.csvg.querySelector('svg').querySelectorAll('[id^="overlay_"]').forEach( item => {
-                             
-                             id =  item.getAttribute('id').split('overlay_')[1];
-                             if(captures[id]) {
-                                Object.keys(captures[id]).forEach( capture => {
-                                    if (captures[id][capture] != null) {
-                                        if (capture != 'id' && capture != 'svg_filename' && capture != 'tag_value') {
-                                            // if (capture == 'tag_value') {
-                                            //     console.log(item)
-                                            //     item.innerHTML(captures[id][capture])
-                                            // } else {
-                                            //     item.setAttribute(capture, captures[id][capture])
-                                            // }
-                                            item.setAttribute(capture, captures[id][capture])
+
+                        Object.keys(captures).forEach( item => {
+                            elem = this.$refs.csvg.querySelector('svg').querySelector(`#${item}`);
+                                Object.keys(captures[item]).forEach( capture => {
+                                    
+                                    if (captures[item][capture] != null) {
+                                        if (capture != 'id' && capture != 'svg_filename') {
+                                            if (capture == 'tag_value') {
+                                                elem.innerHTML = captures[item][capture];
+                                            } else {
+                                                elem.setAttribute(capture, captures[item][capture]);
+                                            }
+                                               
                                         }
                                     }
-                                    
-                                    
-                                })
-                             }
-                         })
+                                });
+                        })
+
                     }  else {
                         timeOut = setTimeout(tick, 100); 
                     }
