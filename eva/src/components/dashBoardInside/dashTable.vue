@@ -3,11 +3,15 @@
             <v-data-table
                     :headers="props.titles"
                     :items.sync="this.getDataStart"
-                    :items-per-page="5"
+                    
                     class="dash-table"
                     :data-id="this.id"
                     v-model="props.input"
                     item-key ="none"
+                    :hide-default-footer="props.hideFooter"
+                    :footer-props="{
+                        itemsPerPageOptions: [100,500,1000,-1], 
+                    }"
                     :height="height"
                     :ref="this.id"
                     fixed-header
@@ -51,7 +55,8 @@ export default {
                    },
                 ],
                selected: {},
-               justCreate: true
+               justCreate: true,
+               hideFooter: false
             }
         }
     },
@@ -91,6 +96,7 @@ export default {
                             this.props.nodata = true;
                         } else {
                             result = this.dataRest;
+                            result.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
                             this.createTitles(result);
                             this.createTockens(result);
                             this.setColors();

@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.1] [scrollTable]
+### Changed
+
+- delete scroll table
+
+- remove footer when data.length < 100
+
+- set per-page [100,500,1000,-1]
+
+- set xlsx to download search
+
 ## [1.14.1] [levelDatePicker]
 ### Changed
 

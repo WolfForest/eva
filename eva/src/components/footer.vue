@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.14.1 [levelDatePicker]'
+            version: 'v 1.15.1 [scrollTable]'
         } 
     },
      computed: { 
