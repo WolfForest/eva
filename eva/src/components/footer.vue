@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.17.1 [legendMulti]'
+            version: 'v 1.19.1 [checkCsvg]'
         } 
     },
      computed: { 

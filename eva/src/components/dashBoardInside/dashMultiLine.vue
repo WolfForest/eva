@@ -290,6 +290,7 @@ export default {
                                 //.ticks(5)
                             
                             );
+                        
                 } else {
                     xAxis = svg.append("g")
                         .attr("transform", "translate(0," + height + ")")

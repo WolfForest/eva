@@ -23,7 +23,7 @@
                 <DTPicker v-model="end" label="Конечная дата и время" format="YYYY-MM-DD HH:mm"  :color="colorSet.controlsActive" :button-color="colorSet.controls" class="dtpicker" @validate="setTocken('dt')"></DTPicker>
                 <div class="name-of-picker" :style="{color:colorSet.controls}"> Диапазон даты</div>
                 <!-- <hr :style="{color:colorSet.text}"> -->
-                <DTPicker v-model="range" range  label="Диапазон дат" format="YYYY-MM-DD"  color="#FF6D70" button-color="teal" class="dtpicker range-picker" @validate="setTocken('range')"></DTPicker>
+                <DTPicker v-model="range" range  label="Диапазон дат" format="YYYY-MM-DD"  :color="colorSet.controlsActive" :button-color="colorSet.controls" class="dtpicker range-picker" @validate="setTocken('range')"></DTPicker>
                 <div class="name-of-picker" :style="{color:colorSet.controls}">Ввод даты и времени вручную</div>
                 <!-- <hr :style="{color:colorSet.text}"> -->
                 <v-text-field  label="Начальная дата" counter="500" clearable :append-icon="check" :color="colorSet[start_custom.color]" @blur="start_custom.color='controlsActive'" v-model="start_custom.value" hide-details  outlined  class="dtpicker custom-picker" @click:append="customDate('begin')"></v-text-field>
@@ -398,7 +398,7 @@ export default {
         },
     },
     mounted() {
-        this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
+       this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
        this.$emit('hideDS',this.id);
        this.$emit('setVissible',this.id);
        
