@@ -1,6 +1,6 @@
 <template >
     <div class="dash-csvg" tabindex="0" ref="svgBlock" :style="{height:`${heightFrom-otstupBottom}px`}" >
-        <div class="csvg-block"  :style="{width:`${widthFrom-40}px`,height:`${heightFrom-otstupBottom}px`}" v-html="svg" v-show="noMsg==1" ref="csvg"></div>
+        <div class="csvg-block"  :style="{width:`${widthFrom-40}px`,height:`${heightFrom-otstupBottom}px`}"  v-show="noMsg==1" ref="csvg"></div>
         <div class="file-input" v-show="noMsg==0">
             <v-file-input :prepend-icon="image" @change="file=$event" :color="color.controls" class="file-itself" hide-details  outlined label="Загрузить изображение"></v-file-input>
             <button class="file-btn" :style="{color: 'white', background: color.controls}" @click="setSvg">{{sendMsg}}</button>
@@ -56,7 +56,6 @@ export default {
                     capture: []
                    },
                 ],
-            svg: '',
             noMsg: 1,
             msgText: 'Нет данных для отображения',
             sendMsg: 'Отправить изображение',
@@ -196,10 +195,14 @@ export default {
                 if (response != '') {
                         this.$emit('setLoading',false);
                         //this.svg = this.checkToken(response);
-                        this.svg = response;
+                        if ( this.$refs.csvg.querySelector('svg') != null ) {
+                            this.$refs.csvg.innerHTML = '';
+                        }
+                        this.$refs.csvg.innerHTML = response;
                         this.noMsg = 1;
                         this.checkSize();
                         this.checkCapture();
+                       
                 } else {
                     this.msgText = "Изображение получить не удалось";
                     this.noMsg = 2;
@@ -240,7 +243,6 @@ export default {
                             elem = this.$refs.csvg.querySelector('svg').querySelector(`#${item}`);
                                 
                                 if(elem) {
-                                    console.log(elem)
                                     Object.keys(captures[item]).forEach( capture => {
                                         if (captures[item][capture] != null) {
                                             if (capture != 'id' && capture != 'svg_filename') {
@@ -254,6 +256,7 @@ export default {
                                     });
                                 }   
                         })
+                        
 
                     }  else {
                         timeOut = setTimeout(tick, 100); 
