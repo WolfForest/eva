@@ -88,18 +88,20 @@ export default {
      }, 
      watch: {
         dataRestFrom: function(dataRest) {
+            
              if(dataRest.length > 0) {
                  if (dataRest[0].start_date && dataRest[0].end_date) {
 
                     this.prepareChart(dataRest);
+                    
                     
                 } else {
                     this.msgText = 'Данные не подходят для построения диаграммы гантта',
                     this.noMsg = true;
                 } 
              }else {
-                        this.msgText = 'Нет данных  для отображения',
-                        this.noMsg = true;
+                    this.msgText = 'Нет данных  для отображения',
+                    this.noMsg = true;
                 } 
         },
         timeFormatFrom: function(timeFormat) {
@@ -468,7 +470,7 @@ export default {
                 .data(ids)
                 .enter();
 
-          
+
 
             idsCaption.append("text")
                 .text(function(d){
@@ -488,6 +490,8 @@ export default {
                 .attr("text-anchor", "start")
                 .style("opacity","0.8")
                 .attr("fill", this.colorFrom.text);
+
+            
 
             currentPos = 0
             
@@ -513,6 +517,8 @@ export default {
                     })
                     .style("stroke", this.colorFrom.text) 
                     .attr("opacity", "0.3");
+
+            
                 
             // линия отделяющяя подписи (ids) от блока данных
 

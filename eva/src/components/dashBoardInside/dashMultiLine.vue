@@ -55,8 +55,7 @@ export default {
                    capture: ['start','end']
                    },
                ],
-               legends: []
-               
+               legends: [],
             }
         }
     },
@@ -68,7 +67,8 @@ export default {
                return this.idDashFrom
         },
         dataRest: function() {
-            //console.log('yep')
+           // console.log('yep')
+            this.props.legends = [];
             return this.dataRestFrom
         },
         color: function() {
@@ -86,11 +86,18 @@ export default {
         height: function() {
             return this.heightFrom
         },
+        // otstupTop: function() {
+        //     if (this.dataRest.length > 0 && this.props.legends.length == 0) {
+        //         this.createLegends();
+        //     }
+        //     return this.$refs.legends.getBoundingClientRect().height
+        // },
         getDataStart: function() {
 
                  let sizeLine = {'width':0,'height':0};  // получаем размеры от родителя
                  sizeLine['width'] = this.width;
                  sizeLine['height'] = this.height;
+                 
 
                  if (sizeLine.width > 0 && sizeLine.height > 0) {  // если размеры получены выше нуля
                     
@@ -109,15 +116,33 @@ export default {
                                         this.props.nodata = false; // то убираем соощение о отсутствии данных
                                         this.props.result = this.dataRest;  // заносим все данные в переменную
                                         let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
-                                        let legends = new Promise((resolve, reject) => {
-                                            this.createLegends(resolve);
-                                        });
-                                        legends
-                                            .then(
-                                                result => {
-                                                    this.createLineChart(this.props,this,sizeLine,time,united,result); // и собственно создаем график
-                                                },
-                                            );
+                                        if (this.props.legends.length == 0) {
+                                            this.createLegends();
+                                            let timeOut = setTimeout( function tick() {
+
+                                                    if ( this.$refs.legends.getBoundingClientRect().height > 0 ) {
+                                                        clearTimeout(timeOut);
+                                                        this.createLineChart(this.props,this,sizeLine,time,united);
+                                                    }  else {
+                                                        timeOut = setTimeout(tick, 100); 
+                                                    }
+                                            }.bind(this), 0);
+
+                                                                               
+                                    //     if (this.props.legends.length == 0) {
+                                    //         let legends = new Promise((resolve, reject) => {
+                                    //             this.createLegends(resolve);
+                                    //         });
+                                    //         legends
+                                    //             .then(
+                                    //                 result => {
+                                    //                     this.createLineChart(this.props,this,sizeLine,time,united); // и собственно создаем график
+                                    //                 },
+                                    //             );
+                                        } else {
+                                            this.createLineChart(this.props,this,sizeLine,time,united);
+                                        }
+                                        
                                         
                                     } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
                                         this.props.nodata = true;  // показываем сообщение о некорректности данных
@@ -134,7 +159,7 @@ export default {
 
     },
      methods: {
-         createLineChart: function (props,that,sizeLine,time,united,otstupTop) {  // создает график
+         createLineChart: function (props,that,sizeLine,time,united) {  // создает график
 
              let colors = [this.color.controls,this.color.text,this.color.controlsActive]; // основные используемые цвета
              let colorLine = this.colorLegends;
@@ -143,8 +168,9 @@ export default {
              if (screen.width <= 1600) {
                  otstupBottom = 40;
              }
-
              
+
+                let otstupTop = this.$refs.legends.getBoundingClientRect().height;
                 // устанавливаем размер и отступы графика 
                 let margin = {top: otstupTop-10, right: 20, bottom: 20, left: 40},
                         width = sizeLine.width - margin.left - margin.right - 20,
@@ -292,6 +318,9 @@ export default {
                 
                 let line,brush,y,AllLinesWithBreak;
 
+                d3.select(this.$el.querySelector('.dash-multi')).selectAll('.tooltip-separeted').remove();
+                d3.select(this.$el.querySelector('.dash-multi')).selectAll('.tooltip').remove();
+
 
                 if (united){
 
@@ -316,7 +345,6 @@ export default {
                     
 
                         // создаем tooltip
-                    d3.select(this.$el.querySelector('.dash-multi')).selectAll('.tooltip').remove();
 
                     let tooltip = d3.select(this.$el.querySelector('.dash-multi'))
                         .append("div")
@@ -324,6 +352,7 @@ export default {
                             .style("color",colors[1])
                             .style("background",this.color.back)
                             .style('border-color',colors[1])
+                            .style('z-index','2')
                             .text('');
 
                     let toolTopBlock = tooltip.nodes()[0];
@@ -542,7 +571,6 @@ export default {
                         y = [];
                         line = [];
                         AllLinesWithBreak = [];
-                        d3.select(this.$el.querySelector('.dash-multi')).selectAll('.tooltip').remove();
 
                          // создаем tooltip
                         let tooltip = 
@@ -552,6 +580,7 @@ export default {
                                     .style("color",colors[1])
                                     .style("background",this.color.backElement)
                                     .style('border-color',colors[1])
+                                    .style('z-index','2')
                                     .text('');
 
                         let toolTopBlock = tooltip.nodes()[0];
@@ -1008,14 +1037,17 @@ export default {
                     }
                 });
                 if (metricsName.length > 0) {
+                    this.props.legends = [];
                     metricsName.forEach( (item,i) => {
                         this.props.legends.push({color: colorLine[i],label:metricsName[i]})
                     })
+                   // this.props.legends = [{color: 'black',label:'12131231231231231231313'},{color: 'black',label:'1213123121231231231313'},{color: 'black',label:'1211231231231231231313'}];
+
 
                     let  readyLegends = setTimeout( function tick()  {
                         if (this.$refs.legends.offsetHeight > 0){
                             clearTimeout(readyLegends);
-                            resolve(this.$refs.legends.offsetHeight)
+                            //resolve('done')
                         } else {
                             readyLegends = setTimeout(tick, 100); 
                         }
