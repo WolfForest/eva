@@ -73,7 +73,7 @@
                 <button class="selectDS" :style="{color: 'white', background: color.controls}" @click="chooseDS()">Выберите источник данных</button>
             </v-card-text>
              <!-- В этой строке подключается элемент визуализации -->
-            <v-card-text class="card-text element-itself" :colorFrom="color" :is="currentElem" :style="{color:color.text, background:'transparent'}"  :idFrom="element"   :idDashFrom="idDash"   v-show="showElement" :dataRestFrom="props.dataRestFilter" :dataModeFrom="dataMode" :shouldFrom="shouldGet" :prepareFrom="prepareData"  @hideDS="hideDS($event)" @setLoading="setLoading($event)" @hideLoading="props.hideLoad = true" :timeFormatFrom="props.timeFormat"  :sizeTileFrom="props.sizeTile" :tooltipFrom="props.tooltip"  :widthFrom="width" :heightFrom="height"  > </v-card-text>
+            <v-card-text class="card-text element-itself" :colorFrom="color" :is="currentElem" :style="{color:color.text, background:'transparent'}"  :idFrom="element"   :idDashFrom="idDash"   v-show="showElement" :dataRestFrom="props.dataRestFilter" :dataModeFrom="dataMode" :shouldFrom="shouldGet" :prepareFrom="prepareData"  @hideDS="hideDS($event)" @setVissible="setVissible($event)" @setLoading="setLoading($event)" @hideLoading="props.hideLoad = true" :timeFormatFrom="props.timeFormat"  :sizeTileFrom="props.sizeTile" :tooltipFrom="props.tooltip"  :widthFrom="width" :heightFrom="height"  > </v-card-text>
              <!-- ------------>
             <!-- <v-card-text class="card-text options" ref="option" :style="{background: color.backElement,color:color.text, border: `1px solid ${color.border}`}" :class="{open_options:!props.showOptions}" >
                  <div class="title-optios" :style="{color:color.text}">Настройки</div>
@@ -552,12 +552,14 @@ export default {
              }
              this.props.open_title = !this.props.open_title;
          },
-         hideDS: function(event) {  // функция которая для определенного элемента сразу вносит ряд настроек визуализации
-             if (event.split('-')[0] == 'picker') {   // собственно если элемнет выбора даты и времен
+         hideDS: function(event) {  // функция которая для определенного элемента сразу вносит ряд настроек визуализации=
+             this.$store.commit('setSwitch',  { idDash: this.idDash, status: true, id: this.element } ) ;  // сразу переключаем элемнет на отображение данных,
+         },
+         setVissible: function(event){
+            if (event.split('-')[0] == 'picker' || event.split('-')[0] == 'guntt') {   // собственно если элемнет выбора даты и времен
                   // поскольку запроса данных никакого не надо
                   this.$el.querySelector('.dash-block').style.overflow ='visible'; // и еще меняем скрытие элемнета,  чтобы раскрывающийся список вылазхил из него
             }
-             this.$store.commit('setSwitch',  { idDash: this.idDash, status: true, id: this.element } ) ;  // сразу переключаем элемнет на отображение данных,
          },
          changeOptions: function(mode) {
 

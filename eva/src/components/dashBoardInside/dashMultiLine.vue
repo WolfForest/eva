@@ -258,10 +258,22 @@ export default {
                 // добовляем ось x                
                 let xAxis = null;
 
+                // настраиваем шаги на оси икс в зависимости от ширины элемента
+
                 let deliter = 2;
                 if ((width+ margin.left + margin.right) < 500) {
                     deliter = 3;
-                }
+                } 
+                if ((width+ margin.left + margin.right) < 400) {
+                    deliter = 4;
+                } 
+                if ((width+ margin.left + margin.right) < 300) {
+                    deliter = 5;
+                } 
+                if ((width+ margin.left + margin.right) < 250) {
+                    deliter = 6;
+                } 
+
 
                 if (time) {
                     xAxis = svg.append("g")

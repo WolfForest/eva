@@ -28,7 +28,10 @@
                 <!-- <hr :style="{color:colorSet.text}"> -->
                 <v-text-field  label="Начальная дата" counter="500" clearable :append-icon="check" :color="colorSet[start_custom.color]" @blur="start_custom.color='controlsActive'" v-model="start_custom.value" hide-details  outlined  class="dtpicker custom-picker" @click:append="customDate('begin')"></v-text-field>
                 <v-text-field  label="Конечная дата" counter="500" clearable :append-icon="check" :color="colorSet[end_custom.color]" @blur="end_custom.color='controlsActive'" v-model="end_custom.value" hide-details  outlined  class="dtpicker custom-picker"  @click:append="customDate('end')"></v-text-field>
-                <v-btn small :color="colorFrom.controlsSystem" class="set-btn" @click="setDate">Установить</v-btn>
+                <div class="set-btn-block">
+                    <v-btn small :color="colorFrom.controlsSystem" class="set-btn" @click="setDate">Установить</v-btn>
+                </div>
+                
             </div>
         </div>
         <div class="current-date" :class="{show_curent:show_curent}" >{{curDate}}</div>
@@ -397,6 +400,8 @@ export default {
     mounted() {
         this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
        this.$emit('hideDS',this.id);
+       this.$emit('setVissible',this.id);
+       
     //    document.querySelectorAll('button.now').forEach(item => {
     //        item.addEventListener('click',() => {
     //              this.setTocken('dt');

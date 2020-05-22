@@ -235,7 +235,23 @@ export default {
                                 .attr('class',"graph-svg")
                             .append("g")
                                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                                
+                           
+                let deliter = 2;
+
+                if ((width+ margin.left + margin.right) < 550) {
+                    deliter = 3;
+                } 
+                if ((width+ margin.left + margin.right) < 400) {
+                    deliter = 4;
+                } 
+                if ((width+ margin.left + margin.right) < 350) {
+                    deliter = 5;
+                } 
+                if ((width+ margin.left + margin.right) < 300) {
+                    deliter = 6;
+                }          
+
+
 
                  // добавляем ось X     
                     let xAxis = null;
@@ -246,7 +262,7 @@ export default {
                                     .tickFormat(d3.timeFormat('%d-%m-%Y '))
                                     .tickValues(
                                         x.ticks().filter( (item,i) => {
-                                            if (i%2 == 0) {
+                                            if (i%deliter == 0) {
                                                 return item
                                             }
                                         })

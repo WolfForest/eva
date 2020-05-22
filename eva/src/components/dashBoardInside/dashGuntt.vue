@@ -67,8 +67,9 @@ export default {
                 let dataRest = this.dataRestFrom;
                 if(dataRest.length > 0) {
                     if (dataRest[0].start_date && dataRest[0].end_date) {
-
+                        
                         this.prepareChart(dataRest);
+
                         
                     } else {
                         this.msgText = 'Данные не подходят для построения диаграммы гантта',
@@ -91,7 +92,7 @@ export default {
             
              if(dataRest.length > 0) {
                  if (dataRest[0].start_date && dataRest[0].end_date) {
-
+                     this.noMsg = false;
                     this.prepareChart(dataRest);
                     
                     
@@ -267,7 +268,21 @@ export default {
                         otstupX = -10;
                     }
 
-                    let many = 2;
+                    let deliter = 2;
+
+                if ((width+ margin.left + margin.right) < 550) {
+                    deliter = 3;
+                } 
+                if ((width+ margin.left + margin.right) < 450) {
+                    deliter = 4;
+                } 
+                if ((width+ margin.left + margin.right) < 400) {
+                    deliter = 5;
+                } 
+                if ((width+ margin.left + margin.right) < 350) {
+                    deliter = 6;
+                } 
+
                  // добавляем ось X     
                     let xAxis = svg.append("g")
                         .attr("transform", `translate(0,${height-otstupBottom})`)
@@ -275,14 +290,17 @@ export default {
                                    .tickFormat(d3.timeFormat(dateFormat))
                                    .tickValues(
                                          x.ticks().filter( (item,i) => {
-                                            if (x.ticks().length> 9) {
-                                                if (screen.width <= 1600) {
-                                                    many = 3;
-                                                }
-                                                if (i%many == 0) {
-                                                    return item
-                                                }
-                                            } else {
+                                            // if (x.ticks().length> 9) {
+                                            //     if (screen.width <= 1600) {
+                                            //         many = 3;
+                                            //     }
+                                            //     if (i%many == 0) {
+                                            //         return item
+                                            //     }
+                                            // } else {
+                                            //     return item
+                                            // }
+                                            if (i%deliter == 0) {
                                                 return item
                                             }
                                         })
@@ -666,6 +684,7 @@ export default {
         // },
     },
     mounted() {
+        this.$emit('setVissible',this.id);
     } 
 }
 

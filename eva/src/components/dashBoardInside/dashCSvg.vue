@@ -238,19 +238,21 @@ export default {
 
                         Object.keys(captures).forEach( item => {
                             elem = this.$refs.csvg.querySelector('svg').querySelector(`#${item}`);
-                                Object.keys(captures[item]).forEach( capture => {
-                                    
-                                    if (captures[item][capture] != null) {
-                                        if (capture != 'id' && capture != 'svg_filename') {
-                                            if (capture == 'tag_value') {
-                                                elem.innerHTML = captures[item][capture];
-                                            } else {
-                                                elem.setAttribute(capture, captures[item][capture]);
+                                
+                                if(elem) {
+                                    console.log(elem)
+                                    Object.keys(captures[item]).forEach( capture => {
+                                        if (captures[item][capture] != null) {
+                                            if (capture != 'id' && capture != 'svg_filename') {
+                                                if (capture == 'tag_value') {
+                                                    elem.innerHTML = captures[item][capture];
+                                                } else {
+                                                    elem.setAttribute(capture, captures[item][capture]);
+                                                }
                                             }
-                                               
                                         }
-                                    }
-                                });
+                                    });
+                                }   
                         })
 
                     }  else {

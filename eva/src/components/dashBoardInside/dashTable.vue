@@ -84,6 +84,9 @@ export default {
             if (screen.width <= 1400) {
                 otstup = 70;
             }
+            if(this.props.hideFooter) {
+                otstup = 0;
+            }
             let height = this.heightFrom-otstup; // 120 это размер блока с пагинацией таблицы + шапка с настройками самого блока
             return height
         },
