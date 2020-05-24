@@ -562,16 +562,18 @@ export default {
             }
          },
          changeOptions: function(mode) {
-
+            let level = this.props.options.level;
              if(mode) {
-                 this.props.differentOptions.visible = true
+                 this.props.differentOptions.visible = true;
              } else {
                  if (!this.props.options.visible) {
-                     this.props.differentOptions.visible = false
+                     this.props.differentOptions.visible = false;
+                     level = '-1';
                  } else {
-                     this.props.differentOptions.visible = true
+                     this.props.differentOptions.visible = true;
                  }
              }
+             this.$emit('SetLevel',level);
          },
          checkFilter: function() {
              let events = this.$store.getters.getEvents({idDash: this.idDash, event: 'OnDataCompare', element: this.element});

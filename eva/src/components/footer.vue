@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.19.2 [sparkSvg]'
+            version: 'v 1.19.3 [zIndexUnvisibleElem]'
         } 
     },
      computed: { 
