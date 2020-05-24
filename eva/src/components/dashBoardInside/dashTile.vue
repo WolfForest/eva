@@ -67,7 +67,6 @@ export default {
             if (screen.width <= 1600) {
                 this.otstupBottom = 35;
             }
-            console.log(data)
             return data
         },
         color: function() {

@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.19.1 [checkCsvg]'
+            version: 'v 1.19.2 [sparkSvg]'
         } 
     },
      computed: { 

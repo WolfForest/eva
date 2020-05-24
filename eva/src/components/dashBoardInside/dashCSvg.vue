@@ -1,6 +1,6 @@
 <template >
     <div class="dash-csvg" tabindex="0" ref="svgBlock" :style="{height:`${heightFrom-otstupBottom}px`}" >
-        <div class="csvg-block"  :style="{width:`${widthFrom-40}px`,height:`${heightFrom-otstupBottom}px`}"  v-show="noMsg==1" ref="csvg"></div>
+        <div class="csvg-block"  :style="{width:`${widthFrom-40}px`,height:`${heightFrom-otstupBottom}px`}"  v-show="noMsg==1" v-html="svg" ref="csvg"></div>
         <div class="file-input" v-show="noMsg==0">
             <v-file-input :prepend-icon="image" @change="file=$event" :color="color.controls" class="file-itself" hide-details  outlined label="Загрузить изображение"></v-file-input>
             <button class="file-btn" :style="{color: 'white', background: color.controls}" @click="setSvg">{{sendMsg}}</button>
@@ -74,6 +74,8 @@ export default {
             tooltipBody: '',
             tooltipOptions: false,
             idTooltip: '',
+            svg: '',
+            svgChanges: {},
         } 
     },
      computed: {  // осоновные параметры, которые чатсо меняются и которы следует отслеживать
@@ -195,10 +197,10 @@ export default {
                 if (response != '') {
                         this.$emit('setLoading',false);
                         //this.svg = this.checkToken(response);
-                        if ( this.$refs.csvg.querySelector('svg') != null ) {
-                            this.$refs.csvg.innerHTML = '';
-                        }
-                        this.$refs.csvg.innerHTML = response;
+                        // if ( this.$refs.csvg.querySelector('svg') != null ) {
+                        //     this.$refs.csvg.innerHTML = '';
+                        // }
+                        this.svg = response;
                         this.noMsg = 1;
                         this.checkSize();
                         this.checkCapture();
@@ -244,16 +246,47 @@ export default {
                                 
                                 if(elem) {
                                     Object.keys(captures[item]).forEach( capture => {
-                                        if (captures[item][capture] != null) {
+                                        
                                             if (capture != 'id' && capture != 'svg_filename') {
-                                                if (capture == 'tag_value') {
-                                                    elem.innerHTML = captures[item][capture];
+                                                if (captures[item][capture] != null) {
+                                                    if (!this.svgChanges[item]) {
+                                                        this.svgChanges[item] = {};
+                                                    }
+                                                    if (!this.svgChanges[item][capture]) {
+                                                        if (capture == 'tag_value') {
+                                                            this.svgChanges[item][capture] = elem.innerHTML;
+                                                            elem.innerHTML = captures[item][capture];
+                                                        } else {
+                                                            this.svgChanges[item][capture] = elem.getAttribute(capture);
+                                                            elem.setAttribute(capture, captures[item][capture]);
+                                                        }  
+                                                    } else {
+                                                        if (capture == 'tag_value') {
+                                                            elem.innerHTML = captures[item][capture];
+                                                        } else {
+                                                            elem.setAttribute(capture, captures[item][capture]);
+                                                        }  
+                                                    }
                                                 } else {
-                                                    elem.setAttribute(capture, captures[item][capture]);
+                                                    if (!this.svgChanges[item]) {
+                                                        this.svgChanges[item] = {};
+                                                    }
+                                                    if (this.svgChanges[item][capture]) {
+                                                        if (capture == 'tag_value') {
+                                                            elem.innerHTML = this.svgChanges[item][capture];
+                                                        } else {
+                                                            elem.setAttribute(capture, this.svgChanges[item][capture]);
+                                                        }  
+                                                    }
+                                                   // console.log(captures[item],this.svgChanges[item])
                                                 }
                                             }
-                                        }
                                     });
+                                    Object.keys(this.svgChanges[item]).forEach( change => {
+                                        if (!Object.keys(captures[item]).includes(change)) {
+                                            elem.setAttribute(change, this.svgChanges[item][change]);
+                                        } 
+                                    })
                                 }   
                         })
                         
@@ -345,17 +378,19 @@ export default {
 
                 })
 
-                 
-                let events = this.$store.getters.getEvents({idDash: this.idDash, event: 'onclick', element: this.id, partelement: 'empty'});
-            
-                if (events.length != 0) {
-                    events.forEach( item => {
-                        if(item.action == 'set'){
-                            this.$store.commit('letEventSet', {events: events, idDash: this.idDash,  });
-                        } else if (item.action == 'go') {
-                                this.$store.commit('letEventGo', {event: item, idDash: this.idDash, route: this.$router, store: this.$store  });
-                        }
-                    }) 
+                if (item == 'object') {
+                    let events = this.$store.getters.getEvents({idDash: this.idDash, event: 'onclick', element: this.id, partelement: 'empty'});
+                
+                    if (events.length != 0) {
+                        events.forEach( item => {
+                            if(item.action == 'set'){
+                                this.$store.commit('letEventSet', {events: events, idDash: this.idDash,  });
+                            } else if (item.action == 'go') {
+
+                                    this.$store.commit('letEventGo', {event: item, idDash: this.idDash, route: this.$router, store: this.$store  });
+                            }
+                        }) 
+                    }
                 }
         },
         setOver: function(token) {
