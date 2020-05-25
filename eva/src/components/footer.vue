@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.20.5 [deleteSpaceInSelect]'
+            version: 'v 1.21.5 [styleLineChartTooltip]'
         } 
     },
      computed: { 

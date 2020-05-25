@@ -415,7 +415,8 @@ export default {
                                         tooltip
                                             .style("opacity","1")
                                             .style("visibility","visible")
-                                            .text(`x: ${x}, y: ${d[metricsName[0]]}`)
+                                            .html(`<p><span>${xMetric}</span> : ${x}</p> 
+                                            <p><span>${metricsName[0]}</span> : ${d[metricsName[0]]}</p>`)
                                             .style("top", (event.layerY-30)+"px")
                                             .style("right","auto")
                                             .style("left",(event.layerX+20)+"px");
