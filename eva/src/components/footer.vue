@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.19.4 [multiselectCut]'
+            version: 'v 1.19.5 [connectionRow]'
         } 
     },
      computed: { 

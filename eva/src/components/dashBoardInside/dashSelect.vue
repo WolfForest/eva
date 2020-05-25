@@ -170,11 +170,12 @@ export default {
             this.select_show = !this.select_show;
         },
          setTocken: function() {
+            
             this.$store.commit('setSelected', {element: 'elemDeep',value: this.elemDeep[String(this.multiple)], idDash: this.idDash, id: this.id });
             let tockens = this.$store.getters.getTockens(this.idDash);
-            let data = this.dataReady;
             let name = '';
             let curTocken = {};
+            let data = this.dataReady;
             Object.keys(tockens).forEach( i =>{
                 if (tockens[i].elem == this.id && tockens[i].action == 'change') {
                     curTocken = tockens[i];
@@ -182,10 +183,22 @@ export default {
                 }
             })
             let value = null;
-            if (String(this.multiple) == 'true') {
-                value = this.elemDeep[String(this.multiple)];
+             if (String(this.multiple) == 'true') {
+                 value = [...[],...this.elemDeep[String(this.multiple)]];
+                for (let i = 0; i < data.length; i++) {
+                    value.forEach((deep,j) => {
+                        if (data[i][this.elem] == deep) {
+                            value[j] = data[i][this.elemlink];
+                        }
+                    })
+                }
             } else {
-                value =  [this.elemDeep[String(this.multiple)]];
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i][this.elem] == this.elemDeep[String(this.multiple)]) {
+                        value = [data[i][this.elemlink]];
+                        break
+                    }
+                }
             }
 
 
