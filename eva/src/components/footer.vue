@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.19.5 [connectionRow]'
+            version: 'v 1.20.5 [deleteSpaceInSelect]'
         } 
     },
      computed: { 

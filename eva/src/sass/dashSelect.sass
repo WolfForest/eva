@@ -48,18 +48,23 @@
 
         .target
             position: relative
-            height: 65px
+            //height: 65px
+            max-height: 65px
             overflow: auto
             opacity: 0
             visibility: hidden
+            border: 1px solid
+            border-radius: 4px
+            margin-top: 5px
 
             .select
                 width: 100%
                 transition: all 0.4s ease
                 transition: width 0s ease
                 width: 100%
-                //left: 60px
-                padding-top: 5px
+
+                .v-input__control
+                    min-height: 40px
 
         .select_show
             opacity: 1
@@ -69,7 +74,7 @@
         .arrow-block
             // width: 100%
             // text-align: left
-            margin-right: 20px
+            margin-right: 10px
 
             .arrows-select
                 width: 20px
@@ -99,7 +104,7 @@
                 color: inherit
 
             .v-input__append-inner
-                margin-top: 10px !important
+                margin-top: 6px !important
 
             .v-icon
                 color: inherit
@@ -127,11 +132,14 @@
             .v-input__slot
                 min-height: 55px !important
 
+            .target
+                max-height: 150px
+
             .v-select__slot
 
                 .v-label
                     font-size: 16px !important
-                    top: 22px !important
+                    top: 14px !important
 
                 .v-label--active
                     top: 18px !important
@@ -141,7 +149,7 @@
 
 
                 .v-input__append-inner
-                    margin-top: 17px !important
+                    margin-top: 3px !important
 
                     svg
                         font-size: 20px
@@ -159,11 +167,14 @@
             .v-input__slot
                 min-height: 34px !important
 
+            .v-input__control
+                min-height: 34px !important
+
             .v-select__slot
 
                 .v-label
                     font-size: 12px !important
-                    top: 10px !important
+                    top: 8px !important
 
                 .v-label--active
                     top: 18px !important
@@ -178,7 +189,7 @@
                         padding: 0
 
                 .v-input__append-inner
-                    margin-top: 6px !important
+                    margin-top: 3px !important
 
                     svg
                         font-size: 20px
@@ -215,3 +226,17 @@
                     .v-input__append-inner
                         margin-top: 3px !important
                         margin-bottom: 3px !important
+
+            .arrow-block
+                margin-right: 5px
+
+            .v-input__control
+                min-height: 30px !important
+
+            .v-select__slot 
+                
+                .v-label
+                    top: 6px !important
+
+                    .v-input__append-inner
+                        margin-top: 0px !important
