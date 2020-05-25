@@ -9,9 +9,9 @@
                     <v-select  :items="this.dataRest" :color="color.controls"  v-model="elem" :data-elem="dataelem" hide-details  outlined class="select-parent"  @change="getItem('elem')"   :loading="dataLoading" @focus="setColorSelect($event)" label="Столбец данных" ></v-select> 
                     <v-select  :items="this.dataRest" :color="color.controls" v-model="elemlink" :data-elem="dataelemlink" hide-details  outlined class="select-parent"  @change="getItem('elemlink')"  :loading="dataLoading" @focus="setColorSelect($event)" label="Связанный столбец данных" ></v-select> 
                 </div>
-                <!-- <div class="target" :style="{width:widthInput}"> -->
-                     <v-select  :items="this.dataRestDeep"  :style="{width:widthInput}" :multiple="multiple"   :class="{select_show:select_show}" v-model="elemDeep[String(multiple)]" :color="color.controls" :data-elem="dataelemDeep" hide-details  outlined class="select"  @change="setTocken"  @focus="setColorSelect($event)"   label="Значение" ></v-select> 
-                <!-- </div> -->
+                 <div class="target" :style="{width:widthInput}" :class="{select_show:select_show}"> 
+                     <v-select  :items="this.dataRestDeep"   :multiple="multiple"    v-model="elemDeep[String(multiple)]" :color="color.controls" :data-elem="dataelemDeep" hide-details  outlined class="select"  @change="setTocken"  @focus="setColorSelect($event)"   label="Значение" ></v-select> 
+                 </div> 
                
         </div>
         <div class="error-msg" v-if="!show">{{message}}</div>
