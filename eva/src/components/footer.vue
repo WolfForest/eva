@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.19.3 [zIndexUnvisibleElem]'
+            version: 'v 1.19.4 [multiselectCut]'
         } 
     },
      computed: { 
