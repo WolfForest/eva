@@ -96,74 +96,14 @@ export default {
             }
         },
          options: function() {
-        //    tooltipFrom
             let options = this.$store.getters.getOptions({idDash: this.idDash, id: this.id});
             let idsButton = this.tooltipFrom.buttons.map( item => {
                 return item.id
             })
+            
             this.actions[0].capture =  idsButton;
             this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
-
-            //let buttons = [...[],...this.tooltipFrom.buttons];
-            //this.setAction();
-        //    let options = {};
-        //    let tockens = this.$store.getters.getTockens(this.idDash);
-        //    let tokenObj = {};
-        //    let reg = '';
-        //    let itemn = {};
-        //    let idsBtn = [];
-        //    tockens.forEach( item => {
-        //        tokenObj[item.name] = item.value;
-        //    })
-        //   // console.log('adasd')
-
-        //    this.tooltipOptions == true ? this.tooltipBody = '' : false;
-        //    this.tooltipOptions = false;
-
-
-        //    if (options.tooltip) {
-        //         if (options.tooltip.texts.length != 0) {
-        //             options.tooltip.texts.forEach( item => {
-
-        //                 Object.keys(tokenObj).forEach( token => {
-        //                     if (item.indexOf(`$${token}$`) != -1) {
-        //                         reg = new RegExp( `\\$${token}\\$`, "g");
-        //                         item =  item.replace(reg, tokenObj[token]);
-        //                     }
-        //                 })   
-        //                 this.tooltipBody += `<p>${item}</p>`;
-        //             })
-        //             this.tooltipBody += `<div class="white-space"></div>`; 
-        //             this.tooltipOptions = true;
-        //         }
-
-        //         if (options.tooltip.links.length != 0) {
-        //             options.tooltip.links.forEach( item => {
-        //                 itemn = {...{},...item};
-        //                 Object.keys(tokenObj).forEach( token => {
-        //                     if (itemn.url.indexOf(`$${token}$`) != -1) {
-        //                         reg = new RegExp( `\\$${token}\\$`, "g");
-        //                         itemn.url =  itemn.url.replace(reg, tokenObj[token]);
-        //                     }
-        //                 }) 
-        //                 this.tooltipBody += `<a href="${itemn.url}" target="_blank">${itemn.name}<span></span></a>`;
-        //             })
-        //             this.tooltipBody += `<div class="white-space"></div>`;
-        //             this.tooltipOptions = true
-        //         }
-
-        //         if (options.tooltip.buttons.length != 0) {
-                    
-        //             options.tooltip.buttons.forEach( item => {
-        //                 this.tooltipBody += `<button data-id="${item.id}" class="tooltip-button" style="color: white; background: ${this.color.controls}">${item.name}</button>`;
-        //                 idsBtn.push(item.id);
-        //             })
-        //             this.tooltipOptions = true
-        //            // console.log(idsBtn)
-        //         }
-
-
-        //    }
+    
 
             return options.change
          }
@@ -171,8 +111,8 @@ export default {
      },  
      watch: { 
          dataRestFrom: function(dataRest) {
+              
             if (dataRest.length != 0 && dataRest[0].svg_filename && dataRest[0].svg_filename != '') {
-                
                 this.dataFrom = dataRest[0];
                 this.getSvg(dataRest[0].svg_filename);
                 this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });

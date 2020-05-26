@@ -235,8 +235,9 @@ export default {
                        
                        this.$store.commit('setShould', { idDash: this.idDash,  id: this.element, status: false}); 
                     }
-
+    
                }
+               
                if (this.props.dataRest.length > 0) {
                     this.checkFilter();
                }
