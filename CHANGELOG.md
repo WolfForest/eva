@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.21.7] [twoCsvgBug]
+### Fixed
+
+- problem with set captures to actions. They not situated in computed. They should set in watch. Example in Cavg and Tile.
+
+- Also fix disable setting tooltip of second svg element on page. I check only " == 'csvg'", but i should use indexOf.
+
 ## [1.21.6] [cutMultiline]
 ### Fixed
 

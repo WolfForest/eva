@@ -56,6 +56,7 @@ export default {
                     capture: []
                    },
                 ],
+            captures: {},
             noMsg: 1,
             msgText: 'Нет данных для отображения',
             sendMsg: 'Отправить изображение',
@@ -101,9 +102,7 @@ export default {
                 return item.id
             })
             
-            this.actions[0].capture =  idsButton;
-            this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
-    
+            this.captures =  idsButton;
 
             return options.change
          }
@@ -128,7 +127,10 @@ export default {
          heightFrom: function() {
             this.checkSize();
          },
-
+        captures: function (captures) {
+           this.actions[0].capture =  captures;
+           this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
+        },
      },
      methods: {
         getSvg: async function(svg) {

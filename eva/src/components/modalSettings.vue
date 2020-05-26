@@ -193,7 +193,7 @@ export default {
                     
                    if (this.$store.getters.getModalSettings(this.idDash).status){ // если окно должно быть открыто
                     this.element = this.$store.getters.getModalSettings(this.idDash).element;  // получаем для каокго элемнета вывести настройки
-                    if (this.element == 'csvg') { 
+                    if (this.element.indexOf('csvg') != -1) { 
                         this.tooltipSettingShow = true;
                     } else {   
                         this.tooltipSettingShow = false;
@@ -230,7 +230,7 @@ export default {
                 }
             }
                  let options = {...{},...this.options};
-            if (this.element == 'csvg') {
+            if (this.element.indexOf('csvg') != -1) {
                 this.options.tooltip = this.tooltip;
                 // this.options.tooltip.texts = JSON.parse(JSON.stringify(this.tooltip.texts));
                 // this.options.tooltip.links = JSON.parse(JSON.stringify(this.tooltip.links));

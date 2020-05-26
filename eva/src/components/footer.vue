@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.21.6 [cutMultiline]'
+            version: 'v 1.21.7 [twoCsvgBug]'
         } 
     },
      computed: { 
