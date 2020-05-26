@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.21.5 [styleLineChartTooltip]'
+            version: 'v 1.21.6 [cutMultiline]'
         } 
     },
      computed: { 

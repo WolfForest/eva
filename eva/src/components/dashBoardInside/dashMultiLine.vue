@@ -75,7 +75,7 @@ export default {
             return this.colorFrom
         },
         colorLegends: function() {
-            return [this.colorFrom.controls,this.colorFrom.controlsActive,'#660099','#3366FF','#e5194a','#fbbe18','#26295a'];
+            return [this.colorFrom.controls,this.colorFrom.controlsActive,'#660099','#3366FF','#e5194a','#fbbe18','#26295a','#228B22'];
         },
         dataLoading: function() {
              return this.dataLoadingFrom
@@ -250,7 +250,7 @@ export default {
                             .append("svg")
                                 .attr("width", width + margin.left + margin.right)
                                 .attr("height", height + margin.top + margin.bottom)
-                                .attr("data-id",props.id)
+                                //.attr("data-id",props.id)
                                 .attr('class',"graph-svg")
                             .append("g")
                                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -299,7 +299,7 @@ export default {
 
                 // создаем область графика, все-что вне этой области не будет отрисованно
                     let clip = svg.append("defs").append("svg:clipPath")
-                        .attr("id", "clip")
+                        .attr("id", `clip-${that.id}`)
                         .append("svg:rect")
                         .attr("width", width )
                         .attr("height", height )
@@ -390,7 +390,7 @@ export default {
                   // строим основную линию
 
                     line =  svg.append('g')  // основная линия графика
-                            .attr("clip-path", "url(#clip)");
+                            .attr("clip-path", `url(#clip-${that.id})`);
 
                    
 
@@ -486,9 +486,9 @@ export default {
                                         let text =  '';
                                         Object.keys(d).forEach( key => {
                                                 if (key == xMetric) {
-                                                    text += `${key}: ${xVal}<br>`;
+                                                    text += `<p><span>${key}</span> : ${xVal}</p>`;
                                                 } else {
-                                                    text += `${key}: ${d[key]}<br>`;
+                                                    text += `<p><span>${key}</span> : ${d[key]}</p>`;
                                                 }
                                             })
                                         tooltip
@@ -559,11 +559,7 @@ export default {
                                             
 
                                             })  // при уводе мышки исчезает, только если это не точка выходящяя порог
-
-
-
-              
-                                
+         
 
                     })
 
@@ -671,7 +667,7 @@ export default {
                             // строим основную линию
 
                             line.push(svg.append('g')  // основная линия графика
-                                    .attr("clip-path", "url(#clip)"));
+                                    .attr("clip-path", `url(#clip-${that.id})`));
 
     
                             let nullValue = -1;
@@ -688,6 +684,8 @@ export default {
                                 })
                             }
 
+                       
+
                             if(nullValue == -1) {
 
                                     data.forEach( line => {
@@ -703,6 +701,7 @@ export default {
                                      linesWithBreak.push(onelinesWithBreak);
                                      AllLinesWithBreak.push(linesWithBreak);
                                      linesWithBreak.forEach( (lineItself,j) => {
+                                         
                                             // Добовляем линию
                                             line[i].append("path")
                                                 .datum(lineItself)
@@ -713,7 +712,7 @@ export default {
                                                 .attr("d", d3.line()
                                                     .x(function(d) {return x(d[xMetric]*secondTransf) })
                                                     .y(function(d,j) {return y[i](d[metric]) })
-                                                    )
+                                                )
                                      })
                                 
                                 
@@ -722,6 +721,8 @@ export default {
                             } else {
                                 dotDate = [extraDot[nullValue]];
                             }
+
+                        
 
                               svg
                                 .append("g")
@@ -757,9 +758,9 @@ export default {
                                             let text =  '';
                                             Object.keys(d).forEach( key => {
                                                 if (key == xMetric) {
-                                                    text += `${key}: ${xVal}<br>`;
+                                                    text += `<p><span>${key}</span> : ${xVal}</p>`;
                                                 } else {
-                                                    text += `${key}: ${d[key]}<br>`;
+                                                    text += `<p><span>${key}</span> : ${d[key]}</p>`;
                                                 }
                                             })
                                             tooltip
@@ -1058,7 +1059,7 @@ export default {
 
 
                     let  readyLegends = setTimeout( function tick()  {
-                        if (this.$refs.legends.offsetHeight > 0){
+                        if (this.$refs && this.$refs.legends.offsetHeight > 0){
                             clearTimeout(readyLegends);
                             //resolve('done')
                         } else {

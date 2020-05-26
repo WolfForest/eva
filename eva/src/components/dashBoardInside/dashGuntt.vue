@@ -270,7 +270,7 @@ export default {
 
                     let deliter = 2;
 
-                if ((width+ margin.left + margin.right) < 550) {
+                if ((width+ margin.left + margin.right) < 600) {
                     deliter = 3;
                 } 
                 if ((width+ margin.left + margin.right) < 450) {
