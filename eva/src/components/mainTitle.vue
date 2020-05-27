@@ -20,7 +20,7 @@
                     <modal-settings :colorFrom="color" :idDashFrom="idDash"   ></modal-settings>
                     <dash-settings :showFrom="showSetting"  ></dash-settings>
                 </v-container>
-            </v-content>
+            </v-content> 
         </div>
        <footer-bottom></footer-bottom>
    </v-app> 
@@ -35,15 +35,26 @@ export default {
            mode: true,
            showSetting: false,
            rotate: '',
+        //    color: {
+        //         back: '#fafafa',
+        //         backElement: '#ffffff',
+        //         text: '#4a4a4a',
+        //         controls: '#6e96c5',
+        //         controlsSystem: '#004799',
+        //         controlsActive: '#41C4FF',
+        //         controlsInsideDash: '#BCBCBC',
+        //         panel: '#2B68B1',
+        //         border: '#00000033',
+        //     },
            color: {
-                back: '#fafafa',
-                backElement: '#ffffff',
-                text: '#4a4a4a',
+                back: '#060606',
+                backElement: '#191919',
+                text: '#DADADA',
                 controls: '#6e96c5',
                 controlsSystem: '#004799',
                 controlsActive: '#41C4FF',
-                controlsInsideDash: '#BCBCBC',
-                panel: '#2B68B1',
+                controlsInsideDash: '#DADADA',
+                panel: '#0D0D0D',
                 border: '#00000033',
             },
             adminRoot: false,
@@ -56,8 +67,8 @@ export default {
         }
     },   
       computed: {
-          idDash:  function() {   // получаем id страницы от родителя
-            return this.$route.params.id
+          idDash: function() {   // получаем id страницы от родителя
+               return this.$route.params.id
          },
           elements: function() {  // получаем название элемента  от родителя
               let elements = [];
@@ -110,23 +121,23 @@ export default {
                 } 
                 
         },
-        checkOver: function() {
-            this.letElements = true;
-            this.checkAlreadyDash();
-        },
-        updateDash: function() {
-             let dateCreate = Math.round(Date.now()/1000);
-             this.$store.commit('updateDash',{dash: this.alreadyDash,modified: this.alreadyDash.modified});
-             this.$store.auth.getters.putLog(`Обновлен дашборд ${this.toHichName(this.alreadyDash.name)} с id ${this.alreadyDash.id}`);
-             this.alreadyShow = false;
-        },
+    checkOver: function() {
+      this.letElements = true;
+      this.checkAlreadyDash();
+    },
+    updateDash: function() {
+    //let dateCreate = Math.round(Date.now()/1000);
+      this.$store.commit('updateDash',{dash: this.alreadyDash,modified: this.alreadyDash.modified});
+      this.$store.auth.getters.putLog(`Обновлен дашборд ${this.toHichName(this.alreadyDash.name)} с id ${this.alreadyDash.id}`);
+      this.alreadyShow = false;
+    },
         toHichName: function(name) {
             return name[0].toUpperCase() + name.slice(1);
         },
         checkAlreadyDash: function() {
                 let response =  this.$store.getters.checkAlreadyDash(this.$route.params.id);
                 response.then( res => {
-                    if (res.status == 'exist') {
+                    if (res.status == 'exist') {  
                         this.alreadyShow = true;
                         this.alreadyDash = res;
                     } 

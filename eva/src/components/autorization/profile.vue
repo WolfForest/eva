@@ -107,14 +107,15 @@ export default {
             user: {},
             curItem: {},
             permission: true,
-            color: {
-                back: '#ffffff',
-                backElement: 'white',
-                text: '#4a4a4a',
+            color: { 
+                back: '#060606',
+                backElement: '#191919',
+                text: '#DADADA',
                 controls: '#6e96c5',
                 controlsSystem: '#004799',
                 controlsActive: '#41C4FF',
-                panel: '#2B68B1',
+                controlsInsideDash: '#DADADA',
+                panel: '#0D0D0D',
                 border: '#00000033',
             },
         } 

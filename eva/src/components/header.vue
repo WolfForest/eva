@@ -38,7 +38,7 @@
                 </v-tooltip>
            </div>   
         </div>
-        <v-divider></v-divider> 
+        <!-- <v-divider></v-divider>  -->
         <modal-log :modalActive="modalActive" :colorFrom="color"  @cancelModal="modalActive=false" ></modal-log>
     </div>    
 </template>
@@ -50,7 +50,7 @@ import { mdiDoor, mdiAccountEdit, mdiUndoVariant,  mdiHomeVariantOutline, mdiPen
 
 import VueJWT from 'vuejs-jwt'
 
-Vue.use(VueJWT, {'storage': 'cookie','keyName':'eva_token'})
+Vue.use(VueJWT, {'storage': 'cookie','keyName': 'eva_token'})
 
 export default {
     props: {
@@ -63,17 +63,18 @@ export default {
             door: mdiDoor,
             userEdit: mdiAccountEdit,
             log: mdiScriptTextOutline,
-            modalActive:false,
+            modalActive: false,
             home: mdiHomeVariantOutline,
             undo: mdiUndoVariant,
-            color: {
-                back: '#ffffff',
-                backElement: 'white',
-                text: '#4a4a4a',
+            color: { 
+                back: '#060606',
+                backElement: '#191919',
+                text: '#DADADA',
                 controls: '#6e96c5',
                 controlsSystem: '#004799',
                 controlsActive: '#41C4FF',
-                panel: '#2B68B1',
+                controlsInsideDash: '#DADADA',
+                panel: '#0D0D0D',
                 border: '#00000033',
             },
         } 

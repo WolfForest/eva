@@ -1,11 +1,11 @@
 <template>
-       <div class="dash-main" :style="{background: color.panel, borderBottom: `1px solid ${color.controls}`}">
+       <div class="dash-main" :style="{background: color.panel}">
             <div class="main-title">
                 <div class="title-name" :style="{color:color.back}">{{name}}</div>
                 <!-- <v-tooltip bottom :color="color.controlsActive" >
                         <template v-slot:activator="{ on }">
                             <v-icon class="home"  :co lor="color.controls" v-on="on" @click="toHome">{{home}}</v-icon>
-                        </template>
+                        </template> 
                         <span>На главную</span>
                 </v-tooltip> -->
                 <div class="title-edit" :style="editSwitch">
