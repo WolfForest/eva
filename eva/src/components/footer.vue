@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.21.7 [twoCsvgBug]'
+            version: 'v 1.22.7 [TextAreaRebranding]'
         } 
     },
      computed: { 

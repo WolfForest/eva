@@ -1,15 +1,16 @@
 <template >
     <div class="dash-textArea" >
-        <div class="button-container">
-            <v-btn small :color="color.controls" class="accept-btn" @click="acceptTextArea">Подтвердить</v-btn>
-        </div>
-        <v-textarea :color="color.text" outlined hide-details class="textarea-itself"   :rows="rows" v-model="textarea"></v-textarea>
+        <v-textarea :color="color.text" solo flat  hide-details class="textarea-itself" @keypress.enter="setTockenByPress($event)"  :height="height" no-resize v-model="textarea"></v-textarea>
+        <!-- <div class="button-container"> -->
+        <v-btn small :color="color.controls" class="accept-btn" @click="acceptTextArea"><v-icon>{{searchIcon}}</v-icon></v-btn>
+        <!-- </div> -->
     </div>
 </template>
 
 
 <script>
 
+import { mdiMagnify } from '@mdi/js'
 
 export default {
     props: {  // переменные полученные от родителя
@@ -25,7 +26,8 @@ export default {
                      capture: []
                    },
                 ],
-            textarea: ''
+            textarea: '',
+            searchIcon: mdiMagnify
         } 
     },
      computed: {  // осоновные параметры, которые чатсо меняются и которы следует отслеживать
@@ -39,7 +41,7 @@ export default {
             return this.colorFrom
         },
         rows: function() {
-            let rowsCount = 20;
+            let rowsCount = 20; 
             if (screen.width< 1400) {
                 rowsCount = 15;
             }
@@ -48,11 +50,22 @@ export default {
             }
             let rows = Math.floor((this.heightFrom-200)/rowsCount);
             return rows
+        },
+        height: function() {
+            let otstup = 55;
+            if (screen.width < 1600) {
+                otstup = 45;
+            }
+            return `${this.heightFrom - otstup}px`
         }
      },  
      methods: {
         acceptTextArea: function() {
             this.$store.commit('setTextArea', {idDash: this.idDash, id: this.id, textarea: this.textarea});
+            this.setTocken();
+        },
+        setTockenByPress: function(event) {
+            event.preventDefault();
             this.setTocken();
         },
          setTocken: function() {
@@ -80,6 +93,7 @@ export default {
        // this.$emit('hideLoading');
         this.textarea = this.$store.getters.getTextArea({idDash: this.idDash, id: this.id});
         this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
+
     } 
 }
 

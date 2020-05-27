@@ -1,19 +1,30 @@
 .dash-textArea
     position: relative
+    display: flex
+    flex-flow: row nowrap
+    justify-content: flex-start
+    align-items: flex-start
+    padding-top: 5px !important
 
-    .button-container
-        width: 100%
-        display: flex
-        flex-flow: row 
-        justify-content: flex-end
-        align-items: center
+    // .button-container
+    //     width: 100%
+    //     display: flex
+    //     flex-flow: row 
+    //     justify-content: flex-end
+    //     align-items: center
 
-        .accept-btn
-            margin: 20px 0
-            color: white
+    .accept-btn
+        color: white
+        padding: 0 !important
+        min-width: 40px !important
+        margin-left: 10px
+
+    .v-input__slot
+        min-height: 35px  !important
 
     textarea
         line-height: 24px
+        margin-top: 0 !important
 
 @media screen and (max-width: 2560px) and (min-width: 1920px)
 

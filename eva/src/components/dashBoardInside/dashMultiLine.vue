@@ -23,7 +23,6 @@
 
 import * as d3 from "d3";
 
-import {  } from '@mdi/js'
 
 export default {
     props: {
