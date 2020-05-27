@@ -10,7 +10,22 @@
                     <v-select  :items="this.dataRest" :color="color.controls" v-model="elemlink" :data-elem="dataelemlink" hide-details  outlined class="select-parent"  @change="getItem('elemlink')"  :loading="dataLoading" @focus="setColorSelect($event)" label="Связанный столбец данных" ></v-select> 
                 </div>
                  <div class="target" :style="{width:widthInput,borderColor:color.text}" :class="{select_show:select_show}"> 
-                     <v-select  :items="this.dataRestDeep"  solo flat :multiple="multiple"    v-model="elemDeep[String(multiple)]" :color="color.controls" :data-elem="dataelemDeep" hide-details  class="select"  @change="setTocken"  @focus="setColorSelect($event)"   label="Значение" ></v-select> 
+                    <v-select  :items="this.dataRestDeep"  solo flat :multiple="multiple"    v-model="elemDeep[String(multiple)]" :color="color.controls" :data-elem="dataelemDeep" hide-details  class="select"  @change="setTocken"  @focus="setColorSelect($event)"   label="Значение" >
+                        <template v-slot:prepend-item v-if="multiple">
+                            <v-list-item
+                                ripple
+                                @click="selectItems"
+                            >
+                                <v-list-item-action>
+                                <v-icon :color="elemDeep[String(multiple)].length > 0 ? color.controls : color.text">{{ chooseIcon }}</v-icon>
+                                </v-list-item-action>
+                                <v-list-item-content>
+                                <v-list-item-title>{{chooseText}}</v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-divider class="mt-2"></v-divider>
+                        </template>  
+                    </v-select> 
                  </div> 
                
         </div>
@@ -21,7 +36,7 @@
 
 <script> 
 
- import { mdiArrowDownBoldBoxOutline, mdiArrowUpBoldBoxOutline   } from '@mdi/js'; 
+ import { mdiArrowDownBoldBoxOutline, mdiArrowUpBoldBoxOutline, mdiCropSquare, mdiSquare   } from '@mdi/js'; 
 
 
 export default {
@@ -50,6 +65,8 @@ export default {
             select_show: false,
             dataFromRest: {},
             legends: {},
+            chooseText: 'Выбрать все',
+            chooseIcon: mdiCropSquare,
             actions: [
                    {name:'click',
                    capture: []
@@ -169,6 +186,18 @@ export default {
             this.open = !this.open;
             this.select_show = !this.select_show;
         },
+        selectItems: function() {
+             if (this.chooseText == 'Выбрать все') {
+                    this.chooseText = 'Очистить Все';
+                    this.chooseIcon = mdiSquare;
+                    this.elemDeep.true = [...[],...this.dataRestDeep];
+             } else {
+                this.chooseText = 'Выбрать все';
+                this.chooseIcon = mdiCropSquare;
+                this.elemDeep.true = [];
+             }
+             this.$store.commit('setSelected', {element: 'elemDeep',value: this.elemDeep.true, idDash: this.idDash, id: this.id });
+        },
          setTocken: function() {
             
             this.$store.commit('setSelected', {element: 'elemDeep',value: this.elemDeep[String(this.multiple)], idDash: this.idDash, id: this.id });
@@ -275,7 +304,15 @@ export default {
             if (this.elem != 'Выберите элемент' && this.elemlink != 'Выберите связанный столбец данных') {
                     this.openSelect();
             }
-            selected.elemDeep ? this.elemDeep[String(this.multiple)] = selected.elemDeep : false;    
+            if (selected.elemDeep.length != 0 || selected.elemDeep != '')  {
+                this.elemDeep[String(this.multiple)] = selected.elemDeep;
+                this.chooseText = 'Очистить Все';
+                this.chooseIcon = mdiSquare;
+            } else {
+                this.chooseText = 'Выбрать все';
+                this.chooseIcon = mdiCropSquare;
+            }
+
        }
 
        
