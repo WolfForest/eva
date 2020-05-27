@@ -10,7 +10,7 @@
                     <v-select  :items="this.dataRest" :color="color.controls" v-model="elemlink" :data-elem="dataelemlink" hide-details  outlined class="select-parent"  @change="getItem('elemlink')"  :loading="dataLoading" @focus="setColorSelect($event)" label="Связанный столбец данных" ></v-select> 
                 </div>
                  <div class="target" :style="{width:widthInput,borderColor:color.text}" :class="{select_show:select_show}"> 
-                    <v-select  :items="this.dataRestDeep"  solo flat :multiple="multiple"    v-model="elemDeep[String(multiple)]" :color="color.controls" :data-elem="dataelemDeep" hide-details  class="select"  @change="setTocken"  @focus="setColorSelect($event)"   label="Значение" >
+                    <v-autocomplete  :items="this.dataRestDeep"  solo flat :multiple="multiple"     v-model="elemDeep[String(multiple)]" :color="color.controls" :data-elem="dataelemDeep" hide-details  class="select"  @change="setTocken"  @focus="setColorSelect($event)"   label="Значение" >
                         <template v-slot:prepend-item v-if="multiple">
                             <v-list-item
                                 ripple
@@ -25,7 +25,7 @@
                             </v-list-item>
                             <v-divider class="mt-2"></v-divider>
                         </template>  
-                    </v-select> 
+                    </v-autocomplete> 
                  </div> 
                
         </div>
@@ -58,6 +58,8 @@ export default {
                 'true' : [],
                 'false' : '',
             },
+            topArray: [],
+            bottomArray: [],
             open: true,
             down: mdiArrowDownBoldBoxOutline,
             up: mdiArrowUpBoldBoxOutline,
@@ -136,6 +138,7 @@ export default {
                     res = Object.values(data).map( item => {
                         return item[this.elem];
                     })
+                    res = this.filterSelect(res,this.elemDeep.true);
                 }
             
             //this.elemDeep = res[0];
@@ -155,11 +158,12 @@ export default {
             return this.$store.getters.getSelected({idDash: this.idDash, id: this.id }).elemlink
         },
         dataelemDeep: function() {
+           
             if (this.$store.getters.getSelected({idDash: this.idDash, id: this.id }).elemDeep == '') {
                 String(this.multiple) == 'true' ?  this.elemDeep[String(this.multiple)] = [] :  this.elemDeep[String(this.multiple)] = '';
-                this.source_show = true;
-                this.open = true;
-                this.select_show = false;
+                // this.source_show = true;
+                // this.open = true;
+                // this.select_show = false;
             }
             return this.$store.getters.getSelected({idDash: this.idDash, id: this.id }).elemDeep
         },
@@ -180,6 +184,10 @@ export default {
                 if (this.elem != 'Выберите элемент' && this.elemlink != 'Выберите связанный столбец данных') {
                     this.openSelect();
                 }
+                this.chooseText = 'Очистить Все';
+                this.selectItems();
+
+
         },
         openSelect: function() {
             this.source_show = !this.source_show;
@@ -190,7 +198,7 @@ export default {
              if (this.chooseText == 'Выбрать все') {
                     this.chooseText = 'Очистить Все';
                     this.chooseIcon = mdiSquare;
-                    this.elemDeep.true = [...[],...this.dataRestDeep];
+                    this.elemDeep.true = [...this.topArray,...this.bottomArray];
              } else {
                 this.chooseText = 'Выбрать все';
                 this.chooseIcon = mdiCropSquare;
@@ -198,6 +206,74 @@ export default {
              }
              this.$store.commit('setSelected', {element: 'elemDeep',value: this.elemDeep.true, idDash: this.idDash, id: this.id });
         },
+         filterSelect: function(res,selected) {
+                let data = [...[],...res];
+                data = data.filter( elem => {
+                    if (!selected.includes(elem)) {
+                        return elem
+                    }
+                })
+
+                this.topArray = sort(selected);
+                this.bottomArray = sort(data);
+                
+
+                data = [...this.topArray,...this.bottomArray];
+               
+                function sort(data) {
+                    let reg = new RegExp( /\d/, "g");
+                        
+                        if (reg.exec(data[0])) {
+                            data = data.sort( (a,b) => {
+                                // let amass = a.split('');
+                                // let bmass = b.split('');
+                                // let res = null;
+                                // for (let i=0; i<amass.length-1;i++) {
+
+                                        
+                                //      if ((Number(amass[i]) && Number(bmass[i])) || amass[i] != bmass[i] ) {
+                                            
+                                //             a = amass[i];
+                                //             b = bmass[i];
+                                //             let j = 1;
+                                //             while (amass[i+j] == 0 || Number(amass[i+j] )) {
+                                //                 a += amass[i+j];
+                                //                 j++
+                                //             }
+                                //             j = 1;
+                                //             while (bmass[i+j] == 0 || Number(bmass[i+j])) {
+                                //                     b += bmass[i+j];
+                                //                 j++
+                                //             }
+                                //             console.log(a,b)
+                                //             console.log('------')
+
+
+
+
+                                //            if (a<b) {
+                                //               res = -1;
+                                //           } else {
+                                //               res = 1;
+                                //           }
+
+                                //            break
+                                //      }
+                                // }
+
+                               // (a < b) ? -1 : (a > b) ? 1 : 0; 
+                                return a-b
+                            });
+                        } else {
+                            data = data.sort();
+                        }
+                    return data
+                }
+
+                
+            
+             return data
+         },
          setTocken: function() {
             
             this.$store.commit('setSelected', {element: 'elemDeep',value: this.elemDeep[String(this.multiple)], idDash: this.idDash, id: this.id });
@@ -265,6 +341,8 @@ export default {
                 
                 
                 this.$store.commit('setTocken', {tocken: tocken, idDash: this.idDash, value: value, store: this.$store });
+
+               
 
                 // let searches = this.$store.getters.getSearches(this.idDash);
                 // let response = {};
