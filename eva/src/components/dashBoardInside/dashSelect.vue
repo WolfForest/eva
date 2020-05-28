@@ -214,17 +214,24 @@ export default {
                     }
                 })
 
-
+                console.log(selected)
                 this.topArray = sorted(selected);
+                console.log(this.topArray)
+                console.log('--------')
+
+                console.log(data)
                 this.bottomArray = sorted(data);
-                
+                console.log(this.bottomArray)
+                console.log('--------')
 
                 data = [...this.topArray,...this.bottomArray];
                
                 function sorted(data) {
-                    let reg = new RegExp( /\d/, "g");
+                    //let reg = new RegExp( /\d/, "g");
                         
-                        if (reg.exec(data[0])) {
+                       // if (reg.exec(data[0])) {
+                           if (Number(data[0])) {
+                        
                             data = data.sort( (a,b) => {
                                 // let amass = a.split('');
                                 // let bmass = b.split('');
