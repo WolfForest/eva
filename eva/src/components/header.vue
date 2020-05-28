@@ -1,23 +1,23 @@
 <template >
-    <div class="header-block" :style="{background: color.controlsSystem, height: height }">
+    <div class="header-block" :style="{background: color.panel, height: height }">
         <div class="aut-panel">
             <div class="nav-btn">
-                <div class="title-main" :style="{color:color.back, opacity: '0.4'}">EVA</div>
+                <div class="title-main" :style="{color:'white', opacity: '0.4'}">EVA</div>
                 <v-tooltip bottom :color="color.controlsActive" >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="home"  :color="color.back" v-on="on" @click="toHome">{{home}}</v-icon>
+                        <v-icon class="home"  color="white" v-on="on" @click="toHome">{{home}}</v-icon>
                     </template>
                     <span>На главную</span>
                 </v-tooltip>
                 <v-tooltip bottom :color="color.controlsActive" >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="undo"  :color="color.back" v-on="on" @click="toBackward">{{undo}}</v-icon>
+                        <v-icon class="undo"  color="white" v-on="on" @click="toBackward">{{undo}}</v-icon>
                     </template>
                     <span>Назад</span>
                 </v-tooltip>
             </div>
            <div class="manage-btn">
-                <div class="id-user" :style="{color:color.back}">{{login}} | </div>
+                <div class="id-user" :style="{color:'white'}">{{login}} | </div>
                 <v-tooltip bottom :color="color.controlsActive" >
                     <template v-slot:activator="{ on }">
                         <v-icon class="edit icon-aut" :color="colorError" v-on="on" @click="openLogs()">{{log}}</v-icon>
@@ -26,13 +26,13 @@
                 </v-tooltip>
                 <v-tooltip bottom :color="color.controlsActive" v-if="!inside" >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="edit icon-aut" :color="color.back" v-on="on" @click="edit">{{userEdit}}</v-icon>
+                        <v-icon class="edit icon-aut" color="white" v-on="on" @click="edit">{{userEdit}}</v-icon>
                     </template>
                     <span>Редактировать профиль</span>
                 </v-tooltip>
                 <v-tooltip bottom :color="color.controlsActive"  >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="exit icon-aut" :color="color.back" v-on="on" @click="exit">{{door}}</v-icon>
+                        <v-icon class="exit icon-aut" color="white" v-on="on" @click="exit">{{door}}</v-icon>
                     </template>
                     <span>Выйти из профиля</span>
                 </v-tooltip>
@@ -74,7 +74,7 @@ export default {
                 controlsSystem: '#004799',
                 controlsActive: '#41C4FF',
                 controlsInsideDash: '#DADADA',
-                panel: '#0D0D0D',
+                panel: '#191919',
                 border: '#00000033',
             },
         } 
@@ -88,7 +88,7 @@ export default {
              if (this.$store.getters.getColorError) {
                  return this.color.controlsActive
              } else {
-                 return this.color.back
+                 return 'white'
              } 
          },
          height: function() {

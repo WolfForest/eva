@@ -1,26 +1,27 @@
 <template >
-    <v-app class="aut-app-profile">
+    <v-app class="aut-app-profile" :style="{background: color.back }" >
       <header-top :inside="true" @permissions="setPermissions"></header-top>
        <v-content>
            <v-container  class="main-container" >
-                <v-card class="card-aut-table">
-                    <v-card-text>
+                <v-card class="card-aut-table" >
+                    <v-card-text :style="{background: color.backElement }">
 
-                    <v-tabs   v-model="tab" :color='color.controls'  @change="getData" >
+                    <v-tabs   v-model="tab" :color='color.text'  @change="getData" :style="{background: color.backElement }">
                         <v-tabs-slider></v-tabs-slider>
                         <v-tab  :href="`#tab-${i}`" v-for="i in tabs.length" :key="i" >
                             {{tabs[i-1]}}
                         </v-tab>
 
-                        <v-tab-item  class="item" v-for="i in tabs.length" :key="i" :value="`tab-${i}`">
+                        <v-tab-item  class="item" v-for="i in tabs.length" :key="i" :value="`tab-${i}`" >
                             <div class="loading-tab" v-if="dataLoading">
                                 <v-skeleton-loader
                                     type="table-tbody"
                                     tile
                                 ></v-skeleton-loader>
                             </div>
-                            <div class="table-tab" v-if="!dataLoading">
+                            <div class="table-tab" v-if="!dataLoading" :style="{background: color.backElement }">
                                 <v-data-table
+                                :style="{background: color.backElement, color: color.text, borderColor: color.text }"
                                 :headers="titles"
                                 :items.sync="originData"
                                 :items-per-page="15"

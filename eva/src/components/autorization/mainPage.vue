@@ -1,18 +1,21 @@
 <template >
     
-    <v-app class="aut-app-main">
+    <v-app class="aut-app-main" :style="{backgroundColor:color.back}">
        <header-top :inside="false"></header-top>
        <v-content>
            <v-container  class="main-container container-product" >
                <div class="product-block">
-                     <v-card  class="product-block-itself"  @click="openDash"  >   
-                        <v-card-text class="product-text">
+                     <v-card  class="product-block-itself"  @click="openDash"  :style="{backgroundColor:color.backElement}">   
+                        <v-card-text class="product-text" :style="{color:color.text}" >
                             Конструирование <br> дашбордов
+                            <p class="delimetr" :style="{backgroundColor:color.text}"></p>
                         </v-card-text>
+                        
                     </v-card>
-                    <v-card  class="product-block-itself"  @click="openReport"  >   
-                        <v-card-text class="product-text">
+                    <v-card  class="product-block-itself"  @click="openReport"  :style="{backgroundColor:color.backElement}">   
+                        <v-card-text class="product-text" :style="{color:color.text}">
                             Исследование <br> данных
+                             <p class="delimetr" :style="{backgroundColor:color.text}"></p>
                         </v-card-text>
                     </v-card>
                </div>
@@ -25,7 +28,7 @@
 
 <script>
 
-import { mdiDoor, mdiAccountEdit, mdiPencil } from '@mdi/js'
+//import { mdiDoor, mdiAccountEdit, mdiPencil } from '@mdi/js'
 
 export default {
 
@@ -36,6 +39,17 @@ export default {
             // user: {},
             // door: mdiDoor,
             // userEdit: mdiAccountEdit,
+            color: { 
+                back: '#060606',
+                backElement: '#191919',
+                text: '#DADADA',
+                controls: '#6e96c5',
+                controlsSystem: '#004799',
+                controlsActive: '#41C4FF',
+                controlsInsideDash: '#DADADA',
+                panel: '#0D0D0D',
+                border: '#454545',
+            },
         } 
     },
      computed: { 

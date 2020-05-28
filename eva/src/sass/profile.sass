@@ -29,6 +29,12 @@
 
     .card-aut-table
         margin-top: 100px  
+
+        .v-tabs-bar
+            background: inherit
+
+            .v-tab
+                color: inherit !important
  
         .aut-table
   
@@ -37,9 +43,12 @@
                 tr
 
                     th
-                        border-bottom: 1px solid rgba(0,0,0,0.8)
-                        color: rgba(0,0,0,0.8)
+                        border-bottom: 1px solid 
+                        color: inherit !important
 
+                        .v-icon
+                            color: inherit !important
+ 
             .icon-aut
                 margin: 0 5px 
                 cursor: pointer
@@ -50,6 +59,29 @@
             .square-profile
                 width: 25px
                 height: 25px
+
+    .v-data-footer
+
+        .v-input
+            color: inherit !important
+
+            .v-input__slot
+
+                &:before
+                  border-color: inherit  
+
+            .v-select__selection
+                color: inherit !important
+
+            .v-input__append-inner
+
+                .v-icon
+                   color: inherit 
+
+        .v-data-footer__icons-before
+
+            .v-icon
+                color: inherit !important
 
     .user-text-card
         display: flex
