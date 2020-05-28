@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.22.7 [TextAreaRebranding]'
+            version: 'v 1.23.7 [workonSelect]'
         } 
     },
      computed: { 
