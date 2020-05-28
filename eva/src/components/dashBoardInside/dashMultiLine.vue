@@ -117,16 +117,28 @@ export default {
                                         this.props.result = this.dataRest;  // заносим все данные в переменную
                                         let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
                                         if (this.props.legends.length == 0) {
-                                            this.createLegends();
-                                            let timeOut = setTimeout( function tick() {
+                                            let metricsName = Object.keys(this.props.result[0]).filter( (item,i) => {
+                                                if (i != 0) {
+                                                    return item
+                                                }
+                                            });
+                                            if (metricsName.length > 0) {
 
-                                                    if ( this.$refs.legends.getBoundingClientRect().height > 0 ) {
-                                                        clearTimeout(timeOut);
-                                                        this.createLineChart(this.props,this,sizeLine,time,united);
-                                                    }  else {
-                                                        timeOut = setTimeout(tick, 100); 
-                                                    }
-                                            }.bind(this), 0);
+                                                this.createLegends(metricsName);
+                                                let timeOut = setTimeout( function tick() {
+                                                        if (this.$refs && this.$refs.legends.getBoundingClientRect().height > 0 ) {
+                                                            
+                                                            clearTimeout(timeOut);
+                                                            this.createLineChart(this.props,this,sizeLine,time,united);
+                                                        }  else {
+                                                            timeOut = setTimeout(tick, 100); 
+                                                        }
+                                                }.bind(this), 0);
+
+                                            } else {
+                                                this.props.message = 'Данные не подходят для построения графика';
+                                                this.props.nodata = true; 
+                                            }
 
                                                                                
                                     //     if (this.props.legends.length == 0) {
@@ -1043,22 +1055,18 @@ export default {
         
                     
          }, 
-         createLegends: function(resolve){
+         createLegends: function(metricsName){
                 let colorLine = this.colorLegends;
-                let metricsName = Object.keys(this.props.result[0]).filter( (item,i) => {
-                    if (i != 0) {
-                        return item
-                    }
-                });
-                if (metricsName.length > 0) {
+                
                     this.props.legends = [];
                     metricsName.forEach( (item,i) => {
-                        this.props.legends.push({color: colorLine[i],label:metricsName[i]})
+                        this.props.legends.push({color: colorLine[i],label: metricsName[i]})
                     })
                    // this.props.legends = [{color: 'black',label:'12131231231231231231313'},{color: 'black',label:'1213123121231231231313'},{color: 'black',label:'1211231231231231231313'}];
 
 
                     let  readyLegends = setTimeout( function tick()  {
+                        
                         if (this.$refs && this.$refs.legends.offsetHeight > 0){
                             clearTimeout(readyLegends);
                             //resolve('done')
@@ -1066,7 +1074,6 @@ export default {
                             readyLegends = setTimeout(tick, 100); 
                         }
                     }.bind(this),0); 
-                }
                 
 
          },

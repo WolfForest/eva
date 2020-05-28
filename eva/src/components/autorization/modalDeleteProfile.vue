@@ -1,8 +1,8 @@
 <template>
     <v-dialog  v-model="active" width='400px' persistent  @keydown="checkEsc($event)">
-        <v-card  class="delete-profile">
+        <v-card  class="delete-profile" :style="{background: colorFrom.backElement }">
             <v-card-text>
-                <div class="name-profile" v-html="dataFrom.text"></div>
+                <div class="name-profile" v-html="dataFrom.text" :style="{color: colorFrom.text }"></div>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>

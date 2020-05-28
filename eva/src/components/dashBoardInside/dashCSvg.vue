@@ -60,7 +60,7 @@ export default {
             noMsg: 1,
             msgText: 'Нет данных для отображения',
             sendMsg: 'Отправить изображение',
-            image:  mdiFileImageOutline ,
+            image: mdiFileImageOutline ,
             file: '',
             upload: mdiUpload,
             dataFrom: {},
@@ -102,7 +102,7 @@ export default {
                 return item.id
             })
             
-            this.captures =  idsButton;
+            this.captures = idsButton;
 
             return options.change
          }

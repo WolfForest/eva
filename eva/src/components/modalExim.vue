@@ -4,11 +4,11 @@
             <v-card :style="{background:color.backElement}">
                 <v-card-text class="headline "><div class="exin-title" :style="{color:color.text,borderColor:color.text}">Экспорт / Импорт </div></v-card-text>
                 <div class="block-exim" ref="blockExim">
-                    <v-select :prepend-icon="selectImg" :items="elements[element]" multiple  v-model="selected" :color="color.text"  hide-details  outlined class="select-exp" :label="labelExp[element]" ></v-select> 
+                    <v-select :prepend-icon="selectImg" :style="{color:color.text, fill: color.text}" :items="elements[element]"  multiple  v-model="selected" :color="color.text"  hide-details  outlined class="select-exp" :label="labelExp[element]" ></v-select> 
                     <v-btn small  :color="color.controls" class="export-btn" @click="exportDash">Экспортировать</v-btn>
                     <p class="msgExp" :style="{color:color[msgExp.color],opacity:msgExp.opacity}">{{msgExp.text}}</p>
                     <div class="divider" :style="{backgroundColor:color.border,opacity:'0,3'}"></div>
-                    <v-file-input :prepend-icon="fileImg" @change="file=$event" :color="color.controls" class="file-itself" hide-details  outlined label="Выберите файл"></v-file-input>
+                    <v-file-input :prepend-icon="fileImg" @change="file=$event" :color="color.controls" :style="{color:color.text, fill: color.text}"  class="file-itself" hide-details  outlined label="Выберите файл"></v-file-input>
                     <v-btn small  :color="color.controls" class="import-btn" @click="importDash">Импортировать</v-btn>
                     <p class="msgImp" :style="{color:color[msgImp.color],opacity:msgImp.opacity}">{{msgImp.text}}</p>
                 </div>  

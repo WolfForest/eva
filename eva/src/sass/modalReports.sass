@@ -61,28 +61,128 @@
 
                 .v-label--active
                     top: 18px
+
+            .v-input__control
+                color: inherit
+
+                .v-input__slot
+                    color: inherit
+
+                    fieldset
+                        color: inherit !important
+                        opacity: 0.5
+
+                    .v-text-field__slot
+
+                        label
+                            color: inherit
+
+                        input
+                            color: inherit
+
+                    .v-input__append-inner
+
+                        button
+                            color: inherit
         
         .expansion-panels
             width: 400px
 
-            .v-expansion-panel-header
-                min-height: 50px
+            .v-expansion-panel
+                // background-color: inherit
+                // color: inherit
 
-            .order-expansion
+                &::before
+                    box-shadow: none
 
-                .v-expansion-panel-content__wrap
-                    display: flex
-                    flex-flow: row wrap
-                    justify-content: flex-start
-                    align-items: center
-                    padding: 0 24px 10px
+                .v-icon
+                    color: inherit
 
-                    .textarea-item
-                        width: 150px
-                        margin: 10px 0
+                .v-expansion-panel-header
+                    min-height: 50px
 
-                        &:nth-child(even)
-                            margin-left: 20px
+                .order-expansion
+
+                    .v-expansion-panel-content__wrap
+                        display: flex
+                        flex-flow: row wrap
+                        justify-content: flex-start
+                        align-items: center
+                        padding: 0 24px 10px
+
+                        .textarea-item
+                            width: 150px
+                            margin: 10px 0
+
+                            &:nth-child(even)
+                                margin-left: 20px
+                        
+                            .v-input__control
+                                color: inherit
+
+                                .v-input__slot
+                                    color: inherit
+
+                                    fieldset
+                                        color: inherit !important
+                                        opacity: 0.5
+
+                                    .v-text-field__slot
+
+                                        label
+                                            color: inherit
+                                            background: inherit
+
+                                        input
+                                            color: inherit
+
+                                    .v-input__append-inner
+
+                                        button
+                                            color: inherit
 
     .reports-action
         width: 100%
+
+    .datetimepicker
+        background: inherit
+
+        .datepicker
+            background: inherit
+            border: 1px solid
+
+            .pickers-container
+                background: inherit
+
+                .datepicker-controls
+
+                    .custom-button
+                        background: inherit
+
+                .month-container
+
+                    .datepicker-day
+
+                        .datepicker-day-text
+                            color: inherit
+
+                        .datepicker-today
+                            background: inherit
+                            border: 1px solid
+
+                .time-picker
+
+                    .time-picker-column-item 
+                        color: inherit
+
+            .datepicker-buttons-container
+                background: inherit
+
+                .datepicker-button
+                    background: inherit
+
+                    svg
+                        fill: inherit
+
+                    .datepicker-button-effect
+                        background: transparent

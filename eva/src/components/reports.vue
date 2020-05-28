@@ -1,22 +1,22 @@
 <template >
-    <v-app class="reports-app-main">
+    <v-app class="reports-app-main" :style="{background: color.back}">
        <header-top @setUsername="setUsername($event)"></header-top>
        <v-content>
            <v-container  class="main-container container-report" >
                <div class="report-block" ref="report" >
-                     <v-card   class="static-block">
+                     <v-card   class="static-block" :style="{background: color.backElement, color: color.text}">
                         <v-card-title  class="static-title">
                             <p>Статистика</p>
                             <div :style="{background:color.controls}" class="static-divider"></div>
                         </v-card-title>
-                        <v-card-text class="static-overflow-block">
+                        <v-card-text class="static-overflow-block" :style="{color:color.text}"  >
                              <div class="static-row" v-for="item in rows" :key="item.id" @click="openStatistic(item)" v-html="item.text"></div>
                          </v-card-text>
                      </v-card>
-                     <v-card class="search-block">
-                        <v-card-text class="search-card-block">
+                     <v-card class="search-block" :style="{background: color.backElement, color: color.text}">
+                        <v-card-text class="search-card-block" :style="{background: color.backElement, color: color.text}">
                             <div  class="loading-divider" :class="{loading:loading}" ><div class="loading-bar " ></div></div>
-                            <v-textarea ref="search" solo spellcheck="false" flat no-resize hide-details  :rows="rowsCount"  placeholder="Введите запрос" v-model="search.original_spl"></v-textarea>
+                            <v-textarea ref="search" solo spellcheck="false" flat no-resize hide-details  :rows="rowsCount"  :style="{background: color.backElement, color: color.text}"  placeholder="Введите запрос" v-model="search.original_spl"></v-textarea>
                              <v-tooltip bottom :color="color.controlsActive" >
                                 <template v-slot:activator="{ on }" >
                                    <v-btn
@@ -56,8 +56,8 @@
                             </v-tooltip>
                         </v-card-text>
                     </v-card>
-                    <v-card class="static-vis" ref="vis">
-                        <v-card-text>
+                    <v-card class="static-vis" ref="vis"  :style="{background: color.backElement, color: color.text}">
+                        <v-card-text :style="{color: color.text}">
                               <v-card-title class="title-vis">
                                   <v-tooltip bottom :color="color.controlsActive" v-for="i in elements" :key="aboutElem[i].key" @click="changeTab(i)" >
                                         <template v-slot:activator="{ on }">
@@ -65,9 +65,9 @@
                                         </template>
                                         <span>{{aboutElem[i].tooltip}}</span>
                                     </v-tooltip>
-                                    <div class="divider-tab"></div>
+                                    <div class="divider-tab" :style="{background: color.border}"></div>
                               </v-card-title>
-                             <v-card-text v-for="i in elements" :key="i" v-show="aboutElem[i].show" :is="`dash-${i}`"   :idFrom="i" :colorFrom="color"  idDashFrom="reports" :widthFrom="size.width" :heightFrom="size.height" :timeFormatFrom="''" :sizeTileFrom="''" :searchRep="true"   :dataRestFrom="data"    > </v-card-text>
+                             <v-card-text v-for="i in elements" :key="i" v-show="aboutElem[i].show" :is="`dash-${i}`"   :idFrom="i" :colorFrom="color"  idDashFrom="reports" :widthFrom="size.width" :heightFrom="size.height" :timeFormatFrom="''" :sizeTileFrom="''" :searchRep="true" :tooltipFrom="tooltipSvg"    :dataRestFrom="data"    > </v-card-text>
                             <v-tooltip bottom :color="color.controlsActive">
                                 <template v-slot:activator="{ on }">
                                         <v-icon class="title-icon merge" :color="unitedData.color" v-show="unitedShow" v-on="on"  @click="changeUnited">{{merge}}</v-icon>
@@ -141,8 +141,13 @@ export default {
                 controlsActive: '#41C4FF',
                 controlsInsideDash: '#DADADA',
                 panel: '#0D0D0D',
-                border: '#00000033',
+                border: '#DADADA',
             },
+            tooltipSvg: {
+                'texts': [],
+                'links': [],
+                'buttons': []
+            }
         } 
     },
     asyncComputed: {
@@ -174,9 +179,9 @@ export default {
         shouldGet:  function() {  // понимаем нужно ли запрашивтаь данные с реста
             return this.$store.getters.getShouldGet({id:'table', idDash: 'reports'})
         },
-        color: function() {
-            return this.$store.getters.getColor
-        },
+        // color: function() {
+        //     return this.$store.getters.getColor
+        // },
         elements: function() {
            
             this.$store.getters.getReportElement.forEach( (item,i) => {
@@ -187,7 +192,7 @@ export default {
                     this.$set(this.aboutElem[item],'color',this.color.controls);
                 } else {
                     this.$set(this.aboutElem[item],'show',false);
-                    this.$set(this.aboutElem[item],'color','none');
+                    this.$set(this.aboutElem[item],'color',this.color.text);
                 }
 
                 this.$set(this.aboutElem[item],'tooltip',settings.reports[item].tooltip);
@@ -357,7 +362,7 @@ export default {
              Object.keys(this.aboutElem).forEach( item => {
                  if (item != elem) {
                      this.$set(this.aboutElem[item],'show',false);
-                     this.$set(this.aboutElem[item],'color','none');
+                     this.$set(this.aboutElem[item],'color',this.color.text);
                  } else {
                      this.$set(this.aboutElem[item],'show',true);
                      this.$set(this.aboutElem[item],'color',this.color.controls);

@@ -117,7 +117,7 @@ export default {
                 controlsActive: '#41C4FF',
                 controlsInsideDash: '#DADADA',
                 panel: '#0D0D0D',
-                border: '#00000033',
+                border: '#DADADA',
             },
         } 
     },
@@ -385,6 +385,7 @@ export default {
     },
     mounted() {
         this.getData('tab-1');
+
     } 
 }
 

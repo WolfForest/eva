@@ -1,10 +1,10 @@
 <template>
-    <v-dialog  v-model="active"  :width="width" persistent @keydown="checkEsc($event)">
-        <v-card v-if="passway" class="passcard">
-            <v-card-text class="card-text-profile">
+    <v-dialog  v-model="active"  :width="width" persistent @keydown="checkEsc($event)" >
+        <v-card v-if="passway" class="passcard" :style="{backgroundColor: colorFrom.backElement }">
+            <v-card-text class="card-text-profile" :style="{color: colorFrom.text }">
                 <div class="headline">Изменить пароль</div>
-                <v-text-field label="Старый пароль" :color="colorFrom.controls"  class="field-profile"  v-model="oldpass" type="password" outlined  hide-details clearable></v-text-field>
-                <v-text-field label="Новый пароль" :color="colorFrom.controls"  class="field-profile"  v-model="newpass" type="password" outlined  hide-details clearable></v-text-field>
+                <v-text-field label="Старый пароль" :color="colorFrom.controls"  :style="{color: colorFrom.text }" class="field-profile"  v-model="oldpass" type="password" outlined  hide-details clearable></v-text-field>
+                <v-text-field label="Новый пароль" :color="colorFrom.controls"  :style="{color: colorFrom.text }"  class="field-profile"  v-model="newpass" type="password" outlined  hide-details clearable></v-text-field>
 
             </v-card-text>
             <div class="msg-profile" :class="{openMsg:openMsg}" :style="{color:colorMsg}">{{msg}}</div>
@@ -14,14 +14,14 @@
             <v-btn small :color="colorFrom.controlsActive" class="profile-btn" @click="cancelModal">Отмена</v-btn>
             </v-card-actions>
         </v-card>
-        <v-card v-if="!passway" class="profile-tab">
+        <v-card v-if="!passway" class="profile-tab" :style="{backgroundColor: colorFrom.backElement }">
 
-            <v-card-text   class="card-text-profile">
+            <v-card-text   class="card-text-profile" :style="{color: colorFrom.text }">
                 <div class="headline">{{titleModal}}</div>
 
                 <div class="profile-block" v-if="showBlock.users">
-                    <v-text-field label="Логин пользователя" :color="colorFrom.controls"  class="field-profile"  v-model="userData.username"  outlined  hide-details clearable></v-text-field>
-                    <v-text-field label="Пароль пользователя" :color="colorFrom.controls"  autocomplete="new-password" class="field-profile" placeholder="********"  v-model="userData.pass" type="password" outlined  hide-details clearable></v-text-field>
+                    <v-text-field label="Логин пользователя" :color="colorFrom.controls"  :style="{color: colorFrom.text }"  class="field-profile"  v-model="userData.username"  outlined  hide-details clearable></v-text-field>
+                    <v-text-field label="Пароль пользователя" :color="colorFrom.controls"   :style="{color: colorFrom.text }"  autocomplete="new-password" class="field-profile" placeholder="********"  v-model="userData.pass" type="password" outlined  hide-details clearable></v-text-field>
                     
                     <!--  v-for="item in Object.keys(user.tab)" :key="item" -->
                     <data-profile v-for="item in Object.keys(user.tab)" :key="item" :colorFrom="colorFrom"  essence="user" :dataFrom="dataRest" @changeData="changeData"  :subessence="item" :create="create"  :activeFrom="activeFrom" ></data-profile>
@@ -309,7 +309,7 @@ export default {
                                 if (this.userData.pass.length == 0 || !this.userData.pass) {
                                     this.msg = "Логин или пароль не могут быть пустыми"; 
                                     this.openMsg = true;
-                                    this.colorMsg = '#FF6D70';
+                                    this.colorMsg = this.colorFrom.controlsActive;
                                     setTimeout( () => {
                                         this.openMsg = false;
                                     },2000);
@@ -319,7 +319,7 @@ export default {
                                 if(this.userData.pass.length < 7){
                                         this.msg = "Пароль должен быть больше 7 символов"; 
                                         this.openMsg = true;
-                                        this.colorMsg = '#FF6D70';
+                                        this.colorMsg = this.colorFrom.controlsActive;
                                         setTimeout( () => {
                                             this.openMsg = false;
                                         },2000);
@@ -331,7 +331,7 @@ export default {
                             if (this.oldpass == null || this.oldpass.length == 0  || !this.oldpass) {
                                 this.msg = "Введите старый пароль"; 
                                 this.openMsg = true;
-                                this.colorMsg = '#FF6D70';
+                                this.colorMsg = this.colorFrom.controlsActive;
                                 setTimeout( () => {
                                     this.openMsg = false;
                                 },2000);
@@ -339,7 +339,7 @@ export default {
                             } else if (this.newpass == null || this.newpass.length == 0 ||  !this.newpass) {
                                 this.msg = "Введите новый пароль"; 
                                 this.openMsg = true;
-                                this.colorMsg = '#FF6D70';
+                                this.colorMsg = this.colorFrom.controlsActive;
                                 setTimeout( () => {
                                     this.openMsg = false;
                                 },2000);
@@ -347,7 +347,7 @@ export default {
                             } else  if (this.newpass.length < 7 ) {
                                 this.msg = "Пароль должен быть больше 7 символов"; 
                                 this.openMsg = true;
-                                this.colorMsg = '#FF6D70';
+                                this.colorMsg = this.colorFrom.controlsActive;
                                 setTimeout( () => {
                                     this.openMsg = false;
                                 },2000);
@@ -355,7 +355,7 @@ export default {
                             } else  if (this.newpass == this.oldpass ) {
                                 this.msg = "Пароли не должны совпадать"; 
                                 this.openMsg = true;
-                                this.colorMsg = '#FF6D70';
+                                this.colorMsg = this.colorFrom.controlsActive;
                                 setTimeout( () => {
                                     this.openMsg = false;
                                 },2000);
@@ -370,7 +370,7 @@ export default {
                                   if(this.userData.pass.length < 7){
                                         this.msg = "Пароль должен быть больше 7 символов"; 
                                         this.openMsg = true;
-                                        this.colorMsg = '#FF6D70';
+                                        this.colorMsg = this.colorFrom.controlsActive;
                                         setTimeout( () => {
                                             this.openMsg = false;
                                         },2000);

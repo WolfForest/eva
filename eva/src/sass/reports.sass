@@ -25,7 +25,7 @@
 
                 .static-title
                     font-size: 18px
-                    color: rgba(0,0,0,1)
+                    color: inherit
                     position: relative
                     width: 100%
                     text-align: center
@@ -52,7 +52,6 @@
                     overflow: auto
 
                     .static-row
-                        color: black
                         font-size: 16px
                         margin: 10px 0
                         cursor: pointer
@@ -89,10 +88,12 @@
 
                 .v-input__slot
                     height: 25vh
+                    background: inherit
 
                     textarea
                         font-size: 16px
                         line-height: 25px
+                        color: inherit
 
 
                 .loading
@@ -145,7 +146,6 @@
                         position: absolute
                         width: 100%
                         height: 1px
-                        background: #333333
                         opacity: 0.4
                         bottom: 0
 
@@ -154,6 +154,44 @@
                         width: 30px
                         height: 30px
                         cursor: pointer
+
+                .graph-block
+                    color: inherit
+
+                    .nodata
+                        color: inherit
+
+                .dash-csvg
+                    color: inherit
+
+                    .file-itself
+                        color: inherit
+
+                        .v-icon
+                            color: inherit
+
+                        .v-input__control
+                            color: inherit
+
+                            .v-input__slot
+                                color: inherit
+
+                                fieldset
+                                    color: inherit !important
+                                    opacity: 0.5
+
+                                .v-text-field__slot
+
+                                    label
+                                        color: inherit
+
+                                    input
+                                        color: inherit
+
+                                .v-input__append-inner
+
+                                    button
+                                        color: inherit
 
                 .merge
                     position: absolute
@@ -166,6 +204,18 @@
 
                 .dash-table
                     margin: 20px 0 !important
+
+                    thead
+
+                        tr
+                            th
+                                box-shadow: inset 0 -1px 0 
+
+                    tbody
+
+                        tr
+                            td
+                                border-color: inherit
 
                         
 
