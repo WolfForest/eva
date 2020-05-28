@@ -3,7 +3,6 @@
             <v-data-table
                     :headers="props.titles"
                     :items.sync="this.getDataStart"
-                    
                     class="dash-table"
                     :data-id="this.id"
                     v-model="props.input"

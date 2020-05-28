@@ -2,32 +2,32 @@
 
 <template>
     <v-dialog  :value="active"  width="680" persistent :color="color.text" @keydown="checkEsc($event)"> 
-        <v-card :style="{background: color.back, color: color.text}" class="card-search">
+        <v-card :style="{background: color.backElement, color: color.text}" class="card-search">
             <div class="textarea-block"  >
-                    <v-text-field :color="color.text" class="textarea-item" outlined label="Имя ИД" placeholder="Sid"  v-model="search.sid" hide-details></v-text-field>
-                    <v-textarea :color="color.text" outlined hide-details no-resize spellcheck="false" class="code-search" height="180px" rows="5"  placeholder="Origin spl" label="Текст ИД" v-model="search.original_spl"></v-textarea>
+                    <v-text-field :color="color.text" :style="{color: colorFrom.text}" class="textarea-item" outlined label="Имя ИД" placeholder="Sid"  v-model="search.sid" hide-details></v-text-field>
+                    <v-textarea :color="color.text" :style="{color: colorFrom.text}" outlined hide-details no-resize spellcheck="false" class="code-search" height="180px" rows="5"  placeholder="Origin spl" label="Текст ИД" v-model="search.original_spl"></v-textarea>
                     <div class="times-block">
                         <div class="time-block">
-                            <v-text-field  :color="color.text" class="textarea-item" outlined label="Временной интервал: начало"  placeholder="0" v-model="search.parametrs.tws" hide-details></v-text-field>
-                            <DTPicker v-model="tws"    :no-value-to-custom-elem="true"  format="YYYY-MM-DD HH:mm"     :color="color.controlsActive" :button-color="color.controls" class="dtpicker-search" >
+                            <v-text-field  :color="color.text" :style="{color: colorFrom.text}" class="textarea-item" outlined label="Временной интервал: начало"  placeholder="0" v-model="search.parametrs.tws" hide-details></v-text-field>
+                            <DTPicker v-model="tws"    :no-value-to-custom-elem="true"  format="YYYY-MM-DD HH:mm"  :style="{fill: colorFrom.text, background: colorFrom.backElement, color: colorFrom.text}"   :color="color.controlsActive" :button-color="color.controls" class="dtpicker-search" >
                                 <v-icon class="picker-search" :color="color.controls" >{{pickerIcon}}</v-icon> 
                             </DTPicker>
                         </div>
                         <div class="time-block">
-                            <v-text-field  :color="color.text" class="textarea-item" outlined label="Временной интервал: конец" placeholder="0"  v-model="search.parametrs.twf" hide-details></v-text-field>
-                            <DTPicker v-model="twf"   :no-value-to-custom-elem="true"  format="YYYY-MM-DD HH:mm"     :color="color.controlsActive" :button-color="color.controls" class="dtpicker-search" >
+                            <v-text-field  :color="color.text" :style="{color: colorFrom.text}" class="textarea-item" outlined label="Временной интервал: конец" placeholder="0"  v-model="search.parametrs.twf" hide-details></v-text-field>
+                            <DTPicker v-model="twf"   :no-value-to-custom-elem="true"  format="YYYY-MM-DD HH:mm"  :style="{fill: colorFrom.text, background: colorFrom.backElement, color: colorFrom.text}"   :color="color.controlsActive" :button-color="color.controls" class="dtpicker-search" >
                                 <v-icon class="picker-search" :color="color.controls" >{{pickerIcon}}</v-icon> 
                             </DTPicker>
                         </div>
                     </div>
                     <v-expansion-panels class="expansion-panels">
-                        <v-expansion-panel>
+                        <v-expansion-panel :style="{backgroundColor: colorFrom.backElement,  color: colorFrom.text, border: `1px solid ${colorFrom.border}`}">
                             <v-expansion-panel-header>Дополнительные параметры</v-expansion-panel-header>
                             <v-expansion-panel-content class='order-expansion'>
-                                <v-text-field  color="teal"  class="textarea-item" outlined label="Timeout"  v-model="search.parametrs.timeout" hide-details></v-text-field>
-                                <v-text-field  color="teal"  class="textarea-item" outlined label="Cache_ttl"  v-model="search.parametrs.cache_ttl" hide-details></v-text-field>
-                                <v-text-field color="teal"   class="textarea-item" outlined label="Field_extraction"  v-model="search.parametrs.field_extraction" hide-details></v-text-field>
-                                <v-text-field  color="teal"  class="textarea-item" outlined label="Preview"  v-model="search.parametrs.preview" hide-details></v-text-field>
+                                <v-text-field  :color="colorFrom.controls" :style="{color: colorFrom.text}"  class="textarea-item" outlined label="Timeout"  v-model="search.parametrs.timeout" hide-details></v-text-field>
+                                <v-text-field  :color="colorFrom.controls" :style="{color: colorFrom.text}" class="textarea-item" outlined label="Cache_ttl"  v-model="search.parametrs.cache_ttl" hide-details></v-text-field>
+                                <v-text-field :color="colorFrom.controls"  :style="{color: colorFrom.text}" class="textarea-item" outlined label="Field_extraction"  v-model="search.parametrs.field_extraction" hide-details></v-text-field>
+                                <v-text-field  :color="colorFrom.controls" :style="{color: colorFrom.text}" class="textarea-item" outlined label="Preview"  v-model="search.parametrs.preview" hide-details></v-text-field>
                             </v-expansion-panel-content>
                         </v-expansion-panel>   
                     </v-expansion-panels> 

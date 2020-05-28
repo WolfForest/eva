@@ -1,7 +1,7 @@
 <template>
        <div class="dash-main" :style="{background: color.panel}">
             <div class="main-title">
-                <div class="title-name" :style="{color:color.back}">{{name}}</div>
+                <div class="title-name" :style="{color:'#DADADA'}">{{name}}</div>
                 <!-- <v-tooltip bottom :color="color.controlsActive" >
                         <template v-slot:activator="{ on }">
                             <v-icon class="home"  :co lor="color.controls" v-on="on" @click="toHome">{{home}}</v-icon>
@@ -11,7 +11,7 @@
                 <div class="title-edit" :style="editSwitch">
                     <v-tooltip bottom :color="color.controlsActive" >
                         <template v-slot:activator="{ on }">
-                           <v-icon class="edit" v-on="on" :style="{color:color.back}" @click="setEditMode">{{edit_layout}}</v-icon> 
+                           <v-icon class="edit" v-on="on" :style="{color:'#DADADA'}" @click="setEditMode">{{edit_layout}}</v-icon> 
                         </template>
                         <span>Поменять режим отображения</span>
                     </v-tooltip>
@@ -118,8 +118,8 @@
                 </div>
             </div>
             <div class="block-tocken" :class="{opentocken:opentocken}"  :style="{boxShadow:`0px 0px 3px 0 ${color.border}`, background:color.back, color:color.text}">
-                <div class="row-tocken" v-for="(tocken, i) in tockens" :key="tocken.name" >
-                    <div class="row-data row-itself" :class="{showTocken:!lookTockens[i].show}">
+                <div class="row-tocken" v-for="(tocken, i) in tockens" :key="tocken.name" :style="{color: color.text}">
+                    <div class="row-data row-itself" :class="{showTocken:!lookTockens[i].show}"  >
                         <v-text-field  class="tocken-name " :color="color.text" outlined label="Имя"  v-model="tockensName[tocken.name]" hide-details></v-text-field>
                         <v-select  :items="elements" :color="color.text"  v-model="tocken.elem" label="Элемент" hide-details  outlined class="tocken-elem " ></v-select>
                         <v-select  :items="actions(tocken.elem)" :color="color.text" v-model="tocken.action" label="Действие" hide-details  outlined class="tocken-action " ></v-select>
@@ -157,7 +157,7 @@
             </div>
             <div class="block-save" :class="{opensave:opensave}" :style="{boxShadow:`0px 0px 3px 0 ${color.border}`, background:color.back}">
                 <div class="save-obertka" v-show="!errorSave">
-                    <div class="question-save">Сохранить дашборд <span :style="{color:color.text}"  class="save-name">{{name}}</span> ?</div>
+                    <div class="question-save" :style="{color:color.text}" >Сохранить дашборд <span  class="save-name">{{name}}</span> ?</div>
                     <div class="buttons-save">
                         <v-btn   class="save-btn" small :color="color.controlsSystem" @click="saveDash">Да</v-btn>
                         <v-btn   class="save-btn" small :color="color.controlsActive" @click="opensave = false; save_elem = false;">Нет</v-btn>
@@ -335,42 +335,42 @@ export default {
                if (this.profile_elem) {
                    return  `fill:${this.color.controlsActive}`;
              } else {
-                    return `fill:${this.color.back}`;
+                    return `fill:#DADADA`;
               }
            },
            saveSwitch: function() {  // переключатель иконки импорта/экспорта 
                if (this.save_elem) {
                    return  `fill:${this.color.controlsActive}`;
              } else {
-                    return `fill:${this.color.back}`;
+                    return `fill:#DADADA`;
               }
            },
            searchSwitch: function() {  // переключатель иконки ИС (источников данных)
                if (this.search_elem) {
                    return  `fill:${this.color.controlsActive}`;
              } else {
-                    return `fill:${this.color.back}`;
+                    return `fill:#DADADA`;
               }
            },
             toolSwitch: function() {  // тоже самое для инструментов
                if (this.tool_elem) {
                   return  `fill:${this.color.controlsActive}`;
              } else {
-                    return `fill:${this.color.back}`;
+                    return `fill:#DADADA`;
               }
            },
            tockenSwitch: function() {  // тоже самое для токенов
                if (this.tocken_elem) {
                    return  `fill:${this.color.controlsActive}`;
              } else {
-                    return `fill:${this.color.back}`;
+                    return `fill:#DADADA`;
               }
            },
            codeSwitch: function() {  // тоже самое для event
                if (this.code_elem) {
                     return  `fill:${this.color.controlsActive}`;
              } else {
-                    return `fill:${this.color.back}`;
+                    return `fill:#DADADA`;
               }
            },
            editSwitch: function() {
@@ -1196,10 +1196,6 @@ export default {
     mounted () {
           this.tools =  settings.tools;
 
-          
-
-
-
            document.onmouseup = event => {  // а при отпускании кнопки при перетаскивании
                document.onmousemove = null;  // мы бросаем элемент где он есть
                let width = document.querySelector("#app").clientWidth;
@@ -1221,11 +1217,11 @@ export default {
            if (eventFull != '') {
                this.textarea_event = eventFull;
            }
-           document.querySelector('.block-code').style = `max-height:${document.querySelector('#content').clientHeight-100}px`;
+           document.querySelector('.block-code').style.maxHeight = `${document.querySelector('#content').clientHeight-100}px`;
            this.colorGear = 'controls';
            this.colorExim = 'controls';
-           this.fieldsets = document.querySelectorAll('fieldset');
-           this.changeColor(this.fieldsets);
+         //  this.fieldsets = document.querySelectorAll('fieldset');
+          // this.changeColor(this.fieldsets);
          
           // document.querySelector('.block-code')
            
