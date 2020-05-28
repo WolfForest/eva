@@ -138,7 +138,7 @@ export default {
                     res = Object.values(data).map( item => {
                         return item[this.elem];
                     })
-                    res = this.filterSelect(res,this.elemDeep.true);
+                        res = this.filterSelect(res,this.elemDeep.true);
                 }
             
             //this.elemDeep = res[0];
@@ -214,13 +214,14 @@ export default {
                     }
                 })
 
-                this.topArray = sort(selected);
-                this.bottomArray = sort(data);
+
+                this.topArray = sorted(selected);
+                this.bottomArray = sorted(data);
                 
 
                 data = [...this.topArray,...this.bottomArray];
                
-                function sort(data) {
+                function sorted(data) {
                     let reg = new RegExp( /\d/, "g");
                         
                         if (reg.exec(data[0])) {
