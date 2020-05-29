@@ -9,7 +9,7 @@
                 @dragging="onDrag"
                 @resizing="onResize" 
                 @dragstop="dragStopped" 
-                :style={zIndex:props.zIndex}
+                :style="{zIndex:props.zIndex, outlineColor: props.color.controlsActive, background: props.color.controlsActive }"
                 >
   
      <dash-board :dataModeFrom="dataMode" :colorFrom="color" :width="props.width"  :height="props.height"  :idDashFrom="idDash" :dataPageFrom="dataPageFrom" :dataElemFrom="id" @moveElem="moveSwitch" @resizeElem="resizeSwitch" @SetLevel="props.zIndex = $event" @sendMove="sendMove" @sendSize="sizeSwitch"  ></dash-board>
@@ -41,6 +41,9 @@ export default {
         left: 0,
         vue_drag: false,
         zIndex: 1,
+        color: { 
+          controlsActive: '#41C4FF',
+        },
       }
     }
   },
@@ -134,7 +137,8 @@ export default {
        let height = this.calcSizeProc(size.height,'height');
        this.props.width = width;
        this.props.height =height;
-  }
+       
+  },
 }
 </script>
 
@@ -146,9 +150,11 @@ export default {
   position: absolute;
   box-sizing: border-box;
   outline: none ;
+  border-radius: 4px;
 }
 .vdr.active.resizable{
-  outline: 2px dashed #FF6D70;
+  outline-color: inherit;
+  outline: 2px dashed;
 }
 
 .handle {
@@ -156,7 +162,7 @@ export default {
   position: absolute;
   width: 10px;
   height: 10px;
-  background: #FF6D70;
+  background: inherit;
   z-index: 1;
 }
 .handle-tl {
