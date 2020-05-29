@@ -15,7 +15,7 @@
                      </v-card>
                      <v-card class="search-block" :style="{background: color.backElement, color: color.text}">
                         <v-card-text class="search-card-block" :style="{background: color.backElement, color: color.text}">
-                            <div  class="loading-divider" :class="{loading:loading}" ><div class="loading-bar " ></div></div>
+                            <div  class="loading-divider" :class="{loading:loading}" ><div class="loading-bar " :style="{background: color.controls}"></div></div>
                             <v-textarea ref="search" solo spellcheck="false" flat no-resize hide-details  :rows="rowsCount"  :style="{background: color.backElement, color: color.text}"  placeholder="Введите запрос" v-model="search.original_spl"></v-textarea>
                              <v-tooltip bottom :color="color.controlsActive" >
                                 <template v-slot:activator="{ on }" >

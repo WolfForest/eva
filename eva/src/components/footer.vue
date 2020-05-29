@@ -1,5 +1,5 @@
 <template >
-    <div class="footer-block">
+    <div class="footer-block" :style="{color: color.text}">
         {{version}}
     </div>    
 </template>
@@ -12,7 +12,10 @@ export default {
 
     data () {
         return {
-            version: 'v 1.23.7 [workonSelect]'
+            version: 'v 1.24.7 [darkTheme]',
+             color: { 
+                text: '#DADADA',
+            },
         } 
     },
      computed: { 

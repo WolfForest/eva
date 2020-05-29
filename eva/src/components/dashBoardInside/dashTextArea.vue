@@ -1,6 +1,6 @@
 <template >
     <div class="dash-textArea" >
-        <v-textarea :color="color.controls" outlined   hide-details class="textarea-itself" @keypress.enter="setTockenByPress($event)"  :height="height" no-resize v-model="textarea"></v-textarea>
+        <v-textarea :color="color.controls" outlined :style="{color: color.text}" spellcheck="false"  hide-details class="textarea-itself" @keypress.enter="setTockenByPress($event)"  :height="height" no-resize v-model="textarea"></v-textarea>
         <!-- <div class="button-container"> -->
         <v-btn small :color="color.controls" class="accept-btn" @click="acceptTextArea"><v-icon>{{searchIcon}}</v-icon></v-btn>
         <!-- </div> -->
