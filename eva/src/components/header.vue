@@ -1,23 +1,23 @@
 <template >
-    <div class="header-block" :style="{background: color.controlsSystem, height: height }">
+    <div class="header-block" :style="{background: color.panel, height: height }">
         <div class="aut-panel">
             <div class="nav-btn">
-                <div class="title-main" :style="{color:color.back, opacity: '0.4'}">EVA</div>
+                <div class="title-main" :style="{color:'white', opacity: '0.4'}">EVA</div>
                 <v-tooltip bottom :color="color.controlsActive" >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="home"  :color="color.back" v-on="on" @click="toHome">{{home}}</v-icon>
+                        <v-icon class="home"  color="white" v-on="on" @click="toHome">{{home}}</v-icon>
                     </template>
                     <span>На главную</span>
                 </v-tooltip>
                 <v-tooltip bottom :color="color.controlsActive" >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="undo"  :color="color.back" v-on="on" @click="toBackward">{{undo}}</v-icon>
+                        <v-icon class="undo"  color="white" v-on="on" @click="toBackward">{{undo}}</v-icon>
                     </template>
                     <span>Назад</span>
                 </v-tooltip>
             </div>
            <div class="manage-btn">
-                <div class="id-user" :style="{color:color.back}">{{login}} | </div>
+                <div class="id-user" :style="{color:'white'}">{{login}} | </div>
                 <v-tooltip bottom :color="color.controlsActive" >
                     <template v-slot:activator="{ on }">
                         <v-icon class="edit icon-aut" :color="colorError" v-on="on" @click="openLogs()">{{log}}</v-icon>
@@ -26,19 +26,19 @@
                 </v-tooltip>
                 <v-tooltip bottom :color="color.controlsActive" v-if="!inside" >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="edit icon-aut" :color="color.back" v-on="on" @click="edit">{{userEdit}}</v-icon>
+                        <v-icon class="edit icon-aut" color="white" v-on="on" @click="edit">{{userEdit}}</v-icon>
                     </template>
                     <span>Редактировать профиль</span>
                 </v-tooltip>
                 <v-tooltip bottom :color="color.controlsActive"  >
                     <template v-slot:activator="{ on }">
-                        <v-icon class="exit icon-aut" :color="color.back" v-on="on" @click="exit">{{door}}</v-icon>
+                        <v-icon class="exit icon-aut" color="white" v-on="on" @click="exit">{{door}}</v-icon>
                     </template>
                     <span>Выйти из профиля</span>
                 </v-tooltip>
            </div>   
         </div>
-        <v-divider></v-divider> 
+        <!-- <v-divider></v-divider>  -->
         <modal-log :modalActive="modalActive" :colorFrom="color"  @cancelModal="modalActive=false" ></modal-log>
     </div>    
 </template>
@@ -50,7 +50,7 @@ import { mdiDoor, mdiAccountEdit, mdiUndoVariant,  mdiHomeVariantOutline, mdiPen
 
 import VueJWT from 'vuejs-jwt'
 
-Vue.use(VueJWT, {'storage': 'cookie','keyName':'eva_token'})
+Vue.use(VueJWT, {'storage': 'cookie','keyName': 'eva_token'})
 
 export default {
     props: {
@@ -63,17 +63,18 @@ export default {
             door: mdiDoor,
             userEdit: mdiAccountEdit,
             log: mdiScriptTextOutline,
-            modalActive:false,
+            modalActive: false,
             home: mdiHomeVariantOutline,
             undo: mdiUndoVariant,
-            color: {
-                back: '#ffffff',
-                backElement: 'white',
-                text: '#4a4a4a',
+            color: { 
+                back: '#060606',
+                backElement: '#191919',
+                text: '#DADADA',
                 controls: '#6e96c5',
                 controlsSystem: '#004799',
                 controlsActive: '#41C4FF',
-                panel: '#2B68B1',
+                controlsInsideDash: '#DADADA',
+                panel: '#191919',
                 border: '#00000033',
             },
         } 
@@ -87,7 +88,7 @@ export default {
              if (this.$store.getters.getColorError) {
                  return this.color.controlsActive
              } else {
-                 return this.color.back
+                 return 'white'
              } 
          },
          height: function() {

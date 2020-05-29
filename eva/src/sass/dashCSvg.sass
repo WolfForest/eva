@@ -111,9 +111,11 @@
         .file-itself
 
             .v-input__control
+                color: inherit
 
                 .v-input__slot
                     min-height: 40px
+                    color: inherit
 
                     .v-text-field__slot
                         padding: 0
@@ -124,8 +126,33 @@
                         .v-file-input__text
                             cursor: pointer
 
+                    fieldset
+                        color: inherit !important
+                        opacity: 0.5
+
+                    .v-text-field__slot
+
+                        label
+                            color: inherit
+                            background: inherit
+
+                        input
+                            color: inherit
+
+                    .v-input__append-inner
+
+                        button
+                            color: inherit
+
+
         .v-input__prepend-outer
             margin-top: 8px
+
+            .v-icon
+                fill: inherit
+
+                svg
+                    fill: inherit
 
         .file-btn
             padding: 10px 20px

@@ -2,7 +2,7 @@
     <div class="dash-csvg" tabindex="0" ref="svgBlock" :style="{height:`${heightFrom-otstupBottom}px`}" >
         <div class="csvg-block"  :style="{width:`${widthFrom-40}px`,height:`${heightFrom-otstupBottom}px`}"  v-show="noMsg==1" v-html="svg" ref="csvg"></div>
         <div class="file-input" v-show="noMsg==0">
-            <v-file-input :prepend-icon="image" @change="file=$event" :color="color.controls" class="file-itself" hide-details  outlined label="Загрузить изображение"></v-file-input>
+            <v-file-input :prepend-icon="image" @change="file=$event" :style="{color: color.text,fill: color.text}" :color="color.controls" class="file-itself" hide-details  outlined label="Загрузить изображение"></v-file-input>
             <button class="file-btn" :style="{color: 'white', background: color.controls}" @click="setSvg">{{sendMsg}}</button>
             <div class="answer-block" :class="{answerShow:answerShow}" :style="{color:answerColor}">{{answer}}</div>
         </div>
@@ -60,7 +60,7 @@ export default {
             noMsg: 1,
             msgText: 'Нет данных для отображения',
             sendMsg: 'Отправить изображение',
-            image:  mdiFileImageOutline ,
+            image: mdiFileImageOutline ,
             file: '',
             upload: mdiUpload,
             dataFrom: {},
@@ -102,7 +102,7 @@ export default {
                 return item.id
             })
             
-            this.captures =  idsButton;
+            this.captures = idsButton;
 
             return options.change
          }

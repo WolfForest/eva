@@ -7,7 +7,7 @@
 
     .more-data
         width: 100%
-        border: 1px solid rgba(0,0,0,0.24)
+        border: 1px solid
         border-radius: 4px
         padding: 20px
 
@@ -19,14 +19,59 @@
             font-size: 16px
             text-align: left
 
+        .v-tabs
+
+            .v-tabs-bar
+                background: inherit
+
+                .v-tab
+                    color: inherit !important
+
+            .v-tabs-items
+                background: inherit
+
         .table-profile-block
             max-heigth: 500px
             overflow: auto
             margin: 20px 0
 
+            thead
+
+                tr
+
+                    th
+                        border-bottom: 1px solid 
+                        color: inherit !important
+
+                        .v-icon
+                            color: inherit !important
+
+            tbody
+
+                tr
+
+                    td
+                        border-color: inherit !important
+
+                .v-data-table__empty-wrapper
+                    color: inherit
+
+            .v-icon
+                color: inherit
+
         .search-row
             width: 50%
             margin: 10px 0 10px 50%
+
+            .v-input__control
+
+                .v-input__slot
+
+                    &::before
+                        border-color: inherit
+
+                    .v-icon
+                        color: inherit
 
 
         .control-btn

@@ -1,11 +1,11 @@
 <template >
-    <v-app class="application-aut">
+    <v-app class="application-aut" >
        <v-content>
-           <v-container  class="main-container container-app" >
+           <v-container  class="main-container container-app" :style="{backgroundColor:color.back}">  
                <div class="aut-container">
-                <v-card class="card-aut"  ref="authForm">
-                    <v-card-title class="title-aut">Авторизация</v-card-title>
-                    <v-card-text class="text-aut">
+                <v-card class="card-aut"  ref="authForm" :style="{backgroundColor:color.backElement}">
+                    <v-card-title class="title-aut" :style="{color:color.text}">Авторизация</v-card-title>
+                    <v-card-text class="text-aut" :style="{color:color.text}">
                         <v-text-field label="Логин" :color="color.controls" class="field-aut" v-model="user.username" outlined  hide-details clearable></v-text-field>
                         <v-text-field label="Пароль" :color="color.controls"  class="field-aut"  v-model="user.password" type="password" outlined  hide-details clearable></v-text-field>
                         <div class="error-msg" :style="{color:color.controlsActive}" :class="{errormsgshow:msg}">{{msgText}}</div>
@@ -34,15 +34,16 @@ export default {
             msg: false,
             msgText: '',
             msgg: '',
-            color: {
-                back: '#ffffff',
-                backElement: 'white',
-                text: '#4a4a4a',
+            color: { 
+                back: '#060606',
+                backElement: '#191919',
+                text: '#DADADA',
                 controls: '#6e96c5',
                 controlsSystem: '#004799',
                 controlsActive: '#41C4FF',
-                panel: '#2B68B1',
-                border: '#00000033',
+                controlsInsideDash: '#DADADA',
+                panel: '#0D0D0D',
+                border: '#454545',
             },
         } 
     },

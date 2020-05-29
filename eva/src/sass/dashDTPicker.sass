@@ -47,10 +47,31 @@
             z-index: 0
             padding: 10px
             background: white
-            border: 2px solid rgba(0,0,0,0.2)
+            border: 2px solid inherit
             border-radius: 0 0 4px 4px
             //box-shadow: 0 0 2px 0px rgba(0,0,0,0.4)
             box-shadow: none !important
+
+            .textarea-item
+
+                .v-input__control
+                    color: inherit
+
+                .v-input__slot
+                    color: inherit
+
+                    fieldset
+                        color: inherit !important
+                        opacity: 0.5
+
+                    .v-text-field__slot
+
+                        label
+                            color: inherit
+                            background: inherit
+
+                        input
+                            color: inherit
 
             hr
                 margin: 5px 0
@@ -71,6 +92,10 @@
 
                 .field
                     background: inherit 
+
+                    input
+                       background: inherit  !important
+                       border-color: inherit 
 
                     label
                         color: inherit
@@ -204,6 +229,25 @@
 
                     input
                         color: inherit
+
+                .v-input__control
+                    color: inherit
+
+                .v-input__slot
+                    color: inherit
+
+                    fieldset
+                        color: inherit !important
+                        opacity: 0.5
+
+                    .v-text-field__slot
+
+                        label
+                            color: inherit
+                            background: inherit
+
+                        input
+                            color: inherit
 
             .v-label
                 font-size: 14px

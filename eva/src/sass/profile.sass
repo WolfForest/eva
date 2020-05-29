@@ -1,3 +1,21 @@
+#app
+    .v-menu__content
+        background: inherit !important
+        color: white
+
+        .v-select-list
+            background: inherit !important
+
+            .v-list-item
+                background: inherit !important
+                color: inherit !important
+
+        .v-list
+            color: inherit
+
+            .v-list-item
+                color: inherit !important
+
 .aut-app-profile 
     color: #333 !important
 
@@ -29,6 +47,12 @@
 
     .card-aut-table
         margin-top: 100px  
+
+        .v-tabs-bar
+            background: inherit
+
+            .v-tab
+                color: inherit !important
  
         .aut-table
   
@@ -37,9 +61,19 @@
                 tr
 
                     th
-                        border-bottom: 1px solid rgba(0,0,0,0.8)
-                        color: rgba(0,0,0,0.8)
+                        border-bottom: 1px solid 
+                        color: inherit !important
 
+                        .v-icon
+                            color: inherit !important
+
+            tbody
+
+                tr
+
+                    td
+                        border-color: inherit !important
+ 
             .icon-aut
                 margin: 0 5px 
                 cursor: pointer
@@ -50,6 +84,47 @@
             .square-profile
                 width: 25px
                 height: 25px
+
+    .v-data-footer
+        border-color: inherit !important
+
+        .v-input
+            color: inherit !important
+
+            .v-input__slot
+
+                &:before
+                  border-color: inherit  
+
+            .v-select__selection
+                color: inherit !important
+
+            .v-input__append-inner
+
+                .v-icon
+                   color: inherit 
+
+        .v-data-footer__icons-before
+
+            button 
+                color: inherit !important
+
+                .v-btn__content
+                    color: inherit !important
+
+                    .v-icon
+                        color: inherit !important 
+
+        .v-data-footer__icons-after
+
+            button 
+                color: inherit !important
+
+                .v-btn__content
+                    color: inherit !important
+
+                    .v-icon
+                        color: inherit !important 
 
     .user-text-card
         display: flex

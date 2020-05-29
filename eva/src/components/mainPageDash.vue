@@ -1,11 +1,11 @@
 <template>
-     <v-app >
+     <v-app :style="{background: color.back}">
       <header-top @permissions="setPermissions"></header-top>
        <v-content>
-           <v-container  class="main-container container-dash" >
-            <v-card class="main-card-dash">
-                <v-card-text>
-                    <v-tabs   v-model="tab" class="tab-dash" :color='color.controls' >
+           <v-container  class="main-container container-dash"  >
+            <v-card class="main-card-dash" :style="{background: color.back, boxShadow:'none'}">
+                <v-card-text >
+                    <v-tabs   v-model="tab" class="tab-dash" :color='color.text' :style="{background: color.back}"> 
                         <v-tabs-slider></v-tabs-slider>
                         <v-tab  :href="`#tab-1`"  @click="deleteCookie" >
                             Группы
@@ -13,8 +13,8 @@
                         <v-tab  :href="`#tab-2`"  :disabled="disabledTab" >
                             Дашборды
                         </v-tab>
-                        <v-tab-item :value="'tab-1'" class="groups-of-dash">
-                                <v-card  class="dash-group"    :ripple="false"  v-for="i in allGroups.length" :key="i" >   
+                        <v-tab-item :value="'tab-1'" class="groups-of-dash" >
+                                <v-card  class="dash-group"    :ripple="false"  v-for="i in allGroups.length" :key="i" :style="{background: color.backElement, color: color.text, borderColors: color.border}">   
                                     <v-card-title  class="dash-group-title">
                                         <div class="title-color" :style="{borderColor:allGroups[i-1].color}"></div>
                                         <div class="controls-group">
@@ -64,17 +64,17 @@
                                 </v-btn>
                         </v-tab-item>
                         <v-tab-item :value="'tab-2'" class="groups-of-dash" >
-                            <v-card  class="dash-group"    :ripple="false"  v-for="i in allDashs.length" :key="i">   
+                            <v-card  class="dash-group"    :ripple="false"  v-for="i in allDashs.length" :key="i" :style="{background: color.backElement, color: color.text, borderColors: color.border}">   
                                 <v-card-title  class="dash-group-title">
                                     <div class="title-color" :style="{borderColor:curColor}"></div>
                                     <div class="controls-group">
-                                        <v-tooltip bottom color="#FF6D70"  >
+                                        <v-tooltip bottom :color="color.controlsActive"  >
                                             <template v-slot:activator="{ on }">
                                                 <v-icon class="edit control-group" :color='color.controls' v-if="adminRool" v-on="on" @click="() => {modalCreateGroup=true; createGroupFlag=false;actionBtn=false; curGroup=i-1 }">{{pencil}}</v-icon>
                                             </template>
                                             <span>Редактировать</span>
                                         </v-tooltip>
-                                        <v-tooltip bottom color="#FF6D70" >
+                                        <v-tooltip bottom :color="color.controlsActive" >
                                             <template v-slot:activator="{ on }">
                                                 <v-icon class="delete control-group" v-if="adminRool" v-on="on" :color='color.controls'  @click="() => {nameDelete = allDashs[i-1].name, modalDelete=true,elemDelete='dash',curDash=i-1}">{{trash}}</v-icon>
                                             </template>
@@ -150,15 +150,16 @@ export default {
             modalExim: false,
             modalCreateGroup: false,
             element: 'dash',
-            color: {
-                back: '#ffffff',
-                backElement: 'white',
-                text: '#4a4a4a',
+            color: { 
+                back: '#060606',
+                backElement: '#191919',
+                text: '#DADADA',
                 controls: '#6e96c5',
                 controlsSystem: '#004799',
                 controlsActive: '#41C4FF',
-                panel: '#2B68B1',
-                border: '#00000033',
+                controlsInsideDash: '#DADADA',
+                panel: '#0D0D0D',
+                border: '#DADADA',
             },
             createGroupFlag: false,
             nameDelete: '',

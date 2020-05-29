@@ -6,7 +6,7 @@
             <v-card :style="{background:color.backElement}" >
                 <v-card-text class="headline "><div class="create-title" :style="{color:color.text}">{{nameTitle}}</div></v-card-text>
                 <div class="create-block">
-                    <v-text-field hide-details  class="input-create" :style="{color:color.text}"  :background-color="color.backElement" label="Имя группы" :color="color.controls" outlined  clearable  v-model="newGroup.name" ></v-text-field>
+                    <v-text-field hide-details  class="input-create"  :style="{color:color.text}"  :background-color="color.backElement" label="Имя группы" :color="color.controls" outlined  clearable  v-model="newGroup.name" ></v-text-field>
                     <div class="zagolovok-field input-create"  :style="{color:color.text}">Цвет группы</div>
                     <v-color-picker class="colorPicker input-create" v-model="newGroup.color"></v-color-picker>
                     <div class="profile-block">

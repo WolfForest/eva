@@ -1,10 +1,10 @@
 <template>
-    <v-dialog  v-model="active" width='90%' persistent @keydown="checkEsc($event)"  >
-        <v-card  class="log-block">
-            <v-card-text class='card-log'>
-                <div class="log-body" v-html="text"></div>
+    <v-dialog  v-model="active" width='90%' persistent @keydown="checkEsc($event)"    >
+        <v-card  class="log-block" :style="{background: colorFrom.backElement }">
+            <v-card-text class='card-log' :style="{color: colorFrom.text }">
+                <div class="log-body" v-html="text" ></div>
             </v-card-text>
-             <v-card-actions class="btn-log">
+             <v-card-actions class="btn-log" :style="{background: colorFrom.backElement }">
                 <v-btn small :color="colorFrom.controlsSystem" class="log-btn" @click="clearLog(clear)">{{clear}}</v-btn>
                 <div class="errorSaveBlock" :style="{color:colorError,opacity:opacityError}">{{msgError}}</div>
                 <div class="right-btn">

@@ -127,14 +127,14 @@
             </div>
             <v-card-text class="headline " v-if="tooltipSettingShow"><div class="settings-title" :style="{color:color.text,borderColor:color.text}">Настройки tooltip </div></v-card-text>
             <div class="options-block" ref="options" v-if="tooltipSettingShow">
-                <div class="divider-tooltip-setting"><p>Текст</p><div :style="{backgroundColor:color.text}" class="divider-line"></div></div>  
+                <div class="divider-tooltip-setting" :style="{color:color.text}" ><p>Текст</p><div :style="{backgroundColor:color.text}" class="divider-line"></div></div>  
                 <v-icon class="icon-plus" :color="color.controls" v-if="tooltip.texts.length==0"  @click="addIntoTooltip('text')">{{plus_icon}}</v-icon>
                 <div class="options-item-tooltip"  v-for="i in tooltip.texts.length" :key="i+'text'">
                     <v-text-field clearable  placeholder="Введите текст tooltip"  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="item-text"  v-model="tooltip.texts[i-1]"   hide-details></v-text-field>
                     <v-icon class="icon-inside" :color="color.controls"  @click="addIntoTooltip('text')">{{plus_icon}}</v-icon>
                     <v-icon class="icon-inside" :color="color.controls"  @click="deleteFromTooltip('text',i-1)">{{minus_icon}}</v-icon>
                 </div>
-                <div class="divider-tooltip-setting"><p>Ссылка</p><div :style="{backgroundColor:color.text}" class="divider-line"></div></div>  
+                <div class="divider-tooltip-setting" :style="{color:color.text}"><p>Ссылка</p><div :style="{backgroundColor:color.text}" class="divider-line"></div></div>  
                 <v-icon class="icon-plus" :color="color.controls" v-if="tooltip.links.length==0"  @click="addIntoTooltip('link')">{{plus_icon}}</v-icon>
                 <div class="options-item-tooltip"  v-for="i in tooltip.links.length" :key="i+'links'">
                     <v-text-field clearable  placeholder="Введите название ссылки"  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="item-link"  v-model="tooltip.links[i-1].name"   hide-details></v-text-field>
@@ -142,7 +142,7 @@
                     <v-icon class="icon-inside" :color="color.controls"  @click="addIntoTooltip('link')">{{plus_icon}}</v-icon>
                     <v-icon class="icon-inside" :color="color.controls"  @click="deleteFromTooltip('link',i-1)">{{minus_icon}}</v-icon>
                 </div>
-                <div class="divider-tooltip-setting"><p>Кнопка</p><div :style="{backgroundColor:color.text}" class="divider-line"></div></div>  
+                <div class="divider-tooltip-setting" :style="{color:color.text}"><p>Кнопка</p><div :style="{backgroundColor:color.text}" class="divider-line"></div></div>  
                 <v-icon class="icon-plus" :color="color.controls" v-if="tooltip.buttons.length==0"  @click="addIntoTooltip('button')">{{plus_icon}}</v-icon>
                 <div class="options-item-tooltip"  v-for="i in tooltip.buttons.length" :key="i+'button'">
                      <v-text-field clearable  placeholder="Введите название кнопки"  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="item-button"  v-model="tooltip.buttons[i-1].name"   hide-details></v-text-field>

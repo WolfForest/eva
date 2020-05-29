@@ -66,7 +66,7 @@ export default {
           },
     },
     updated() {
-       this.changeStyle();
+      // this.changeStyle();
     }
 }
 </script>
