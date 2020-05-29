@@ -34,7 +34,7 @@
                 
             </div>
         </div>
-        <div class="current-date" :class="{show_curent:show_curent}" >{{curDate}}</div>
+        <div class="current-date" :style="{color:colorFrom.text, border: `1px solid ${colorFrom.border}`}" :class="{show_curent:show_curent}" >{{curDate}}</div>
        
         
     </div>
