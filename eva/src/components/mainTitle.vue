@@ -55,7 +55,7 @@ export default {
                 controlsActive: '#41C4FF',
                 controlsInsideDash: '#DADADA',
                 panel: '#0D0D0D',
-                border: '#DADADA',
+                border: '#454545',
             },
             adminRoot: false,
             openProfile: false,

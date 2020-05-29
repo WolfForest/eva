@@ -9,7 +9,7 @@
                     <v-select  :items="this.dataRest" :color="color.controls" :style="{color:color.text, fill: color.text}"  v-model="elem" :data-elem="dataelem" hide-details  outlined class="select-parent"  @change="getItem('elem')"   :loading="dataLoading" @focus="setColorSelect($event)" label="Столбец данных" ></v-select> 
                     <v-select  :items="this.dataRest" :color="color.controls" :style="{color:color.text, fill: color.text}" v-model="elemlink" :data-elem="dataelemlink" hide-details  outlined class="select-parent"  @change="getItem('elemlink')"  :loading="dataLoading" @focus="setColorSelect($event)" label="Связанный столбец данных" ></v-select> 
                 </div>
-                 <div class="target" :style="{width:widthInput,borderColor:color.text}" :class="{select_show:select_show}"> 
+                 <div class="target" :style="{width:widthInput,borderColor:color.border}" :class="{select_show:select_show}"> 
                     <v-autocomplete  :items="this.dataRestDeep"  solo flat :multiple="multiple"    :style="{color:color.text, fill: color.text}"  v-model="elemDeep[String(multiple)]" :color="color.controls" :data-elem="dataelemDeep" hide-details  class="select"  @change="setTocken"  @focus="setColorSelect($event)"   label="Значение" >
                         <template v-slot:prepend-item v-if="multiple">
                             <v-list-item
@@ -214,15 +214,8 @@ export default {
                     }
                 })
 
-                console.log(selected)
-                this.topArray = sorted(selected);
-                console.log(this.topArray)
-                console.log('--------')
-
-                console.log(data)
+                this.topArray = sorted(selected);        
                 this.bottomArray = sorted(data);
-                console.log(this.bottomArray)
-                console.log('--------')
 
                 data = [...this.topArray,...this.bottomArray];
                

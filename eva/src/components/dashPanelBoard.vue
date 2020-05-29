@@ -69,10 +69,10 @@
                 </v-tooltip>
             </div>
             <!-- <block-exim :color="color" :openexim="openexim" :idDash="idDash" @closeExim="openExim"></block-exim> -->
-            <div class="block-code" ref="blockCode" :class="{opencode:opencode}" :style="{boxShadow:`0px 0px 3px 0 ${color.border}`, background:color.back, color:color.text}">
+            <div class="block-code" ref="blockCode" :class="{opencode:opencode}" :style=" {background:color.backElement, color:color.text}">
                 <div class="searches-one" v-for="sear in searches" :key="sear.sid" @click="openEditSearch($event,sear.sid)">
                     <div class="search-id" :style="{ background:color.controls, color:'#fff', border: `1px solid ${color.controls}`}" >{{checkSid(sear.sid)}}</div>
-                    <div class="search-query" :style="{ background:color.back, color:color.text,border: `1px solid ${color.text}`}" >{{sear.original_spl}}<div class="loading-bar" :class="{loading:loadings[sear.sid]}"></div></div>
+                    <div class="search-query" :style="{ background:color.backElement, color:color.text,border: `1px solid ${color.border}`}" >{{sear.original_spl}}<div class="loading-bar" :class="{loading:loadings[sear.sid]}"></div></div>
                     <v-tooltip bottom :color="color.controlsActive">
                         <template v-slot:activator="{ on }">
                             <v-icon class=" search-play" v-on="on" :color="color.controls" @click="startSearch(sear)">{{play}}</v-icon>
@@ -111,13 +111,13 @@
                     <v-icon class="sign minus" v-if="!sign"  @click="openSearch">{{minus_icon}}</v-icon>
                 </div> -->
             </div>
-            <div class="block-tool" :class="{opentool:opentool}" :style="{boxShadow:`0px 0px 3px 0 ${color.border}`, background:color.back, color:color.text}">
+            <div class="block-tool" :class="{opentool:opentool}" :style="{ background:color.backElement, color:color.text}">
                 <div class="tool-one draggable" v-for="tool in tools" :key="tool.name"  @mousedown="dragTool" :data-type="tool.type">
                     <div class="tool-img" :style="{ background:color.controls, color:'#fff', border: `2px solid ${color.controls}`}"><v-icon class="tool-img-itself"  >{{`${tool.img}`}}</v-icon></div>
-                    <div class="tool-name" :style="{ background:color.back, color:color.text, border: `1px solid ${color.text}`}" >{{tool.name}}</div>
+                    <div class="tool-name" :style="{ background:color.backElement, color:color.text, border: `1px solid ${color.border}`}" >{{tool.name}}</div>
                 </div>
             </div>
-            <div class="block-tocken" :class="{opentocken:opentocken}"  :style="{boxShadow:`0px 0px 3px 0 ${color.border}`, background:color.back, color:color.text}">
+            <div class="block-tocken" :class="{opentocken:opentocken}"  :style="{ background:color.backElement, color:color.text}">
                 <div class="row-tocken" v-for="(tocken, i) in tockens" :key="tocken.name" :style="{color: color.text}">
                     <div class="row-data row-itself" :class="{showTocken:!lookTockens[i].show}"  >
                         <v-text-field  class="tocken-name " :color="color.text" outlined label="Имя"  v-model="tockensName[tocken.name]" hide-details></v-text-field>
@@ -151,11 +151,11 @@
                 <div  class="exin-btn" @click="showModalExin('ex')"  :style="{background:color.controls,color:'#fff'}">Экспортировать</div>
                 <div class="exin-btn" @click="showModalExin('im')" :style="{background:color.controls,color:'#fff'}">Импортировать</div>
             </div> -->
-            <div class="block-event" :class="{openevent:openevent}" :style="{boxShadow:`0px 0px 3px 0 ${color.border}`, background:color.back}">
+            <div class="block-event" :class="{openevent:openevent}" :style="{ background:color.backElement}">
                 <v-textarea  v-model="textarea_event"  spellcheck="false" :textAreaFull="textareaEv" :color="color.text" :style="{color:color.text}" auto-grow  outlined  class="textarea-event"  label="Начните писать событие"  hide-details clearable  ></v-textarea>
                 <v-btn   class="event-btn" :color="color.controlsSystem" @click="setEvents">Подтвердить</v-btn>
             </div>
-            <div class="block-save" :class="{opensave:opensave}" :style="{boxShadow:`0px 0px 3px 0 ${color.border}`, background:color.back}">
+            <div class="block-save" :class="{opensave:opensave}" :style="{ background:color.backElement}">
                 <div class="save-obertka" v-show="!errorSave">
                     <div class="question-save" :style="{color:color.text}" >Сохранить дашборд <span  class="save-name">{{name}}</span> ?</div>
                     <div class="buttons-save">
