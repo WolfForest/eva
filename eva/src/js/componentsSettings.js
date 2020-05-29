@@ -56,7 +56,7 @@ export default {
             },
             textarea: {
                 width: 400,
-                height: 90
+                height: 80
             },
             barchart: {
                 width: 700,

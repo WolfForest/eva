@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.24.8 [linechartCut]',
+            version: 'v 1.25.8 [linechartCut]',
              color: { 
                 text: '#DADADA',
             },

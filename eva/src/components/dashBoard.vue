@@ -64,7 +64,7 @@
            </v-card-title>
            <!-- <v-divider :style="{borderColor:color.text, opacity: '0.2'}"  v-show="props.disappear" class="divider" ><div class="loading-bar " :class="{loading:true}"></div></v-divider> -->
             <div class="loading-block" v-if="!props.hideLoad">
-                <div :style="{borderColor:color.text, opacity: '0.2'}"   v-show="props.disappear" class="loading-divider" :class="{loading:loadingSearch,loading:props.loading,noBorder:!dataMode}" ><div class="loading-bar " :style="{background: color.controls}" ></div></div>
+                <div :style="{borderColor:color.text, opacity: '0.2'}"   v-show="props.disappear" class="loading-divider" :class="{loading:loadingSearch,loading:props.loading,noBorder:!dataMode}" ><div class="loading-bar " :style="{background: color.controlsActive}" ></div></div>
             </div>
            <!-- <div class="divider" @click="openTitle" :class="{divider_open:props.open_title}"> 
                 <v-icon class=" divider-icon "  >{{props.arrow.elem}}</v-icon>

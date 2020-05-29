@@ -16,6 +16,7 @@
                     fixed-header
                     @current-items="updatePage"
                     v-show="!props.nodata"
+                    :style="{borderColor:colorFrom.border}"
             ></v-data-table>
             <div class="no-data-table" v-show="props.nodata">{{props.message}}</div>
         </div>
@@ -304,7 +305,7 @@ export default {
              let zagolovok = table.querySelector('thead');
              if (zagolovok != null) {
                 zagolovok.style.color = this.color.text; 
-                zagolovok.querySelector('tr').style.borderBottom = `1px solid ${this.color.text}`;
+               // zagolovok.querySelector('tr').style.borderBottom = `1px solid ${this.color.border}`;
              }
              table.addEventListener('mouseover', event => {
                  if(event.target.tagName.toLowerCase() == 'td' && !event.target.parentElement.classList.contains('event')) {

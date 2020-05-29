@@ -4,7 +4,7 @@
        <div class="body-block" v-if="prepared">
             <dash-panel-bord  :idDashFrom="idDash" :colorFrom="color" :style="{top:top}" @changeMode="changeMode" @openProfile="event => {this.openProfile = event}" @openSettings="openSettings" ></dash-panel-bord>
             <!-- <v-divider style="margin-top: 60px"></v-divider> -->
-            <v-card class="already-block" v-if="alreadyShow" :style="{color:color.text,background:color.back,boxShadow:` 0 0 5px 5px ${color.border}`}">
+            <v-card class="already-block" v-if="alreadyShow" :style="{color:color.text,background:color.backElement}">
                     <div class="text-already" >Существует более новая версия дашборда. Хотите обновить?</div>
                     <div class="btn-already">
                     <v-btn small :color="color.controlsSystem" class="create-btn" @click="updateDash">Да</v-btn>
@@ -155,14 +155,19 @@ export default {
             //   this.makeScreen();
             //  },300000)
            
-            let height = document.body.clientHeight;  // получаем высоту страницы пользователя
+            //let height = document.body.clientHeight;  // получаем высоту страницы пользователя
+            let otstup = 0;
+            
 
-             window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатываетпри скролле страницы)
+             window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)
                 if (document.querySelector('.aplication')) {
                     if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
-                        document.querySelector('.aplication').style = "margin-bottom: 40px";  // значит стваим отступ
+                       // document.querySelector('.aplication').style.paddingBottom = "40px";  // значит стваим отступ
+                       otstup = 40;
+                    } else {
+                        otstup = 0;
                     }
-                    document.querySelector('.aplication').style.height =  `${document.body.scrollHeight}px`; // в любом случае расширяем контейнер до размеров экрана
+                    document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
                 }
                     })
             //setTimeout( () => {
