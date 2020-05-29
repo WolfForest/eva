@@ -50,7 +50,7 @@ export default {
             //     height: null,
             //     colors: null,
             // },
-            colors: ['teal','#FF6D70','#660099','#3366FF'],
+            colors: [this.colorFrom.controls,this.colorFrom.controlsActive,'#660099','#3366FF','#e5194a','#fbbe18','#26295a','#228B22'],
             legends: [],
             firstTime: true // определяем первый ли раз зашли на страницу, ничего лучше не придумал
         } 

@@ -375,7 +375,7 @@ export default {
                         .append("div")
                             .attr("class", "tooltip")
                             .style("color",colors[1])
-                            .style("background",this.color.back)
+                            .style("background",this.color.backElement)
                             .style('border-color',colors[1])
                             .style('z-index','2')
                             .text('');
