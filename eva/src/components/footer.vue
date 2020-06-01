@@ -12,7 +12,7 @@ export default {
 
     data () {
         return {
-            version: 'v 1.25.9 [brokenMultiline]',
+            version: 'v 1.25.10 [toLargeTable]',
              color: { 
                 text: '#DADADA',
             },

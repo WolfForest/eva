@@ -290,13 +290,34 @@
               />
             </div>
           </div>
-                     <div class="option-item" v-if="checkOptions('name')">
-                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}">name</div>
-                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Выбрать название кнопки</div>
-                        <div class="status-option item">
-                              <v-text-field clearable  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.name"   hide-details></v-text-field>
-                        </div>
-                    </div>
+          <div 
+            v-if="checkOptions('name')"
+            class="option-item" 
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              name
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Выбрать название кнопки
+            </div>
+            <div class="status-option item">
+              <v-text-field 
+                v-model="options.name"  
+                clearable  
+                :color="color.text" 
+                :style="{color:color.text, background: 'transparent', borderColor: color.text}" 
+                outlined 
+                class="subnumber" 
+                hide-details
+              />
+            </div>
+          </div>
                     <div class="option-item" v-if="checkOptions('timeFormat')">
                         <div class="name-option item" :style="{color:color.text, borderColor:color.text}">timeFormat</div>
                         <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Выбрать формат даты и времени</div>
