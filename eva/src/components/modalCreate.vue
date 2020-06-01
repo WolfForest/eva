@@ -11,7 +11,7 @@
                     <v-color-picker class="colorPicker input-create" v-model="newGroup.color"></v-color-picker>
                     <div class="profile-block">
                         <!-- <data-profile   essence="dashGroup" subessence="dashs" :dataFrom="dataRest" @changeData="changeData" :create="actionFrom == 'create' ? true : false " :userFrom="newGroup" :activeFrom="modalFrom" ></data-profile> -->
-                         <data-profile v-for="item in Object.keys(group.tab)" :key="item"   essence="group" :dataFrom="dataRest" @changeData="changeData"  :subessence="item" :create="actionFrom"  :activeFrom="modalFrom" ></data-profile>
+                         <data-profile v-for="item in Object.keys(group.tab)" :key="item"   essence="group" :dataFrom="dataRest" @changeData="changeData"  :subessence="item" :colorFrom="color" :create="actionFrom"  :activeFrom="modalFrom" ></data-profile>
                     </div> 
                     <div class="warn" :class="{showwarning:showwarning}" :style="{color:color.controlsActive}">{{nameWarn}}</div>
                     <v-card-actions>
@@ -28,7 +28,7 @@
                  <div class="create-block">
                     <v-text-field hide-details  class="input-create" :style="{color:color.text}"  :background-color="color.backElement" label="Имя дашборда" :color="color.controls" outlined  clearable  v-model="newDash.name" ></v-text-field>
                     <div class="profile-block">
-                        <data-profile   essence="dash" subessence="groups" :nameGroupFrom="nameGroupFrom" :dataFrom="dataRest" @changeData="changeData"  :create="actionFrom"  :activeFrom="modalFrom" ></data-profile>
+                        <data-profile   essence="dash" subessence="groups" :nameGroupFrom="nameGroupFrom" :dataFrom="dataRest" @changeData="changeData"  :create="actionFrom" :colorFrom="color" :activeFrom="modalFrom" ></data-profile>
                     </div>
                     <div class="warn" :class="{showwarning:showwarning}" :style="{color:color.controlsActive}">{{nameWarn}}</div>
                     <v-card-actions>

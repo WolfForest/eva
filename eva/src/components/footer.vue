@@ -1,7 +1,10 @@
-<template >
-    <div class="footer-block" :style="{color: color.text}">
-        {{version}}
-    </div>    
+<template>
+  <div 
+    class="footer-block" 
+    :style="{color: color.text}"
+  >
+    {{ version }}
+  </div>    
 </template>
 
 
@@ -10,20 +13,20 @@
 
 export default {
 
-    data () {
-        return {
-            version: 'v 1.25.10 [toLargeTable]',
-             color: { 
-                text: '#DADADA',
-            },
-        } 
-    },
-     computed: { 
+  data () {
+    return {
+      version: 'v 1.25.11 doesntWorkSaveDash]',
+      color: { 
+        text: '#DADADA',
+      },
+    } 
+  },
+  computed: { 
 
-     },  
-     methods: {
+  },  
+  methods: {
 
-     },
+  },
 }
 
 

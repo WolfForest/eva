@@ -57,7 +57,23 @@
                     color: inherit
 
             .v-icon
-                color: inherit
+                color: inherit !important
+
+            .v-data-footer
+
+                .v-input
+                    color: inherit
+
+                    .v-select__selection
+                        color: inherit
+
+                    .v-input__slot
+
+                        &:before
+                            border-color: inherit !important
+
+                button
+                    color: inherit !important
 
         .search-row
             width: 50%
@@ -68,7 +84,10 @@
                 .v-input__slot
 
                     &::before
-                        border-color: inherit
+                        border-color: inherit !important
+
+                    label
+                        color: inherit
 
                     .v-icon
                         color: inherit
