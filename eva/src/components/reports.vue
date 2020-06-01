@@ -39,7 +39,8 @@
           >
             <v-card-text 
               class="search-card-block" 
-              :style="{background: color.backElement, color: color.text}">
+              :style="{background: color.backElement, color: color.text}"
+            >
               <div 
                 class="loading-divider" 
                 :class="{loading:loading}" 
@@ -58,7 +59,7 @@
                 no-resize 
                 hide-details  
                 :rows="rowsCount"
-                :style="{background: color.backElement, color: color.text}" 
+                :style="{background: color.backElement, color: `${color.text} !important`}" 
                 placeholder="Введите запрос" 
               />
               <v-tooltip 

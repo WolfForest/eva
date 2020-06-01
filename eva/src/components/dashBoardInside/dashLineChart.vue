@@ -283,7 +283,7 @@ export default {
 
                 // создаем область графика, все-что вне этой области не будет отрисованно
                     let clip = svg.append("defs").append("svg:clipPath")
-                        .attr("id", `clip-${this.id}`)
+                        .attr("id", `clip-${that.id}`)
                         .append("svg:rect")
                         .attr("width", width )
                         .attr("height", height )
@@ -334,7 +334,7 @@ export default {
                             .attr("fill", colors[1])
                             .attr("class", "area")  // добовляем свой класс
                             .style("opacity",0.05)
-                            .attr("clip-path", `url(#clip-${this.id})`)
+                            .attr("clip-path", `url(#clip-${that.id})`)
                             .attr("d", d3.area()
                                 .x(function(d) { return d.above.x })
                                 .y0(function(d) {  return d.below.y })
@@ -367,7 +367,7 @@ export default {
                   // строим основную линию
 
                     lineName[0]= svg.append('g')  // основная линия графика
-                            .attr("clip-path", `url(#clip-${this.id})`);
+                            .attr("clip-path", `url(#clip-${that.id})`);
 
  
                             // Добовляем линию
@@ -471,7 +471,7 @@ export default {
                     function addHall(j) {  // функция создающяя линию коридора 
                           
                                 lineName[j] = svg.append('g')  // добовляем объект для линии коридора, верхней или нижней
-                                    .attr("clip-path", `url(#clip-${this.id})`);
+                                    .attr("clip-path", `url(#clip-${that.id})`);
 
                          // console.log(lineName[0]);
                             // Добовляем  саму линию

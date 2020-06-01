@@ -1,80 +1,295 @@
 <!-- Модальное окно для настройки дашборда -->
 
 <template>
-    <v-dialog  v-model="active"  width="1140"  persistent @keydown="checkEsc($event)" > 
-        <div class="settings-modal-block"  >
-        <v-card :style="{background:color.backElement}">
-            <v-card-text class="headline "><div class="settings-title" :style="{color:color.text,borderColor:color.text}">Настройки <p>{{element}}</p> </div></v-card-text>
-            <div class="options-block" ref="options">
-
-                    <div class="option-item">
-                        <div class="name-option main item" :style="{color:color.text, borderBottom: `1px solid ${color.text}`}">Название</div>
-                        <div class="discribe-option main item" :style="{color:color.text, borderBottom: `1px solid ${color.text}`}">Описание</div>
-                        <div class="status-option main item" :style="{color:color.text, borderBottom: `1px solid ${color.text}`}">Статус</div>
-                    </div>
-                    <div class="option-item" v-if="checkOptions('visible')">
-                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}" >visible</div>
-                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Показывает / скрывает элемент</div>
-                        <div class="status-option item">
-                            <v-switch   class="switch" :color="color.controls" :style="{color:color.text}" v-model="options.visible"   :label="String(options.visible)" ></v-switch>
-                        </div>
-                    </div>
-                    <div class="option-item" v-if="checkOptions('level')">
-                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}" >level</div>
-                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Установить слой отображения элемента</div>
-                        <div class="status-option item">
-                            <v-text-field clearable  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.level"   hide-details></v-text-field>  
-                        </div>
-                    </div>
-                    <div class="option-item" v-if="checkOptions('boxShadow')">
-                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}">boxShadow</div>
-                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Добавляет / удаляет тень</div>
-                        <div class="status-option item">
-                            <v-switch   class="switch" :color="color.controls" :style="{color:color.text,}" v-model="options.boxShadow"   :label="String(options.boxShadow)" ></v-switch>
-                        </div>
-                    </div>
-                    <div class="option-item" v-if="checkOptions('subnumber')">
-                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}">subnumber</div>
-                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Выводит дополнительную надпись под числом</div>
-                        <div class="status-option item">
-                            <v-text-field clearable  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.subnumber"   hide-details></v-text-field>  
-                        </div>
-                    </div>
-                    <div class="option-item" v-if="checkOptions('rowcolor')">
-                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}">rowcolor</div>
-                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Выбрать цвет которым подсветится нужная строка</div>
-                        <div class="status-option item">
-                              <v-text-field clearable  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.rowcolor"   hide-details></v-text-field>
-                        </div>
-                    </div>
-                    <div class="option-item" v-if="checkOptions('columncolor')">
-                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}">columncolor</div>
-                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Выбрать цвет которым подсветится нужная строка</div>
-                        <div class="status-option item">
-                              <v-text-field clearable  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.columncolor"   hide-details></v-text-field>
-                        </div>
-                    </div>
-                    <div class="option-item" v-if="checkOptions('cellcolor')">
-                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}">cellcolor</div>
-                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Выбрать цвет которым подсветится нужная строка</div>
-                        <div class="status-option item">
-                              <v-text-field clearable  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.cellcolor"   hide-details></v-text-field>
-                        </div>
-                    </div>
-                    <div class="option-item" v-if="checkOptions('color')">
-                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}">color</div>
-                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Выбрать цвет значения</div>
-                        <div class="status-option item">
-                              <v-text-field clearable  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.color"   hide-details></v-text-field>
-                        </div>
-                    </div>
-                     <div class="option-item" v-if="checkOptions('backgroundcolor')">
-                        <div class="name-option item" :style="{color:color.text, borderColor:color.text}">backgroundcolor</div>
-                        <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Выбрать цвет фона</div>
-                        <div class="status-option item">
-                              <v-text-field clearable  :color="color.text" :style="{color:color.text, background: 'transparent', borderColor: color.text}" outlined class="subnumber"  v-model="options.backgroundcolor"   hide-details></v-text-field>
-                        </div>
-                    </div>
+  <v-dialog  
+    v-model="active"  
+    width="1140"  
+    persistent 
+    @keydown="checkEsc($event)"
+  > 
+    <div class="settings-modal-block">
+      <v-card :style="{background:color.backElement}">
+        <v-card-text class="headline">
+          <div 
+            class="settings-title" 
+            :style="{color:color.text,borderColor:color.text}"
+          >
+            Настройки 
+            <p>{{ element }}</p> 
+          </div>
+        </v-card-text>
+        <div 
+          ref="options" 
+          class="options-block" 
+        >
+          <div class="option-item">
+            <div 
+              class="name-option main item" 
+              :style="{color:color.text, borderBottom: `1px solid ${color.text}`}"
+            >
+              Название
+            </div>
+            <div 
+              class="discribe-option main item" 
+              :style="{color:color.text, borderBottom: `1px solid ${color.text}`}"
+            >
+              Описание
+            </div>
+            <div 
+              class="status-option main item" 
+              :style="{color:color.text, borderBottom: `1px solid ${color.text}`}"
+            >
+              Статус
+            </div>
+          </div>
+          <div 
+            v-if="checkOptions('visible')"
+            class="option-item" 
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}" 
+            >
+              visible
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Показывает / скрывает элемент
+            </div>
+            <div class="status-option item">
+              <v-switch   
+                v-model="options.visible"  
+                class="switch" 
+                :color="color.controls" 
+                :style="{color:color.text}" 
+                :label="String(options.visible)" 
+              />
+            </div>
+          </div>
+          <div 
+            v-if="checkOptions('level')"
+            class="option-item"
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}" 
+            >
+              level
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Установить слой отображения элемента
+            </div>
+            <div class="status-option item">
+              <v-text-field 
+                v-model="options.level"
+                clearable  
+                :color="color.text" 
+                :style="{color:color.text, background: 'transparent', borderColor: color.text}" 
+                outlined 
+                class="subnumber"  
+                hide-details
+              />  
+            </div>
+          </div>
+          <div 
+            v-if="checkOptions('boxShadow')"
+            class="option-item"
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              boxShadow
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Добавляет / удаляет тень
+            </div>
+            <div class="status-option item">
+              <v-switch  
+                v-model="options.boxShadow"    
+                class="switch" 
+                :color="color.controls" 
+                :style="{color:color.text,}"
+                :label="String(options.boxShadow)" 
+              />
+            </div>
+          </div>
+          <div 
+            v-if="checkOptions('subnumber')"
+            class="option-item" 
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              subnumber
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Выводит дополнительную надпись под числом
+            </div>
+            <div class="status-option item">
+              <v-text-field 
+                v-model="options.subnumber"   
+                clearable  
+                :color="color.text" 
+                :style="{color:color.text, background: 'transparent', borderColor: color.text}" 
+                outlined 
+                class="subnumber"  
+                hide-details
+              />  
+            </div>
+          </div>
+          <div 
+            v-if="checkOptions('rowcolor')"
+            class="option-item" 
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              rowcolor
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Выбрать цвет которым подсветится нужная строка
+            </div>
+            <div class="status-option item">
+              <v-text-field 
+                v-model="options.rowcolor"  
+                clearable  
+                :color="color.text" 
+                :style="{color:color.text, background: 'transparent', borderColor: color.text}" 
+                outlined 
+                class="subnumber"  
+                hide-details
+              />
+            </div>
+          </div>
+          <div 
+            v-if="checkOptions('columncolor')"
+            class="option-item"
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              columncolor
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Выбрать цвет которым подсветится нужная строка
+            </div>
+            <div class="status-option item">
+              <v-text-field 
+                v-model="options.columncolor" 
+                clearable  
+                :color="color.text" 
+                :style="{color:color.text, background: 'transparent', borderColor: color.text}"
+                outlined 
+                class="subnumber"  
+                hide-details
+              />
+            </div>
+          </div>
+          <div 
+            v-if="checkOptions('cellcolor')"
+            class="option-item" 
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              cellcolor
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Выбрать цвет которым подсветится нужная строка
+            </div>
+            <div class="status-option item">
+              <v-text-field 
+                v-model="options.cellcolor" 
+                clearable  
+                :color="color.text" 
+                :style="{color:color.text, background: 'transparent', borderColor: color.text}" 
+                outlined 
+                class="subnumber" 
+                hide-details
+              />
+            </div>
+          </div>
+          <div 
+            v-if="checkOptions('color')"
+            class="option-item" 
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              color
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Выбрать цвет значения
+            </div>
+            <div class="status-option item">
+              <v-text-field 
+                v-model="options.color" 
+                clearable  
+                :color="color.text" 
+                :style="{color:color.text, background: 'transparent', borderColor: color.text}" 
+                outlined 
+                class="subnumber"  
+                hide-details
+              />
+            </div>
+          </div>
+          <div 
+            v-if="checkOptions('backgroundcolor')"
+            class="option-item" 
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              backgroundcolor
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Выбрать цвет фона
+            </div>
+            <div class="status-option item">
+              <v-text-field 
+                v-model="options.backgroundcolor"
+                clearable  
+                :color="color.text" 
+                :style="{color:color.text, background: 'transparent', borderColor: color.text}" 
+                outlined 
+                class="subnumber"  
+                hide-details
+              />
+            </div>
+          </div>
                      <div class="option-item" v-if="checkOptions('name')">
                         <div class="name-option item" :style="{color:color.text, borderColor:color.text}">name</div>
                         <div class="discribe-option item" :style="{color:color.text, borderColor:color.text}">Выбрать название кнопки</div>

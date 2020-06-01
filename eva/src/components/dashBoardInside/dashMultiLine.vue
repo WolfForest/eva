@@ -115,22 +115,26 @@ export default {
                                         this.props.nodata = false; // то убираем соощение о отсутствии данных
                                         this.props.result = this.dataRest;  // заносим все данные в переменную
                                         let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
+                                        
                                         if (this.props.legends.length == 0) {
                                             let metricsName = Object.keys(this.props.result[0]).filter( (item,i) => {
                                                 if (i != 0) {
                                                     return item
                                                 }
                                             });
+                                          
                                             if (metricsName.length > 0) {
-
+                                                          
                                                 this.createLegends(metricsName);
+
                                                 let timeOut = setTimeout( function tick() {
-                                                        if (this.$refs && this.$refs.legends.getBoundingClientRect().height > 0 ) {
+                                                        if (this.$refs && this.props.legends.length > 0 ) {
                                                             
                                                             clearTimeout(timeOut);
+                                                            
                                                             this.createLineChart(this.props,this,sizeLine,time,united);
                                                         }  else {
-                                                            timeOut = setTimeout(tick, 100); 
+                                                            timeOut = setTimeout(tick.bind(this), 100); 
                                                         }
                                                 }.bind(this), 0);
 
@@ -344,7 +348,6 @@ export default {
 
                 d3.select(this.$el.querySelector('.dash-multi')).selectAll('.tooltip-separeted').remove();
                 d3.select(this.$el.querySelector('.dash-multi')).selectAll('.tooltip').remove();
-
 
                 if (united){
 
@@ -1063,14 +1066,12 @@ export default {
                     })
                    // this.props.legends = [{color: 'black',label:'12131231231231231231313'},{color: 'black',label:'1213123121231231231313'},{color: 'black',label:'1211231231231231231313'}];
 
-
+                     
                     let  readyLegends = setTimeout( function tick()  {
-                        
-                        if (this.$refs && this.$refs.legends.offsetHeight > 0){
+                        if (this.$refs && this.props.legends.length > 0){
                             clearTimeout(readyLegends);
-                            //resolve('done')
                         } else {
-                            readyLegends = setTimeout(tick, 100); 
+                            readyLegends = setTimeout(tick.bind(this), 100); 
                         }
                     }.bind(this),0); 
                 
