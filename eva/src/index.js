@@ -85,10 +85,10 @@ store.auth = storeAuth;
 
 // создаем экземпляр vue где подключаем самое главное переадрасицию, визуализацию элемнетов и хранилище
 new Vue({
-    store: store,
-    vuetify: vuetify,
-    router: router,
-    screenshot: screenshot,
-    el: "#app"
+  store: store,
+  vuetify: vuetify,
+  router: router,
+  screenshot: screenshot,
+  el: "#app"
 })
 

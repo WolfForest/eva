@@ -9,8 +9,8 @@ import store from './store.js'
 
 
 export default new Vuex.Store({
-    modules: {
-        store
-    },
-    plugins: [createPersistedState()],
+  modules: {
+    store
+  },
+  plugins: [createPersistedState()],
 })

@@ -9,7 +9,7 @@
                     <div class="btn-already">
                     <v-btn small :color="color.controlsSystem" class="create-btn" @click="updateDash">Да</v-btn>
                     <v-btn small :color="color.controlsActive" class="create-btn" @click="alreadyShow = false">Нет</v-btn>
-                    </div>
+                     </div> 
             </v-card>
             <v-content id="content" style="margin-bottom:40px">
                 <v-container  class="dash-container">
