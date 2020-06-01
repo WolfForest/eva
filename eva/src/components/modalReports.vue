@@ -58,7 +58,7 @@ export default {
         return {
             search: {
                 sid: '',
-                original_spl: null,
+                original_otl: null,
                 parametrs: {
                     tws: '',
                     twf: '',

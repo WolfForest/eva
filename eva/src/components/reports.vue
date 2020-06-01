@@ -16,7 +16,7 @@
                      <v-card class="search-block" :style="{background: color.backElement, color: color.text}">
                         <v-card-text class="search-card-block" :style="{background: color.backElement, color: color.text}">
                             <div  class="loading-divider" :class="{loading:loading}" ><div class="loading-bar " :style="{background: color.controls}"></div></div>
-                            <v-textarea ref="search" solo spellcheck="false" flat no-resize hide-details  :rows="rowsCount"  :style="{background: color.backElement, color: color.text}"  placeholder="Введите запрос" v-model="search.original_spl"></v-textarea>
+                            <v-textarea ref="search" solo spellcheck="false" flat no-resize hide-details  :rows="rowsCount"  :style="{background: color.backElement, color: color.text}"  placeholder="Введите запрос" v-model="search.original_otl"></v-textarea>
                              <v-tooltip bottom :color="color.controlsActive" >
                                 <template v-slot:activator="{ on }" >
                                    <v-btn
@@ -243,7 +243,7 @@ export default {
          launchSearch: async function() {
 
                
-                this.search.sid = this.hashCode(this.search.original_spl);
+                this.search.sid = this.hashCode(this.search.original_otl);
                 
                 this.$store.auth.getters.putLog(`Запущен запрос  ${this.search.sid}`);
 
@@ -273,8 +273,8 @@ export default {
          setUsername: function(event) {
             this.search.parametrs.username = event;
          },
-         hashCode: function(spl) {
-            return spl.split('').reduce((prevHash, currVal) =>
+         hashCode: function(otl) {
+            return otl.split('').reduce((prevHash, currVal) =>
                 (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
          },
           getData:  function(searсhID) {   // асинхронная функция для получения даных с реста
@@ -432,7 +432,7 @@ export default {
     },
     mounted() {
         this.search = this.$store.getters.getReportSearch;
-        if (this.search.original_spl != '') {
+        if (this.search.original_otl != '') {
             this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: true});
         }
         this.calcSize();

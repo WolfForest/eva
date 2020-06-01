@@ -47,7 +47,7 @@ export default {
         
                                     // отправляем get запрос с параметрами ИС
                                 
-                                    responseGet = await fetch(`/api/checkjob?original_spl=${encodeURIComponent(searchFrom.spl)}&tws=${searchFrom.tws}&twf=${searchFrom.twf}&cache_ttl=${searchFrom.cache_ttl}`, {
+                                    responseGet = await fetch(`/api/checkjob?original_otl=${encodeURIComponent(searchFrom.otl)}&tws=${searchFrom.tws}&twf=${searchFrom.twf}&cache_ttl=${searchFrom.cache_ttl}`, {
                                             method: 'GET',
                                             //  mode: 'no-cors'  
                                         })  

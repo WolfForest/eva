@@ -72,7 +72,7 @@
             <div class="block-code" ref="blockCode" :class="{opencode:opencode}" :style=" {background:color.backElement, color:color.text}">
                 <div class="searches-one" v-for="sear in searches" :key="sear.sid" @click="openEditSearch($event,sear.sid)">
                     <div class="search-id" :style="{ background:color.controls, color:'#fff', border: `1px solid ${color.controls}`}" >{{checkSid(sear.sid)}}</div>
-                    <div class="search-query" :style="{ background:color.backElement, color:color.text,border: `1px solid ${color.border}`}" >{{sear.original_spl}}<div class="loading-bar" :class="{loading:loadings[sear.sid]}"></div></div>
+                    <div class="search-query" :style="{ background:color.backElement, color:color.text,border: `1px solid ${color.border}`}" >{{sear.original_otl}}<div class="loading-bar" :class="{loading:loadings[sear.sid]}"></div></div>
                     <v-tooltip bottom :color="color.controlsActive">
                         <template v-slot:activator="{ on }">
                             <v-icon class=" search-play" v-on="on" :color="color.controls" @click="startSearch(sear)">{{play}}</v-icon>
@@ -278,7 +278,7 @@ export default {
             event: {},
             newSearch: {
                 sid: null,
-                original_spl: null,
+                original_otl: null,
                 parametrs: {
                     tws: 0,
                     twf: 0,
@@ -558,7 +558,7 @@ export default {
              this.activeModal = !this.activeModal;
              this.newSearch = {
                 sid: null,
-                original_spl: null,
+                original_otl: null,
                 parametrs: {
                     tws: 0,
                     twf: 0,

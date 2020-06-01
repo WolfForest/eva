@@ -293,7 +293,7 @@ export default {  // приблизительный объект хранили�
                         let response = {};
 
                         searches.forEach( async item => {  // также при обновлении токена нужно заново запускать серч и обновлять информацию
-                            if (item.original_spl.indexOf(`$${state[tocken.idDash].tockens[id].name}$`) != -1  ) {  // если в тексте запроса есть наш токен
+                            if (item.original_otl.indexOf(`$${state[tocken.idDash].tockens[id].name}$`) != -1  ) {  // если в тексте запроса есть наш токен
                                 
 
                                 tocken.store.commit('setLoading', {search: item.sid, idDash: tocken.idDash, should: true, error: false});  
@@ -732,7 +732,7 @@ export default {  // приблизительный объект хранили�
                             searches.forEach(async item => {  // также при обновлении токена нужно заново запускать серч и обновлять информацию
                                 
                                     changed.forEach( async itemTok => {
-                                        if (item.original_spl.indexOf(`$${itemTok}$`) != -1  ) { // если в тексте запроса есть наш токен                 
+                                        if (item.original_otl.indexOf(`$${itemTok}$`) != -1  ) { // если в тексте запроса есть наш токен                 
 
                                             event.store.commit('setLoading', {search: item.sid, idDash: id, should: true, error: false});  
 
@@ -1110,7 +1110,7 @@ export default {  // приблизительный объект хранили�
                
         
                //  console.log(search);
-                 let spl = search.original_spl;
+                 let otl = search.original_otl;
                  let tws = search.parametrs.tws;
                  let twf = search.parametrs.twf;
                  let reg = null;
@@ -1123,8 +1123,8 @@ export default {  // приблизительный объект хранили�
                     Object.keys(state[idDash].tockens).forEach( item => {  // если есть токены в запросе то меняем временные метки в зависимости от значения токена
                         //let reg = `\\$${state[idDash].tockens[item].name}`;  
                         reg = new RegExp( `\\$${state[idDash].tockens[item].name}\\$`, "g");
-                        if (spl.indexOf(`$${state[idDash].tockens[item].name}$`) != -1) {
-                            spl =  spl.replace(reg, state[idDash].tockens[item].value);
+                        if (otl.indexOf(`$${state[idDash].tockens[item].name}$`) != -1) {
+                            otl =  otl.replace(reg, state[idDash].tockens[item].value);
                         }
                         
                         
@@ -1161,12 +1161,12 @@ export default {  // приблизительный объект хранили�
                 }
 
         
-                  spl = spl.replace(/\r|\n/g,'');
+                  otl = otl.replace(/\r|\n/g,'');
         
                  
                  let formData = new FormData();  // формируем объект для передачи RESTу
                  formData.append('sid', `${search.sid}+${hash}`);
-                 formData.append('original_spl', String(spl));
+                 formData.append('original_otl', String(otl));
                  formData.append('tws', tws);
                  formData.append('twf', twf);
                  formData.append('username', search.parametrs.username);
@@ -1177,7 +1177,7 @@ export default {  // приблизительный объект хранили�
 
                  let searchForRest = {
                      sid: search.sid,
-                     spl: String(spl),
+                     otl: String(otl),
                      tws: tws,
                      twf: twf, 
                      cache_ttl: search.parametrs.cache_ttl
@@ -1350,7 +1350,7 @@ export default {  // приблизительный объект хранили�
                 } else {
                     return {
                          sid : '',
-                         original_spl: '',
+                         original_otl: '',
                          parametrs: {
                             tws: 0,
                             twf: 0,

@@ -6,7 +6,7 @@
         <div class="searches-block">
             <div class="searches-one" v-for="sear in searches" :key="sear.id" @click="selectSearch($event,sear)" >
                 <div class="search-id" :style="{color:'white', background: color.controls, border: `2px solid ${color.controls}`}">{{checkSid(sear.sid)}}</div>
-                <div class="search-query" :style="{color: color.text, background: color.backElement, border: `1px solid ${color.text}`}">{{sear.original_spl}}</div>
+                <div class="search-query" :style="{color: color.text, background: color.backElement, border: `1px solid ${color.text}`}">{{sear.original_otl}}</div>
             </div>
         </div>
         <v-card-actions>

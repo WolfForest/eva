@@ -5,7 +5,7 @@
         <v-card :style="{background: color.backElement, color: color.text}" class="card-search">
             <div class="textarea-block"  >
                     <v-text-field :color="color.text" :style="{color: colorFrom.text}" class="textarea-item" outlined label="Имя ИД" placeholder="Sid"  v-model="search.sid" hide-details></v-text-field>
-                    <v-textarea :color="color.text" :style="{color: colorFrom.text}" outlined hide-details no-resize spellcheck="false" class="code-search" height="180px" rows="5"  placeholder="Origin spl" label="Текст ИД" v-model="search.original_spl"></v-textarea>
+                    <v-textarea :color="color.text" :style="{color: colorFrom.text}" outlined hide-details no-resize spellcheck="false" class="code-search" height="180px" rows="5"  placeholder="Origin otl" label="Текст ИД" v-model="search.original_otl"></v-textarea>
                     <div class="times-block">
                         <div class="time-block">
                             <v-text-field  :color="color.text" :style="{color: colorFrom.text}" class="textarea-item" outlined label="Временной интервал: начало"  placeholder="0" v-model="search.parametrs.tws" hide-details></v-text-field>
@@ -76,7 +76,7 @@ export default {
         return {
             search: {
                 sid: null,
-                original_spl: null,
+                original_otl: null,
                 parametrs: {
                     tws: 0,
                     twf: 0,
