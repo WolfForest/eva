@@ -1,5 +1,5 @@
 <template>
-       <div class="dash-main" :style="{background: color.panel}">
+  <div class="dash-main" :style="{background: color.panel}">
             <div class="main-title">
                 <div class="title-name" :style="{color:'#DADADA'}">{{name}}</div>
                 <!-- <v-tooltip bottom :color="color.controlsActive" >
@@ -30,28 +30,28 @@
                 </div>
               
             </div>
-            <div class="control-block" :class="{hide_control:!edit_elem}">
+            <div class="control-block" >
                 <v-tooltip bottom :color="color.controlsActive">
                     <template v-slot:activator="{ on }">
-                        <v-icon class="code" :style="codeSwitch"  v-on="on" @click="openEventCode">{{code_icon}}</v-icon>
+                        <v-icon class="code" :style="codeSwitch" :class="{hide_control:!edit_elem}"  v-on="on" @click="openEventCode">{{code_icon}}</v-icon>
                     </template>
                     <span>События</span>
                 </v-tooltip>
                 <v-tooltip bottom :color="color.controlsActive">
                     <template v-slot:activator="{ on }">
-                        <v-icon class="tocken" :style="tockenSwitch" v-on="on" @click="openTockenCode">{{tocken_icon}}</v-icon>
+                        <v-icon class="tocken" :style="tockenSwitch" :class="{hide_control:!edit_elem}" v-on="on" @click="openTockenCode">{{tocken_icon}}</v-icon>
                     </template>
                     <span>Токены</span>
                 </v-tooltip>
                 <v-tooltip bottom :color="color.controlsActive">
                     <template v-slot:activator="{ on }">
-                        <v-icon class="search" :style="searchSwitch" v-on="on" @click="openSearchCode">{{search_icon}}</v-icon>
+                        <v-icon class="search" :style="searchSwitch" :class="{hide_control:!edit_elem}" v-on="on" @click="openSearchCode">{{search_icon}}</v-icon>
                     </template>
                     <span>Источники даных</span>
                 </v-tooltip>
                 <v-tooltip bottom :color="color.controlsActive">
                     <template v-slot:activator="{ on }">
-                        <v-icon class="tools" :style="toolSwitch" v-on="on" @click="openToolPanel">{{tool_icon}}</v-icon>
+                        <v-icon class="tools" :style="toolSwitch" :class="{hide_control:!edit_elem}" v-on="on" @click="openToolPanel">{{tool_icon}}</v-icon>
                     </template>
                     <span>Визуализации</span>
                 </v-tooltip>
@@ -101,7 +101,7 @@
                         <template v-slot:activator="{ on }">
                             <v-icon class="search-trash" v-on="on" :color="color.controls" @click="deleteSearch(sear.sid)">{{trash}}</v-icon>
                         </template>
-                        <span>Удалить ИД</span>
+                        <span>Удалить ИД</span> 
                     </v-tooltip>
                 </div>
                 
@@ -190,7 +190,7 @@
 
 <script>
 
-import { mdiPlusBox, mdiPlay, mdiEye, mdiArrowDownBold,  mdiContentSave, mdiAccount,    mdiHomeVariantOutline,  mdiSettings, mdiHelpCircleOutline, mdiClockOutline,  mdiDatabase,mdiTableEdit,mdiCodeTags, mdiTrashCanOutline, mdiMinusBox, mdiToolbox ,   mdiPencil,  mdiVariable, mdiCheckBold,  mdiSwapVerticalBold } from '@mdi/js'
+import { mdiPlusBox, mdiPlay, mdiEye, mdiArrowDownBold, mdiContentSave, mdiAccount,    mdiHomeVariantOutline,  mdiSettings, mdiHelpCircleOutline, mdiClockOutline,  mdiDatabase,mdiTableEdit,mdiCodeTags, mdiTrashCanOutline, mdiMinusBox, mdiToolbox ,   mdiPencil,  mdiVariable, mdiCheckBold,  mdiSwapVerticalBold } from '@mdi/js'
 
 import { match } from 'minimatch'
 
