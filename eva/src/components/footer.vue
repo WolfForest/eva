@@ -15,7 +15,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.27.12 [zeroCsvg]',
+      version: 'v 1.28.12 [lastDot]',
       color: { 
         text: '#DADADA',
       },

@@ -185,14 +185,14 @@
             <modal-create-search :idDashFrom="idDash" :colorFrom="color" :modalFrom="activeModal" :createBtnFrom="createSearchBtn" :dataSearchFrom="newSearch" @startSearch="startSearch($event)"  @cancelModal="cancelModal"></modal-create-search>
             <modal-schedule :idDashFrom="idDash" :colorFrom="color" :modalFrom="activeSchedule" @cancel="activeSchedule=false" :dataSidFrom="scheduleSid"></modal-schedule>
        </div>
-       
+    
 </template>
 
 <script>
 
 import { mdiPlusBox, mdiPlay, mdiEye, mdiArrowDownBold, mdiContentSave, mdiAccount,    mdiHomeVariantOutline,  mdiSettings, mdiHelpCircleOutline, mdiClockOutline,  mdiDatabase,mdiTableEdit,mdiCodeTags, mdiTrashCanOutline, mdiMinusBox, mdiToolbox ,   mdiPencil,  mdiVariable, mdiCheckBold,  mdiSwapVerticalBold } from '@mdi/js'
 
-import { match } from 'minimatch'
+//import { match } from 'minimatch'
 
 import  settings  from '../js/componentsSettings.js'
 
