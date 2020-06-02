@@ -255,7 +255,7 @@ export default {
         dataMode: function() {
             this.changeOptions(this.dataModeFrom);
             if (!this.dataModeFrom) {
-                if (this.element.split('-')[0] == 'button') {
+                if (this.element.split('-')[0] == 'button' || this.element.split('-')[0] == 'csvg' || this.element.split('-')[0] == 'tile') {
                     this.props.disappear = false;
                 }
             } else {

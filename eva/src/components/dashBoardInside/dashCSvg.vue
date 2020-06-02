@@ -1,5 +1,5 @@
 <template >
-    <div class="dash-csvg" tabindex="0" ref="svgBlock" :style="{height:`${heightFrom-otstupBottom}px`}" >
+    <div class="dash-csvg" tabindex="0" ref="svgBlock"  >
         <div class="csvg-block"  :style="{width:`${widthFrom-40}px`,height:`${heightFrom-otstupBottom}px`}"  v-show="noMsg==1" v-html="svg" ref="csvg"></div>
         <div class="file-input" v-show="noMsg==0">
             <v-file-input :prepend-icon="image" @change="file=$event" :style="{color: color.text,fill: color.text}" :color="color.controls" class="file-itself" hide-details  outlined label="Загрузить изображение"></v-file-input>
@@ -42,7 +42,8 @@ export default {
         colorFrom: null,  // цветовые переменные
         widthFrom: null, // ширина родительского компонента
         heightFrom: null, // выоста родительского компонента
-        tooltipFrom: null,
+        tooltipFrom: null, // объект тултипа
+        dataModeFrom: null, // выключена ли шапка или включена
     },
     data () {
         return {
@@ -68,7 +69,7 @@ export default {
             answer: 'Изображение успешно загружено',
             answerShow: false,
             answerColor: '',
-            otstupBottom: 40,
+            otstupBottom: 45,
             tooltipShow: false,
             linkCanvasShow: false,
             tooltipPress: false,
@@ -108,7 +109,18 @@ export default {
          }
 
      },  
-     watch: { 
+  watch: { 
+    dataModeFrom: function(dataMode) {
+      if (dataMode) {
+        this.otstupBottom = 45;
+        if (screen.width <= 1600) {
+          this.otstupBottom = 30;
+        }
+      } else {
+        this.otstupBottom = 10; 
+      }
+      this.checkSize();
+    },
          dataRestFrom: function(dataRest) {
               
             if (dataRest.length != 0 && dataRest[0].svg_filename && dataRest[0].svg_filename != '') {
@@ -157,14 +169,11 @@ export default {
             if (this.svg != 'Нет данных для отображения') {
                  let timeOut = setTimeout( function tick() {
                         if (this.$refs.csvg.querySelector('svg') != null ) {
-                             let otstupBottom = 45;
-                            if (screen.width <= 1600) {
-                                otstupBottom = 30;
-                            }
                             clearTimeout(timeOut);
+                            console.log(this.otstupBottom)
                             let svgElem = this.$refs.csvg.querySelector('svg');
                             svgElem.setAttribute("width", this.widthFrom-40);
-                            svgElem.setAttribute("height", this.heightFrom-otstupBottom);
+                            svgElem.setAttribute("height", this.heightFrom-this.otstupBottom);
                         }  else {
                             timeOut = setTimeout(tick.bind(this), 1000); 
                         }
@@ -400,8 +409,7 @@ export default {
         } 
 
     },
-    mounted() {
-       //this.$emit('hideDS',this.id);
+  mounted() {
         
        this.$refs.csvg.addEventListener('click', event => {
            let token = '';

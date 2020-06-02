@@ -18,7 +18,11 @@
                     <modal-search :colorFrom="color" :idDashFrom="idDash" ></modal-search>
                     <!-- <modal-exin :colorFrom="color" :idDashFrom="idDash" :dataPageFrom="page"></modal-exin> -->
                     <modal-settings :colorFrom="color" :idDashFrom="idDash"   ></modal-settings>
-                    <dash-settings :showFrom="showSetting"  ></dash-settings>
+                    
+                    <!-- 
+                        НЕ УДАЛЯТЬ ЦВЕТОВЫЕ НАСТРОЙКИ
+                        <dash-settings :showFrom="showSetting"  ></dash-settings> 
+                    -->
                 </v-container>
             </v-content> 
         </div>

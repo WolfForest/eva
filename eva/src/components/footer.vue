@@ -15,7 +15,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.25.11 doesntWorkSaveDash]',
+      version: 'v ## 1.26.11 [hideHeaderSvgTile]',
       color: { 
         text: '#DADADA',
       },

@@ -21,8 +21,9 @@ export default {
         idDashFrom: null, // id дашборда 
         dataRestFrom: null, // данные полученые после выполнения запроса
         colorFrom: null,  // цветовые переменные
-        sizeTileFrom: null,
-        heightFrom: null,
+        sizeTileFrom: null,  // размер плиток 
+        heightFrom: null,  // высота родительского элемента
+        dataModeFrom: null,  // включена ли шапка
     },
     data () {
         return {
@@ -35,7 +36,6 @@ export default {
             captures: {},
             noMsg: false,
             msgText: '',
-            otstupBottom: 50,
             // sizeTile: {
             //     width: '100px',
             //     height: '100px'
@@ -64,11 +64,20 @@ export default {
                 })
                  this.captures = Object.keys(this.dataRestFrom[0]);
              }
-            if (screen.width <= 1600) {
-                this.otstupBottom = 35;
-            }
             return data
         },
+    otstupBottom: function() {
+      let otstup = null;
+      if (this.dataModeFrom) {
+        otstup = 50;
+        if (screen.width <= 1600) {
+          otstup = 35;
+        }
+      } else {
+        otstup = 10;
+      }
+      return otstup
+    },
         color: function() {
             return this.colorFrom
         },
