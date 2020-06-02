@@ -15,7 +15,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.27.11 [hideHeaderPanel]',
+      version: 'v 1.27.12 [zeroCsvg]',
       color: { 
         text: '#DADADA',
       },

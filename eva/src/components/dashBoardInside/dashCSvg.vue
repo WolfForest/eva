@@ -170,7 +170,6 @@ export default {
                  let timeOut = setTimeout( function tick() {
                         if (this.$refs.csvg.querySelector('svg') != null ) {
                             clearTimeout(timeOut);
-                            console.log(this.otstupBottom)
                             let svgElem = this.$refs.csvg.querySelector('svg');
                             svgElem.setAttribute("width", this.widthFrom-40);
                             svgElem.setAttribute("height", this.heightFrom-this.otstupBottom);
@@ -184,69 +183,82 @@ export default {
             }
            
         },
-        checkCapture: async function() {
-            let captures = this.prepareCapture();  // получаем объект свойства элементов из данных 
-            let elem = '';
-            let timeOut = setTimeout( function tick() {  // запускаем цикл повторений, ибо нам надо удостовериться что свг уже отрисовался
+    checkCapture: async function() {
+      let captures = this.prepareCapture();  // получаем объект свойства элементов из данных 
+      let elem = '';
+      let timeOut = setTimeout( function tick() {  // запускаем цикл повторений, ибо нам надо удостовериться что свг уже отрисовался
 
-                    if ( this.$refs.csvg.querySelector('svg') != null ) { // и если уже отрисовался
-                        clearTimeout(timeOut);  // прекращаем цикл
+        if ( this.$refs.csvg.querySelector('svg') != null ) { // и если уже отрисовался
+          clearTimeout(timeOut);  // прекращаем цикл
 
-                        Object.keys(captures).forEach( item => {  // прбегаемся по  элементам
-                            elem = this.$refs.csvg.querySelector('svg').querySelector(`#${item}`); // получаем элемент для которого нужно проверить свойства
-                                
-                                if(elem) { // если данный элемнет вообще существует
-                                    Object.keys(captures[item]).forEach( capture => { // пробегаемя по его свойствам
-                                        
-                                            if (capture != 'id' && capture != 'svg_filename') { // если свойство не id и не название файла, потмоу что они нам не интересны
-                                                if (captures[item][capture] != null) { // так же проверяем что свойство не равно null (не пустое)
-                                                    if (!this.svgChanges[item]) { // если в специальном объекте с только изменившимся свойствами нет еще этого элемента
-                                                        this.svgChanges[item] = {}; // создаем его
-                                                    }
-                                                    if (!this.svgChanges[item][capture]) {  // если у созданного элемнета нет еще такого свойства ()то есть впервые оно изменилось 
-                                                        if (capture == 'tag_value') { // то сперва проверяем текст ли это
-                                                            this.svgChanges[item][capture] = elem.innerHTML; // и если текст то заносим в наш объект с измененными данными
-                                                                                                            // значение которое было изначально
-                                                            elem.innerHTML = captures[item][capture]; // и потом уже в самой свг обновляем значение на то, что пришло из данных
-                                                        } else { // а если не еткст а другие свойства
-                                                            this.svgChanges[item][capture] = elem.getAttribute(capture); // делаем тоже самое, заносим значение по умолчанию
-                                                            elem.setAttribute(capture, captures[item][capture]);  // а в самой свг меняем не значение из данных
-                                                        }  
-                                                    } else { // если значенеи по умолчанию уже занесено у нас в объект с изменениями
-                                                        if (capture == 'tag_value') {  // то делаем тоже самое, толко не трогаем по умолчанию, меняем лишь значение в самой свг
-                                                            elem.innerHTML = captures[item][capture];
-                                                        } else {
-                                                            elem.setAttribute(capture, captures[item][capture]);
-                                                        }  
-                                                    }
-                                                } else { // если значение пришло пустое
-                                                    if (!this.svgChanges[item]) {  // то все ранво првоеряем есть ли такой элемент в нашем объекте с изменениями
-                                                        this.svgChanges[item] = {};
-                                                    }
-                                                    if (this.svgChanges[item][capture]) {  // есть ли такое свойство
-                                                        if (capture == 'tag_value') {  // и тут в свг заносим значение уже по умолчанию, а не из данных
-                                                            elem.innerHTML = this.svgChanges[item][capture];
-                                                        } else {
-                                                            elem.setAttribute(capture, this.svgChanges[item][capture]);
-                                                        }  
-                                                    }
-                                                }
-                                            }
-                                    });
-                                    // осталось проверить не удалилось ли какое-то значение из данных вообще, а до этого оно было
-                                    Object.keys(this.svgChanges[item]).forEach( change => {   // для этого пробегаемся по всему объекту с изменениями
-                                        if (!Object.keys(captures[item]).includes(change)) { // если в измененном объекте есть значение а в данных его нет
-                                            elem.setAttribute(change, this.svgChanges[item][change]); // то значение этого свойства выставим по умолчанию
-                                        } 
-                                    })
-                                }   
-                        })
+          Object.keys(captures).forEach( item => {  // прбегаемся по  элементам
+            elem = this.$refs.csvg.querySelector('svg').querySelector(`#${item}`); // получаем элемент для которого нужно проверить свойства
+                
+            if(elem) { // если данный элемнет вообще существует
+              Object.keys(captures[item]).forEach( capture => { // пробегаемя по его свойствам
                         
-                    }  else { // если свг еще не отрисовался
-                        timeOut = setTimeout(tick, 100);  // прсото повторяем цикл
+                if (capture != 'id' && capture != 'svg_filename') { // если свойство не id и не название файла, потмоу что они нам не интересны
+                  if (captures[item][capture] != null) { // так же проверяем что свойство не равно null (не пустое)
+                    if (!this.svgChanges[item]) { // если в специальном объекте с только изменившимся свойствами нет еще этого элемента
+                      this.svgChanges[item] = {}; // создаем его
                     }
-            }.bind(this), 0); // здесь забайндил this чтобы он был доступен изнутри
-        }, 
+                    if (!this.svgChanges[item][capture]) {  // если у созданного элемнета нет еще такого свойства ()то есть впервые оно изменилось 
+                      if (capture == 'tag_value') { // то сперва проверяем текст ли это
+                        this.svgChanges[item][capture] = elem.innerHTML; // и если текст то заносим в наш объект с измененными данными
+                                                                        // значение которое было изначально
+                        elem.innerHTML = captures[item][capture]; // и потом уже в самой свг обновляем значение на то, что пришло из данных
+                      } else { // а если не еткст а другие свойства
+                        this.svgChanges[item][capture] = elem.getAttribute(capture); // делаем тоже самое, заносим значение по умолчанию
+                        elem.setAttribute(capture, captures[item][capture]);  // а в самой свг меняем не значение из данных
+                      }  
+                    } else { // если значенеи по умолчанию уже занесено у нас в объект с изменениями
+                      if (capture == 'tag_value') {  // то делаем тоже самое, толко не трогаем по умолчанию, меняем лишь значение в самой свг
+                        elem.innerHTML = captures[item][capture];
+                      } else {
+                        elem.setAttribute(capture, captures[item][capture]);
+                      }  
+                    }
+                  } else { // если значение пришло пустое
+                    if (!this.svgChanges[item]) {  // то все ранво првоеряем есть ли такой элемент в нашем объекте с изменениями
+                      this.svgChanges[item] = {};
+                    }
+                    if (this.svgChanges[item][capture]) {  // есть ли такое свойство
+                      if (capture == 'tag_value') {  // и тут в свг заносим значение уже по умолчанию, а не из данных
+                        elem.innerHTML = this.svgChanges[item][capture];
+                      } else {
+                        elem.setAttribute(capture, this.svgChanges[item][capture]);
+                      }  
+                    }
+                  }
+                }   
+              });
+
+              // осталось проверить не удалилось ли какое-то значение из данных вообще, а до этого оно было       
+              Object.keys(this.svgChanges[item]).forEach( change => {   // для этого пробегаемся по всему объекту с изменениями
+                if (!Object.keys(captures[item]).includes(change)) { // если в измененном объекте есть значение а в данных его нет
+                  elem.setAttribute(change, this.svgChanges[item][change]); // то значение этого свойства выставим по умолчанию
+                } 
+              })
+            }   
+          })
+          // теперь проверим может какой-то элемент менялся, а тепреь вообще не пришел в данных
+          Object.keys(this.svgChanges).forEach( change => {   // для этого пробегаемся по всему объекту с изменениями
+            if (!Object.keys(captures).includes(change)) { // если в измененном объекте есть значение а в данных его нет
+              elem = this.$refs.csvg.querySelector('svg').querySelector(`#${change}`);
+              Object.keys(this.svgChanges[change]).forEach( defChange => {
+                if (defChange == 'tag_value') {
+                  elem.innerHTML = this.svgChanges[change][defChange];
+                } else {
+                  elem.setAttribute(defChange, this.svgChanges[change][defChange]); // то значение этого свойства выставим по умолчанию
+                }
+              })
+            } 
+          })
+        }  else { // если свг еще не отрисовался
+          timeOut = setTimeout(tick, 100);  // прсото повторяем цикл
+        }
+      }.bind(this), 0); // здесь забайндил this чтобы он был доступен изнутри
+    },  
         prepareCapture: function() {
            let captures = {};
            this.dataRestFrom.forEach( item => {
