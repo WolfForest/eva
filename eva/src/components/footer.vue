@@ -15,7 +15,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.28.13 [orderTooltip]',
+      version: 'v 1.29.13 [addGridtoLinechart]',
       color: { 
         text: '#DADADA',
       },

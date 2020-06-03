@@ -264,6 +264,7 @@ export default {
       let xAxis = null;
       if (time) {
         xAxis = svg.append("g")
+          .attr("class","xAxis")
           .attr("transform", "translate(0," + height + ")")
           .call(d3.axisBottom(x)
             .tickFormat(d3.timeFormat('%d-%m-%Y '))
@@ -278,14 +279,40 @@ export default {
           );
       } else {
         xAxis = svg.append("g")
+          .attr("class","xAxis")
           .attr("transform", "translate(0," + height + ")")
           .call(d3.axisBottom(x)); 
       }
-                    
 
+              
       // добавляем ось Y
       svg.append("g")
+        .attr("class","yAxis")
         .call(d3.axisLeft(y).ticks(y.ticks().length/2));
+
+      // отрисуем сетку сперва для горизотнальных тиков
+      d3.selectAll("g.xAxis g.tick")
+        .append("line") // добавляем линию
+        .attr("class","grid-line-x") // добавляем класс
+        .attr("x1", 0)
+        .attr("x2", 0)
+        .attr("y1", 0)
+        .attr("y2", - (height-20))
+        .attr("stroke", that.colorFrom.text)
+        .style("opacity", "0.3");
+
+
+      // и для вертикальных
+      d3.selectAll("g.yAxis g.tick")
+        .append("line")
+        .attr("class","grid-line-y")
+        .attr("x1", 0)
+        .attr("y1", 0)
+        .attr("x2", width)
+        .attr("y2", 0)
+        .attr("stroke", that.colorFrom.text)
+        .style("opacity", "0.3");
+
 
       // создаем область графика, все-что вне этой области не будет отрисованно
       let clip = svg.append("defs").append("svg:clipPath")
