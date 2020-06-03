@@ -328,7 +328,7 @@ export default {
 
 
       // отрисуем сетку сперва для горизотнальных тиков
-      d3.selectAll("g.xAxis g.tick")
+      svg.selectAll("g.xAxis g.tick")
         .append("line") // добавляем линию
         .attr("class","grid-line-x") // добавляем класс
         .attr("x1", 0)
@@ -374,7 +374,7 @@ export default {
 
 
         // отрисуем сетку сперва для вертикальных тиков
-        d3.selectAll("g.yAxis g.tick")
+        svg.selectAll("g.yAxis g.tick")
           .append("line")
           .attr("class","grid-line-y")
           .attr("x1", 0)

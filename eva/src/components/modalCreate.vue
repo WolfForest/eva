@@ -32,10 +32,15 @@
             outlined  
             clearable  
           />
-          <div class="zagolovok-field input-create"  :style="{color:color.text}">Цвет группы</div>
-          <v-color-picker 
+          <div 
+            class="zagolovok-field input-create"  
+            :style="{color:color.text}"
+          >
+            Цвет группы
+          </div>
+          <v-color-picker
+            v-model="newGroup.color" 
             class="colorPicker input-create" 
-            v-model="newGroup.color"
           />
           <div class="profile-block">
             <data-profile 
@@ -166,93 +171,91 @@ export default {
     nameGroupFrom: null,
     permissionsFrom: null,
   },
-    data () {
-        return {
-            name: '',
-            newDash: {
-                name: '',
-                id: '',
-            },
-            newGroup: {
-                name: '',
-                color: ''
-            },
-            nameBtn: {
-                create: 'Создать',
-                cancel: 'Отмена'
-            },
-            nameTitle: '',
-            nameWarn: 'Имя не может быть пустым',
-            showwarning: false,
-            newLayout: {},
-            create_warning: false,
-            dataRest: {},
-            changedData: {},
-            group: {
-                tab: {
-                    users: null,
-                    dashs: null,
-                    indexes: null,
-                },
-            },
-            dash: {
-                tab: {
-                    groups: null,
-                },
-            },
+  data () {
+    return {
+      name: '',
+      newDash: {
+        name: '',
+        id: '',
+      },
+      newGroup: {
+        name: '',
+        color: ''
+      },
+      nameBtn: {
+        create: 'Создать',
+        cancel: 'Отмена'
+      },
+      nameTitle: '',
+      nameWarn: 'Имя не может быть пустым',
+      showwarning: false,
+      newLayout: {},
+      create_warning: false,
+      dataRest: {},
+      changedData: {},
+      group: {
+        tab: {
+          users: null,
+          dashs: null,
+          indexes: null,
+        },
+      },
+      dash: {
+        tab: {
+          groups: null,
+        },
+      },
+    }
+  },
+  computed: {
+    active: function() {  // тут понимаем нужно ли открыть окно с созданием или нет  
+      if (this.modalFrom ) {
+        if (this.dataFrom) {
+          this.newGroup.name = this.dataFrom.name;
+          this.newGroup.color = this.dataFrom.color;
+        } else {
+          this.newGroup.name = '';
+          this.newGroup.color = '';
         }
+        if (this.dashFrom) {
+          this.newDash.name = this.dashFrom.name;
+          this.newDash.id = this.dashFrom.id;
+        } else {
+          this.newDash.name = ''
+        }
+        if (this.actionFrom){
+          if (this.groupCheck) {
+            this.nameTitle = 'Создать новую группу';
+          } else {
+            this.nameTitle = 'Создать новый дашборд';
+          }
+          this.nameBtn.create = 'Создать';
+            
+        } else {
+          if (this.groupCheck) {
+            this.nameTitle = 'Редактировать группу';
+          } else {
+            this.nameTitle = 'Редактировать дашборд';
+          }
+          this.nameBtn.create = 'Редактировать';
+        }
+        this.dataRest = this.getDataForEssence();  
+      }
+      return this.modalFrom
     },
-      computed: {
-           active: function() {  // тут понимаем нужно ли открыть окно с созданием или нет  
-           if (this.modalFrom ) {
-               if (this.dataFrom) {
-                   this.newGroup.name = this.dataFrom.name;
-                   this.newGroup.color = this.dataFrom.color;
-               } else {
-                   this.newGroup.name = '';
-                   this.newGroup.color = '';
-               }
-               if (this.dashFrom) {
-                  // console.log(this.dashFrom) 
-                   this.newDash.name = this.dashFrom.name;
-                   this.newDash.id = this.dashFrom.id;
-               } else {
-                   this.newDash.name = ''
-               }
-               if (this.actionFrom){
-                if (this.groupCheck) {
-                    this.nameTitle = 'Создать новую группу';
-                } else {
-                    this.nameTitle = 'Создать новый дашборд';
-                }
-                this.nameBtn.create = 'Создать';
-                   
-               } else {
-                    if (this.groupCheck) {
-                        this.nameTitle = 'Редактировать группу';
-                    } else {
-                        this.nameTitle = 'Редактировать дашборд';
-                    }
-                this.nameBtn.create = 'Редактировать';
-               }
-               this.dataRest = this.getDataForEssence();
-               
-           }
-               return this.modalFrom
-           },
-           color: function() {
-               return this.colorFrom
-           },
-           groupCheck: function() { 
-               return this.groupFlagFrom
-           },
-           groups: function() {
-               return this.groupFrom
-           },
-           dashs: function() {
-              return  this.dashsFrom
-           }
-     },
+    color: function() {
+      return this.colorFrom
+    },
+    groupCheck: function() { 
+      return this.groupFlagFrom
+    },
+    groups: function() {
+      return this.groupFrom
+    },
+    dashs: function() {
+      return  this.dashsFrom
+    }
+  },
       methods: {  
           createBtn: function (name) {  // при нажатии на кнопку создать 
               let flag = false;
