@@ -15,7 +15,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.28.12 [lastDot]',
+      version: 'v 1.28.13 [orderTooltip]',
       color: { 
         text: '#DADADA',
       },

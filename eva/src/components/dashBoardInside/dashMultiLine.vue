@@ -86,6 +86,7 @@ export default {
           },
         ],
         legends: [],
+        metrics: [],
       }
     }
   },
@@ -141,13 +142,12 @@ export default {
               let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
               
               if (this.props.legends.length == 0) {
-                let metricsName = Object.keys(this.props.result[0]).filter( (item,i) => {
-                  if (i != 0) {
-                    return item
-                  }
-                });
+                this.props.metrics = [];
+                let metricsName = Object.keys(this.props.result[0]);
                                           
                 if (metricsName.length > 0) {
+                  this.props.metrics = [...[],...metricsName];
+                  metricsName.splice(0, 1)
                               
                   this.createLegends(metricsName);
 
@@ -776,7 +776,7 @@ export default {
                 xVal = `${xVal.getDate()}-${xVal.getMonth()+1}-${xVal.getFullYear()}`;
               }
               let text =  '';
-              Object.keys(d).forEach( key => {
+              that.props.metrics.forEach( key => {
                 if (key == xMetric) {
                   text += `<p><span>${key}</span> : ${xVal}</p>`;
                 } else {
