@@ -1,170 +1,221 @@
-<template >
-    <div class="header-block" :style="{background: color.panel, height: height }">
-        <div class="aut-panel">
-            <div class="nav-btn">
-                <div class="title-main" :style="{color:'white', opacity: '0.4'}">EVA</div>
-                <v-tooltip bottom :color="color.controlsActive" >
-                    <template v-slot:activator="{ on }">
-                        <v-icon class="home"  color="white" v-on="on" @click="toHome">{{home}}</v-icon>
-                    </template>
-                    <span>На главную</span>
-                </v-tooltip>
-                <v-tooltip bottom :color="color.controlsActive" >
-                    <template v-slot:activator="{ on }">
-                        <v-icon class="undo"  color="white" v-on="on" @click="toBackward">{{undo}}</v-icon>
-                    </template>
-                    <span>Назад</span>
-                </v-tooltip>
-            </div>
-           <div class="manage-btn">
-                <div class="id-user" :style="{color:'white'}">{{login}} | </div>
-                <v-tooltip bottom :color="color.controlsActive" >
-                    <template v-slot:activator="{ on }">
-                        <v-icon class="edit icon-aut" :color="colorError" v-on="on" @click="openLogs()">{{log}}</v-icon>
-                    </template>
-                    <span>Просмотреть логи</span>
-                </v-tooltip>
-                <v-tooltip bottom :color="color.controlsActive" v-if="!inside" >
-                    <template v-slot:activator="{ on }">
-                        <v-icon class="edit icon-aut" color="white" v-on="on" @click="edit">{{userEdit}}</v-icon>
-                    </template>
-                    <span>Редактировать профиль</span>
-                </v-tooltip>
-                <v-tooltip bottom :color="color.controlsActive"  >
-                    <template v-slot:activator="{ on }">
-                        <v-icon class="exit icon-aut" color="white" v-on="on" @click="exit">{{door}}</v-icon>
-                    </template>
-                    <span>Выйти из профиля</span>
-                </v-tooltip>
-           </div>   
+<template>
+  <div 
+    class="header-block" 
+    :style="{background: color.panel, height: height }"
+  >
+    <div class="aut-panel">
+      <div class="nav-btn">
+        <div 
+          class="title-main" 
+          :style="{color:'white', opacity: '0.4'}"
+        >
+          EVA
         </div>
-        <!-- <v-divider></v-divider>  -->
-        <modal-log :modalActive="modalActive" :colorFrom="color"  @cancelModal="modalActive=false" ></modal-log>
-    </div>    
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive" 
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class="home"  
+              color="white" 
+              v-on="on" 
+              @click="toHome"
+            >
+              {{ home }}
+            </v-icon>
+          </template>
+          <span>На главную</span>
+        </v-tooltip>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive" 
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class="undo"  
+              color="white" 
+              v-on="on"
+              @click="toBackward"
+            >
+              {{ undo }}
+            </v-icon>
+          </template>
+          <span>Назад</span>
+        </v-tooltip>
+      </div>
+      <div class="manage-btn">
+        <div 
+          class="id-user" 
+          :style="{color:'white'}"
+        >
+          {{ login }}
+          | 
+        </div>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive" 
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class="edit icon-aut" 
+              :color="colorError" 
+              v-on="on" 
+              @click="openLogs()"
+            >
+              {{ log }}
+            </v-icon>
+          </template>
+          <span>Просмотреть логи</span>
+        </v-tooltip>
+        <v-tooltip 
+          v-if="!inside" 
+          bottom 
+          :color="color.controlsActive" 
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class="edit icon-aut" 
+              color="white" 
+              v-on="on"
+              @click="edit"
+            >
+              {{ userEdit }}
+            </v-icon>
+          </template>
+          <span>Редактировать профиль</span>
+        </v-tooltip>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive"  
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class="exit icon-aut" 
+              color="white" 
+              v-on="on" 
+              @click="exit"
+            >
+              {{ door }}
+            </v-icon>
+          </template>
+          <span>Выйти из профиля</span>
+        </v-tooltip>
+      </div>   
+    </div>
+    <modal-log 
+      :modalActive="modalActive" 
+      :colorFrom="color"  
+      @cancelModal="modalActive=false" 
+    />
+  </div>    
 </template>
 
 
 <script>
 
-import { mdiDoor, mdiAccountEdit, mdiUndoVariant,  mdiHomeVariantOutline, mdiPencil, mdiScriptTextOutline } from '@mdi/js'
+import { mdiDoor, mdiAccountEdit, mdiUndoVariant,  mdiHomeVariantOutline, mdiScriptTextOutline } from '@mdi/js'
 
 import VueJWT from 'vuejs-jwt'
 
 Vue.use(VueJWT, {'storage': 'cookie','keyName': 'eva_token'})
 
 export default {
-    props: {
-        inside: null
-    },
-    data () {
-        return {
-            login: '',
-            user: {},
-            door: mdiDoor,
-            userEdit: mdiAccountEdit,
-            log: mdiScriptTextOutline,
-            modalActive: false,
-            home: mdiHomeVariantOutline,
-            undo: mdiUndoVariant,
-            color: { 
-                back: '#060606',
-                backElement: '#191919',
-                text: '#DADADA',
-                controls: '#6e96c5',
-                controlsSystem: '#004799',
-                controlsActive: '#41C4FF',
-                controlsInsideDash: '#DADADA',
-                panel: '#191919',
-                border: '#00000033',
-            },
-        } 
-    },
-     computed: { 
-        // color: function() {
-        //      return this.$store.getters.getColor
-        //  },
-         colorError: function() {
+  props: {
+    inside: null
+  },
+  data () {
+    return {
+      login: '',
+      user: {},
+      door: mdiDoor,
+      userEdit: mdiAccountEdit,
+      log: mdiScriptTextOutline,
+      modalActive: false,
+      home: mdiHomeVariantOutline,
+      undo: mdiUndoVariant,
+      color: { 
+        back: '#060606',
+        backElement: '#191919',
+        text: '#DADADA',
+        controls: '#6e96c5',
+        controlsSystem: '#004799',
+        controlsActive: '#41C4FF',
+        controlsInsideDash: '#DADADA',
+        panel: '#191919',
+        border: '#00000033',
+      },
+    } 
+  },
+  computed: { 
+    colorError: function() {
 
-             if (this.$store.getters.getColorError) {
-                 return this.color.controlsActive
-             } else {
-                 return 'white'
-             } 
-         },
-         height: function() {
-             if (screen.width < 1400) {
-                 return '40px'
-             } else {
-                 return "50px"
-             }
-         }
-     },  
-     methods: {
-         getCookie: async function() {
-                if(this.$jwt.hasToken()) {
-                   // token = this.$jwt.getToken();
-                    // this.unicid = (this.$jwt.decode());
-                    this.login = this.$jwt.decode().username;
-                    let id = this.$jwt.decode().user_id;
-                    let permissions = [];
+      if (this.$store.getters.getColorError) {
+        return this.color.controlsActive
+      } else {
+        return 'white'
+      } 
+    },
+    height: function() {
+      if (screen.width < 1400) {
+        return '40px'
+      } else {
+        return "50px"
+      }
+    }
+  },  
+  methods: {
+    getCookie: async function() {
+      if(this.$jwt.hasToken()) {
+        this.login = this.$jwt.decode().username;
+        //let id = this.$jwt.decode().user_id;
+        let permissions = [];
 
-                    let response = await fetch(`/api/user/permissions`)
-                    .catch (error => {
-                        console.log(error);
-                        return {status: 300, result: 'Post не создался, возможно из-за неточностей в запросе'}
-                    }) 
+        let response = await fetch(`/api/user/permissions`)
+          .catch (error => {
+            console.log(error);
+            return {status: 300, result: 'Post не создался, возможно из-за неточностей в запросе'}
+          }) 
 
                    
-                    if (response.status == 200) {  // если получилось
-                            await response.json().then( res => {  // переводим полученные данные из json в нормальный объект
-                                permissions = res.data;
-                                this.$emit('permissions',permissions);
-                                this.$emit('setUsername',this.login);
-                                this.$emit('checkOver');
-                            }) 
-                    }  else {
-                        // permissions = ['all'];
-                        // this.$emit('permissions',permissions);
-                    }
+        if (response.status == 200) {  // если получилось
+          await response.json().then( res => {  // переводим полученные данные из json в нормальный объект
+            permissions = res.data;
+            this.$emit('permissions',permissions);
+            this.$emit('setUsername',this.login);
+            this.$emit('checkOver');
+          }) 
+        } 
+                         
+      } else {
+        this.$router.push(`/`);
+      }
 
-
-                    // this.role = this.$jwt.decode().role;
-                    
-                     
-                } else {
-                    this.$router.push(`/`);
-                }
-
-                // if (this.unicid == null) {
-                //     this.$router.push(`/`);
-                // } 
-
-         },
-         exit: function() {
-             document.cookie = `eva-dashPage=''; max-age=0 ; path=/`;
-             document.cookie = `eva_token=''; max-age=0 ; path=/`;
-             this.$store.commit('clearState');
-             this.$router.push(`/`); 
-         },
-         edit: function() {
-
-            this.$router.push(`/profile`); 
-           // this.$router.push(`/profile`); 
-         },
-         toHome: function() {
-             this.$router.push(`/main`);
-         },
-         toBackward: function() {
-             this.$router.go(-1);
-         },
-         openLogs: function() {
-            this.modalActive=true;
-            this.$store.commit('setErrorLogs',false);
-         }
     },
-    mounted() {
-        this.getCookie();
-    } 
+    exit: function() {
+      document.cookie = `eva-dashPage=''; max-age=0 ; path=/`;
+      document.cookie = `eva_token=''; max-age=0 ; path=/`;
+      this.$store.commit('clearState');
+      this.$router.push(`/`); 
+    },
+    edit: function() {
+
+      this.$router.push(`/profile`);  
+    },
+    toHome: function() {
+      this.$router.push(`/main`);
+    },
+    toBackward: function() {
+      this.$router.go(-1);
+    },
+    openLogs: function() {
+      this.modalActive=true;
+      this.$store.commit('setErrorLogs',false);
+    }
+  },
+  mounted() {
+    this.getCookie();
+  } 
 }
 
 

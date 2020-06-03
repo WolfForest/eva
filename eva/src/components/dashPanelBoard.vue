@@ -1,191 +1,600 @@
 <template>
-  <div class="dash-main" :style="{background: color.panel}">
-            <div class="main-title">
-                <div class="title-name" :style="{color:'#DADADA'}">{{name}}</div>
-                <!-- <v-tooltip bottom :color="color.controlsActive" >
-                        <template v-slot:activator="{ on }">
-                            <v-icon class="home"  :co lor="color.controls" v-on="on" @click="toHome">{{home}}</v-icon>
-                        </template> 
-                        <span>На главную</span>
-                </v-tooltip> -->
-                <div class="title-edit" :style="editSwitch">
-                    <v-tooltip bottom :color="color.controlsActive" >
-                        <template v-slot:activator="{ on }">
-                           <v-icon class="edit" v-on="on" :style="{color:'#DADADA'}" @click="setEditMode">{{edit_layout}}</v-icon> 
-                        </template>
-                        <span>Поменять режим отображения</span>
-                    </v-tooltip>
-                    <!-- <v-tooltip bottom :color="color.controlsActive" >
-                        <template v-slot:activator="{ on }">
-                            <v-icon class="gear" :class="{hide_control:!edit_elem}" :style="{color:color[colorGear]}" v-on="on" @click="openSettings">{{gear}}</v-icon>
-                        </template>
-                        <span>Настройки</span>
-                    </v-tooltip> -->
-                    <!-- <v-tooltip bottom :color="color.controlsActive" >
-                        <template v-slot:activator="{ on }">
-                            <v-icon class="exim" :class="{hide_control:!edit_elem}" :style="{color:color[colorExim]}" v-on="on" @click="openExim">{{exim}}</v-icon>
-                        </template>
-                        <span>Экспорт/Импорт</span>
-                    </v-tooltip> -->
-                </div>
-              
-            </div>
-            <div class="control-block" >
-                <v-tooltip bottom :color="color.controlsActive">
-                    <template v-slot:activator="{ on }">
-                        <v-icon class="code" :style="codeSwitch" :class="{hide_control:!edit_elem}"  v-on="on" @click="openEventCode">{{code_icon}}</v-icon>
-                    </template>
-                    <span>События</span>
-                </v-tooltip>
-                <v-tooltip bottom :color="color.controlsActive">
-                    <template v-slot:activator="{ on }">
-                        <v-icon class="tocken" :style="tockenSwitch" :class="{hide_control:!edit_elem}" v-on="on" @click="openTockenCode">{{tocken_icon}}</v-icon>
-                    </template>
-                    <span>Токены</span>
-                </v-tooltip>
-                <v-tooltip bottom :color="color.controlsActive">
-                    <template v-slot:activator="{ on }">
-                        <v-icon class="search" :style="searchSwitch" :class="{hide_control:!edit_elem}" v-on="on" @click="openSearchCode">{{search_icon}}</v-icon>
-                    </template>
-                    <span>Источники даных</span>
-                </v-tooltip>
-                <v-tooltip bottom :color="color.controlsActive">
-                    <template v-slot:activator="{ on }">
-                        <v-icon class="tools" :style="toolSwitch" :class="{hide_control:!edit_elem}" v-on="on" @click="openToolPanel">{{tool_icon}}</v-icon>
-                    </template>
-                    <span>Визуализации</span>
-                </v-tooltip>
-                <v-tooltip bottom :color="color.controlsActive">
-                    <template v-slot:activator="{ on }">
-                        <v-icon class="profile" :style="profileSwitch" v-on="on" :data-error="colorError" @click="openProfile">{{profile_icon}}</v-icon>
-                    </template>
-                    <span>Профиль</span>
-                </v-tooltip>
-                <v-tooltip bottom :color="color.controlsActive">
-                    <template v-slot:activator="{ on }">
-                        <v-icon class="save" :style="saveSwitch" v-on="on" @click="openSave">{{save_icon}}</v-icon>
-                    </template>
-                    <span>Сохранить</span>
-                </v-tooltip>
-            </div>
-            <!-- <block-exim :color="color" :openexim="openexim" :idDash="idDash" @closeExim="openExim"></block-exim> -->
-            <div class="block-code" ref="blockCode" :class="{opencode:opencode}" :style=" {background:color.backElement, color:color.text}">
-                <div class="searches-one" v-for="sear in searches" :key="sear.sid" @click="openEditSearch($event,sear.sid)">
-                    <div class="search-id" :style="{ background:color.controls, color:'#fff', border: `1px solid ${color.controls}`}" >{{checkSid(sear.sid)}}</div>
-                    <div class="search-query" :style="{ background:color.backElement, color:color.text,border: `1px solid ${color.border}`}" >{{sear.original_spl}}<div class="loading-bar" :class="{loading:loadings[sear.sid]}"></div></div>
-                    <v-tooltip bottom :color="color.controlsActive">
-                        <template v-slot:activator="{ on }">
-                            <v-icon class=" search-play" v-on="on" :color="color.controls" @click="startSearch(sear)">{{play}}</v-icon>
-                        </template>
-                        <span>Запустить ИД</span>
-                    </v-tooltip>
-                    <v-tooltip bottom :color="color.controlsActive">
-                        <template v-slot:activator="{ on }">
-                            <v-icon class=" search-pencil" v-on="on" :color="color.controls" @click="openEdit(sear.sid)">{{pencil}}</v-icon>
-                        </template>
-                        <span>Редактировать ИД</span>
-                    </v-tooltip>
-                    <v-tooltip bottom :color="color.controlsActive">
-                        <template v-slot:activator="{ on }">
-                            <v-icon class=" search-clock" v-on="on" :color="color.controls" @click="openSchedule(sear.sid)">{{clock}}</v-icon>
-                        </template>
-                        <span>Планировщик</span>
-                    </v-tooltip>
-                    <v-tooltip bottom :color="color.controlsActive">
-                        <template v-slot:activator="{ on }">
-                            <v-icon class=" search-clock" v-on="on" :color="color.controls" :disabled="disabledDS[sear.sid]" @click="exportSearch(sear.sid)">{{download}}</v-icon>
-                        </template>
-                        <span>Экспортировать ИД</span>
-                    </v-tooltip>
-                    <v-tooltip bottom :color="color.controlsActive">
-                        <template v-slot:activator="{ on }">
-                            <v-icon class="search-trash" v-on="on" :color="color.controls" @click="deleteSearch(sear.sid)">{{trash}}</v-icon>
-                        </template>
-                        <span>Удалить ИД</span> 
-                    </v-tooltip>
-                </div>
-                
-                <v-btn small class="create-search"  :color="color.controlsSystem"  @click="openModal">Создать</v-btn>
-                <!-- <div class="sign-block">
-                    <v-icon class="sign plus" v-if="sign"  @click="openSearch">{{plus_icon}}</v-icon>
-                    <v-icon class="sign minus" v-if="!sign"  @click="openSearch">{{minus_icon}}</v-icon>
-                </div> -->
-            </div>
-            <div class="block-tool" :class="{opentool:opentool}" :style="{ background:color.backElement, color:color.text}">
-                <div class="tool-one draggable" v-for="tool in tools" :key="tool.name"  @mousedown="dragTool" :data-type="tool.type">
-                    <div class="tool-img" :style="{ background:color.controls, color:'#fff', border: `2px solid ${color.controls}`}"><v-icon class="tool-img-itself"  >{{`${tool.img}`}}</v-icon></div>
-                    <div class="tool-name" :style="{ background:color.backElement, color:color.text, border: `1px solid ${color.border}`}" >{{tool.name}}</div>
-                </div>
-            </div>
-            <div class="block-tocken" :class="{opentocken:opentocken}"  :style="{ background:color.backElement, color:color.text}">
-                <div class="row-tocken" v-for="(tocken, i) in tockens" :key="tocken.name" :style="{color: color.text}">
-                    <div class="row-data row-itself" :class="{showTocken:!lookTockens[i].show}"  >
-                        <v-text-field  class="tocken-name " :color="color.text" outlined label="Имя"  v-model="tockensName[tocken.name]" hide-details></v-text-field>
-                        <v-select  :items="elements" :color="color.text"  v-model="tocken.elem" label="Элемент" hide-details  outlined class="tocken-elem " ></v-select>
-                        <v-select  :items="actions(tocken.elem)" :color="color.text" v-model="tocken.action" label="Действие" hide-details  outlined class="tocken-action " ></v-select>
-                        <v-select  :items="capture({action:tocken.action,elem: tocken.elem})" :color="color.text" v-model="tocken.capture" label="Свойство" hide-details  outlined class="tocken-capture " ></v-select>
-                        <v-text-field  class="tocken-prefix " :color="color.text" label="Префикс"  outlined v-model="tocken.prefix" hide-details ></v-text-field>
-                        <v-text-field  class="tocken-sufix " :color="color.text" label="Суфикс"  outlined v-model="tocken.sufix" hide-details ></v-text-field>
-                        <v-text-field  class="tocken-delimetr " :color="color.text" label="Разделитель"  outlined v-model="tocken.delimetr" hide-details ></v-text-field>
-                    </div>
-                        <p class="tocken-view" :class="{showView:lookTockens[i].show}" :color="color.controls" >{{tocken.value}}</p>
-                        <v-icon class="row-check "  :color="color.controls" :class="{showIcon:lookTockens[i].show}" @click=" saveTocken()">{{check}}</v-icon>
-                        <v-icon class="row-look"  :color="lookTockens[i].color"  @click="lookTocken(i)">{{look}}</v-icon>
-                        <v-icon class="row-trash " :color="color.controls" :class="{showIcon:lookTockens[i].show}" @click="deleteTocken(tocken.name)">{{trash}}</v-icon>
-                </div>
-                
-                <div class="row-tocken new" :class="{opennewtocken:opennewtocken}" :style="{borderTop: `1px solid ${color.text}`}">
-                    <v-text-field  class="tocken-name" :color="color.text" label="Имя"  outlined v-model="newTockenName" hide-details ></v-text-field>
-                    <v-select  :items="elements" :color="color.text" v-model="newElem" hide-details  outlined class="tocken-elem" label="Элемент"></v-select>
-                    <v-select  :items="actions(newElem)" :color="color.text" v-model="newAction" hide-details  outlined class="tocken-action" label="Действие" ></v-select>
-                    <v-select  :items="capture({action:newAction,elem: newElem})" :color="color.text"  hide-details  outlined class="tocken-capture" label="Свойство" ></v-select>
-                    <v-text-field  class="tocken-prefix" :color="color.text" label="Префикс"  outlined v-model="newTockenDop.prefix" hide-details ></v-text-field>
-                    <v-text-field  class="tocken-sufix" :color="color.text" label="Суфикс"  outlined v-model="newTockenDop.sufix" hide-details ></v-text-field>
-                    <v-text-field  class="tocken-delimetr" :color="color.text" label="Разделитель"  outlined v-model="newTockenDop.delimetr" hide-details ></v-text-field>
-                    <v-icon class="row-check" :color="color.controls" @click=" saveTocken()">{{check}}</v-icon>
-                </div>
-                <v-icon class="row-plus" v-if="showSign" :color="color.controls" @click="() => {showSign = !showSign; opennewtocken=!opennewtocken;}">{{plus_icon}}</v-icon>
-                <v-icon class="row-minus" v-if="!showSign" :color="color.controlsActive" @click="() => {showSign = !showSign; opennewtocken=!opennewtocken;}">{{minus_icon}}</v-icon>
-            </div>
-            <!-- <div class="block-exin" :class="{openexin:openexin}" :style="{boxShadow:`0px 0px 3px 0 ${color.border}`, background:color.back, color:color.text}">
-                <div  class="exin-btn" @click="showModalExin('ex')"  :style="{background:color.controls,color:'#fff'}">Экспортировать</div>
-                <div class="exin-btn" @click="showModalExin('im')" :style="{background:color.controls,color:'#fff'}">Импортировать</div>
-            </div> -->
-            <div class="block-event" :class="{openevent:openevent}" :style="{ background:color.backElement}">
-                <v-textarea  v-model="textarea_event"  spellcheck="false" :textAreaFull="textareaEv" :color="color.text" :style="{color:color.text}" auto-grow  outlined  class="textarea-event"  label="Начните писать событие"  hide-details clearable  ></v-textarea>
-                <v-btn   class="event-btn" :color="color.controlsSystem" @click="setEvents">Подтвердить</v-btn>
-            </div>
-            <div class="block-save" :class="{opensave:opensave}" :style="{ background:color.backElement}">
-                <div class="save-obertka" v-show="!errorSave">
-                    <div class="question-save" :style="{color:color.text}" >Сохранить дашборд <span  class="save-name">{{name}}</span> ?</div>
-                    <div class="buttons-save">
-                        <v-btn   class="save-btn" small :color="color.controlsSystem" @click="saveDash">Да</v-btn>
-                        <v-btn   class="save-btn" small :color="color.controlsActive" @click="opensave = false; save_elem = false;">Нет</v-btn>
-                    </div>
-                </div>
-                <div v-show="errorSave" class="save-obertka message-save">
-                    <div class="question-save" :style="{color:colorErrorSave}">{{msgErrorSave}}</div>
-                </div>
-            </div>
-            <div class="warning-block" :style="{background:this.color.back, border:`1px solid ${this.color.border}`, color:this.color.text, bottom: `-${this.otstupBottom}px`}">
-                <div class="warning-text">{{msgWarn}}</div>
-                <div class="btn-warning">
-                    <v-btn small :color="color.controls" class="warning-btn yes-btn" @click="yesSearch">Да</v-btn>
-                    <v-btn small :color="color.controlsActive" class="warning-btn" @click="noSearch">Нет</v-btn>
-                </div>
-            </div>
-            
-            <!-- <v-icon class="plus" :style="plus_coral"  @click="openPlusCode">{{plus_icon}}</v-icon>
-            <div class="plus-code"  :class="{opencode:opencode}" contenteditable >
-                <div>Describe here...</div>
-                <v-btn small color="teal" class="create-btn" @click="pressBtn">Создать</v-btn>
-                <v-icon class="help" :style="help_coral"  @click="openHelp">{{help_icon}}</v-icon>
-            </div>
-            <div class="help-block" :class="{openhelp:openhelp}">create (id, [элемнет внутри ;элемнет внутри;...],  название, отступ сверху, отступ слева, ширина , высота  )</div> -->
-            <modal-create-search :idDashFrom="idDash" :colorFrom="color" :modalFrom="activeModal" :createBtnFrom="createSearchBtn" :dataSearchFrom="newSearch" @startSearch="startSearch($event)"  @cancelModal="cancelModal"></modal-create-search>
-            <modal-schedule :idDashFrom="idDash" :colorFrom="color" :modalFrom="activeSchedule" @cancel="activeSchedule=false" :dataSidFrom="scheduleSid"></modal-schedule>
-       </div>
-    
+  <div 
+    class="dash-main" 
+    :style="{background: color.panel}"
+  >
+    <div class="main-title">
+      <div 
+        class="title-name" 
+        :style="{color:'#DADADA'}"
+      >
+        {{ name }}
+      </div>
+      <div 
+        class="title-edit" 
+        :style="editSwitch"
+      >
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive" 
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class="edit" 
+              :style="{color:'#DADADA'}"
+              v-on="on"
+              @click="setEditMode"
+            >
+              {{ edit_layout }}
+            </v-icon> 
+          </template>
+          <span>Поменять режим отображения</span>
+        </v-tooltip>
+      </div>
+    </div>
+    <div class="control-block">
+      <v-tooltip 
+        bottom 
+        :color="color.controlsActive"
+      >
+        <template v-slot:activator="{ on }">
+          <v-icon 
+            class="code" 
+            :style="codeSwitch" 
+            :class="{hide_control:!edit_elem}"  
+            v-on="on" 
+            @click="openEventCode"
+          >
+            {{ code_icon }}
+          </v-icon>
+        </template>
+        <span>События</span>
+      </v-tooltip>
+      <v-tooltip 
+        bottom 
+        :color="color.controlsActive"
+      >
+        <template v-slot:activator="{ on }">
+          <v-icon 
+            class="tocken" 
+            :style="tockenSwitch" 
+            :class="{hide_control:!edit_elem}" 
+            v-on="on" 
+            @click="openTockenCode"
+          >
+            {{ tocken_icon }}
+          </v-icon>
+        </template>
+        <span>Токены</span>
+      </v-tooltip>
+      <v-tooltip 
+        bottom 
+        :color="color.controlsActive"
+      >
+        <template v-slot:activator="{ on }">
+          <v-icon 
+            class="search" 
+            :style="searchSwitch" 
+            :class="{hide_control:!edit_elem}" 
+            v-on="on" 
+            @click="openSearchCode"
+          >
+            {{ search_icon }}
+          </v-icon>
+        </template>
+        <span>Источники даных</span>
+      </v-tooltip>
+      <v-tooltip 
+        bottom 
+        :color="color.controlsActive"
+      >
+        <template v-slot:activator="{ on }">
+          <v-icon 
+            class="tools" 
+            :style="toolSwitch" 
+            :class="{hide_control:!edit_elem}" 
+            v-on="on" 
+            @click="openToolPanel"
+          >
+            {{ tool_icon }}
+          </v-icon>
+        </template>
+        <span>Визуализации</span>
+      </v-tooltip>
+      <v-tooltip 
+        bottom 
+        :color="color.controlsActive"
+      >
+        <template v-slot:activator="{ on }">
+          <v-icon 
+            class="profile" 
+            :style="profileSwitch" 
+            :data-error="colorError" 
+            v-on="on" 
+            @click="openProfile"
+          >
+            {{ profile_icon }}
+          </v-icon>
+        </template>
+        <span>Профиль</span>
+      </v-tooltip>
+      <v-tooltip 
+        bottom 
+        :color="color.controlsActive"
+      >
+        <template v-slot:activator="{ on }">
+          <v-icon 
+            class="save" 
+            :style="saveSwitch" 
+            v-on="on" 
+            @click="openSave"
+          >
+            {{ save_icon }}
+          </v-icon>
+        </template>
+        <span>Сохранить</span>
+      </v-tooltip>
+    </div>
+    <div 
+      ref="blockCode"
+      class="block-code" 
+      :class="{opencode:opencode}" 
+      :style=" {background:color.backElement, color:color.text}"
+    >
+      <div 
+        v-for="sear in searches" 
+        :key="sear.sid" 
+        class="searches-one" 
+        @click="openEditSearch($event,sear.sid)"
+      >
+        <div 
+          class="search-id" 
+          :style="{ background:color.controls, color:'#fff', border: `1px solid ${color.controls}`}" 
+        >
+          {{ checkSid(sear.sid) }}
+        </div>
+        <div 
+          class="search-query" 
+          :style="{ background:color.backElement, color:color.text,border: `1px solid ${color.border}`}" 
+        >
+          {{ sear.original_spl }}
+          <div 
+            class="loading-bar" 
+            :class="{loading:loadings[sear.sid]}"
+          />
+        </div>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive"
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class=" search-play" 
+              :color="color.controls"
+              v-on="on" 
+              @click="startSearch(sear)"
+            >
+              {{ play }}
+            </v-icon>
+          </template>
+          <span>Запустить ИД</span>
+        </v-tooltip>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive"
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class=" search-pencil" 
+              :color="color.controls"
+              v-on="on" 
+              @click="openEdit(sear.sid)"
+            >
+              {{ pencil }}
+            </v-icon>
+          </template>
+          <span>Редактировать ИД</span>
+        </v-tooltip>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive"
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class=" search-clock" 
+              :color="color.controls" 
+              v-on="on" 
+              @click="openSchedule(sear.sid)"
+            >
+              {{ clock }}
+            </v-icon>
+          </template>
+          <span>Планировщик</span>
+        </v-tooltip>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive"
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class=" search-clock" 
+              :color="color.controls" 
+              :disabled="disabledDS[sear.sid]" 
+              v-on="on"
+              @click="exportSearch(sear.sid)"
+            >
+              {{ download }}
+            </v-icon>
+          </template>
+          <span>Экспортировать ИД</span>
+        </v-tooltip>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive"
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class="search-trash" 
+              :color="color.controls"
+              v-on="on" 
+              @click="deleteSearch(sear.sid)"
+            >
+              {{ trash }}
+            </v-icon>
+          </template>
+          <span>Удалить ИД</span> 
+        </v-tooltip>
+      </div>      
+      <v-btn 
+        small 
+        class="create-search"  
+        :color="color.controlsSystem"  
+        @click="openModal"
+      >
+        Создать
+      </v-btn>
+    </div>
+    <div 
+      class="block-tool" 
+      :class="{opentool:opentool}" 
+      :style="{ background:color.backElement, color:color.text}"
+    >
+      <div 
+        v-for="tool in tools" 
+        :key="tool.name"  
+        class="tool-one draggable"
+        :data-type="tool.type" 
+        @mousedown="dragTool" 
+      >
+        <div 
+          class="tool-img" 
+          :style="{ background:color.controls, color:'#fff', border: `2px solid ${color.controls}`}"
+        >
+          <v-icon class="tool-img-itself">
+            {{ `${tool.img}` }}
+          </v-icon>
+        </div>
+        <div 
+          class="tool-name" 
+          :style="{ background:color.backElement, color:color.text, border: `1px solid ${color.border}`}" 
+        >
+          {{ tool.name }}
+        </div>
+      </div>
+    </div>
+    <div 
+      class="block-tocken" 
+      :class="{opentocken:opentocken}"  
+      :style="{ background:color.backElement, color:color.text}"
+    >
+      <div 
+        v-for="(tocken, i) in tockens" 
+        :key="tocken.name" 
+        class="row-tocken" 
+        :style="{color: color.text}"
+      >
+        <div 
+          class="row-data row-itself" 
+          :class="{showTocken:!lookTockens[i].show}"  
+        >
+          <v-text-field  
+            v-model="tockensName[tocken.name]" 
+            class="tocken-name " 
+            :color="color.text" 
+            outlined 
+            label="Имя"
+            hide-details
+          />
+          <v-select  
+            v-model="tocken.elem"
+            :items="elements" 
+            :color="color.text"  
+            label="Элемент" 
+            hide-details  
+            outlined 
+            class="tocken-elem" 
+          />
+          <v-select  
+            v-model="tocken.action"
+            :items="actions(tocken.elem)" 
+            :color="color.text" 
+            label="Действие" 
+            hide-details  
+            outlined 
+            class="tocken-action" 
+          />
+          <v-select  
+            v-model="tocken.capture"
+            :items="capture({action:tocken.action,elem: tocken.elem})" 
+            :color="color.text" 
+            label="Свойство" 
+            hide-details  
+            outlined 
+            class="tocken-capture" 
+          />
+          <v-text-field  
+            v-model="tocken.prefix"
+            class="tocken-prefix" 
+            :color="color.text" 
+            label="Префикс"  
+            outlined 
+            hide-details 
+          />
+          <v-text-field 
+            v-model="tocken.sufix"  
+            class="tocken-sufix " 
+            :color="color.text" 
+            label="Суфикс"  
+            outlined 
+            hide-details 
+          />
+          <v-text-field 
+            v-model="tocken.delimetr" 
+            class="tocken-delimetr " 
+            :color="color.text" 
+            label="Разделитель"  
+            outlined 
+            hide-details 
+          />
+        </div>
+        <p 
+          class="tocken-view" 
+          :class="{showView:lookTockens[i].show}" 
+          :color="color.controls" 
+        >
+          {{ tocken.value }}
+        </p>
+        <v-icon 
+          class="row-check"  
+          :color="color.controls" 
+          :class="{showIcon:lookTockens[i].show}" 
+          @click=" saveTocken()"
+        >
+          {{ check }}
+        </v-icon>
+        <v-icon 
+          class="row-look"  
+          :color="lookTockens[i].color" 
+          @click="lookTocken(i)"
+        > 
+          {{ look }} 
+        </v-icon>
+        <v-icon 
+          class="row-trash " 
+          :color="color.controls" 
+          :class="{showIcon:lookTockens[i].show}" 
+          @click="deleteTocken(tocken.name)"
+        >
+          {{ trash }}
+        </v-icon>
+      </div>
+      <div 
+        class="row-tocken new" 
+        :class="{opennewtocken:opennewtocken}" 
+        :style="{borderTop: `1px solid ${color.text}`}"
+      >
+        <v-text-field  
+          v-model="newTockenName"
+          class="tocken-name" 
+          :color="color.text" 
+          label="Имя"  
+          outlined 
+          hide-details 
+        />
+        <v-select  
+          v-model="newElem" 
+          :items="elements" 
+          :color="color.text"
+          hide-details  
+          outlined 
+          class="tocken-elem" 
+          label="Элемент"
+        />
+        <v-select  
+          v-model="newAction" 
+          :items="actions(newElem)" 
+          :color="color.text"
+          hide-details  
+          outlined 
+          class="tocken-action" 
+          label="Действие" 
+        />
+        <v-select  
+          :items="capture({action:newAction,elem: newElem})" 
+          :color="color.text"  
+          hide-details  
+          outlined 
+          class="tocken-capture" 
+          label="Свойство" 
+        />
+        <v-text-field  
+          v-model="newTockenDop.prefix" 
+          class="tocken-prefix" 
+          :color="color.text" 
+          label="Префикс"  
+          outlined 
+          hide-details 
+        />
+        <v-text-field  
+          v-model="newTockenDop.sufix"
+          class="tocken-sufix" 
+          :color="color.text" 
+          label="Суфикс"  
+          outlined 
+          hide-details 
+        />
+        <v-text-field  
+          v-model="newTockenDop.delimetr"
+          class="tocken-delimetr" 
+          :color="color.text"
+          label="Разделитель"  
+          outlined 
+          hide-details 
+        />
+        <v-icon 
+          class="row-check" 
+          :color="color.controls" 
+          @click=" saveTocken()"
+        >
+          {{ check }}
+        </v-icon>
+      </div>
+      <v-icon 
+        v-if="showSign" 
+        class="row-plus" 
+        :color="color.controls" 
+        @click="() => {showSign = !showSign; opennewtocken=!opennewtocken;}"
+      >
+        {{ plus_icon }}
+      </v-icon>
+      <v-icon 
+        v-if="!showSign"
+        class="row-minus" 
+        :color="color.controlsActive"
+        @click="() => {showSign = !showSign; opennewtocken=!opennewtocken;}"
+      >
+        {{ minus_icon }}
+      </v-icon>
+    </div>
+    <div 
+      class="block-event" 
+      :class="{openevent:openevent}" 
+      :style="{ background:color.backElement}"
+    >
+      <v-textarea  
+        v-model="textarea_event"  
+        spellcheck="false" 
+        :textAreaFull="textareaEv" 
+        :color="color.text" 
+        :style="{color:color.text}" 
+        auto-grow  
+        outlined  
+        class="textarea-event"  
+        label="Начните писать событие"  
+        hide-details 
+        clearable  
+      />
+      <v-btn   
+        class="event-btn" 
+        :color="color.controlsSystem" 
+        @click="setEvents"
+      >
+        Подтвердить
+      </v-btn>
+    </div>
+    <div 
+      class="block-save" 
+      :class="{opensave:opensave}" 
+      :style="{ background:color.backElement}"
+    >
+      <div 
+        v-show="!errorSave"
+        class="save-obertka"
+      >
+        <div 
+          class="question-save" 
+          :style="{color:color.text}" 
+        >
+          Сохранить дашборд 
+          <span class="save-name">
+            {{ name }}
+          </span>
+          ?
+        </div>
+        <div class="buttons-save">
+          <v-btn   
+            class="save-btn" 
+            small 
+            :color="color.controlsSystem" 
+            @click="saveDash"
+          >
+            Да
+          </v-btn>
+          <v-btn   
+            class="save-btn" 
+            small 
+            :color="color.controlsActive" 
+            @click="opensave = false; save_elem = false;"
+          >
+            Нет
+          </v-btn>
+        </div>
+      </div>
+      <div 
+        v-show="errorSave" 
+        class="save-obertka message-save"
+      >
+        <div 
+          class="question-save" 
+          :style="{color:colorErrorSave}"
+        >
+          {{ msgErrorSave }}
+        </div>
+      </div>
+    </div>
+    <div 
+      class="warning-block" 
+      :style="{background:color.back, border:`1px solid ${color.border}`, color:color.text, bottom: `-${otstupBottom}px`}"
+    >
+      <div class="warning-text">
+        {{ msgWarn }}
+      </div>
+      <div class="btn-warning">
+        <v-btn 
+          small 
+          :color="color.controls" 
+          class="warning-btn yes-btn" 
+          @click="yesSearch"
+        >
+          Да
+        </v-btn>
+        <v-btn 
+          small 
+          :color="color.controlsActive" 
+          class="warning-btn" 
+          @click="noSearch"
+        >
+          Нет
+        </v-btn>
+      </div>
+    </div>
+    <modal-create-search 
+      :idDashFrom="idDash" 
+      :colorFrom="color" 
+      :modalFrom="activeModal" 
+      :createBtnFrom="createSearchBtn" 
+      :dataSearchFrom="newSearch"
+      @startSearch="startSearch($event)"  
+      @cancelModal="cancelModal"
+    />
+    <modal-schedule 
+      :idDashFrom="idDash" 
+      :colorFrom="color" 
+      :modalFrom="activeSchedule" 
+      :dataSidFrom="scheduleSid"
+      @cancel="activeSchedule=false" 
+    />
+  </div>
 </template>
 
 <script>
@@ -197,647 +606,579 @@ import { mdiPlusBox, mdiPlay, mdiEye, mdiArrowDownBold, mdiContentSave, mdiAccou
 import  settings  from '../js/componentsSettings.js'
 
 export default {
-    props: {
-        idDashFrom: null,
-        colorFrom: null,
+  props: {
+    idDashFrom: null,
+    colorFrom: null,
+  },
+  data () {
+    return {
+      search_elem: false,
+      help_icon: mdiHelpCircleOutline,
+      //search_coral: 'fill:teal',
+      search_icon: mdiDatabase,
+      tool_elem: false,
+      // tool_coral: 'fill:teal',
+      tocken_elem: false,
+      profile_elem: false,
+      save_elem: false,
+      edit_elem: true,
+      code_elem: false,
+      check: mdiCheckBold,
+      look: mdiEye,
+      // tocken_coral: 'fill:teal',
+      tool_icon: mdiToolbox ,
+      tocken_icon: mdiVariable,
+      profile_icon: mdiAccount,
+      plus_icon: mdiPlusBox,
+      minus_icon: mdiMinusBox,
+      trash: mdiTrashCanOutline,
+      edit_layout: mdiTableEdit,
+      code_icon: mdiCodeTags,
+      save_icon: mdiContentSave,
+      pencil: mdiPencil,
+      play: mdiPlay,
+      clock: mdiClockOutline,
+      download: mdiArrowDownBold,
+      help_elem: true,
+      help_coral: 'fill:teal',
+      opencode: false,
+      openevent: false,
+      openexin: false,
+      opentool: false,
+      opentocken: false,
+      opensearch: false,
+      opensave: false,
+      openexim: false,
+      sign: true,
+      gear: mdiSettings,
+      exim: mdiSwapVerticalBold,
+      home: mdiHomeVariantOutline,
+      openhelp: false,
+      newDashBoard: {},
+      lookTockens: [],
+      tools: [],
+      avatar: null,
+      tempTocken: {},
+      change: {},
+      textarea: '',
+      showSign: true,
+      newTockenName: null,
+      opennewtocken: false,
+      newTockenDop: {},
+      newElem: '',
+      newAction: '',
+      tockensName: {},
+      msgWarn: '',
+      textarea_event: '',
+      events: [],
+      event: {},
+      newSearch: {
+        sid: null,
+        original_spl: null,
+        parametrs: {
+          tws: 0,
+          twf: 0,
+          username: 'admin',
+          timeout: 60,
+          preview: false,
+          field_extraction: false,
+          cache_ttl: 60,
+        },
+      },
+      activeModal: false,
+      activeSchedule: false,
+      scheduleSid: -1,
+      loadings: { },
+      dbOpen: null,
+      colorGear: '',
+      colorExim: '',
+      fieldsets: null,
+      otstupBottom: 550,
+      errorSave: false,
+      msgErrorSave: '',
+      colorErrorSave: '',
+      createSearchBtn:  '',
+      disabledDS: {},
+    }
+  },
+  computed: {
+    idDash: function() {  // получаем id страницы переданного от родителя
+      return this.idDashFrom
     },
-    data () {
-        return {
-            search_elem: false,
-            help_icon: mdiHelpCircleOutline,
-            //search_coral: 'fill:teal',
-            search_icon: mdiDatabase,
-            tool_elem: false,
-           // tool_coral: 'fill:teal',
-            tocken_elem: false,
-            profile_elem: false,
-            save_elem: false,
-            edit_elem: true,
-            code_elem: false,
-            check: mdiCheckBold,
-            look: mdiEye,
-           // tocken_coral: 'fill:teal',
-            tool_icon: mdiToolbox ,
-            tocken_icon: mdiVariable,
-            profile_icon: mdiAccount,
-            plus_icon: mdiPlusBox,
-            minus_icon: mdiMinusBox,
-            trash: mdiTrashCanOutline,
-            edit_layout: mdiTableEdit,
-            code_icon: mdiCodeTags,
-            save_icon: mdiContentSave,
-            pencil: mdiPencil,
-            play: mdiPlay,
-            clock: mdiClockOutline,
-            download: mdiArrowDownBold,
-            help_elem: true,
-            help_coral: 'fill:teal',
-            opencode: false,
-            openevent: false,
-            openexin: false,
-            opentool: false,
-            opentocken: false,
-            opensearch: false,
-            opensave: false,
-            openexim: false,
-            sign: true,
-            gear: mdiSettings,
-            exim: mdiSwapVerticalBold,
-            home: mdiHomeVariantOutline,
-            openhelp: false,
-            newDashBoard: {},
-            lookTockens: [],
-            tools: [
-            //     {name:'Таблица', img: mdiTableLarge, type: 'table'},
-            //     {name:'Линейный график', img:  mdiChartBar, type: 'lineChart'},
-            //     {name:'Мультилинейный график', img:  mdiChartMultiline, type: 'multiLine'},
-            //     {name:'Cтолбцовая диаграмма', img:  mdiPoll , type: 'barchart'},
-            //     {name:'Выпадающий список', img:  mdiFormatListBulleted, type: 'select'},
-            //     {name:'Выбор времени', img:  mdiCalendarMonth, type: 'picker'},
-            //     {name:'Граф', img:  mdiGraph , type: 'graph'},
-            //     {name:'Диаграмма Гантта', img:  mdiChartGantt, type: 'guntt'},
-            //     {name:'Число', img:  mdiNumeric, type: 'single'},
-            //     {name:'Кнопка', img:  mdiGestureTap , type: 'button'},
-            //     {name:'Текстовый блок', img:  mdiCardTextOutline , type: 'textarea'},
-            ],
-            avatar: null,
-            newDashBoard: {},
-            tempTocken: {},
-            change: {},
-            textarea: '',
-            showSign: true,
-            newTockenName: null,
-            opennewtocken: false,
-            newTockenDop: {},
-            newElem: '',
-            newAction: '',
-            tockensName: {},
-            msgWarn : '',
-            textarea_event: '',
-            events: [],
-            event: {},
-            newSearch: {
-                sid: null,
-                original_spl: null,
-                parametrs: {
-                    tws: 0,
-                    twf: 0,
-                    username: 'admin',
-                    timeout: 60,
-                    preview: false,
-                    field_extraction: false,
-                    cache_ttl: 60,
-                },
-            },
-            activeModal: false,
-            activeSchedule: false,
-            scheduleSid: -1,
-            loadings: { },
-            dbOpen: null,
-            colorGear: '',
-            colorExim: '',
-            fieldsets: null,
-            otstupBottom: 550,
-            errorSave: false,
-            msgErrorSave: '',
-            colorErrorSave: '',
-            createSearchBtn:  '',
-            disabledDS: {},
-        }
+    searches: function() {  // массив со всеми ИС на странице
+      let searchesRes = [];
+      if (this.idDash) {
+        let searches = this.$store.getters.getSearches(this.idDash)
+        searches.forEach( item => {
+          this.$set(this.change,item.sid,false);
+          this.checkDataSearch(item.sid);
+        })
+        searchesRes =  searches
+      }
+      return searchesRes
     },
-     computed: {
-          idDash: function() {  // получаем id страницы переданного от родителя
-            return this.idDashFrom
-          },
-          searches:  function() {  // массив со всеми ИС на странице
-              if (this.idDash) {
-                    let searches = this.$store.getters.getSearches(this.idDash)
-
-                    searches.forEach( item => {
-
-                        this.$set(this.change,item.sid,false);
-                        this.checkDataSearch(item.sid);
-                        // if (typeof this.loadings[item.sid] != 'undefined'){
-                        //     this.loadings[item.sid] = false;
-                        // }
-                        // this.loadings[item.sid] = false;
-                    })
-                    return searches
-              }
-           },
-           name: function() {
-               return this.$store.getters.getName(this.idDash)
-           }, 
-           color: function() {
-               return this.colorFrom
-           },
-          profileSwitch: function() {  // переключатель иконки импорта/экспорта 
-               if (this.profile_elem) {
-                   return  `fill:${this.color.controlsActive}`;
-             } else {
-                    return `fill:#DADADA`;
-              }
-           },
-           saveSwitch: function() {  // переключатель иконки импорта/экспорта 
-               if (this.save_elem) {
-                   return  `fill:${this.color.controlsActive}`;
-             } else {
-                    return `fill:#DADADA`;
-              }
-           },
-           searchSwitch: function() {  // переключатель иконки ИС (источников данных)
-               if (this.search_elem) {
-                   return  `fill:${this.color.controlsActive}`;
-             } else {
-                    return `fill:#DADADA`;
-              }
-           },
-            toolSwitch: function() {  // тоже самое для инструментов
-               if (this.tool_elem) {
-                  return  `fill:${this.color.controlsActive}`;
-             } else {
-                    return `fill:#DADADA`;
-              }
-           },
-           tockenSwitch: function() {  // тоже самое для токенов
-               if (this.tocken_elem) {
-                   return  `fill:${this.color.controlsActive}`;
-             } else {
-                    return `fill:#DADADA`;
-              }
-           },
-           codeSwitch: function() {  // тоже самое для event
-               if (this.code_elem) {
-                    return  `fill:${this.color.controlsActive}`;
-             } else {
-                    return `fill:#DADADA`;
-              }
-           },
-           editSwitch: function() {
-               if (this.edit_elem) {
-                   return  'opacity:1';
-             } else {
-                    return 'opacity:0.5';
-              }
-           },
-           textareaEv: function() {
-                    let eventFull = this.$store.getters.getEventFull(this.idDash);
-                    if (eventFull != ''){
-                        this.textarea_event = eventFull;
-                    }     
-                return true
-           },
-           tockens: function() {  // получения всех токенов на страницы
-               let tockens = this.$store.getters.getTockens(this.idDash);
-              
-               tockens.forEach( item => {
-                   this.tockensName[item.name] = item.name;
-                   this.lookTockens.push({show:false,color:this.color.controls})
-               })
-               return tockens
-           },
-           elements: function() {  // получение всех элемнета на странице
-              return this.$store.getters.getElements(this.idDash)
-           },
-           actions: function() { // получение всех событий элемента на странице
-               return function(element){
-                        let names = this.$store.getters.getActions({elem: element, idDash: this.idDash}).map( item => {
-                            return item.name
-                        });
-                    return names
-               }
-           },
-           capture: function() { // получение всех подсобытий элемента на странице (события второго уровня )
-               return function(element){
-                   let capture = this.$store.getters.getCapture({elem: element.elem, action: element.action, idDash: this.idDash});
-                    return capture
-               }
-           },
-           colorError: function() {
-             if (this.$store.getters.getColorError ) {
-                this.profile_elem = true;
-                this.$emit('openProfile',true);
-             } 
-             return true
-         }
-     },
-      methods: {
-        setEditMode: function() {
-            this.edit_elem = !this.edit_elem;
-            this.$emit('changeMode');
-        },
-        cancelModal: function() {
-            this.activeModal  = false;
-        },
-        openSchedule: function(id) {
-            this.scheduleSid = id;
-            this.activeSchedule = true;
-        },
-        openEdit: function(id) {   // окно с редактированием search
-            //if (this.sign) {   // если окно закрыто
-                
-                this.openSearch();  // то открываем его 
-           // }
+    name: function() {
+      return this.$store.getters.getName(this.idDash)
+    }, 
+    color: function() {
+      return this.colorFrom
+    },
+    profileSwitch: function() {  // переключатель иконки импорта/экспорта 
+      if (this.profile_elem) {
+        return  `fill:${this.color.controlsActive}`;
+      } else {
+        return `fill:#DADADA`;
+      }
+    },
+    saveSwitch: function() {  // переключатель иконки импорта/экспорта 
+      if (this.save_elem) {
+        return  `fill:${this.color.controlsActive}`;
+      } else {
+        return `fill:#DADADA`;
+      }
+    },
+    searchSwitch: function() {  // переключатель иконки ИС (источников данных)
+      if (this.search_elem) {
+        return  `fill:${this.color.controlsActive}`;
+      } else {
+        return `fill:#DADADA`;
+      }   
+    },
+    toolSwitch: function() {  // тоже самое для инструментов
+      if (this.tool_elem) {
+        return  `fill:${this.color.controlsActive}`;
+      } else {
+        return `fill:#DADADA`;
+      }
+    },
+    tockenSwitch: function() {  // тоже самое для токенов
+      if (this.tocken_elem) {
+        return  `fill:${this.color.controlsActive}`;
+      } else {
+        return `fill:#DADADA`;
+      }
+    },
+    codeSwitch: function() {  // тоже самое для event
+      if (this.code_elem) {
+        return  `fill:${this.color.controlsActive}`;
+      } else {
+        return `fill:#DADADA`;
+      }
+    },
+    editSwitch: function() {
+      if (this.edit_elem) {
+        return  'opacity:1';
+      } else {
+        return 'opacity:0.5';
+      }
+    },
+    textareaEv: function() {
+      let eventFull = this.$store.getters.getEventFull(this.idDash);
+      if (eventFull != ''){
+        this.textarea_event = eventFull;
+      }     
+      return true
+    },
+    tockens: function() {  // получения всех токенов на страницы
+      let tockens = this.$store.getters.getTockens(this.idDash);
+      
+      tockens.forEach( item => {
+        this.tockensName[item.name] = item.name;
+        this.lookTockens.push({show: false,color: this.color.controls})
+      })
+      return tockens
+    },
+    elements: function() {  // получение всех элемнета на странице
+      return this.$store.getters.getElements(this.idDash)
+    },
+    actions: function() { // получение всех событий элемента на странице
+      return function(element){
+        let names = this.$store.getters.getActions({elem: element, idDash: this.idDash}).map( item => {
+          return item.name
+        });
+        return names
+      }
+    },
+    capture: function() { // получение всех подсобытий элемента на странице (события второго уровня )
+      return function(element){
+        let capture = this.$store.getters.getCapture({elem: element.elem, action: element.action, idDash: this.idDash});
+        return capture
+      }
+    },
+    colorError: function() {
+      if (this.$store.getters.getColorError ) {
+        this.profile_elem = true;
+        this.$emit('openProfile',true);
+      } 
+      return true
+    }
+  },
+  methods: {
+    setEditMode: function() {
+      this.edit_elem = !this.edit_elem;
+      this.$emit('changeMode');
+    },
+    cancelModal: function() {
+      this.activeModal  = false;
+    },
+    openSchedule: function(id) {
+      this.scheduleSid = id;
+      this.activeSchedule = true;
+    },
+    openEdit: function(id) {   // окно с редактированием search
+      this.openSearch();  // то открываем его 
        
-            if (!this.change[id]) {  // я так понимаю если на странице есть созданные ИС
-                 Object.keys(this.change).forEach( item =>{  // то пробегаемся по всем ИС
-                     item == id ? this.change[item] = true: this.change[item] = false;  // если нашли выбронный ИС то меняем его статус
-                 }) 
-                let search = this.searches.filter( item => {  // получаем только тот ИС который редактируется
-                    return item.sid == id
-                })[0];
-                // отстутствие отступов сделано специально  чтобы красивее смотрелось на фронте
-               //  console.log(search);
-                 this.newSearch = Object.assign({}, search);
-
-                 this.activeModal  = true;
-
-                 this.createSearchBtn = 'edit';
-//                 let spl = `create_search(
-// sid = ${search.sid},
-// original_spl = ${search.original_spl},
-// tws = ${search.parametrs.tws},
-// twf = ${search.parametrs.twf},
-// username=${search.parametrs.username},
-// preview = ${search.parametrs.preview},
-// field_extraction = ${search.parametrs.field_extraction},
-// cache_ttl=${search.parametrs.cache_ttl},
-// timeout=${search.parametrs.timeout}
-// )`;
-
-                
-//                 this.textarea = spl.replace(/\s\s/g, ''); // заносим текст редактируемого ИС без пробелов
-             }  else { // а если ИС нету 
-                 this.openSearch();  //  то закрываем окно редактирования
-             }
-         },
-         // возможно стоит переделать под цикл или типа того. ПОДУМАТЬ НАД ЭТИМ!
-         openProfile: function() {  // дальше будут фукнции отвечающие за переключение между разными инструментами, суть проста, если один открыт закрываем все остальные
-                this.profile_elem = !this.profile_elem;
-                this.opentool = false;
-                this.tool_elem = false;
-                this.tocken_elem = false;
-                this.opentocken = false;
-                this.opencode = false;
-                this.search_elem = false;
-                this.code_elem = false;
-                this.openevent = false;
-                this.$emit('openProfile',this.profile_elem);
+      if (!this.change[id]) {  // я так понимаю если на странице есть созданные ИС
+        Object.keys(this.change).forEach( item =>{  // то пробегаемся по всем ИС
+          item == id ? this.change[item] = true: this.change[item] = false;  // если нашли выбронный ИС то меняем его статус
+        }) 
+        let search = this.searches.filter( item => {  // получаем только тот ИС который редактируется
+          return item.sid == id
+        })[0];
+          // отстутствие отступов сделано специально  чтобы красивее смотрелось на фронте
+        this.newSearch = Object.assign({}, search);
+        this.activeModal  = true;
+        this.createSearchBtn = 'edit';
+      }  else { // а если ИС нету 
+        this.openSearch();  //  то закрываем окно редактирования
+      }
+    },
+    // возможно стоит переделать под цикл или типа того. ПОДУМАТЬ НАД ЭТИМ!
+    openProfile: function() {  // дальше будут фукнции отвечающие за переключение между разными инструментами, суть проста, если один открыт закрываем все остальные
+      this.profile_elem = !this.profile_elem;
+      this.opentool = false;
+      this.tool_elem = false;
+      this.tocken_elem = false;
+      this.opentocken = false;
+      this.opencode = false;
+      this.search_elem = false;
+      this.code_elem = false;
+      this.openevent = false;
+      this.$emit('openProfile',this.profile_elem);
+    },
+    openSave: function() {  // дальше будут фукнции отвечающие за переключение между разными инструментами, суть проста, если один открыт закрываем все остальные
+      this.errorSave = false;
+      this.save_elem = !this.save_elem;
+      this.opensave = !this.opensave;
+      this.opentool = false;
+      this.tool_elem = false;
+      this.tocken_elem = false;
+      this.opentocken = false;
+      this.opencode = false;
+      this.search_elem = false;
+      this.code_elem = false;
+      this.openevent = false;
+    },
+    openSearchCode: function() {
+      this.search_elem = !this.search_elem;
+      this.opencode = !this.opencode;
+      this.save_elem = false;
+      this.opensave = false;
+      this.opentool = false;
+      this.tool_elem = false;
+      this.tocken_elem = false;
+      this.opentocken = false;
+      this.code_elem = false;
+      this.openevent = false;
+    },
+    openToolPanel: function() {
+      this.tool_elem = !this.tool_elem;
+      this.opentool = !this.opentool;
+      this.save_elem = false;
+      this.opensave = false;
+      this.opencode = false;
+      this.search_elem = false;
+      this.tocken_elem = false;
+      this.opentocken = false;
+      this.code_elem = false;
+      this.openevent = false;
+    },
+    openTockenCode: function() {
+      this.tocken_elem = !this.tocken_elem;
+      this.opentocken = !this.opentocken;
+      this.save_elem = false;
+      this.opensave = false;
+      this.opentool = false;
+      this.tool_elem = false;
+      this.opencode = false;
+      this.search_elem = false;
+      this.code_elem = false;
+      this.openevent = false;
+      this.changeColor(this.fieldsets);
+    },
+    openEventCode: function() {
+      this.code_elem = !this.code_elem;
+      this.openevent = !this.openevent;
+      this.save_elem = false;
+      this.opensave = false;
+      this.opentool = false;
+      this.tool_elem = false;
+      this.opencode = false;
+      this.search_elem = false;
+      this.tocken_elem = false;
+      this.opentocken = false;
+      this.changeColor(this.fieldsets);
+    },
+    openSearch: function() {  // собственно функция которая показывает или нет окно с редактируемым ИД
+      this.opensearch = !this.opensearch;
+      Object.keys(this.change).forEach( item =>{
+        this.change[item] = false;
+      })  
+    },
+    openModal: function() {
+      this.activeModal = !this.activeModal;
+      this.newSearch = {
+        sid: null,
+        original_spl: null,
+        parametrs: {
+          tws: 0,
+          twf: 0,
+          username: 'admin',
+          timeout: 60,
+          preview: false,
+          field_extraction: false,
+          cache_ttl: 60,
         },
-        openSave: function() {  // дальше будут фукнции отвечающие за переключение между разными инструментами, суть проста, если один открыт закрываем все остальные
-                this.errorSave = false;
-                this.save_elem = !this.save_elem;
-                this.opensave = !this.opensave;
-                this.opentool = false;
-                this.tool_elem = false;
-                this.tocken_elem = false;
-                this.opentocken = false;
-                this.opencode = false;
-                this.search_elem = false;
-                this.code_elem = false;
-                this.openevent = false;
-        },
-         openSearchCode: function() {
-                this.search_elem = !this.search_elem;
-                this.opencode = !this.opencode;
-                this.save_elem = false;
-                this.opensave = false;
-                this.opentool = false;
-                this.tool_elem = false;
-                this.tocken_elem = false;
-                this.opentocken = false;
-                this.code_elem = false;
-                this.openevent = false;
-         },
-         openToolPanel: function() {
-                this.tool_elem = !this.tool_elem;
-                this.opentool = !this.opentool;
-                this.save_elem = false;
-                this.opensave = false;
-                this.opencode = false;
-                this.search_elem = false;
-                this.tocken_elem = false;
-                this.opentocken = false;
-                this.code_elem = false;
-                this.openevent = false;
-         },
-         openTockenCode: function() {
-                this.tocken_elem = !this.tocken_elem;
-                this.opentocken = !this.opentocken;
-                this.save_elem = false;
-                this.opensave = false;
-                this.opentool = false;
-                this.tool_elem = false;
-                this.opencode = false;
-                this.search_elem = false;
-                this.code_elem = false;
-                this.openevent = false;
-                this.changeColor(this.fieldsets);
-         },
-         openEventCode: function() {
-                this.code_elem = !this.code_elem;
-                this.openevent = !this.openevent;
-                this.save_elem = false;
-                this.opensave = false;
-                this.opentool = false;
-                this.tool_elem = false;
-                this.opencode = false;
-                this.search_elem = false;
-                this.tocken_elem = false;
-                this.opentocken = false;
-                this.changeColor(this.fieldsets);
-         },
-         openSearch: function() {  // собственно функция которая показывает или нет окно с редактируемым ИС
-             //this.sign = !this.sign;
-             this.opensearch = !this.opensearch;
-             Object.keys(this.change).forEach( item =>{
-                     this.change[item] = false;
-             })  
-         },
-         openModal: function() {
-             this.activeModal = !this.activeModal;
-             this.newSearch = {
-                sid: null,
-                original_spl: null,
-                parametrs: {
-                    tws: 0,
-                    twf: 0,
-                    username: 'admin',
-                    timeout: 60,
-                    preview: false,
-                    field_extraction: false,
-                    cache_ttl: 60,
-                },
-             };
-             this.createSearchBtn = 'create';
-         },
-         lookTocken: function(i) {
-            if (!this.lookTockens[i].show) {
-                this.lookTockens[i].show = true;
-                this.lookTockens[i].color = this.color.controlsActive;
-            } else {
-                this.lookTockens[i].show = false;
-                this.lookTockens[i].color = this.color.controls;
-            }
-         },
-         saveTocken: function(tocken) {  // функция которая сохраняет токен в хранилище
-            
-             let parent = event.target.parentElement;  // получаем предка элемнета на который нажали для сохранения
-             while(!parent.classList.contains('row-tocken')) {
-                 parent = parent.parentElement;  // то еще на уровень выше берем предка
-             }
-             this.tempTocken = { // создаем объект нашего сохраняемого токена считывая имя элемент и остальные поля из нужно строки
-                name: parent.querySelector('.tocken-name').querySelector('input') ?  parent.querySelector('.tocken-name').querySelector('input').value :  '',
-                elem: parent.querySelector('.tocken-elem').querySelector('.v-select__selection') ? parent.querySelector('.tocken-elem').querySelector('.v-select__selection').innerText: '',
-                action: parent.querySelector('.tocken-action').querySelector('.v-select__selection') ? parent.querySelector('.tocken-action').querySelector('.v-select__selection').innerText: '',
-                capture: parent.querySelector('.tocken-capture').querySelector('.v-select__selection') ? parent.querySelector('.tocken-capture').querySelector('.v-select__selection').innerText: '',
-                prefix: parent.querySelector('.tocken-prefix').querySelector('input') ?  parent.querySelector('.tocken-prefix').querySelector('input').value :  '',
-                sufix: parent.querySelector('.tocken-sufix').querySelector('input') ?  parent.querySelector('.tocken-sufix').querySelector('input').value :  '',
-                delimetr: parent.querySelector('.tocken-delimetr').querySelector('input') ?  parent.querySelector('.tocken-delimetr').querySelector('input').value :  '',
-             }
+      };
+      this.createSearchBtn = 'create';
+    },
+    lookTocken: function(i) {
+      if (!this.lookTockens[i].show) {
+        this.lookTockens[i].show = true;
+        this.lookTockens[i].color = this.color.controlsActive;
+      } else {
+        this.lookTockens[i].show = false;
+        this.lookTockens[i].color = this.color.controls;
+      }
+    },
+    saveTocken: function() {  // функция которая сохраняет токен в хранилище
+      
+      let parent = event.target.parentElement;  // получаем предка элемнета на который нажали для сохранения
+      while(!parent.classList.contains('row-tocken')) {
+        parent = parent.parentElement;  // то еще на уровень выше берем предка
+      }
+      this.tempTocken = { // создаем объект нашего сохраняемого токена считывая имя элемент и остальные поля из нужно строки
+        name: parent.querySelector('.tocken-name').querySelector('input') ?  parent.querySelector('.tocken-name').querySelector('input').value :  '',
+        elem: parent.querySelector('.tocken-elem').querySelector('.v-select__selection') ? parent.querySelector('.tocken-elem').querySelector('.v-select__selection').innerText: '',
+        action: parent.querySelector('.tocken-action').querySelector('.v-select__selection') ? parent.querySelector('.tocken-action').querySelector('.v-select__selection').innerText: '',
+        capture: parent.querySelector('.tocken-capture').querySelector('.v-select__selection') ? parent.querySelector('.tocken-capture').querySelector('.v-select__selection').innerText: '',
+        prefix: parent.querySelector('.tocken-prefix').querySelector('input') ?  parent.querySelector('.tocken-prefix').querySelector('input').value :  '',
+        sufix: parent.querySelector('.tocken-sufix').querySelector('input') ?  parent.querySelector('.tocken-sufix').querySelector('input').value :  '',
+        delimetr: parent.querySelector('.tocken-delimetr').querySelector('input') ?  parent.querySelector('.tocken-delimetr').querySelector('input').value :  '',
+      }
 
-                   let j = -1; 
+      let j = -1; 
 
-                    this.tockens.forEach( (item,i) => {  // затем пробегаемся по все мтокенам 
-                            if (item.name == this.tempTocken.name) { // и смотрим есть ли у нас такой токен 
-                                j = i;
-                            }
-                    }) 
-                  if (j != -1) {  // если токен уже есть
-                        let height = this.$el.querySelector('.block-tocken').getBoundingClientRect().height  // выводим предупреждающее сообщение, переписать ли его
-                        this.$el.querySelector('.warning-block').classList.add('warning-block-show');
-                        //this.$el.querySelector('.warning-block').style.bottom = `-${height+55}px; !important`; // 45 это высота самого warning и padding сверху
-                        this.otstupBottom = height+55;
-                        this.msgWarn = "Такой токен уже существует. Хотите обновить?";
-                        this.$el.querySelector('.warning-block').querySelector('.yes-btn').setAttribute("tool", "tocken");
-                  } else {  // если нету то етсь он новый
-                      this.$store.commit('createTockens', {idDash: this.idDash, tocken: this.tempTocken}); // то создаем токен в хранилище
-                      this.showSign = true;  // визуально скрываем окно с созданием токена
-                      this.opennewtocken=false;
-                  }
-           
-         },
-         deleteTocken: function(name) {  // удаляем токен
-             this.$store.commit('setModalDelete', { id: this.idDash, status: true, elem: '', name: name, page:  'tocken'});  // просто отправляем информацию об удаляемом токене в хранилище
-         },
-         deleteSearch: function(id) {  // тоже саоме для удаления ИС
-            this.$store.commit('setModalDelete', { id: this.idDash, status: true, elem: id, name: id, page:  'search'}); 
-         },
-         addSearch: function() {  // добовляем ИС
+      this.tockens.forEach( (item,i) => {  // затем пробегаемся по все мтокенам 
+        if (item.name == this.tempTocken.name) { // и смотрим есть ли у нас такой токен 
+          j = i;
+        }
+      }) 
+      if (j != -1) {  // если токен уже есть
+        let height = this.$el.querySelector('.block-tocken').getBoundingClientRect().height  // выводим предупреждающее сообщение, переписать ли его
+        this.$el.querySelector('.warning-block').classList.add('warning-block-show');
+        //this.$el.querySelector('.warning-block').style.bottom = `-${height+55}px; !important`; // 45 это высота самого warning и padding сверху
+        this.otstupBottom = height+55;
+        this.msgWarn = "Такой токен уже существует. Хотите обновить?";
+        this.$el.querySelector('.warning-block').querySelector('.yes-btn').setAttribute("tool", "tocken");
+      } else {  // если нету то етсь он новый
+        this.$store.commit('createTockens', {idDash: this.idDash, tocken: this.tempTocken}); // то создаем токен в хранилище
+        this.showSign = true;  // визуально скрываем окно с созданием токена
+        this.opennewtocken=false;
+      }    
+    },
+    deleteTocken: function(name) {  // удаляем токен
+      this.$store.commit('setModalDelete', { id: this.idDash, status: true, elem: '', name: name, page:  'tocken'});  // просто отправляем информацию об удаляемом токене в хранилище
+    },
+    deleteSearch: function(id) {  // тоже саоме для удаления ИС
+      this.$store.commit('setModalDelete', { id: this.idDash, status: true, elem: id, name: id, page:  'search'}); 
+    },
+    addSearch: function() {  // добовляем ИС
 
-            let searches = this.searches;  // получаем все ИС
-            let j = -1;
+      let searches = this.searches;  // получаем все ИС
+      let j = -1;
 
-            searches.forEach( (item,i) => { // пробегаемся по всем ИС
-                    if (item.sid == this.newSearch.sid) {  // и если ИС с таким id уже есть
-                        j = i;  // меняем переменную
-                    }
-            }) 
-            if (j != -1) {  // если такой ИС уже есть вызовем сообщение с уточнением
-                let height = this.$el.querySelector('.block-code').getBoundingClientRect().height
-                this.$el.querySelector('.warning-block').style = `bottom: -${height+55}px; opacity: 1; z-index: 3; visibility: visible`; // 45 это высота самого warning и padding сверху
-                this.msgWarn = "Такой источник данных существует. Хотите обновить?";
-                this.$el.querySelector('.warning-block').querySelector('.yes-btn').setAttribute("tool", "search");
-            } else {  // если нету
-                 this.$store.commit('setSearch', {search: this.newSearch, idDash: this.idDash, reload: false });  // отправляем в хранилище для создания
-                 this.openSearch(); // и скрываем окно редактирования ИС
-            }
-                    
+      searches.forEach( (item,i) => { // пробегаемся по всем ИС
+        if (item.sid == this.newSearch.sid) {  // и если ИС с таким id уже есть
+          j = i;  // меняем переменную
+        }
+      }) 
+      if (j != -1) {  // если такой ИС уже есть вызовем сообщение с уточнением
+        let height = this.$el.querySelector('.block-code').getBoundingClientRect().height
+        this.$el.querySelector('.warning-block').style = `bottom: -${height+55}px; opacity: 1; z-index: 3; visibility: visible`; // 45 это высота самого warning и padding сверху
+        this.msgWarn = "Такой источник данных существует. Хотите обновить?";
+        this.$el.querySelector('.warning-block').querySelector('.yes-btn').setAttribute("tool", "search");
+      } else {  // если нету
+        this.$store.commit('setSearch', {search: this.newSearch, idDash: this.idDash, reload: false });  // отправляем в хранилище для создания
+        this.openSearch(); // и скрываем окно редактирования ИС
+      }
+                  
+    },
 
-         },
+    startSearch: async function(event) {
 
-         startSearch: async function(event) {
+      this.$set(this.loadings,event.sid,true);
+
+      this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: true, error: false }); 
+
+    
+      this.$store.auth.getters.putLog(`Запущен запрос  ${event.sid}`);
+      //   let response = await this.$store.getters.getDataAPI({search: event, idDash: this.idDash});  // собственно проводим все операции с данными 
+      let response = await this.$store.getters.getDataApi({search: event, idDash: this.idDash});
+      // вызывая метод в хранилище 
+      if ( response.length == 0) {  // если что-то пошло не так 
+        this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: true  });  
+        this.$set(this.loadings,event.sid,false);  // выключаем строку загрузки
+      } else {  // если все нормально
+        let responseDB = this.$store.getters.putIntoDB(response, event.sid, this.idDash);
+        responseDB
+          .then(
+            result => {
+              let refresh =  this.$store.getters.refreshElements(this.idDash, event.sid, );
+              this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: false  }); 
+              this.disabledDS[event.sid] = false;
+            },
+          );
+        this.$set(this.loadings,event.sid,false);  // выключаем полосу загрузки
+      }
+    },
+    yesSearch: function() {  // кнопка согласия на обновления если ИС или токен уже существует
+      let elem = event.target.nodeName.toLowerCase() != 'button' ? event.target.parentElement : event.target;  // сперва берем родителя кнопки, и если не получилось поймать кнопку, то еще выше уровнеь берем
+      if (elem.getAttribute('tool') == 'search') {  // если это окно ИС
+        this.$store.commit('setSearch', {search: this.newSearch, idDash: this.idDash, reload: true }); // то обновляем ИС
+        this.$el.querySelector('.warning-block').classList.remove('warning-block-show');  // убираем окно с предпреждением
+        this.openSearch();
+      } else if (elem.getAttribute('tool') == 'tocken') {  // если это токен - собственно тоже самое
+        this.$store.commit('createTockens', {idDash: this.idDash, tocken: this.tempTocken});
+        this.$el.querySelector('.warning-block').classList.remove('warning-block-show'); 
+        this.showSign = true;
+        this.opennewtocken=false;
+      }    
+    },
+    noSearch: function() { // если нажали на кнопку нет
+      this.$el.querySelector('.warning-block').classList.remove('warning-block-show'); // то просто убираем это окно
+    },
+    checkSid: function(sid) {
+      let newSid = sid; 
+      if (sid.length > 5) {  // если там больше 10 символов
+        newSid = sid.substring(0,5) + '...'; // обрезаем и добовляем троеточие
+      }
+      return newSid 
+    },
+    openEditSearch: function(event,sid) {
+      if (event.target.classList.contains('search-id') || event.target.classList.contains('search-query')) {
+        this.openEdit(sid);
+      }
+    },
+    exportSearch: function(sid) {
+
+      let db = null;
+    
+      let request = indexedDB.open("EVA",1);  
 
 
- 
-             this.$set(this.loadings,event.sid,true);
+      request.onerror = function(event) {
+        console.log("error: ",event);
+      };
 
-             this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: true, error: false }); 
+      request.onupgradeneeded = event => {
+        console.log('create');
+        db = event.target.result;
+        if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
+          db.createObjectStore('searches'); // create it
+        }
 
+        request.onsuccess = event => {
+          db = request.result;
+          console.log("successEvent: " + db);
+        };
+
+      }
+
+
+      let promise = new Promise((resolve, reject) => {
+
+        request.onsuccess =  event => {
+
+          db = request.result;
+
+          let transaction = db.transaction("searches"); // (1)
+
+          // получить хранилище объектов для работы с ним
+          let searches = transaction.objectStore("searches"); // (2)
+
+          let query = searches.get(`${this.idDash}-${sid}`); // (3) return store.get('Ire Aderinokun');
+
+          query.onsuccess = event => { // (4)
+            resolve(query.result);
+          };
+
+          query.onerror = function() {
+            console.log("Ошибка", query.error);
+          };
+
+        };    
+
+      });
+
+      promise.then( res => {
+        let csvContent = "data:text/csv;charset=utf-8,"; // задаем кодировку csv файла
+        let keys = Object.keys(res[0]); // получаем ключи для заголовков столбцов
+        csvContent += encodeURIComponent(keys.join(',') + "\n"); // добавляем ключи в файл
+        csvContent += encodeURIComponent(res.map( item =>  Object.values(item).join(",")).join("\n")); // добовляем все значения по клюам в файл
+        let link = this.$refs.blockCode.appendChild(document.createElement("a")); // создаем ссылку
+        link.setAttribute('href',csvContent); // указываем ссылке что надо скачать наш файл csv
+        link.setAttribute("download", `${this.idDash}-${sid}.xlsx`); // указываем имя файла 
+        link.click(); // жмем на скачку
+        link.remove(); // удаляем ссылку 
+      })
+   
+    },
+    checkDataSearch: async function(sid) {
+      let response = await this.$store.getters.checkDataSearch(`${this.idDash}-${sid}`);
+      if(response) {
+        this.$set(this.disabledDS,sid,false);
+      } else {
+        this.$set(this.disabledDS,sid,true);
+      }
+    },
+    dragTool: function(event) {  // функция для перетаскивания нового элемнета на полотно (остальную область, ну вы поняли короче)
+        
+      if (event.which != 1) {  // если пошло что-то не так 
+        return;   // то прекращаем функцию
+      } 
+      let parent = '';
+      let elem = '';
+      if (event.target.nodeName != 'div') {  // если мы ухватились не за div
+        elem = event.target;
+        while (!elem.classList.contains('tool-one')) { // то ка кбы всплываем вверх пока не уткнемся в элемнет с классом tool-one
+          elem = elem.parentElement;
+        }
+        parent = elem;  // это будет наш родитель
+      } else { // а если мы сразу попали как надо
+        parent = event.target.parentElement; // то присваиваем нужно нам родителя
+      }
+             
+
+      let originCoord = parent.getBoundingClientRect();  // получаем координаты нашего элемента
+      let shiftX = event.pageX-originCoord.left; // это как бы расстояния от точки куда тыкнул пользователь до краев элемнета, это нужно чтобы красиво перемещать
+      let shiftY = event.pageY-(originCoord.top+pageYOffset);
+      let avatar = parent.cloneNode(true); // дальше мы создаем как бы клон нашего элемнета 
+      document.body.appendChild(avatar);  // и его уже добовляем в body 
+      avatar.classList.add('avatar'); // даем ему класс
+      avatar.style.zIndex = 3;  // делаем его выше всех
+      avatar.style.position = 'absolute'; // и относительно позиионируем
+
+      document.onmousemove = (event) => { // при движении мыши
               
-               this.$store.auth.getters.putLog(`Запущен запрос  ${event.sid}`);
-               //   let response = await this.$store.getters.getDataAPI({search: event, idDash: this.idDash});  // собственно проводим все операции с данными 
-               let response = await this.$store.getters.getDataApi({search: event, idDash: this.idDash});
-               // вызывая метод в хранилище 
-             if ( response.length == 0) {  // если что-то пошло не так 
-                this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: true  });  
-                this.$set(this.loadings,event.sid,false);  // выключаем строку загрузки
-             } else {  // если все нормально
-                  let responseDB = this.$store.getters.putIntoDB(response, event.sid, this.idDash);
-                  responseDB
-                    .then(
-                        result => {
-                           let refresh =  this.$store.getters.refreshElements(this.idDash, event.sid, );
-                           this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: false  }); 
-                           this.disabledDS[event.sid] = false;
-                        },
-                    );
-                this.$set(this.loadings,event.sid,false);  // выключаем полосу загрузки
+        avatar.style.left = event.pageX - shiftX + 'px'; // мы перемещаем на самом деле наш автар, а не сам объект
+        avatar.style.top = event.pageY - shiftY + 'px';
+        this.avatar = avatar;  // и храним объект нашего  аватара 
 
-             
-             }
-
-
-         },
-         yesSearch: function() {  // кнопка согласия на обновления если ИС или токен уже существует
-            let elem = event.target.nodeName.toLowerCase() != 'button' ? event.target.parentElement : event.target;  // сперва берем родителя кнопки, и если не получилось поймать кнопку, то еще выше уровнеь берем
-            if (elem.getAttribute('tool') == 'search') {  // если это окно ИС
-                     this.$store.commit('setSearch', {search: this.newSearch, idDash: this.idDash, reload: true }); // то обновляем ИС
-                     this.$el.querySelector('.warning-block').classList.remove('warning-block-show');  // убираем окно с предпреждением
-                     this.openSearch();
-            } else if (elem.getAttribute('tool') == 'tocken') {  // если это токен - собственно тоже самое
-                   this.$store.commit('createTockens', {idDash: this.idDash, tocken: this.tempTocken});
-                   this.$el.querySelector('.warning-block').classList.remove('warning-block-show'); 
-                   this.showSign = true;
-                   this.opennewtocken=false;
-            }    
-         },
-         noSearch: function() { // если нажали на кнопку нет
-            this.$el.querySelector('.warning-block').classList.remove('warning-block-show'); // то просто убираем это окно
-         },
-         checkSid: function(sid) {
-            let newSid = sid; 
-            if (sid.length > 5) {  // если там больше 10 символов
-                newSid = sid.substring(0,5) + '...'; // обрезаем и добовляем троеточие
-            }
-            return newSid 
-         },
-         openEditSearch: function(event,sid) {
-             if (event.target.classList.contains('search-id') || event.target.classList.contains('search-query')) {
-                 this.openEdit(sid);
-             }
-         },
-         exportSearch: function(sid) {
-
-             let db = null;
-             let result = null;
-            
-
-             let request = indexedDB.open("EVA",1);  
-
-
-                request.onerror = function(event) {
-                    console.log("error: ",event);
-                };
-
-                 request.onupgradeneeded = event => {
-                            console.log('create');
-                            db = event.target.result;
-                            if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
-                                db.createObjectStore('searches'); // create it
-                            }
-
-                                request.onsuccess = event => {
-                                    db = request.result;
-                                   // this.alreadyDB = request.result;
-                                    console.log("successEvent: " + db);
-
-
-                            };
-
-                }
-
-
-                let promise = new Promise((resolve, reject) => {
-
-                        request.onsuccess =  event => {
-
-                            db = request.result;
-                            
-                          //  console.log("success: " + db);
-
-
-                            let transaction = db.transaction("searches"); // (1)
-
-                            // получить хранилище объектов для работы с ним
-                            let searches = transaction.objectStore("searches"); // (2)
-
-
-
-                            let query = searches.get(`${this.idDash}-${sid}`); // (3) return store.get('Ire Aderinokun');
-
-                            query.onsuccess = event => { // (4)
-                                resolve(query.result);
-                        //    console.log("Сёрч получен", query.result);
-                            };
-
-                            query.onerror = function() {
-                            console.log("Ошибка", query.error);
-                            };
-
-                          
-                            
-
-                        };    
-
-                     
-
-                });
-
-                promise.then( res => {
-                    let csvContent = "data:text/csv;charset=utf-8,"; // задаем кодировку csv файла
-                    let keys = Object.keys(res[0]); // получаем ключи для заголовков столбцов
-                    csvContent += encodeURIComponent(keys.join(',') + "\n"); // добавляем ключи в файл
-                    csvContent += encodeURIComponent(res.map( item =>  Object.values(item).join(",")).join("\n")); // добовляем все значения по клюам в файл
-                    let link = this.$refs.blockCode.appendChild(document.createElement("a")); // создаем ссылку
-                    link.setAttribute('href',csvContent); // указываем ссылке что надо скачать наш файл csv
-                    link.setAttribute("download", `${this.idDash}-${sid}.xlsx`); // указываем имя файла 
-                    link.click(); // жмем на скачку
-                    link.remove(); // удаляем ссылку 
-                })
-
-         
-         },
-         checkDataSearch: async function(sid) {
-             let response = await this.$store.getters.checkDataSearch(`${this.idDash}-${sid}`);
-             if(response) {
-                 this.$set(this.disabledDS,sid,false);
-             } else {
-                 this.$set(this.disabledDS,sid,true);
-             }
-         },
-         dragTool: function(event) {  // функция для перетаскивания нового элемнета на полотно (остальную область, ну вы поняли короче)
-             
-             if (event.which != 1) {  // если пошло что-то не так 
-                    return;   // то прекращаем функцию
-                } 
-             let parent = '';
-             let elem = '';
-             if (event.target.nodeName != 'div') {  // если мы ухватились не за div
-                    elem = event.target;
-                    while (!elem.classList.contains('tool-one')) { // то ка кбы всплываем вверх пока не уткнемся в элемнет с классом tool-one
-                            elem = elem.parentElement;
-                    }
-                 parent = elem;  // это будет наш родитель
-             } else { // а если мы сразу попали как надо
-                  parent = event.target.parentElement; // то присваиваем нужно нам родителя
-             }
-             
-
-            let originCoord = parent.getBoundingClientRect();  // получаем координаты нашего элемента
-            let shiftX = event.pageX-originCoord.left; // это как бы расстояния от точки куда тыкнул пользователь до краев элемнета, это нужно чтобы красиво перемещать
-            let shiftY = event.pageY-(originCoord.top+pageYOffset);
-            let avatar = parent.cloneNode(true); // дальше мы создаем как бы клон нашего элемнета 
-            document.body.appendChild(avatar);  // и его уже добовляем в body 
-            avatar.classList.add('avatar'); // даем ему класс
-            avatar.style.zIndex = 3;  // делаем его выше всех
-            avatar.style.position = 'absolute'; // и относительно позиионируем
-
-            
-            //console.log(pageYOffset);
-
-            document.onmousemove = (event) => { // при движении мыши
-                    
-                    avatar.style.left = event.pageX - shiftX + 'px'; // мы перемещаем на самом деле наш автар, а не сам объект
-                    avatar.style.top = event.pageY - shiftY + 'px';
-                    this.avatar = avatar;  // и храним объект нашего  аватара 
-
-            }
-
-            document.onclick = (event) => { // при клике на элемент
-                avatar.remove(); // удаляем аватар из дерева dom
-            }  
-
+      }
+        document.onclick = (event) => { // при клике на элемент
+            avatar.remove(); // удаляем аватар из дерева dom
+        }  
          },
          addDashBoard: function()  {    // функция создания нового элемнета
              if (this.avatar.nodeName) {  // если автар существует а не потерялся по пути

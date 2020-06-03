@@ -256,237 +256,175 @@ export default {
       return  this.dashsFrom
     }
   },
-      methods: {  
-          createBtn: function (name) {  // при нажатии на кнопку создать 
-              let flag = false;
-              if (!name || name == '') {  //  если пользователь не ввел имя
-                  this.showwarning = true;  //  показываем предупреждение
-                  setTimeout( () => { this.showwarning = false;},3000); // а через три секунды убираем - чисто понты)
-              } else  {  // если имя введено
-                    let actionEmit = '';
-                    let dataObj = {};
-                    let warnText = '';
-                    let essence = '';
-                    if (this.groupCheck) {
-                        this.groups.forEach( item => {  // для этого просматриваем все дашборды на странице (но берем их из хранилища)
-                            item.name.toLowerCase() == name.toLowerCase() ? flag = true: false 
-                        });
-                        dataObj = {name: this.newGroup.name, color: this.newGroup.color, };
-                        if (Object.keys(this.changedData).length != 0) {
-                            let keys = this.changedData.group;
-                            Object.keys(keys).forEach( item => {
-                                dataObj[item] = keys[item];
-                            })
-                        }
-                        if (this.curGroupFrom != -1) {
-                            dataObj.id = this.groupFrom[this.curGroupFrom].id;
-                            
-                        }
-                        essence = 'group';
-                        warnText = 'Такая группа уже существует. Хотите изменить её?'
-                    } else {
-                        this.dashs.forEach( item => {  // для этого просматриваем все дашборды на странице (но берем их из хранилища)
-                            // if (item.id && this.newDash.id) {  // ПОТОМ УДАЛИТЬ 
-                            //     item.id.toLowerCase() == this.newDash.id.toLowerCase() ? flag = true: false 
-                            //     console.log(item.id.toLowerCase(), this.newDash.id.toLowerCase())
-                            // }
-                            item.name.toLowerCase() == name.toLowerCase() ? flag = true: false 
-                        });      
-                        //console.log(this.dashs,flag)  
-                        // dataObj = {name: this.newGroup.name, color: this.newGroup.color, };
-                        // if (Object.keys(this.changedData).length != 0) {
-                        //     let keys = this.changedData.group;
-                        //     Object.keys(keys).forEach( item => {
-                        //         dataObj[item] = keys[item];
-                        //     })
-                        // }       
-                        dataObj = {name: this.newDash.name,};
-
-                        if (this.newDash.id != '') {
-                            dataObj.id = this.newDash.id; 
-                        }
-
-                        if (Object.keys(this.changedData).length != 0) {
-                            let keys = this.changedData.dash;
-                            Object.keys(keys).forEach( item => {
-                                dataObj[item] = keys[item];
-                            })
-                        } 
-
-
-                        essence = 'dash';
-                        warnText = 'Такой дашборд уже существует. Хотите изменить его?'
-                    }
-                        if (!flag) { // если такого дашборда еще нет
-                           // this.createGroup(this.name);  // создаем его
-                            this.createEssence(dataObj,"POST",essence);
-                            this.showwarning = false;  //  показываем предупреждение
-                            this.nameBtn.create = 'Создать';
-                            this.nameBtn.cancel = 'Отмена';
-                            this.nameWarn = '';
-                            
-
-                          // this.cancelModal('Отмена');
-                                                       
-                        } else {  // а иначе 
-                            if (this.nameBtn.create != 'Да') {
-                                this.showwarning = true;  //  показываем предупреждение
-                                this.nameBtn.create = 'Да';
-                                this.nameBtn.cancel = 'Нет';
-                                this.nameWarn = warnText;
-                            } else {
-                                this.createEssence(dataObj,"PUT",essence);
-                                this.showwarning = false;  //  показываем предупреждение
-                                this.nameBtn.create = 'Создать';
-                                this.nameBtn.cancel = 'Отмена';
-                                this.nameWarn = '';
-                              //  this.cancelModal('Отмена');
-                            }
-                        }
-              }
-          },
-          cancelModal: function(btn) {  // есл инажали на отмену создания
-            if (btn == "Отмена") {
-                this.$emit('closeModal');  // передаем в родителя чтобы выключили модалку
-                this.name = '';  // очищаем имя
-            } 
-                this.showwarning = false;
-                this.nameBtn.create = 'Создать';
-                this.nameBtn.cancel = 'Отмена';
-                this.nameWarn = 'Имя не может быть пустым';
-          },
-          checkEsc: function(event) {
-              if (event.code =="Escape") {
-                  this.cancelModal("Отмена");
-              }
-          },
-          yesDashBoards: function() {  // если нажали на кнпку подстверждения создания дашборда
-                this.createObj(this.name);  // создаем его
-                this.create_warning = false;  // убаирем предупреждение
-          },
-          noDashBoards: function() {  // если нажали на отмену
-              this.create_warning = false;  // просто убираем предупреждение
-          },
-          createEssence:  function(group,method,essence) {
-            let response =  this.$store.auth.getters.setEssence({formData: JSON.stringify(group), essence: essence,method: method});
-             response.then( res => {
-                if (res.status == 200){
-                    if (essence == 'dash') {
-                        res.json().then (data => {
-                            this.createDash({id:data.id, name: group.name, modified: data.modified});
-                        }) 
-                    }
-                    this.$emit('closeModal');  // передаем в родителя чтобы выключили модалку
-                } else if (res.status == 409) {
-                    this.showwarning = true;  //  показываем предупреждение
-                    essence == 'group' ? this.nameWarn = 'Такая группа уже есть.' : this.nameWarn = 'Такой дашборд уже есть.';
-                    setTimeout( () => {
-                        this.showwarning = false;
-                    },2000);
-                }
+  methods: {  
+    createBtn: function (name) {  // при нажатии на кнопку создать 
+      let flag = false;
+      if (!name || name == '') {  //  если пользователь не ввел имя
+        this.showwarning = true;  //  показываем предупреждение
+        setTimeout( () => { this.showwarning = false;},3000); // а через три секунды убираем - чисто понты)
+      } else  {  // если имя введено
+        //let actionEmit = '';
+        let dataObj = {};
+        let warnText = '';
+        let essence = '';
+        if (this.groupCheck) {
+          this.groups.forEach( item => {  // для этого просматриваем все дашборды на странице (но берем их из хранилища)
+            item.name.toLowerCase() == name.toLowerCase() ? flag = true: false 
+          });
+          dataObj = {name: this.newGroup.name, color: this.newGroup.color, };
+          if (Object.keys(this.changedData).length != 0) {
+            let keys = this.changedData.group;
+            Object.keys(keys).forEach( item => {
+              dataObj[item] = keys[item];
             })
-        },
-          createDash: function(dash) {
+          }
+          if (this.curGroupFrom != -1) {
+            dataObj.id = this.groupFrom[this.curGroupFrom].id;              
+          }
+          essence = 'group';
+          warnText = 'Такая группа уже существует. Хотите изменить её?'
+        } else {
+          this.dashs.forEach( item => {  // для этого просматриваем все дашборды на странице (но берем их из хранилища)
+            item.name.toLowerCase() == name.toLowerCase() ? flag = true: false 
+          });          
+          dataObj = {name: this.newDash.name,};
 
-            // if (i != -1) {
-            //    this.allDashs[i] = dash 
-            // } else {
-            //    this.allDashs.push(dash);
-                this.$store.commit('setDash',{data: dash,getters:this.$store.getters.checkAlreadyDash});
-                this.$store.auth.getters.putLog(`Создан дашборд ${this.toHichName(dash.name)} с id ${dash.id}`);
-            // }
-        },
-        toHichName: function(name) {
-            return name[0].toUpperCase() + name.slice(1);
-        },
-          getDataForEssence: async  function() {
-                let role = '';
-                let data = '';
-                if (this.groupCheck) {
-                    role = 'group';
-                    data = this.groups;
-                } else {
-                    role = 'dash';
-                    data = this.dashs;
-                } 
-                if (this.actionFrom) {
-                   let allData = {};
-                   let keys =[];
-                   let promise = Object.keys(this.$data[role].tab).map(  item => {
-                       keys.push(item);
-                       return this.$store.auth.getters.getEssenceList(item,true);
-                   })
-                 let result =  await Promise.all(promise);
-                 result.forEach( (item,i) => {
-                     allData[keys[i]] = item;
-                 })
-                
-                  return allData
-                } 
-                return this.$store.auth.getters.getEssence(role,data[this.curGroupFrom].id)
+          if (this.newDash.id != '') {
+            dataObj.id = this.newDash.id; 
+          }
 
-        },
-        //   createObj: function(name) {  // создаем дашборд
-        //             name = name.toLowerCase();
-        //             this.$set(this.newLayout,name,{});    // используем конструкцию  this.$set для сохранения реактивности
-        //             this.$set(this.newLayout[name],'name',name[0].toUpperCase() + name.substring(1));  // здесь с большой буквы заносим
-        //             let modalDelete = {
-        //                     active: false,
-        //                     id: '',
-        //                     name: '',
-        //                 };
-        //             this.$set(this.newLayout[name],'modalDelete',modalDelete);  // набор модалок по умолчанию 
-        //             let modalSearch = {
-        //                    elem: '',
-        //                    status: true,
-        //                 };
-        //             this.$set(this.newLayout[name],'modalSearch',modalSearch);
-        //              let modalExin = {
-        //                    event: '',
-        //                    status: true,
-        //                 };
-        //             this.$set(this.newLayout[name],'modalExin',modalExin);
-        //             this.$set(this.newLayout[name],'elements',[]);  // остальные настройки которые должны быть в элементе по умолчанию
-        //             this.$set(this.newLayout[name],'searches',[]);
-        //             this.$set(this.newLayout[name],'screenshot',{});
-        //             this.$set(this.newLayout[name],'tockens',[]);
-
-        //            this.$store.commit('createlayout',{name: name, layout:this.newLayout}); // отправляем информацию о создании нового дашборда в хранилище
-        //            this.$emit('showModal'); // выключаем модалку
-        //            this.name = ''; // очищаем имя введеное пользователем
-        //            this.$emit('createSuccess'); // выключаем модалку
-        //   },
-          setEnter: function(event) {
-              if(event.code == "Enter"){
-                  this.createBtn();
-              }
-          },
-          changeStyle: function() {
-                if (this.active) {
-                    let dialog = document.querySelector('.v-dialog');
-                    dialog.style.boxShadow = `0 3px 1px -2px ${this.color.border},0 2px 2px 0 ${this.color.border},0 1px 5px 0 ${this.color.border}`; 
-                    dialog.querySelectorAll('.v-input__slot').forEach( item => {
-                        item.style.boxShadow = `0 3px 1px -2px ${this.color.border},0 2px 2px 0 ${this.color.border},0 1px 5px 0 ${this.color.border}`; 
-                    })
-                    dialog.querySelectorAll('input').forEach( item => {
-                        item.style.color = this.color.text;
-                    })
-                }
-          },
-          changeData: function(event) {
-            if (!this.changedData[event.essence]) {
-                this.changedData[event.essence] = {}; 
-            }
-            
-            this.changedData[event.essence][event.subessence] = event.data;
-         }
+          if (Object.keys(this.changedData).length != 0) {
+            let keys = this.changedData.dash;
+            Object.keys(keys).forEach( item => {
+              dataObj[item] = keys[item];
+            })
+          } 
+          essence = 'dash';
+          warnText = 'Такой дашборд уже существует. Хотите изменить его?'
+        }
+        if (!flag) { // если такого дашборда еще нет
+          this.createEssence(dataObj,"POST",essence);
+          this.showwarning = false;  //  показываем предупреждение
+          this.nameBtn.create = 'Создать';
+          this.nameBtn.cancel = 'Отмена';
+          this.nameWarn = '';
+        } else {  // а иначе 
+          if (this.nameBtn.create != 'Да') {
+            this.showwarning = true;  //  показываем предупреждение
+            this.nameBtn.create = 'Да';
+            this.nameBtn.cancel = 'Нет';
+            this.nameWarn = warnText;
+          } else {
+            this.createEssence(dataObj,"PUT",essence);
+            this.showwarning = false;  //  показываем предупреждение
+            this.nameBtn.create = 'Создать';
+            this.nameBtn.cancel = 'Отмена';
+            this.nameWarn = '';
+          }
+        }
+      }
     },
-    mounted() {
-        this.create_warning = false; // выключаем все предупреждения что были включены
+    cancelModal: function(btn) {  // есл инажали на отмену создания
+      if (btn == "Отмена") {
+        this.$emit('closeModal');  // передаем в родителя чтобы выключили модалку
+        this.name = '';  // очищаем имя
+      } 
+      this.showwarning = false;
+      this.nameBtn.create = 'Создать';
+      this.nameBtn.cancel = 'Отмена';
+      this.nameWarn = 'Имя не может быть пустым';
     },
-    updated() {
-       //this.changeStyle();
+    checkEsc: function(event) {
+      if (event.code =="Escape") {
+        this.cancelModal("Отмена");
+      }
+    },
+    yesDashBoards: function() {  // если нажали на кнпку подстверждения создания дашборда
+      this.createObj(this.name);  // создаем его
+      this.create_warning = false;  // убаирем предупреждение
+    },
+    noDashBoards: function() {  // если нажали на отмену
+      this.create_warning = false;  // просто убираем предупреждение
+    },
+    createEssence:  function(group,method,essence) {
+      let response =  this.$store.auth.getters.setEssence({formData: JSON.stringify(group), essence: essence,method: method});
+      response.then( res => {
+        if (res.status == 200){
+          if (essence == 'dash') {
+            res.json().then (data => {
+              this.createDash({id: data.id, name: group.name, modified: data.modified});
+            }) 
+          }
+          this.$emit('closeModal');  // передаем в родителя чтобы выключили модалку
+        } else if (res.status == 409) {
+          this.showwarning = true;  //  показываем предупреждение
+          essence == 'group' ? this.nameWarn = 'Такая группа уже есть.' : this.nameWarn = 'Такой дашборд уже есть.';
+          setTimeout( () => {
+            this.showwarning = false;
+          },2000);
+        }
+      })
+    },
+    createDash: function(dash) {
+      this.$store.commit('setDash',{data: dash,getters:this.$store.getters.checkAlreadyDash});
+      this.$store.auth.getters.putLog(`Создан дашборд ${this.toHichName(dash.name)} с id ${dash.id}`);
+    },
+    toHichName: function(name) {
+      return name[0].toUpperCase() + name.slice(1);
+    },
+    getDataForEssence: async  function() {
+      let role = '';
+      let data = '';
+      if (this.groupCheck) {
+        role = 'group';
+        data = this.groups;
+      } else {
+        role = 'dash';
+        data = this.dashs;
+      } 
+      if (this.actionFrom) {
+        let allData = {};
+        let keys =[];
+        let promise = Object.keys(this.$data[role].tab).map(  item => {
+          keys.push(item);
+          return this.$store.auth.getters.getEssenceList(item,true);
+        })
+        let result =  await Promise.all(promise);
+        result.forEach( (item,i) => {
+          allData[keys[i]] = item;
+        })        
+        return allData
+      } 
+      return this.$store.auth.getters.getEssence(role,data[this.curGroupFrom].id)
+
+    },
+    setEnter: function(event) {
+      if(event.code == "Enter"){
+        this.createBtn();
+      }
+    },
+    changeStyle: function() {
+      if (this.active) {
+        let dialog = document.querySelector('.v-dialog');
+        dialog.style.boxShadow = `0 3px 1px -2px ${this.color.border},0 2px 2px 0 ${this.color.border},0 1px 5px 0 ${this.color.border}`; 
+        dialog.querySelectorAll('.v-input__slot').forEach( item => {
+          item.style.boxShadow = `0 3px 1px -2px ${this.color.border},0 2px 2px 0 ${this.color.border},0 1px 5px 0 ${this.color.border}`; 
+        })
+        dialog.querySelectorAll('input').forEach( item => {
+          item.style.color = this.color.text;
+        })
+      }
+    },
+    changeData: function(event) {
+      if (!this.changedData[event.essence]) {
+        this.changedData[event.essence] = {}; 
+      }
+      this.changedData[event.essence][event.subessence] = event.data;
     }
+  },
+  mounted() {
+    this.create_warning = false; // выключаем все предупреждения что были включены
+  },
 }
 </script>
 
