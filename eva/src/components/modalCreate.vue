@@ -1,64 +1,171 @@
 <!-- Модальное окно для создания дашборда -->
 
 <template>
-    <v-dialog  v-model="active"  width="90%"  persistent @keydown="checkEsc($event)" > 
-        <div class="create-modal-block-group"  v-if="groupCheck" >
-            <v-card :style="{background:color.backElement}" >
-                <v-card-text class="headline "><div class="create-title" :style="{color:color.text}">{{nameTitle}}</div></v-card-text>
-                <div class="create-block">
-                    <v-text-field hide-details  class="input-create"  :style="{color:color.text}"  :background-color="color.backElement" label="Имя группы" :color="color.controls" outlined  clearable  v-model="newGroup.name" ></v-text-field>
-                    <div class="zagolovok-field input-create"  :style="{color:color.text}">Цвет группы</div>
-                    <v-color-picker class="colorPicker input-create" v-model="newGroup.color"></v-color-picker>
-                    <div class="profile-block">
-                        <!-- <data-profile   essence="dashGroup" subessence="dashs" :dataFrom="dataRest" @changeData="changeData" :create="actionFrom == 'create' ? true : false " :userFrom="newGroup" :activeFrom="modalFrom" ></data-profile> -->
-                         <data-profile v-for="item in Object.keys(group.tab)" :key="item"   essence="group" :dataFrom="dataRest" @changeData="changeData"  :subessence="item" :colorFrom="color" :create="actionFrom"  :activeFrom="modalFrom" ></data-profile>
-                    </div> 
-                    <div class="warn" :class="{showwarning:showwarning}" :style="{color:color.controlsActive}">{{nameWarn}}</div>
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn small :color="color.controls" class="create-btn" @click="createBtn(newGroup.name)">{{nameBtn.create}}</v-btn>
-                    <v-btn small :color="color.controlsActive" class="create-btn" @click="cancelModal(nameBtn.cancel)">{{nameBtn.cancel}}</v-btn>
-                    </v-card-actions>
-                </div>
-            </v-card>
+  <v-dialog  
+    v-model="active"  
+    width="90%"  
+    persistent 
+    @keydown="checkEsc($event)" 
+  > 
+    <div 
+      v-if="groupCheck"
+      class="create-modal-block-group"  
+    >
+      <v-card :style="{background:color.backElement}">
+        <v-card-text class="headline ">
+          <div 
+            class="create-title" 
+            :style="{color:color.text}"
+          >
+            {{ nameTitle }}
+          </div>
+        </v-card-text>
+        <div class="create-block">
+          <v-text-field 
+            v-model="newGroup.name"
+            hide-details  
+            class="input-create"  
+            :style="{color:color.text}"  
+            :background-color="color.backElement" 
+            label="Имя группы" 
+            :color="color.controls" 
+            outlined  
+            clearable  
+          />
+          <div class="zagolovok-field input-create"  :style="{color:color.text}">Цвет группы</div>
+          <v-color-picker 
+            class="colorPicker input-create" 
+            v-model="newGroup.color"
+          />
+          <div class="profile-block">
+            <data-profile 
+              v-for="item in Object.keys(group.tab)" 
+              :key="item"   
+              essence="group" 
+              :dataFrom="dataRest" 
+              :subessence="item" 
+              :colorFrom="color" 
+              :create="actionFrom"  
+              :activeFrom="modalFrom" 
+              @changeData="changeData"
+            />
+          </div> 
+          <div 
+            class="warn" 
+            :class="{showwarning:showwarning}" 
+            :style="{color:color.controlsActive}"
+          >
+            {{ nameWarn }}
+          </div>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn 
+              small 
+              :color="color.controls" 
+              class="create-btn"
+              @click="createBtn(newGroup.name)"
+            >
+              {{ nameBtn.create }}
+            </v-btn>
+            <v-btn 
+              small 
+              :color="color.controlsActive" 
+              class="create-btn" 
+              @click="cancelModal(nameBtn.cancel)"
+            >
+              {{ nameBtn.cancel }}
+            </v-btn>
+          </v-card-actions>
         </div>
-        <div class="create-modal-block-group" :class={create_warning:create_warning} v-if="!groupCheck">
-            <v-card :style="{background:color.backElement}">
-                <v-card-text class="headline "><div class="create-title" :style="{color:color.text}">{{nameTitle}}</div></v-card-text>
-                 <div class="create-block">
-                    <v-text-field hide-details  class="input-create" :style="{color:color.text}"  :background-color="color.backElement" label="Имя дашборда" :color="color.controls" outlined  clearable  v-model="newDash.name" ></v-text-field>
-                    <div class="profile-block">
-                        <data-profile   essence="dash" subessence="groups" :nameGroupFrom="nameGroupFrom" :dataFrom="dataRest" @changeData="changeData"  :create="actionFrom" :colorFrom="color" :activeFrom="modalFrom" ></data-profile>
-                    </div>
-                    <div class="warn" :class="{showwarning:showwarning}" :style="{color:color.controlsActive}">{{nameWarn}}</div>
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn small :color="color.controls" class="create-btn" @click="createBtn(newDash.name)">{{nameBtn.create}}</v-btn>
-                    <v-btn small :color="color.controlsActive" class="create-btn" @click="cancelModal(nameBtn.cancel)">{{nameBtn.cancel}}</v-btn>
-                    </v-card-actions>
-                </div>
-            </v-card>
+      </v-card>
+    </div>
+    <div 
+      v-if="!groupCheck"
+      class="create-modal-block-group" 
+      :class="{create_warning:create_warning}"
+    >
+      <v-card :style="{background:color.backElement}">
+        <v-card-text class="headline ">
+          <div 
+            class="create-title" 
+            :style="{color:color.text}"
+          >
+            {{ nameTitle }}
+          </div>
+        </v-card-text>
+        <div class="create-block">
+          <v-text-field 
+            v-model="newDash.name" 
+            hide-details  
+            class="input-create" 
+            :style="{color:color.text}"  
+            :background-color="color.backElement" 
+            label="Имя дашборда" 
+            :color="color.controls" 
+            outlined  
+            clearable  
+          />
+          <div class="profile-block">
+            <data-profile   
+              essence="dash" 
+              subessence="groups" 
+              :nameGroupFrom="nameGroupFrom" 
+              :dataFrom="dataRest" 
+              @changeData="changeData"  
+              :create="actionFrom" 
+              :colorFrom="color" 
+              :activeFrom="modalFrom" 
+            />
+          </div>
+          <div 
+            class="warn" 
+            :class="{showwarning:showwarning}" 
+            :style="{color:color.controlsActive}"
+          >
+            {{ nameWarn }}
+          </div>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn 
+              small 
+              :color="color.controls" 
+              class="create-btn" 
+              @click="createBtn(newDash.name)"
+            >
+              {{ nameBtn.create }}
+            </v-btn>
+            <v-btn 
+              small 
+              :color="color.controlsActive" 
+              class="create-btn" 
+              @click="cancelModal(nameBtn.cancel)"
+            >
+              {{ nameBtn.cancel }}
+            </v-btn>
+          </v-card-actions>
         </div>
-    </v-dialog>
+      </v-card>
+    </div>
+  </v-dialog>
 </template>
 
 <script> 
 
 
 export default {
-    props: {
-        modalFrom: null,
-        colorFrom: null,
-        groupFlagFrom: null,
-        groupFrom: null,
-        dashsFrom: null,
-        actionFrom: null,
-        dataFrom: null,
-        dashFrom: null,
-        curGroupFrom: null,
-        nameGroupFrom: null,
-        permissionsFrom: null,
-    },
+  props: {
+    modalFrom: null,
+    colorFrom: null,
+    groupFlagFrom: null,
+    groupFrom: null,
+    dashsFrom: null,
+    actionFrom: null,
+    dataFrom: null,
+    dashFrom: null,
+    curGroupFrom: null,
+    nameGroupFrom: null,
+    permissionsFrom: null,
+  },
     data () {
         return {
             name: '',

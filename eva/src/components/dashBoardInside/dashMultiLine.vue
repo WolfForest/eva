@@ -105,7 +105,10 @@ export default {
       return this.colorFrom
     },
     colorLegends: function() {
-      return [this.colorFrom.controls,this.colorFrom.controlsActive,'#660099','#3366FF','#e5194a','#fbbe18','#26295a','#228B22'];
+      return [this.colorFrom.controls,this.colorFrom.controlsActive,
+        '#660099','#3366FF','#e5194a','#fbbe18','#26295a','#228B22',
+        '#CCCC00','#CC0000','#9933FF','#0099CC','#009966','#99CC00',
+        '#FF4500','#FFC125','#FF6A6A','#483D8B','#2F4F4F','#8B4513'];
     },
     dataLoading: function() {
       return this.dataLoadingFrom
@@ -380,10 +383,6 @@ export default {
           .attr("y2", 0)
           .attr("stroke", colors[1])
           .style("opacity", "0.3");
-
-                
-
-                    
 
         // создаем tooltip
 
