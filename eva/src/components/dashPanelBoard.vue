@@ -157,7 +157,7 @@
           class="search-query" 
           :style="{ background:color.backElement, color:color.text,border: `1px solid ${color.border}`}" 
         >
-          {{ sear.original_spl }}
+          {{ sear.original_otl }}
           <div 
             class="loading-bar" 
             :class="{loading:loadings[sear.sid]}"
@@ -674,7 +674,7 @@ export default {
       event: {},
       newSearch: {
         sid: null,
-        original_spl: null,
+        original_otl: null,
         parametrs: {
           tws: 0,
           twf: 0,
@@ -929,7 +929,7 @@ export default {
       this.activeModal = !this.activeModal;
       this.newSearch = {
         sid: null,
-        original_spl: null,
+        original_otl: null,
         parametrs: {
           tws: 0,
           twf: 0,

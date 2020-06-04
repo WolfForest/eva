@@ -24,7 +24,7 @@
           hide-details
         />
         <v-textarea 
-          v-model="search.original_spl"
+          v-model="search.original_otl"
           :color="color.text" 
           :style="{color: colorFrom.text}" 
           outlined 
@@ -34,7 +34,7 @@
           class="code-search" 
           height="180px" 
           rows="5"  
-          placeholder="Origin spl" 
+          placeholder="Origin otl" 
           label="Текст ИД" 
         />
         <div class="times-block">
@@ -184,7 +184,7 @@ export default {
     return {
       search: {
         sid: null,
-        original_spl: null,
+        original_otl: null,
         parametrs: {
           tws: 0,
           twf: 0,

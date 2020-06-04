@@ -24,7 +24,7 @@
             class="search-query" 
             :style="{color: color.text, background: color.backElement, border: `1px solid ${color.text}`}"
           >
-            {{ sear.original_spl }}
+            {{ sear.original_otl }}
           </div>
         </div>
       </div>
