@@ -697,7 +697,7 @@ export default {
       errorSave: false,
       msgErrorSave: '',
       colorErrorSave: '',
-      createSearchBtn:  '',
+      createSearchBtn: '',
       disabledDS: {},
     }
   },
@@ -988,10 +988,10 @@ export default {
       }    
     },
     deleteTocken: function(name) {  // удаляем токен
-      this.$store.commit('setModalDelete', { id: this.idDash, status: true, elem: '', name: name, page:  'tocken'});  // просто отправляем информацию об удаляемом токене в хранилище
+      this.$store.commit('setModalDelete', { id: this.idDash, status: true, elem: '', name: name, page: 'tocken'});  // просто отправляем информацию об удаляемом токене в хранилище
     },
     deleteSearch: function(id) {  // тоже саоме для удаления ИС
-      this.$store.commit('setModalDelete', { id: this.idDash, status: true, elem: id, name: id, page:  'search'}); 
+      this.$store.commit('setModalDelete', { id: this.idDash, status: true, elem: id, name: id, page: 'search'}); 
     },
     addSearch: function() {  // добовляем ИС
 
@@ -1176,397 +1176,266 @@ export default {
         this.avatar = avatar;  // и храним объект нашего  аватара 
 
       }
-        document.onclick = (event) => { // при клике на элемент
-            avatar.remove(); // удаляем аватар из дерева dom
-        }  
-         },
-         addDashBoard: function()  {    // функция создания нового элемнета
-             if (this.avatar.nodeName) {  // если автар существует а не потерялся по пути
-                let coord = this.avatar.getBoundingClientRect();  // берем координаты аватара
-                let type = this.avatar.getAttribute('data-type'); // и его тип (table, select and etc)
-                this.avatar.remove(); // удаляем аватар из дерева dom
-                this.avatar = null;  // и у нас тоже его очищаем
+      document.onclick = (event) => { // при клике на элемент
+        avatar.remove(); // удаляем аватар из дерева dom
+      }  
+    },
+    addDashBoard: function()  {    // функция создания нового элемнета
+      if (this.avatar.nodeName) {  // если автар существует а не потерялся по пути
+        let coord = this.avatar.getBoundingClientRect();  // берем координаты аватара
+        let type = this.avatar.getAttribute('data-type'); // и его тип (table, select and etc)
+        this.avatar.remove(); // удаляем аватар из дерева dom
+        this.avatar = null;  // и у нас тоже его очищаем
 
-                 // Создаем новый элемнет на дашборде (стандартные настройки любого элемента)
+        // Создаем новый элемнет на дашборде (стандартные настройки любого элемента)
 
-                this.$set(this.newDashBoard,type,{});
-                this.$set(this.newDashBoard[type],'name_elem',type[0].toUpperCase() + type.substring(1));
+        this.$set(this.newDashBoard,type,{});
+        this.$set(this.newDashBoard[type],'name_elem',type[0].toUpperCase() + type.substring(1));
 
 
-                this.$set(this.newDashBoard[type],'width',settings.size[type].width);
-                this.$set(this.newDashBoard[type],'height',settings.size[type].height); 
-                
-                // switch(type) {
-                //     case 'picker':
-                //        this.$set(this.newDashBoard[type],'width',size.type.width);
-                //        this.$set(this.newDashBoard[type],'height',size.type.height); 
-                //        break;
-                //     case 'select':
-                //         this.$set(this.newDashBoard[type],'width',480);
-                //         this.$set(this.newDashBoard[type],'height',170);
-                //         break;
-                //     case 'lineChart':
-                //         this.$set(this.newDashBoard[type],'width',700);
-                //         this.$set(this.newDashBoard[type],'height',400);
-                //         break;
-                //     case 'graph':
-                //         this.$set(this.newDashBoard[type],'width',1000);
-                //         this.$set(this.newDashBoard[type],'height',600);
-                //         break;
-                //     case 'table':
-                //         this.$set(this.newDashBoard[type],'width',500);
-                //         this.$set(this.newDashBoard[type],'height',450);
-                //         break;
-                //     case 'single':
-                //         this.$set(this.newDashBoard[type],'width',350);
-                //         this.$set(this.newDashBoard[type],'height',200);
-                //         break;
-                //     case 'guntt':
-                //         this.$set(this.newDashBoard[type],'width',600);
-                //         this.$set(this.newDashBoard[type],'height',300);
-                //         break;
-                //     case 'multiLine':
-                //         this.$set(this.newDashBoard[type],'width',700);
-                //         this.$set(this.newDashBoard[type],'height',400);
-                //         break;
-                //     case 'button':
-                //         this.$set(this.newDashBoard[type],'width',350);
-                //         this.$set(this.newDashBoard[type],'height',100);
-                //         break;
-                //     case 'textarea':
-                //         this.$set(this.newDashBoard[type],'width',500);
-                //         this.$set(this.newDashBoard[type],'height',450);
-                //         break;
-                //     case 'barchart':
-                //         this.$set(this.newDashBoard[type],'width',700);
-                //         this.$set(this.newDashBoard[type],'height',450);
-                //         break;
-                    
-                // }
-                
-                //let size = this.checkPos({top: coord.top, left: coord.left, width: this.newDashBoard[type].width, height: this.newDashBoard[type].height});
-                  let size ={top: coord.top, left: coord.left};
-               // let top,left;
-               // size.top+pageYOffset ? top = size.top+pageYOffset : top = size.top;
-                
-                //this.$set(this.newDashBoard[type],'top',this.calcSizePx(size.top+pageYOffset,'height'));
-                //this.$set(this.newDashBoard[type],'left',this.calcSizePx(size.left,'width'));
-                this.$set(this.newDashBoard[type],'top',size.top+pageYOffset);
-                this.$set(this.newDashBoard[type],'left',size.left);
-                this.$set(this.newDashBoard[type],'should',false);
-                this.$set(this.newDashBoard[type],'search',-1);
-                this.$set(this.newDashBoard[type],'switch',false);
-                this.$set(this.newDashBoard[type],'actions',[]);
+        this.$set(this.newDashBoard[type],'width',settings.size[type].width);
+        this.$set(this.newDashBoard[type],'height',settings.size[type].height); 
+       
+        let size ={top: coord.top, left: coord.left};
+        this.$set(this.newDashBoard[type],'top',size.top+pageYOffset);
+        this.$set(this.newDashBoard[type],'left',size.left);
+        this.$set(this.newDashBoard[type],'should',false);
+        this.$set(this.newDashBoard[type],'search',-1);
+        this.$set(this.newDashBoard[type],'switch',false);
+        this.$set(this.newDashBoard[type],'actions',[]);
 
-                this.$store.commit('createDashBoard', { idDash: this.idDash, dashboard: this.newDashBoard });  // создаем новый элемнет
+        this.$store.commit('createDashBoard', { idDash: this.idDash, dashboard: this.newDashBoard });  // создаем новый элемнет
 
-                this.newDashBoard = {};
+        this.newDashBoard = {};
 
-             }
+      }
 
-         },
-         calcSizePx(size,key) {
-           return `${((size*100)/screen[key]).toFixed(1)}%`
-         },
-         checkPos: function(size) {
-            let result = {top: 0, left: 0};
-            let clientWidth = document.querySelector('#app').clientWidth;
-            size.top < 50 ? result.top = 70 : result.top = size.top;
-            size.left < 0 ? result.left = 20 : result.left = size.left;
-            if((size.left + size.width) > clientWidth) {
-                result.left = clientWidth  - size.width - 20 
-            } else {
-                if (result.left == 0) {
-                    result.left = size.left
+    },
+    calcSizePx(size,key) {
+      return `${((size*100)/screen[key]).toFixed(1)}%`
+    },
+    checkPos: function(size) {
+      let result = {top: 0, left: 0};
+      let clientWidth = document.querySelector('#app').clientWidth;
+      size.top < 50 ? result.top = 70 : result.top = size.top;
+      size.left < 0 ? result.left = 20 : result.left = size.left;
+      if((size.left + size.width) > clientWidth) {
+        result.left = clientWidth  - size.width - 20 
+      } else {
+        if (result.left == 0) {
+          result.left = size.left
+        }
+      } 
+      return result
+    },
+    showModalExin: function(event) {  // функция вызова модального окна импорта экспорта
+      this.$store.commit('setModalExin', { idDash: this.idDash, status: true, event: event });
+    },
+    openSettings: function() {
+      this.$emit('openSettings');
+          
+      if (this.colorGear == 'controlsActive') {
+        this.colorGear = 'controls';
+      } else {
+        this.colorGear = 'controlsActive';
+      }
+    },
+    openExim: function() {
+      if (this.colorExim == 'controlsActive') {
+        this.colorExim = 'controls';
+      } else {
+        this.colorExim = 'controlsActive';
+      }
+      this.openexim  = !this.openexim;
+    },
+    setEvents: function() {
+      if (this.textarea_event != null  && this.textarea_event != '') {
+        let events = this.textarea_event.split('\n');
+        let reg,body,bodyArray,element,doing;
+
+        if (events.length != 0) {
+          events.forEach( item => {  
+            item =  item.replace(/\s/g, ''); 
+            if (item != ''){
+              reg = new RegExp( /^[\s+]?[\w]+\(/, "g");
+              this.$set(this.event,'event',reg.exec(item)[0].replace('(',''));
+              reg = new RegExp( /\(.+\)/, "g");               
+              body = reg.exec(item)[0];
+              
+              body = body.slice(1, body.length-1);      
+              bodyArray = body.split(',');
+              bodyArray.forEach( (elem,i) => {
+                if(elem.indexOf('(') != -1) {
+                  element = bodyArray.splice(0, i);
                 }
-            } 
-            return result
-         },
-         showModalExin: function(event) {  // функция вызова модального окна импорта экспорта
-             this.$store.commit('setModalExin', { idDash: this.idDash, status: true, event: event });
-         },
-         openSettings: function() {
-             this.$emit('openSettings');
-                 
-                 if (this.colorGear == 'controlsActive') {
-                     this.colorGear = 'controls';
-                 } else {
-                     this.colorGear = 'controlsActive';
-                 }
-         },
-          openExim: function() {
-                 if (this.colorExim == 'controlsActive') {
-                     this.colorExim = 'controls';
-                 } else {
-                     this.colorExim = 'controlsActive';
-                 }
-                 this.openexim  = !this.openexim;
-         },
-         setEvents: function() {
-         if (this.textarea_event != null  && this.textarea_event != '') {
-             let events = this.textarea_event.split('\n');
-             let reg,body,bodyArray,element,doing;
+              })
 
-             if (events.length != 0) {
-                events.forEach( item => {  
-                    item =  item.replace(/\s/g, ''); 
-                    if (item != ''){
-                        reg = new RegExp( /^[\s+]?[\w]+\(/, "g");
-                        this.$set(this.event,'event',reg.exec(item)[0].replace('(',''));
-                        reg = new RegExp( /\(.+\)/, "g");               
-                        body = reg.exec(item)[0];
-                        
-                        body = body.slice(1, body.length-1);      
-                        bodyArray = body.split(',');
-                        bodyArray.forEach( (elem,i) => {
-                            if(elem.indexOf('(') != -1) {
-                                element = bodyArray.splice(0, i);
-                            };
-                        })
+              if (this.event.event == 'OnDataCompare') { 
+                if (element.length > 2 && element[1].indexOf('[') == -1){
+                  this.$set(this.event,'compare',element[0]);
+                  this.$set(this.event,'column',element[1]);
+                  this.$set(this.event,'row',element.splice(2, element.length-1).join(',')); 
+                } else {
+                  this.$set(this.event,'compare',element[0]);
+                  this.$set(this.event,'sense',element.splice(1, element.length-1).join(',')); 
+                }
+                      
+              } else if(this.event.event == 'OnTokenCompare') {
+                this.$set(this.event,'compare',element[0]);
+                this.$set(this.event,'token',element[1]);
+                this.$set(this.event,'tokenval',element.splice(2, element.length-1).join(','));
+              } else {
+                this.$set(this.event,'element',element[0]);
+                if (element[1]){
+                  if (element[1].indexOf('[') != -1) {
+                    let j = -1;
+                    element.forEach( (item,i) => {
+                      if (item.indexOf(']') != -1) {
+                        j = i;
+                      }
+                    })
+                    let partelement = element[1];
+                    for (let i = 2; i< j+1; i++) {
 
-                        if (this.event.event == 'OnDataCompare') { 
-                                     if (element.length > 2 && element[1].indexOf('[') == -1){
-                                            this.$set(this.event,'compare',element[0]);
-                                            this.$set(this.event,'column',element[1]);
-                                            this.$set(this.event,'row',element.splice(2, element.length-1).join(',')); 
-                                    } else {
-                                        this.$set(this.event,'compare',element[0]);
-                                        this.$set(this.event,'sense',element.splice(1, element.length-1).join(',')); 
-                                    }
-                                
-                        } else if(this.event.event == 'OnTokenCompare') {
-                            this.$set(this.event,'compare',element[0]);
-                            this.$set(this.event,'token',element[1]);
-                            this.$set(this.event,'tokenval',element.splice(2, element.length-1).join(','));
-                        } else {
-                            this.$set(this.event,'element',element[0]);
-                            if (element[1]){
-                                if (element[1].indexOf('[') != -1) {
-                                        let j = -1;
-                                        element.forEach( (item,i) => {
-                                            if (item.indexOf(']') != -1) {
-                                                j = i;
-                                            }
-                                        })
-                                        let partelement = element[1];
-                                        for (let i = 2; i< j+1; i++) {
-
-                                            partelement += ','+element[i];
-                                        }
-                                        this.$set(this.event,'partelement',partelement);          
-                                } else {
-                                    this.$set(this.event,'partelement',element[1]);
-                                }
-                            } else {
-                                this.$set(this.event,'partelement','empty');
-                            }
-
-                        }
-
-
-                        
-                        reg = new RegExp( /\w+\(.+\)/, "g");
-                        doing = reg.exec(body)[0];
-                        doing = doing.split('(');
-                        this.$set(this.event,'action',doing[0]);
-                        if (doing[1].indexOf(']') != -1) {
-                            doing = doing[1].slice(0, doing[1].length-1).split(',');
-                            this.$set(this.event,'target',doing[0]);
-                            doing.splice(0,1);
-                            doing = doing.join(',');
-                            doing = doing.match(/[^\[]+(?=\])/g);
-                            if (doing == null) {
-                                this.$set(this.event,'prop',['']);
-                                this.$set(this.event,'value',['']);
-                            } else {
-                                this.$set(this.event,'prop',doing[0].split(','));
-                                this.$set(this.event,'value',doing[1].split(','));
-                            } 
-                        } else {
-                            doing = doing[1].slice(0, doing[1].length-1).split(',');
-                            this.$set(this.event,'target',doing[0]);
-                            this.$set(this.event,'prop',[doing[1]]);
-                            this.$set(this.event,'value',[doing[2]]);  
-                        }
-                        this.events.push(this.event);
-                        this.event ={};
-                        
+                      partelement += ','+element[i];
                     }
+                    this.$set(this.event,'partelement',partelement);          
+                  } else {
+                    this.$set(this.event,'partelement',element[1]);
+                  }
+                } else {
+                  this.$set(this.event,'partelement','empty');
+                }
 
-                })
+              }
+            
+              reg = new RegExp( /\w+\(.+\)/, "g");
+              doing = reg.exec(body)[0];
+              doing = doing.split('(');
+              this.$set(this.event,'action',doing[0]);
+              if (doing[1].indexOf(']') != -1) {
+                doing = doing[1].slice(0, doing[1].length-1).split(',');
+                this.$set(this.event,'target',doing[0]);
+                doing.splice(0,1);
+                doing = doing.join(',');
+                doing = doing.match(/[^\[]+(?=\])/g);
+                if (doing == null) {
+                  this.$set(this.event,'prop',['']);
+                  this.$set(this.event,'value',['']);
+                } else {
+                  this.$set(this.event,'prop',doing[0].split(','));
+                  this.$set(this.event,'value',doing[1].split(','));
+                } 
+              } else {
+                doing = doing[1].slice(0, doing[1].length-1).split(',');
+                this.$set(this.event,'target',doing[0]);
+                this.$set(this.event,'prop',[doing[1]]);
+                this.$set(this.event,'value',[doing[2]]);  
+              }
+              this.events.push(this.event);
+              this.event ={};
+            }
+
+          })
                 
 
-                this.$store.commit('setEvents', {event: this.events ,eventFull: this.textarea_event, idDash: this.idDash, });
+          this.$store.commit('setEvents', {event: this.events ,eventFull: this.textarea_event, idDash: this.idDash, });
 
-                this.events = [];
+          this.events = [];
 
-                this.openEventCode();
+          this.openEventCode();
                
                  
-             }
+        }
 
-         } else {
-            this.$store.commit('setEvents', {event: null ,eventFull: null, idDash: this.idDash, });
+      } else {
+        this.$store.commit('setEvents', {event: null ,eventFull: null, idDash: this.idDash, });
 
-            this.events = [];
+        this.events = [];
 
-            this.openEventCode();
-         }
+        this.openEventCode();
+      }
 
-         },
-       
-        //  openHelp: function() {
-        //     if (this.help_elem) {
-        //             this.help_coral = 'fill:#FF6D70';
-        //             this.help_elem = !this.help_elem;
-        //             this.openhelp = !this.openhelp;
-        //      } else {
-        //             this.help_coral = 'fill:teal';
-        //             this.help_elem = !this.help_elem;
-        //             this.openhelp = !this.openhelp;
-        //       } 
-        //  },
-        //  pressBtn: function(event) {
-        //      let target = '';
-        //      if (event.target.localName == 'span') {
-        //          target = event.target.parentElement.parentElement;
-        //      } else {
-        //           target = event.target.parentElement;
-        //      } 
-        //      let children = [...target.childNodes];
-        //          children.forEach( item => {
-        //             if (item.localName == 'div') {
-        //                 if (item.innerHTML.indexOf('create') !== -1 && item.innerHTML.indexOf('(') !== -1 && item.innerHTML.indexOf(')') !== -1)  {
-        //                     this.create(item.innerHTML);
-        //                 }
-        //             }
-        //          })
-        //     this.openPlusCode();
-        //  },
-        
-        //  create: function(string) {
-        //         let create = '';
-        //         let resultObj = {};
-
-        //         // Отсекаем <br> и берем то, что в скобках и еще пробелы отсекаем и разбиваем в массив
-        //         create = string.replace(/<br>/, '').match("\\(([\\S\\s]*)\\)")[1].replace(/ /g, '').replace(/&nbsp;/g, '').split(',');  
-                    
-        //             if (create[0] != '') {
-
-        //                  this.$set(this.newDashBoard,create[0],{});
-        //                 if (create[1]) { 
-        //                     let elements = create[1].match("\\[([\\S]*)\\]")[1].split(';');
-        //                     elements = elements.map( item => {
-        //                         return `dash-${item}`
-        //                     })
-        //                     this.$set(this.newDashBoard[create[0]],'elements',elements);
-        //                 } else { 
-        //                     this.$set(this.newDashBoard[create[0]],'elements',[]);
-        //                 }
-        //                  create[2] ? this.$set(this.newDashBoard[create[0]],'name_dash',create[2]) : this.$set(this.newDashBoard[create[0]],'name_dash','D-board');
-        //                  create[3] ? this.$set(this.newDashBoard[create[0]],'top',parseInt(create[3])) : this.$set(this.newDashBoard[create[0]],'top',250);
-        //                  create[4] ? this.$set(this.newDashBoard[create[0]],'left',parseInt(create[4]))  : this.$set(this.newDashBoard[create[0]],'left',500);
-        //                  create[5] ? this.$set(this.newDashBoard[create[0]],'width',parseInt(create[5])) : this.$set(this.newDashBoard[create[0]],'width',500);
-        //                  create[6] ? this.$set(this.newDashBoard[create[0]],'height',parseInt(create[6])) : this.$set(this.newDashBoard[create[0]],'height',500)
-        //                 this.$set(this.newDashBoard[create[0]],'diapason',['null','null']);
-        //                 this.$set(this.newDashBoard[create[0]],'should',false);
-        //                 this.$set(this.newDashBoard[create[0]],'file','');
-        //                 this.$set(this.newDashBoard[create[0]],'search',false);
-        //                 this.$set(this.newDashBoard[create[0]],'filter','');
-        //                 let methods = {
-        //                     status: false,
-        //                     data: {},
-        //                     action: ''
-        //                 };
-        //                 this.$set(this.newDashBoard[create[0]],'methods',methods);
-
-                       
-        //                 this.$store.commit('createDashBoard', this.newDashBoard);
-
-        //             }
-                 
-        //  }
-         changeColor: function(fieldsets) {
-             this.fieldsets.forEach( item => {
-                 item.style.borderColor = this.color.text;
-                 item.style.borderWidth = '1px';
-             })
-             if (document.querySelectorAll('.v-menu__content').length != 0){ 
-                    document.querySelectorAll('.v-menu__content').forEach( item => {
-                    item.style.boxShadow = `0 5px 5px -3px ${this.color.border},0 8px 10px 1px ${this.color.border},0 3px 14px 2px ${this.color.border}`;
-                    item.style.background = this.color.back;
-                    item.style.color = this.color.text;
-                    item.style.border = `1px solid ${this.color.border}`;
-                })
-             }
-         },
-         saveDash:  function() {
-             let dash = this.$store.getters.getDashboard(this.idDash); 
-             let response =  this.$store.getters.saveDashboard({id: this.idDash, body: JSON.stringify(dash)});
-             response.then( res => {
-                 this.errorSave = true;
-                 if (res.status == 200) {
-                    this.colorErrorSave = this.color.controls;
-                    this.msgErrorSave = 'Дашборд сохранен';
-                    this.$store.auth.getters.putLog(`Сохранен дашборд  ${this.toHichName(res.data.name)} c id ${res.data.id}`);
-                   // console.log(res.data)
-                    this.updateDash({data: res.data,dash: dash})
-                 } else {
-                    this.colorErrorSave = this.color.controlsActive;
-                    this.msgErrorSave = 'Не получилось. Попробуйте еще раз.';
-                 }
-                 setTimeout( () => {
-                     this.save_elem = false;
-                     this.opensave = false;
-                 },2000)
-
-             })
-
-         },
-        updateDash: function(dash) {
-             this.$store.commit('updateDash',{dash: {body: JSON.stringify(dash.dash),id:this.idDash}, modified: dash.data.modified});
-             this.$store.auth.getters.putLog(`Обновлен дашборд ${this.toHichName(dash.data.name)} с id ${this.idDash}`);
-        },
-        toHichName: function(name) {
-            return name[0].toUpperCase() + name.slice(1);
-        },
-        toHome: function() {
-            this.$router.push(`/main`);
-        },
-    }, 
-    mounted () {
-          this.tools =  settings.tools;
-
-           document.onmouseup = event => {  // а при отпускании кнопки при перетаскивании
-               document.onmousemove = null;  // мы бросаем элемент где он есть
-               let width = document.querySelector("#app").clientWidth;
-             
-               if (this.avatar) {
-                    let height = document.querySelector('.opentool').clientHeight;
-                    if (event.x > width-450 && event.y < height ){
-                        this.avatar.remove(); // удаляем аватар из дерева dom
-                        this.avatar = null;  // и у нас тоже его очищаем
-                    } else {
-                        this.addDashBoard();
-                        this.opentool = false;
-                        this.tool_elem = false;
-                    } 
-               } 
-              
-           };
-           let eventFull = this.$store.getters.getEventFull(this.idDash);
-           if (eventFull != '') {
-               this.textarea_event = eventFull;
-           }
-           document.querySelector('.block-code').style.maxHeight = `${document.querySelector('#content').clientHeight-100}px`;
-           this.colorGear = 'controls';
-           this.colorExim = 'controls';
-         //  this.fieldsets = document.querySelectorAll('fieldset');
-          // this.changeColor(this.fieldsets);
-         
-          // document.querySelector('.block-code')
-           
     },
+       
+       
+    changeColor: function() {
+      this.fieldsets.forEach( item => {
+        item.style.borderColor = this.color.text;
+        item.style.borderWidth = '1px';
+      })
+      if (document.querySelectorAll('.v-menu__content').length != 0){ 
+        document.querySelectorAll('.v-menu__content').forEach( item => {
+          item.style.boxShadow = `0 5px 5px -3px ${this.color.border},0 8px 10px 1px ${this.color.border},0 3px 14px 2px ${this.color.border}`;
+          item.style.background = this.color.back;
+          item.style.color = this.color.text;
+          item.style.border = `1px solid ${this.color.border}`;
+        })
+      }
+    },
+    saveDash: function() {
+      let dash = this.$store.getters.getDashboard(this.idDash); 
+      let response =  this.$store.getters.saveDashboard({id: this.idDash, body: JSON.stringify(dash)});
+      response.then( res => {
+        this.errorSave = true;
+        if (res.status == 200) {
+          this.colorErrorSave = this.color.controls;
+          this.msgErrorSave = 'Дашборд сохранен';
+          this.$store.auth.getters.putLog(`Сохранен дашборд  ${this.toHichName(res.data.name)} c id ${res.data.id}`);
+          // console.log(res.data)
+          this.updateDash({data: res.data,dash: dash})
+        } else {
+          this.colorErrorSave = this.color.controlsActive;
+          this.msgErrorSave = 'Не получилось. Попробуйте еще раз.';
+        }
+        setTimeout( () => {
+          this.save_elem = false;
+          this.opensave = false;
+        },2000)
+
+      })
+
+    },
+    updateDash: function(dash) {
+      this.$store.commit('updateDash',{dash: {body: JSON.stringify(dash.dash),id: this.idDash}, modified: dash.data.modified});
+      this.$store.auth.getters.putLog(`Обновлен дашборд ${this.toHichName(dash.data.name)} с id ${this.idDash}`);
+    },
+    toHichName: function(name) {
+      return name[0].toUpperCase() + name.slice(1);
+    },
+    toHome: function() {
+      this.$router.push(`/main`);
+    },
+  }, 
+  mounted () {
+    this.tools =  settings.tools;
+
+    document.onmouseup = event => {  // а при отпускании кнопки при перетаскивании
+      document.onmousemove = null;  // мы бросаем элемент где он есть
+      let width = document.querySelector("#app").clientWidth;
+    
+      if (this.avatar) {
+        let height = document.querySelector('.opentool').clientHeight;
+        if (event.x > width-450 && event.y < height ){
+          this.avatar.remove(); // удаляем аватар из дерева dom
+          this.avatar = null;  // и у нас тоже его очищаем
+        } else {
+          this.addDashBoard();
+          this.opentool = false;
+          this.tool_elem = false;
+        } 
+      } 
+              
+    };
+    let eventFull = this.$store.getters.getEventFull(this.idDash);
+    if (eventFull != '') {
+      this.textarea_event = eventFull;
+    }
+    document.querySelector('.block-code').style.maxHeight = `${document.querySelector('#content').clientHeight-100}px`;
+    this.colorGear = 'controls';
+    this.colorExim = 'controls';
+           
+  },
 }
 </script>
 
