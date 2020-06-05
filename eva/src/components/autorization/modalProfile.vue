@@ -139,6 +139,7 @@
             v-for="item in Object.keys(role.tab)" 
             :key="item"  
             essence="role"  
+            :colorFrom="colorFrom"
             :dataFrom="dataRest" 
             :subessence="item" 
             :create="create" 
@@ -163,7 +164,8 @@
           <data-profile 
             v-for="item in Object.keys(permission.tab)" 
             :key="item"  
-            essence="permission" 
+            essence="permission"
+            :colorFrom="colorFrom" 
             :dataFrom="dataRest" 
             :subessence="item" 
             :create="create" 
@@ -195,6 +197,7 @@
             v-for="item in Object.keys(group.tab)" 
             :key="item"  
             essence="group" 
+            :colorFrom="colorFrom"
             :dataFrom="dataRest" 
             :subessence="item" 
             :create="create" 
@@ -209,7 +212,7 @@
           <v-text-field 
             v-model="curItem.name" 
             label="Название индекса" 
-            :color="colorFrom.controls"  
+            :color="colorFrom.controls"   
             class="field-profile"  
             outlined  
             hide-details 
@@ -219,6 +222,7 @@
             v-for="item in Object.keys(index.tab)" 
             :key="item"  
             essence="index" 
+            :colorFrom="colorFrom"
             :dataFrom="dataRest" 
             :subessence="item" 
             :create="create" 
