@@ -150,7 +150,7 @@ export default {
     return {
       search: {
         sid: '',
-        original_otl: null,
+        original_spl: null,
         parametrs: {
           tws: '',
           twf: '',

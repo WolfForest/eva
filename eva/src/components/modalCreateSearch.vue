@@ -24,7 +24,7 @@
           hide-details
         />
         <v-textarea 
-          v-model="search.original_otl"
+          v-model="search.original_spl"
           :color="color.text" 
           :style="{color: colorFrom.text}" 
           outlined 
@@ -184,7 +184,7 @@ export default {
     return {
       search: {
         sid: null,
-        original_otl: null,
+        original_spl: null,
         parametrs: {
           tws: 0,
           twf: 0,

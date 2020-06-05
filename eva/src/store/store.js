@@ -191,7 +191,7 @@ export default {  // приблизительный объект хранили�
         let response = {};
 
         searches.forEach( async item => {  // также при обновлении токена нужно заново запускать серч и обновлять информацию
-          if (item.original_otl.indexOf(`$${state[tocken.idDash].tockens[id].name}$`) != -1  ) {  // если в тексте запроса есть наш токен
+          if (item.original_spl.indexOf(`$${state[tocken.idDash].tockens[id].name}$`) != -1  ) {  // если в тексте запроса есть наш токен
                 
 
             tocken.store.commit('setLoading', {search: item.sid, idDash: tocken.idDash, should: true, error: false});  
@@ -528,7 +528,7 @@ export default {  // приблизительный объект хранили�
           searches.forEach(async item => {  // также при обновлении токена нужно заново запускать серч и обновлять информацию
             
             changed.forEach( async itemTok => {
-              if (item.original_otl.indexOf(`$${itemTok}$`) != -1  ) { // если в тексте запроса есть наш токен                 
+              if (item.original_spl.indexOf(`$${itemTok}$`) != -1  ) { // если в тексте запроса есть наш токен                 
 
                 event.store.commit('setLoading', {search: item.sid, idDash: id, should: true, error: false});  
 
@@ -777,7 +777,7 @@ export default {  // приблизительный объект хранили�
         // let search = getters.getSearch(searchOut);  // получаем нужный ИС на основе полученных при вызове настроек
         let search = searchFrom.search;
         let idDash = searchFrom.idDash;
-        let otl = search.original_otl;
+        let otl = search.original_spl;
         let tws = search.parametrs.tws;
         let twf = search.parametrs.twf;
         let reg = null;
@@ -826,7 +826,7 @@ export default {  // приблизительный объект хранили�
             
         let formData = new FormData();  // формируем объект для передачи RESTу
         formData.append('sid', `${search.sid}+${hash}`);
-        formData.append('original_otl', String(otl));
+        formData.append('original_spl', String(otl));
         formData.append('tws', tws);
         formData.append('twf', twf);
         formData.append('username', search.parametrs.username);
@@ -966,7 +966,7 @@ export default {  // приблизительный объект хранили�
       } else {
         return {
           sid: '',
-          original_otl: '',
+          original_spl: '',
           parametrs: {
             tws: 0,
             twf: 0,

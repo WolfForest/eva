@@ -89,7 +89,7 @@ export default {
         otstup = 70;
       }
       if(this.props.hideFooter) {
-        otstup = 0;
+        otstup = 45;
       }
       let height = this.heightFrom-otstup; // 120 это размер блока с пагинацией таблицы + шапка с настройками самого блока
       return height

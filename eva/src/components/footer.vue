@@ -15,7 +15,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.30.13 [addSomeColor]',
+      version: 'v 1.30.14 [notContainTable]',
       color: { 
         text: '#DADADA',
       },
