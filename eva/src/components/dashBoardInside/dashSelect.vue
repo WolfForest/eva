@@ -39,7 +39,6 @@
           class="select-parent"  
           :loading="dataLoading" 
           label="Столбец данных"
-          @focus="setColorSelect($event)" 
           @change="getItem('elem')"
         /> 
         <v-select  
@@ -53,7 +52,6 @@
           class="select-parent"  
           label="Связанный столбец данных"
           :loading="dataLoading" 
-          @focus="setColorSelect($event)" 
           @change="getItem('elemlink')"
         /> 
       </div>
@@ -75,7 +73,6 @@
           class="select"
           label="Значение"  
           @change="setTocken"  
-          @focus="setColorSelect($event)"
         >
           <template 
             v-if="multiple"

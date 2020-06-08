@@ -8,7 +8,7 @@ export default {
     controlsActive: '#41C4FF',
     controlsInsideDash: '#DADADA',
     panel: '#191919',
-    border: '#00000033',
+    border: '#FFFFFF33',
   },
   light: {
     back: '#ffffff',
