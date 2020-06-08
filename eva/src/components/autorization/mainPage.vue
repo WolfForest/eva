@@ -49,26 +49,27 @@
 
 <script>
 
+import themes from '../../js/themeSettings.js';
+
 export default {
 
   data () {
     return {
-      color: { 
-        back: '#060606',
-        backElement: '#191919',
-        text: '#DADADA',
-        controls: '#6e96c5',
-        controlsSystem: '#004799',
-        controlsActive: '#41C4FF',
-        controlsInsideDash: '#DADADA',
-        panel: '#0D0D0D',
-        border: '#454545',
-      },
+      color: { },
     } 
   },
   computed: { 
 
+    theme: function() {
+      return this.$store.getters.getTheme
+    }
   },  
+  watch: {
+    theme: function (theme) {
+      this.color = themes[theme];
+      
+    },
+  },
   methods: {
     openDash: function() {
       this.$router.push(`/dashboards`); 
@@ -78,6 +79,9 @@ export default {
       this.$router.push(`/reports`); 
     },
   },
+  mounted() {
+    this.color = themes[this.theme];
+  }
 }
 
 

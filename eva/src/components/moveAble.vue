@@ -6,7 +6,7 @@
     :y="props.top"  
     :draggable="props.draggable" 
     :resizable="props.resizable" 
-    :style="{zIndex:props.zIndex, outlineColor: props.color.controlsActive, background: props.color.controlsActive }" 
+    :style="{zIndex:props.zIndex, outlineColor: color.controlsActive, background: color.controlsActive }" 
     @dragging="onDrag"
     @resizing="onResize" 
     @dragstop="dragStopped" 
@@ -31,7 +31,6 @@
 <script>
 
 
-
 export default {
   props: {
     dataModeFrom: null,
@@ -51,9 +50,6 @@ export default {
         left: 0,
         vue_drag: false,
         zIndex: 1,
-        color: { 
-          controlsActive: '#41C4FF',
-        },
       }
     }
   },

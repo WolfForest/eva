@@ -43,6 +43,22 @@
           </template>
           <span>Назад</span>
         </v-tooltip>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive" 
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class="palete"  
+              color="white" 
+              v-on="on"
+              @click="paleteShow = !paleteShow"
+            >
+              {{ palete }}
+            </v-icon>
+          </template>
+          <span>Настройки темы</span>
+        </v-tooltip>
       </div>
       <div class="manage-btn">
         <div 
@@ -108,13 +124,19 @@
       :colorFrom="color"  
       @cancelModal="modalActive=false" 
     />
+    <theme-settings 
+      :color-from="color" 
+      :palete-from="paleteShow"
+    />
   </div>    
 </template>
 
 
 <script>
 
-import { mdiDoor, mdiAccountEdit, mdiUndoVariant,  mdiHomeVariantOutline, mdiScriptTextOutline } from '@mdi/js'
+import { mdiDoor, mdiAccountEdit, mdiPalette, mdiUndoVariant,  mdiHomeVariantOutline, mdiScriptTextOutline } from '@mdi/js'
+
+import themes from '../js/themeSettings.js';
 
 import VueJWT from 'vuejs-jwt'
 
@@ -134,17 +156,9 @@ export default {
       modalActive: false,
       home: mdiHomeVariantOutline,
       undo: mdiUndoVariant,
-      color: { 
-        back: '#060606',
-        backElement: '#191919',
-        text: '#DADADA',
-        controls: '#6e96c5',
-        controlsSystem: '#004799',
-        controlsActive: '#41C4FF',
-        controlsInsideDash: '#DADADA',
-        panel: '#191919',
-        border: '#00000033',
-      },
+      palete: mdiPalette,
+      paleteShow: false,
+      color: { },
     } 
   },
   computed: { 
@@ -162,8 +176,17 @@ export default {
       } else {
         return "50px"
       }
+    },
+    theme: function() {
+      return this.$store.getters.getTheme
     }
   },  
+  watch: {
+    theme: function (theme) {
+      this.color = themes[theme];
+      
+    },
+  },
   methods: {
     getCookie: async function() {
       if(this.$jwt.hasToken()) {
@@ -211,10 +234,11 @@ export default {
     openLogs: function() {
       this.modalActive=true;
       this.$store.commit('setErrorLogs',false);
-    }
+    },
   },
   mounted() {
     this.getCookie();
+    this.color = themes[this.theme];
   } 
 }
 

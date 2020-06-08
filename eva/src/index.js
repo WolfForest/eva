@@ -48,7 +48,7 @@ Vue.component('modal-schedule', require('./components/modalScheduler.vue').defau
 Vue.component('modal-exim', require('./components/modalExim.vue').default)  // модальное окно для импорта и экспорта
 Vue.component('modal-create-search', require('./components/modalCreateSearch.vue').default)  // модальное окно для импорта и экспорта
 Vue.component('modal-settings', require('./components/modalSettings.vue').default)  // модальное окно для импорта и экспорта
-Vue.component('dash-settings', require('./components/dashSettings.vue').default)  // настройки системы
+Vue.component('theme-settings', require('./components/themeSettings.vue').default)  // настройки системы
 
 Vue.component('dash-table', require('./components/dashBoardInside/dashTable.vue').default)  // элемент таблицы
 Vue.component('dash-guntt', require('./components/dashBoardInside/dashGuntt.vue').default)  // элемент диаграммы ганта

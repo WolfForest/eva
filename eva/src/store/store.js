@@ -566,8 +566,8 @@ export default {  // приблизительный объект хранили�
         
       return state[settings.idDash].modalSettings
     },
-    setColor: (state, color) => {    // устанавливает объект цвета в хранилище
-      state.color = color;
+    setTheme: (state, theme) => {    // устанавливает объект цвета в хранилище
+      Vue.set(state, 'theme', theme);
     },
     setGraphTree: (state, tree) => { // мтеод сохраняет структуру и позицию графа
       state[tree.idDash][tree.id].tree = tree.tree;
@@ -1086,6 +1086,12 @@ export default {  // приблизительный объект хранили�
         return state[id].schedulers
 
       }
+    },
+    getTheme(state) {
+      if (!state.theme) {
+        Vue.set(state, 'theme', 'light');
+      }
+      return state.theme
     },
     // getColor(state) {  // получаем объект с цветовыми настройками
         

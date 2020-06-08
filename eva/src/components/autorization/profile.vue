@@ -146,6 +146,8 @@
 
 import {   mdiPencil,  mdiPlus, mdiTrashCanOutline  } from '@mdi/js'
 
+import themes from '../../js/themeSettings.js';
+
 export default {
 
   data () {
@@ -170,24 +172,23 @@ export default {
       dataDelete: {},
       curItem: {},
       permission: true,
-      color: { 
-        back: '#060606',
-        backElement: '#191919',
-        text: '#DADADA',
-        controls: '#6e96c5',
-        controlsSystem: '#004799',
-        controlsActive: '#41C4FF',
-        controlsInsideDash: '#DADADA',
-        panel: '#0D0D0D',
-        border: '#DADADA',
-      },
+      color: { },
     } 
   },
   computed: { 
     adminRool: function() {
       return this.adminRoot
+    },
+    theme: function() {
+      return this.$store.getters.getTheme
     }
   },  
+  watch: {
+    theme: function (theme) {
+      this.color = themes[theme];
+      
+    },
+  }, 
   methods: {
     setPermissions: function(event) {
       if (event.includes('admin_all')) {
@@ -335,6 +336,7 @@ export default {
   },
   mounted() {
     this.getData('tab-1');
+    this.color = themes[this.theme];
   } 
 }
 

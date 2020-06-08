@@ -88,6 +88,8 @@
 
 <script> 
 
+import themes from '../js/themeSettings.js';
+
 export default {
   data () {
     return {
@@ -95,17 +97,7 @@ export default {
       mode: true,
       showSetting: false,
       rotate: '',
-      color: {
-        back: '#060606',
-        backElement: '#191919',
-        text: '#DADADA',
-        controls: '#6e96c5',
-        controlsSystem: '#004799',
-        controlsActive: '#41C4FF',
-        controlsInsideDash: '#DADADA',
-        panel: '#0D0D0D',
-        border: '#454545',
-      },
+      color: { },
       adminRoot: false,
       openProfile: false,
       alreadyDash: {},
@@ -137,7 +129,16 @@ export default {
       } else {
         return '0px'
       }
+    },
+    theme: function() {
+      return this.$store.getters.getTheme
     }
+  },  
+  watch: {
+    theme: function (theme) {
+      this.color = themes[theme];
+      
+    },
   },
   methods: {
     hash: function(elem) {
@@ -191,6 +192,7 @@ export default {
         document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
       }
     })
+    this.color = themes[this.theme];
   }
 }
 </script>
