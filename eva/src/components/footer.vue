@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.30.14 [notContainTable]',
+      version: 'v 1.31.14 [colorTheme]',
       color: { },
     } 
   },
