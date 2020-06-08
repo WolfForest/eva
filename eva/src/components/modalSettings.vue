@@ -192,7 +192,7 @@
               class="discribe-option item" 
               :style="{color:color.text, borderColor:color.text}"
             >
-              Выбрать цвет которым подсветится нужная строка
+              Выбрать цвет которым подсветится нужный столбец
             </div>
             <div class="status-option item">
               <v-text-field 
@@ -220,7 +220,7 @@
               class="discribe-option item" 
               :style="{color:color.text, borderColor:color.text}"
             >
-              Выбрать цвет которым подсветится нужная строка
+              Выбрать цвет которым подсветится нужная ячейка
             </div>
             <div class="status-option item">
               <v-text-field 
