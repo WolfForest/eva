@@ -52,7 +52,7 @@
               </div>
               <v-textarea 
                 ref="search" 
-                v-model="search.original_spl"  
+                v-model="search.original_otl"  
                 solo 
                 spellcheck="false" 
                 flat 
@@ -302,7 +302,7 @@ export default {
   methods: {
     launchSearch: async function() {
 
-      this.search.sid = this.hashCode(this.search.original_spl);
+      this.search.sid = this.hashCode(this.search.original_otl);
 
       this.$store.auth.getters.putLog(`Запущен запрос  ${this.search.sid}`);
 
@@ -470,7 +470,7 @@ export default {
   },
   mounted() {
     this.search = this.$store.getters.getReportSearch;
-    if (this.search.original_spl != '') {
+    if (this.search.original_otl != '') {
       this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: true});
     }
     this.calcSize();
