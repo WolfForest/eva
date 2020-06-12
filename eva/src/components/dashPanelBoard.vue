@@ -314,6 +314,7 @@
             hide-details  
             outlined 
             class="tocken-elem" 
+            @click="changeColor"
           />
           <v-select  
             v-model="tocken.action"
@@ -323,6 +324,7 @@
             hide-details  
             outlined 
             class="tocken-action" 
+            @click="changeColor"
           />
           <v-select  
             v-model="tocken.capture"
@@ -332,6 +334,7 @@
             hide-details  
             outlined 
             class="tocken-capture" 
+            @click="changeColor"
           />
           <v-text-field  
             v-model="tocken.prefix"
@@ -404,12 +407,13 @@
         />
         <v-select  
           v-model="newElem" 
-          :items="elements" 
+          :items="elements"  
           :color="color.text"
           hide-details  
           outlined 
           class="tocken-elem" 
           label="Элемент"
+          @click="changeColor"
         />
         <v-select  
           v-model="newAction" 
@@ -419,6 +423,7 @@
           outlined 
           class="tocken-action" 
           label="Действие" 
+          @click="changeColor"
         />
         <v-select  
           :items="capture({action:newAction,elem: newElem})" 
@@ -427,6 +432,7 @@
           outlined 
           class="tocken-capture" 
           label="Свойство" 
+          @click="changeColor"
         />
         <v-text-field  
           v-model="newTockenDop.prefix" 
@@ -905,7 +911,6 @@ export default {
       this.search_elem = false;
       this.code_elem = false;
       this.openevent = false;
-      this.changeColor(this.fieldsets);
     },
     openEventCode: function() {
       this.code_elem = !this.code_elem;
@@ -918,7 +923,6 @@ export default {
       this.search_elem = false;
       this.tocken_elem = false;
       this.opentocken = false;
-      this.changeColor(this.fieldsets);
     },
     openSearch: function() {  // собственно функция которая показывает или нет окно с редактируемым ИД
       this.opensearch = !this.opensearch;
@@ -1361,12 +1365,10 @@ export default {
        
        
     changeColor: function() {
-      this.fieldsets.forEach( item => {
-        item.style.borderColor = this.color.text;
-        item.style.borderWidth = '1px';
-      })
-      if (document.querySelectorAll('.v-menu__content').length != 0){ 
+      if (document.querySelectorAll('.v-menu__content').length != 0){
+        
         document.querySelectorAll('.v-menu__content').forEach( item => {
+          
           item.style.boxShadow = `0 5px 5px -3px ${this.color.border},0 8px 10px 1px ${this.color.border},0 3px 14px 2px ${this.color.border}`;
           item.style.background = this.color.back;
           item.style.color = this.color.text;
@@ -1435,6 +1437,8 @@ export default {
     document.querySelector('.block-code').style.maxHeight = `${document.querySelector('#content').clientHeight-100}px`;
     this.colorGear = 'controls';
     this.colorExim = 'controls';
+    // this.fieldsets = document.querySelectorAll('fieldset');
+    // this.changeColor();
            
   },
 }
