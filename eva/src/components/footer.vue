@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.31.14 [colorTheme]',
+      version: 'v 1.31.15 [invisibleSelect]',
       color: { },
     } 
   },

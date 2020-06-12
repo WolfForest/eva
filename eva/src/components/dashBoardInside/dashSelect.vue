@@ -40,6 +40,7 @@
           :loading="dataLoading" 
           label="Столбец данных"
           @change="getItem('elem')"
+          @click="changeColor"
         /> 
         <v-select  
           v-model="elemlink" 
@@ -53,14 +54,16 @@
           label="Связанный столбец данных"
           :loading="dataLoading" 
           @change="getItem('elemlink')"
+          @click="changeColor"
         /> 
       </div>
       <div 
+        ref="targetBlock"
         class="target" 
         :style="{width:widthInput,borderColor:color.border}" 
         :class="{select_show:select_show}"
       > 
-        <v-autocomplete  
+        <v-autocomplete 
           v-model="elemDeep[String(multiple)]" 
           :items="dataRestDeep"  
           solo 
@@ -72,7 +75,8 @@
           hide-details  
           class="select"
           label="Значение"  
-          @change="setTocken"  
+          @change="setTocken" 
+          @click="changeColor" 
         >
           <template 
             v-if="multiple"
@@ -260,6 +264,18 @@ export default {
       this.open = !this.open;
       this.select_show = !this.select_show;
     },
+    changeColor: function() {
+      if (document.querySelectorAll('.v-menu__content').length != 0){
+        
+        document.querySelectorAll('.v-menu__content').forEach( item => {
+          
+          item.style.boxShadow = `0 5px 5px -3px ${this.color.border},0 8px 10px 1px ${this.color.border},0 3px 14px 2px ${this.color.border}`;
+          item.style.background = this.color.back;
+          item.style.color = this.color.text;
+          item.style.border = `1px solid ${this.color.border}`;
+        })
+      }
+    },
     selectItems: function() {
       if (this.chooseText == 'Выбрать все') {
         this.chooseText = 'Очистить Все';
@@ -381,6 +397,10 @@ export default {
       }
 
     }
+    // здесь мы ищем иконку стрелки у выпдающего списка, потому что почему-то втсроенный клик на ней не срабатывает, вот мы добавляем свой
+    this.$refs.targetBlock.querySelector('.v-input__append-inner').addEventListener('click', () => {
+      this.changeColor();
+    })
 
        
   }, 
