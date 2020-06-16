@@ -460,8 +460,6 @@
               />
             </div>
           </div>
-
-
           <v-card-text 
             v-if="!options.united && checkOptions('united')"
             class="headline" 
@@ -513,9 +511,10 @@
                 @click="changeColor"
               /> 
               <v-text-field 
-                v-model="metrics[i-1].upborder" 
+                v-model="metrics[i-1].lowborder" 
                 clearable  
-                placeholder="Верхняя граница (ось Y)"  
+                placeholder="0"  
+                label="Нижняя граница (ось Y)"
                 :color="color.text" 
                 :style="{color:color.text, background: 'transparent', borderColor: color.text}" 
                 :disabled="metrics[i-1].manual"
@@ -524,9 +523,10 @@
                 hide-details
               />
               <v-text-field 
-                v-model="metrics[i-1].lowborder" 
+                v-model="metrics[i-1].upborder" 
                 clearable  
-                placeholder="Нижняя граница (ось Y)"  
+                placeholder="0"  
+                label="Верхняя граница (ось Y)"
                 :color="color.text" 
                 :style="{color:color.text, background: 'transparent', borderColor: color.text}" 
                 :disabled="metrics[i-1].manual"
@@ -557,8 +557,6 @@
               </v-icon>
             </div> 
           </div>
-
-
           <div 
             v-if="checkOptions('multiple')"
             class="option-item" 
@@ -844,7 +842,7 @@ export default {
   },
   methods: {  
     setOptions: function() {  // отправляем настройки в хранилище
-    
+
       if(!this.options.level){
         this.options.level = 1;
       }
@@ -933,6 +931,7 @@ export default {
             this.$set(this.tooltip,'links', [...[],...options[item].links]);
             this.$set(this.tooltip,'buttons',[...[],...options[item].buttons]);
           } else if (item == 'metrics') {
+            console.log(options[item])
             this.metrics = options[item];
           } else {
             this.$set(this.options,item,options[item]);
@@ -944,11 +943,6 @@ export default {
           }
           if (item == 'multiple') {
             this.$set(this.options,item,false);
-          }
-          
-          if (item == 'metrics') {
-            
-            this.metrics = item;
           }
         }
       })

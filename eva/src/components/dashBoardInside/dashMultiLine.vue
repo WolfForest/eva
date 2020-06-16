@@ -145,7 +145,10 @@ export default {
               this.props.nodata = false; // то убираем соощение о отсутствии данных
               this.props.result = this.dataRest;  // заносим все данные в переменную
               let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
-              let metricsOpt = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics;
+              let metricsOpt = [];
+              if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
+                metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
+              }
               
               if (this.props.legends.length == 0) {
                 this.props.metrics = [];
@@ -174,6 +177,7 @@ export default {
               } else {
                 this.createLineChart(this.props,this,sizeLine,time,united,metricsOpt);
               }
+              console.log('fsdf')
                       
               this.setMetrics();
                                         
@@ -277,6 +281,10 @@ export default {
 
       let max = metricsName.map( (item,i) => { // получаем массив с максимальным значением каждой метрики, кроме временной
         return   d3.max(data, function(d) {  return +d[metricsName[i]]; })
+      })
+
+      let min = metricsName.map( (item,i) => { // получаем массив с максимальным значением каждой метрики, кроме временной
+        return   d3.min(data, function(d) {  return d[metricsName[i]]; })
       })
 
 
@@ -676,22 +684,41 @@ export default {
           
 
           let metricOPt = {};
-          metricsOpt.forEach( item => {
-            if (item.name == metric) {
-              metricOPt = item;
+          if (metricsOpt.length != 0) {
+
+            metricsOpt.forEach( item => {
+              if (item.name == metric) {
+                metricOPt = {...{},...item};
+              }
+            })
+
+          }
+          let minY, maxY;
+          if (Object.keys(metricOPt).length == 0) {
+            minY = min[i];
+            maxY = max[i];
+          } else {
+            if (metricOPt.manual) {
+              minY = min[i];
+              maxY = max[i];
+            } else {
+              minY = metricOPt.lowborder;
+              maxY = metricOPt.upborder;
             }
-          })
+          }
+
+          console.log('zashel')
 
 
           if (i == 0 ) {
 
             y.push(d3.scaleLinear()
-              .domain([0, max[i]+otstupProcent])
+              .domain([minY, maxY+otstupProcent])
               .range([parseFloat(step)+20,startY  ]));
 
             // добавляем ось Y
             svg.append("g")
-              .call(d3.axisLeft(y[i]).tickValues([max[i]]));
+              .call(d3.axisLeft(y[i]).tickValues([maxY]));
 
             
             if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
@@ -710,12 +737,12 @@ export default {
           } else {
             
             y.push(d3.scaleLinear()
-              .domain([0, max[i]+otstupProcent])
+              .domain([minY, maxY+otstupProcent])
               .range([ parseFloat(step*(i+1))+20, startY ]));
 
             // добавляем ось Y
             svg.append("g")
-              .call(d3.axisLeft(y[i]).tickValues([max[i]]));
+              .call(d3.axisLeft(y[i]).tickValues([maxY]));
 
             if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
               
