@@ -132,6 +132,7 @@ export default {
           if(this.dataRest.error) {  // сомтрим если с ошибкой
             this.props.message = this.dataRest.error; // то выводим сообщение о ошибке
           } else {  // если нет
+            
             let time = false;
             let onlyNum = true;
             let key = Object.keys(this.dataRest[0])[0];
@@ -140,9 +141,11 @@ export default {
               if(this.dataRest[0][key] > 1000000000 && this.dataRest[0][key] < 2000000000) {
                 time = true;
               }
+
               this.props.nodata = false; // то убираем соощение о отсутствии данных
               this.props.result = this.dataRest;  // заносим все данные в переменную
               let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
+              let metricsOpt = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics;
               
               if (this.props.legends.length == 0) {
                 this.props.metrics = [];
@@ -157,7 +160,7 @@ export default {
                   let timeOut = setTimeout( function tick() {
                     if (this.$refs && this.props.legends.length > 0 ) {    
                       clearTimeout(timeOut);
-                      this.createLineChart(this.props,this,sizeLine,time,united);
+                      this.createLineChart(this.props,this,sizeLine,time,united,metricsOpt);
                     }  else {
                       timeOut = setTimeout(tick.bind(this), 100); 
                     }
@@ -169,9 +172,10 @@ export default {
                 }
 
               } else {
-                this.createLineChart(this.props,this,sizeLine,time,united);
+                this.createLineChart(this.props,this,sizeLine,time,united,metricsOpt);
               }
-                                        
+                      
+              this.setMetrics();
                                         
             } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
               this.props.nodata = true;  // показываем сообщение о некорректности данных
@@ -188,7 +192,10 @@ export default {
 
   },
   methods: {
-    createLineChart: function (props,that,sizeLine,time,united) {  // создает график
+    setMetrics: function() {
+      this.$store.commit('setMetricsMulti', {metrics: this.props.metrics, idDash: this.idDash, id: this.id });
+    },
+    createLineChart: function (props,that,sizeLine,time,united,metricsOpt) {  // создает график
 
       let colors = [this.color.controls,this.color.text,this.color.controlsActive]; // основные используемые цвета
       let colorLine = this.colorLegends;
@@ -229,7 +236,8 @@ export default {
         if (i != 0) {
           return item
         }
-      });          
+      });  
+      
 
       if(metricsName.length == 0){ // если метрик вообще не найдено
         this.props.nodata = true;  // показываем сообщение о некорректности данных
@@ -355,6 +363,7 @@ export default {
 
       if (united){
 
+
         max = max.reduce(function(last, next) {   // находим максимальное значение среди всех метрик
           if (next > last){
             return next
@@ -478,7 +487,6 @@ export default {
           }
 
                             
-
           svg
             .append("g")
             .selectAll('dot')
@@ -607,6 +615,7 @@ export default {
           .call(brush);
 
       } else {
+
             
         let step = ((height-20)/metricsName.length).toFixed(5);
         let startY = 20;
@@ -614,6 +623,8 @@ export default {
         y = [];
         line = [];
         AllLinesWithBreak = [];
+
+
 
         // создаем tooltip
         let tooltip = 
@@ -646,6 +657,8 @@ export default {
         // линии отделяющие графики друг от друга
         metricsName.forEach( (metric,i) => {
 
+
+
           if (i != 0) {
             svg.append("g") 
               .append("line")
@@ -657,7 +670,17 @@ export default {
               .attr("opacity", "0.3");
           }
 
+
           otstupProcent = (10*max[i])/100;
+
+          
+
+          let metricOPt = {};
+          metricsOpt.forEach( item => {
+            if (item.name == metric) {
+              metricOPt = item;
+            }
+          })
 
 
           if (i == 0 ) {
@@ -670,16 +693,22 @@ export default {
             svg.append("g")
               .call(d3.axisLeft(y[i]).tickValues([max[i]]));
 
-            // создаем область выделения
-            brush = d3.brushX()                   // область выделения
-              .extent( [ [0,startY], [width,parseFloat(step)+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
-              .on("end", updateData )               // каждый раз как область выделения изменится вызовется функция
-            brush.id = i;
+            
+            if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
+              
+              // создаем область выделения
+              brush = d3.brushX()                   // область выделения
+                .extent( [ [0,startY], [width,parseFloat(step)+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
+                .on("end", updateData )               // каждый раз как область выделения изменится вызовется функция
+              brush.id = i;
+
+            }
             
 
             startY = parseFloat(step)+20;
             
           } else {
+            
             y.push(d3.scaleLinear()
               .domain([0, max[i]+otstupProcent])
               .range([ parseFloat(step*(i+1))+20, startY ]));
@@ -688,201 +717,260 @@ export default {
             svg.append("g")
               .call(d3.axisLeft(y[i]).tickValues([max[i]]));
 
-            // создаем область выделения
-            brush = d3.brushX()                   // область выделения
-              .extent( [ [0,startY], [width, parseFloat(step*(i+1))+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
-              .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
-            brush.id = i;
+            if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
+              
+              // создаем область выделения
+              brush = d3.brushX()                   // область выделения
+                .extent( [ [0,startY], [width, parseFloat(step*(i+1))+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
+                .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
+              brush.id = i;
+              
+            }
+
             startY = parseFloat(step*(i+1))+20;
 
 
           }
 
-          // строим основную линию
 
-          line.push(svg.append('g')  // основная линия графика
-            .attr("clip-path", `url(#clip-${that.id})`));
+          if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
+
+            // строим основную линию
+
+            line.push(svg.append('g')  // основная линия графика
+              .attr("clip-path", `url(#clip-${that.id})`));
 
 
-          let nullValue = -1;
-          let dotDate = null;
-          let linesWithBreak = [];
-          let onelinesWithBreak = [];
-          let mustSee = [];
-          let allDotHover = [];
-          if (extraDot.length > 0) {
-            extraDot.forEach( (item,j) => {
-              if (metric == item.column) {
-                nullValue = j
-              }
-            })
-          }
-
-                       
-
-          if(nullValue == -1) {
-
-            data.forEach( line => {
-              if (!Number(line[metric]) && line[metric] != 0) { 
-                onelinesWithBreak.length == 1 ? mustSee.push(onelinesWithBreak[0]) : false;
-                linesWithBreak.push(onelinesWithBreak);
-                onelinesWithBreak = [];
-              } else {
-                onelinesWithBreak.push(line);
-              }
-            })
-            onelinesWithBreak.length == 1 ? mustSee.push(onelinesWithBreak[0]) : false;
-            linesWithBreak.push(onelinesWithBreak);
-            AllLinesWithBreak.push(linesWithBreak);
-            linesWithBreak.forEach( (lineItself,j) => {
-                  
-              // Добовляем линию
-              line[i].append("path")
-                .datum(lineItself)
-                .attr("class", `line-${i}-${j}`)  // добовляем свой класс
-                .attr("fill", "none")
-                .attr("stroke", colorLine[i])
-                .attr("stroke-width", 1.5)
-                .attr("d", d3.line()
-                  .x(function(d) {return x(d[xMetric]*secondTransf) })
-                  .y(function(d) {return y[i](d[metric]) })
-                )
-            })
-                                
-                                
-            dotDate = data;
-
-          } else {
-            dotDate = [extraDot[nullValue]];
-          }
+            let nullValue = -1;
+            let dotDate = null;
+            let linesWithBreak = [];
+            let onelinesWithBreak = [];
+            let mustSee = [];
+            let allDotHover = [];
+            if (extraDot.length > 0) {
+              extraDot.forEach( (item,j) => {
+                if (metric == item.column) {
+                  nullValue = j
+                }
+              })
+            }
 
                         
 
-          svg
-            .append("g")
-            .selectAll('dot')
-            .data(dotDate)
-            .enter()
-            .append("circle")
-            .attr("cx", function(d) { return x(d[xMetric]*secondTransf) } )
-            .attr("cy", function(d) {  return y[i](d[metric])  } )
-            .attr("r", 5)
-            .attr("fill",colorLine[i])
-            .attr('metric',metric)
-            .style("opacity",function(d,j) {
-              let opacity = 0;
-              if (nullValue != -1) {
-                opacity =  1;
-              }
-              mustSee.forEach( item => {
-                if (item[metric] == d[metric]) {
+            if(nullValue == -1) {
+
+              data.forEach( line => {
+                if (!Number(line[metric]) && line[metric] != 0) { 
+                  onelinesWithBreak.length == 1 ? mustSee.push(onelinesWithBreak[0]) : false;
+                  linesWithBreak.push(onelinesWithBreak);
+                  onelinesWithBreak = [];
+                } else {
+                  onelinesWithBreak.push(line);
+                }
+              })
+              onelinesWithBreak.length == 1 ? mustSee.push(onelinesWithBreak[0]) : false;
+              linesWithBreak.push(onelinesWithBreak);
+              AllLinesWithBreak.push(linesWithBreak);
+              linesWithBreak.forEach( (lineItself,j) => {
+                    
+                // Добовляем линию
+                line[i].append("path")
+                  .datum(lineItself)
+                  .attr("class", `line-${i}-${j}`)  // добовляем свой класс
+                  .attr("fill", "none")
+                  .attr("stroke", colorLine[i])
+                  .attr("stroke-width", 1.5)
+                  .attr("d", d3.line()
+                    .x(function(d) {return x(d[xMetric]*secondTransf) })
+                    .y(function(d) {return y[i](d[metric]) })
+                  )
+              })
+                                  
+                                  
+              dotDate = data;
+
+            } else {
+              dotDate = [extraDot[nullValue]];
+            }
+
+                          
+
+            svg
+              .append("g")
+              .selectAll('dot')
+              .data(dotDate)
+              .enter()
+              .append("circle")
+              .attr("cx", function(d) { return x(d[xMetric]*secondTransf) } )
+              .attr("cy", function(d) {  return y[i](d[metric])  } )
+              .attr("r", 5)
+              .attr("fill",colorLine[i])
+              .attr('metric',metric)
+              .style("opacity",function(d,j) {
+                let opacity = 0;
+                if (nullValue != -1) {
                   opacity =  1;
                 }
-              })
-              if (j == data.length-1) { // если это последняя точка, то
-                opacity = 1;  // и постоянно ее отображаем
-                this.setAttribute('data-last-dote','true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
-                svg.append('text')   // текст легенды (название метрики)
-                  .attr('class','last-dot-text')
-                  .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y[i](d[metric])-10})`) 
-                  .attr('font-size', `0.7em`)
-                  .attr('text-anchor','end')
-                  .style('fill', that.colorFrom.text)
-                  .text(d[metric]);
-                
-              }
-              return opacity
-            })
-            .attr("class",`dot dot-${i}`)
-            .on('click', function(d) {return that.setClick({x: d[xMetric],y: d[metric]},'click')})
-            .on("mouseover", function(d) {
-              let xVal = d[xMetric]; 
-              if (time) {
-                xVal = new Date( d[xMetric]*secondTransf );
-                xVal = `${xVal.getDate()}-${xVal.getMonth()+1}-${xVal.getFullYear()}`;
-              }
-              let text =  '';
-              that.props.metrics.forEach( key => {
-                if (key == xMetric) {
-                  text += `<p><span>${key}</span> : ${xVal}</p>`;
-                } else {
-                  text += `<p><span>${key}</span> : ${d[key]}</p>`;
-                }
-              })
-              tooltip
-                .style("opacity","1")
-                .style("visibility","visible")
-                .html(text)
-                .style("top", (event.layerY-40)+"px")
-                .style("right","auto")
-                .style("left",(event.layerX+15)+"px");
-              if ((event.layerX+100) > width){
-                tooltip
-                  .style("left","auto")
-                  .style("right",(width - event.layerX+100)+"px");
-              }
-              if(event.layerY-40+toolTopBlock.offsetHeight > height) {
-                tooltip
-                  .style("top", (event.layerY-10-toolTopBlock.offsetHeight)+"px")
-              }
-              lineDot
-                .attr("opacity","0.7")
-                .attr("x1",  x(d[xMetric]*secondTransf) )
-                .attr("x2", x(d[xMetric]*secondTransf) )
-
-              allDotHover = svg.selectAll('circle').nodes().filter( dot => {
-                if(dot.classList.contains('dot')){
-                  if (dot.getAttribute('cx') == x(d[xMetric]*secondTransf) && dot['__data__'][dot.getAttribute('metric')] != null ) {
-                    dot.style="opacity:1";
-                    return dot
-                  }
-                  
-                }
-              });
-              
-              this.style="opacity:1"
-
-            })  // при наведении мышки точка появляется
-            .on("mouseout", function(d) {
-              let opacity = 1;
-              if (!this.getAttribute("data-last-dote")) {
-                if (nullValue == -1) {
-                  opacity = 0;
-                }
-                allDotHover.forEach( dot => {
-                  if (extraDot.indexOf(dot['__data__']) == -1) {
-                    dot.style=`opacity:0`;
+                mustSee.forEach( item => {
+                  if (item[metric] == d[metric]) {
+                    opacity =  1;
                   }
                 })
-              }
-            
-              mustSee.forEach( item => {
-                if (item[metric] == d[metric]) {
-                  opacity =  1;
+                if (j == data.length-1) { // если это последняя точка, то
+                  opacity = 1;  // и постоянно ее отображаем
+                  this.setAttribute('data-last-dote','true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
+                  svg.append('text')   // текст легенды (название метрики)
+                    .attr('class','last-dot-text')
+                    .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y[i](d[metric])-10})`) 
+                    .attr('font-size', `0.7em`)
+                    .attr('text-anchor','end')
+                    .style('fill', that.colorFrom.text)
+                    .text(d[metric]);
+                  
                 }
+                return opacity
               })
+              .attr("class",`dot dot-${i}`)
+              .on('click', function(d) {return that.setClick({x: d[xMetric],y: d[metric]},'click')})
+              .on("mouseover", function(d) {
+                let xVal = d[xMetric]; 
+                if (time) {
+                  xVal = new Date( d[xMetric]*secondTransf );
+                  xVal = `${xVal.getDate()}-${xVal.getMonth()+1}-${xVal.getFullYear()}`;
+                }
+                let text =  '';
+                that.props.metrics.forEach( key => {
+                  if (key == xMetric) {
+                    text += `<p><span>${key}</span> : ${xVal}</p>`;
+                  } else {
+                    text += `<p><span>${key}</span> : ${d[key]}</p>`;
+                  }
+                })
+                tooltip
+                  .style("opacity","1")
+                  .style("visibility","visible")
+                  .html(text)
+                  .style("top", (event.layerY-40)+"px")
+                  .style("right","auto")
+                  .style("left",(event.layerX+15)+"px");
+                if ((event.layerX+100) > width){
+                  tooltip
+                    .style("left","auto")
+                    .style("right",(width - event.layerX+100)+"px");
+                }
+                if(event.layerY-40+toolTopBlock.offsetHeight > height) {
+                  tooltip
+                    .style("top", (event.layerY-10-toolTopBlock.offsetHeight)+"px")
+                }
+                lineDot
+                  .attr("opacity","0.7")
+                  .attr("x1",  x(d[xMetric]*secondTransf) )
+                  .attr("x2", x(d[xMetric]*secondTransf) )
+
+                allDotHover = svg.selectAll('circle').nodes().filter( dot => {
+                  if(dot.classList.contains('dot')){
+                    if (dot.getAttribute('cx') == x(d[xMetric]*secondTransf) && dot['__data__'][dot.getAttribute('metric')] != null ) {
+                      dot.style="opacity:1";
+                      return dot
+                    }
+                    
+                  }
+                });
+                
+                this.style="opacity:1"
+
+              })  // при наведении мышки точка появляется
+              .on("mouseout", function(d) {
+                let opacity = 1;
+                if (!this.getAttribute("data-last-dote")) {
+                  if (nullValue == -1) {
+                    opacity = 0;
+                  }
+                  allDotHover.forEach( dot => {
+                    if (extraDot.indexOf(dot['__data__']) == -1) {
+                      dot.style=`opacity:0`;
+                    }
+                  })
+                }
               
-              this.style=`opacity:${opacity}`;
-              // }
-              tooltip
-                .style("opacity","0")
-                .style("visibility","hidden")
+                mustSee.forEach( item => {
+                  if (item[metric] == d[metric]) {
+                    opacity =  1;
+                  }
+                })
+                
+                this.style=`opacity:${opacity}`;
+                // }
+                tooltip
+                  .style("opacity","0")
+                  .style("visibility","hidden")
 
-              lineDot
-                .attr("opacity","0")
+                lineDot
+                  .attr("opacity","0")
 
 
-            })  // при уводе мышки исчезает, только если это не точка выходящяя порог
+              })  // при уводе мышки исчезает, только если это не точка выходящяя порог
 
 
-                        
-          // добовляем область выделения 
-          line[i]
-            .append("g")
-            .attr("class", `brush-${i}`)
-            .call(brush);
+                          
+            // добовляем область выделения 
+            line[i]
+              .append("g")
+              .attr("class", `brush-${i}`)
+              .call(brush);
+
+          } else if (Object.keys(metricOPt).length != 0 || metricOPt.type == 'Bar chart') {
+            line.push('Bar chart');  // добовляем в массив заглушку, чтобы собюсти порядок следования линий для линейных графиков
+                
+            // добавляем ось X 
+            let x = d3.scaleBand()
+              .range([ 0, width ])
+              .domain(data.map(function(d) {return d[xMetric]; }));
+              //.padding(0.2);
+                                            
+            //let ticks = data;
+
+            // if (data.length > 10) {
+            //   ticks = data.filter( (item,i) => {
+            //     if (i == 0 || i == data.length-1 || (i % (Math.round(data.length/9)) == 0)) {
+            //       return item
+            //     }
+            //   });
+            // }
+
+            svg.append("g")
+              .attr("transform", "translate(0," + startY + ")")
+              .call(d3.axisBottom(x))
+              .style('opacity','0');
+
+            // // добавляем ось Y
+            // let y = d3.scaleLinear()
+            //   .domain([0, max])
+            //   .range([ height, 0]);
+            // svg.append("g")
+            //   .call(d3.axisLeft(y));
+
+            // добовляем сами столбики
+            svg.selectAll(`bar-${i}`)
+              .data(data)
+              .enter()
+              .append("rect")
+              .attr("x", function(d) { return x(d[xMetric]); })
+              .attr("y", function(d) { return y[i](d[metricOPt.name]); })
+              .attr("width", x.bandwidth())
+              .attr("height", function(d) { return startY - y[i](d[metricOPt.name]); })
+              .attr("fill", colors[0]);
+
+
+          }
+
+
 
         })
+
+
+
+
 
 
                          

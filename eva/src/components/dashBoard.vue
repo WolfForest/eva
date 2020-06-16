@@ -305,6 +305,7 @@ export default {
         sizeTile: {},
         hideLoad: false,
         tooltip: {},
+        metricsMulti: [],
       }
     }
   },

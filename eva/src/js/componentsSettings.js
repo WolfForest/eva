@@ -89,7 +89,7 @@ export default {
   }, 
   options: {
     lineChart: ['visible','level','boxShadow'],
-    multiLine: ['visible','level','boxShadow','united'], 
+    multiLine: ['visible','level','boxShadow','united','metrics'], 
     barchart: ['visible','level','boxShadow'],
     table: ['visible','level','boxShadow','rowcolor','columncolor','cellcolor'],
     select: ['visible','level','boxShadow','multiple'],

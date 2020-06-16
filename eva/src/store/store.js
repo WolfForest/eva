@@ -613,7 +613,15 @@ export default {  // приблизительный объект хранили�
     //     controlsActive: '#FF6D70',
     //     border: '#00000033',
     // });
-    }
+    },
+    setMetricsMulti: (state,dash) => {
+      let metrics = [...[],...dash.metrics];
+      metrics.splice(0,1);
+      if (!state[dash.idDash][dash.id].metrics) {
+        state[dash.idDash][dash.id].metrics = [];
+      }
+      state[dash.idDash][dash.id].metrics = metrics;
+    },
   },
   actions: {
     
@@ -1273,7 +1281,15 @@ export default {  // приблизительный объект хранили�
         return rest.importDash(dash,restAuth) // отправляем в файл storeRest.js 
       }
     },
-       
+    getMetricsMulti: (state) => {
+      return (dash) => {
+        if (!state[dash.idDash][dash.id].metrics) {
+          state[dash.idDash][dash.id].metrics = [];
+        }
+        return state[dash.idDash][dash.id].metrics
+
+      }
+    },
   },
 }
 
