@@ -766,6 +766,12 @@ export default {
 
           }
 
+          // let cutData = data.filter( item => {
+          //     if (item[metric] >= minY && item[metric] <= maxY) {
+          //       return item
+          //     }
+          //   })
+
 
           if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
 
@@ -962,7 +968,7 @@ export default {
 
           } else if (Object.keys(metricOPt).length != 0 || metricOPt.type == 'Bar chart') {
             //line.push('Bar chart');  // добовляем в массив заглушку, чтобы собюсти порядок следования линий для линейных графиков
-
+            let allDotHover = [];
             line.push(svg.append('g')  // основная линия графика
               .attr("clip-path", `url(#clip-${that.id})`)
             );
@@ -1010,7 +1016,78 @@ export default {
               .attr("y", function(d) { return y[i](d[metricOPt.name]); })
               .attr("width", x.bandwidth())
               .attr("height", function(d) { return startY - y[i](d[metricOPt.name]); })
-              .attr("fill", colors[0]);
+              .attr("fill", colors[0])
+              .on('click', function(d) {return that.setClick({x: d[xMetric],y: d[metricOPt.name]},'click')})
+              .on("mouseover", function(d) {
+                let xVal = d[xMetric]; 
+                if (time) {
+                  xVal = new Date( d[xMetric]*secondTransf );
+                  xVal = `${xVal.getDate()}-${xVal.getMonth()+1}-${xVal.getFullYear()}`;
+                }
+                let text =  '';
+                that.props.metrics.forEach( key => {
+                  if (key == xMetric) {
+                    text += `<p><span>${key}</span> : ${xVal}</p>`;
+                  } else {
+                    text += `<p><span>${key}</span> : ${d[key]}</p>`;
+                  }
+                })
+                tooltip
+                  .style("opacity","1")
+                  .style("visibility","visible")
+                  .html(text)
+                  .style("top", (event.layerY-40)+"px")
+                  .style("right","auto")
+                  .style("left",(event.layerX+15)+"px");
+                if ((event.layerX+100) > width){
+                  tooltip
+                    .style("left","auto")
+                    .style("right",(width - event.layerX+100)+"px");
+                }
+                if(event.layerY-40+toolTopBlock.offsetHeight > height) {
+                  tooltip
+                    .style("top", (event.layerY-10-toolTopBlock.offsetHeight)+"px")
+                }
+                lineDot
+                  .attr("opacity","0.7")
+                  .attr("x1",  x(d[xMetric]*secondTransf))
+                  .attr("x2", x(d[xMetric]*secondTransf))
+
+                allDotHover = svg.selectAll('circle').nodes().filter( dot => {
+                  if(dot.classList.contains('dot')){
+                    if (dot['__data__'][xMetric] == d[xMetric]*secondTransf && dot['__data__'][dot.getAttribute('metric')] != null ) {
+                      dot.style="opacity:1";
+                      return dot
+                    }
+                    
+                  }
+                });
+
+              })  // при наведении мышки точка появляется
+              .on("mouseout", function() {
+                allDotHover.forEach( dot => {
+                  if (extraDot.indexOf(dot['__data__']) == -1) {
+                    dot.style=`opacity:0`;
+                  }
+                })
+              
+                // mustSee.forEach( item => {
+                //   if (item[metric] == d[metric]) {
+                //     opacity =  1;
+                //   }
+                // })
+                
+                //this.style=`opacity:${opacity}`;
+                // }
+                tooltip
+                  .style("opacity","0")
+                  .style("visibility","hidden")
+
+                lineDot
+                  .attr("opacity","0")
+
+
+              })  // при уводе мышки исчезает, только если это не точка выходящяя порог
 
 
           }
