@@ -931,7 +931,6 @@ export default {
             this.$set(this.tooltip,'links', [...[],...options[item].links]);
             this.$set(this.tooltip,'buttons',[...[],...options[item].buttons]);
           } else if (item == 'metrics') {
-            console.log(options[item])
             this.metrics = options[item];
           } else {
             this.$set(this.options,item,options[item]);

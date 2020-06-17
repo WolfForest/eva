@@ -177,7 +177,6 @@ export default {
               } else {
                 this.createLineChart(this.props,this,sizeLine,time,united,metricsOpt);
               }
-              console.log('fsdf')
                       
               this.setMetrics();
                                         
@@ -702,12 +701,18 @@ export default {
               minY = min[i];
               maxY = max[i];
             } else {
-              minY = metricOPt.lowborder;
-              maxY = metricOPt.upborder;
+              minY = parseFloat(metricOPt.lowborder);
+              maxY = parseFloat(metricOPt.upborder);
             }
           }
 
-          console.log('zashel')
+          // svg.append("defs").append("svg:clipPath")
+          //   .attr("id", `clip-${that.id}-${i}`)
+          //   .append("svg:rect")
+          //   .attr("width", width )
+          //   .attr("height", parseFloat(step)+20)
+          //   .attr("x", 0)
+          //   .attr("y", startY);
 
 
           if (i == 0 ) {
@@ -715,6 +720,8 @@ export default {
             y.push(d3.scaleLinear()
               .domain([minY, maxY+otstupProcent])
               .range([parseFloat(step)+20,startY  ]));
+
+            
 
             // добавляем ось Y
             svg.append("g")
@@ -782,11 +789,18 @@ export default {
               })
             }
 
+            let cutData = data.filter( item => {
+              if (item[metric] >= minY && item[metric] <= maxY) {
+                return item
+              }
+            })
+            //console.log(cutData)
+
                         
 
             if(nullValue == -1) {
 
-              data.forEach( line => {
+              cutData.forEach( line => {
                 if (!Number(line[metric]) && line[metric] != 0) { 
                   onelinesWithBreak.length == 1 ? mustSee.push(onelinesWithBreak[0]) : false;
                   linesWithBreak.push(onelinesWithBreak);
@@ -814,7 +828,7 @@ export default {
               })
                                   
                                   
-              dotDate = data;
+              dotDate = cutData;
 
             } else {
               dotDate = [extraDot[nullValue]];
@@ -947,7 +961,11 @@ export default {
               .call(brush);
 
           } else if (Object.keys(metricOPt).length != 0 || metricOPt.type == 'Bar chart') {
-            line.push('Bar chart');  // добовляем в массив заглушку, чтобы собюсти порядок следования линий для линейных графиков
+            //line.push('Bar chart');  // добовляем в массив заглушку, чтобы собюсти порядок следования линий для линейных графиков
+
+            line.push(svg.append('g')  // основная линия графика
+              .attr("clip-path", `url(#clip-${that.id})`)
+            );
                 
             // добавляем ось X 
             let x = d3.scaleBand()
@@ -977,9 +995,15 @@ export default {
             // svg.append("g")
             //   .call(d3.axisLeft(y));
 
+            let cutData = data.filter( item => {
+              if (item[metricOPt.name] >= minY && item[metricOPt.name] <= maxY) {
+                return item
+              }
+            })
+
             // добовляем сами столбики
-            svg.selectAll(`bar-${i}`)
-              .data(data)
+            line[i].selectAll(`bar-${i}`)
+              .data(cutData)
               .enter()
               .append("rect")
               .attr("x", function(d) { return x(d[xMetric]); })
