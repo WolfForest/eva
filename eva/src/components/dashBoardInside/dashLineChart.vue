@@ -507,7 +507,7 @@ export default {
       // добовляем область выделения 
       lineName[0]
         .append("g")
-        .attr("class", "brush")
+        .attr("class", `brush-${that.id}`)
         .call(brush);
 
       function verticalLine(d,item,i) {
@@ -523,6 +523,7 @@ export default {
           .attr("y1", 20)
           .attr("x2", x(d[xMetric]*secondTransf))
           .attr("y2", height)
+          .attr("xVal", d[xMetric]*secondTransf)
           .attr("stroke", colors[i+2])
           .style("opacity", "0.7")
 
@@ -530,6 +531,7 @@ export default {
           .append("circle")
           .attr("cx",  x(d[xMetric]*secondTransf) )
           .attr("cy", 20)
+          .attr("xVal", d[xMetric]*secondTransf)
           .attr("r", 5)
           .attr("opacity", "0.7")
           .attr("fill", colors[i+2])
@@ -632,7 +634,7 @@ export default {
       function zoom(extent) {  // функция делающяя зумирование графика
 
         x.domain([ x.invert(extent[0]), x.invert(extent[1]) ]);  // меняем значения оси х на основе нашего выделенного диапазона
-        lineName[0].select(".brush").call(brush.move, null);  // убираем область выделения
+        lineName[0].select(`.brush-${that.id}`).call(brush.move, null);  // убираем область выделения
 
         if (time) {
           xAxis.transition().duration(secondTransf)
@@ -691,13 +693,53 @@ export default {
               .x(function(d) { return x(d[xMetric]*secondTransf) })
               .y(function(d) { return y(d[metricsName[0]]) })
             )
+          let dotLabelPos = [];
+          let lastDotPos = null;
+
 
           svg  // все точки на графике
             .selectAll(".dot")
             .transition()
             .duration(dauration)
-            .attr("cx", function(d) { return x(d[xMetric]*secondTransf) } )
+            .attr("cx", function(d) { 
+              if (this.getAttribute('data-with-caption')){
+                dotLabelPos.push({x: x(d[xMetric]*secondTransf),y: y(d[metricsName[0]])});
+              }  
+              if (this.getAttribute('data-last-dote')){
+                lastDotPos = {x: x(d[xMetric]*secondTransf),y: y(d[metricsName[0]])};
+              }  
+              return x(d[xMetric]*secondTransf) } )
             .attr("cy", function(d) {  return y(d[metricsName[0]])  }  )
+
+          svg
+            .selectAll(".caption-dot-text")
+            .transition()
+            .duration(dauration) 
+            .attr('transform', function(d,i) {return `translate(${dotLabelPos[i].x},${dotLabelPos[i].y})`})
+          if (lastDotPos != null) {
+            svg
+              .select(".last-dot-text")
+              .transition()
+              .duration(dauration) 
+              .attr('transform', `translate(${lastDotPos.x},${lastDotPos.y})`)
+          }
+
+          let group = svg.selectAll(".vetical-line-group")
+
+          group
+            .selectAll(".vetical-line")
+            .transition()
+            .duration(dauration) 
+            .attr("x1", function() { return x(this.getAttribute("xVal")) } )
+            .attr("x2", function() { return  x(this.getAttribute("xVal")) } )
+
+          group
+            .selectAll(".dot-vertical")
+            .transition()
+            .duration(dauration) 
+            .attr("cx",  function() {  return x(this.getAttribute("xVal")) } )
+
+          
         
           if (metricsName[1]  &&  metricsName[2] ) {   // проверяем если коридор есть
 

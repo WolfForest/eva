@@ -5,10 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.36.15] [SNMNGC-223]
+## [1.36.16] [SNMNGC-223]
 ### Added
 
 - add new event on click open
+
+## [1.35.16] [coupleBugs]
+### Fixed
+
+- color in dark theme
+
+- color of chart same as color in legend
+
+- zoom change also dot label and line vertical
+
+- infinity loop - reason in call setMetricsMulti in computed getDataRest. made throw watcher
 
 ## [1.35.15] [linesOnChart]
 ### Added
