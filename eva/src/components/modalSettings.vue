@@ -435,6 +435,32 @@
             </div>
           </div>
           <div 
+            v-if="checkOptions('lastDot')"
+            class="option-item" 
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              lastDot
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Показывать последнее значение
+            </div>
+            <div class="status-option item">
+              <v-switch  
+                v-model="options.lastDot" 
+                class="switch" 
+                :color="color.controls" 
+                :style="{color:color.text,}"
+                :label="String(options.lastDot)" 
+              />
+            </div>
+          </div>
+          <div 
             v-if="checkOptions('united')"
             class="option-item" 
           >
@@ -460,6 +486,7 @@
               />
             </div>
           </div>
+         
           <v-card-text 
             v-if="!options.united && checkOptions('united')"
             class="headline" 
@@ -938,6 +965,9 @@ export default {
         } else {
           this.$set(this.options,item,null);
           if (item == 'united') {
+            this.$set(this.options,item,false);
+          }
+          if (item == 'lastDot') {
             this.$set(this.options,item,false);
           }
           if (item == 'multiple') {

@@ -145,6 +145,7 @@ export default {
               this.props.nodata = false; // то убираем соощение о отсутствии данных
               this.props.result = this.dataRest;  // заносим все данные в переменную
               let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
+              let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
               let metricsOpt = [];
               if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
                 metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
@@ -166,7 +167,7 @@ export default {
                   let timeOut = setTimeout( function tick() {
                     if (this.$refs && this.props.legends.length > 0 ) {    
                       clearTimeout(timeOut);
-                      this.createLineChart(this.props,this,sizeLine,time,united,metricsOpt);
+                      this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
                     }  else {
                       timeOut = setTimeout(tick.bind(this), 100); 
                     }
@@ -178,7 +179,7 @@ export default {
                 }
 
               } else {
-                this.createLineChart(this.props,this,sizeLine,time,united,metricsOpt);
+                this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
               }
                       
               this.setMetrics();
@@ -201,7 +202,7 @@ export default {
     setMetrics: function() {
       this.$store.commit('setMetricsMulti', {metrics: this.props.metrics, idDash: this.idDash, id: this.id });
     },
-    createLineChart: function (props,that,sizeLine,time,united,metricsOpt) {  // создает график
+    createLineChart: function (props,that,sizeLine,time,united,lastDot,metricsOpt) {  // создает график
 
       let colors = [this.color.controls,this.color.text,this.color.controlsActive]; // основные используемые цвета
       let colorLine = this.colorLegends;
@@ -237,9 +238,7 @@ export default {
       let extraDot = checkExtraDot(props.result);
 
       let metricsName = [...[],...that.props.metrics];  // массив из всех метрик что доступны на графике и в нужном нам порядке
-
-      
-      
+ 
 
       if(metricsName.length == 0){ // если метрик вообще не найдено
         this.props.nodata = true;  // показываем сообщение о некорректности данных
@@ -378,8 +377,10 @@ export default {
           }
         }, 0);
 
+        let otstupProcent = (10*max)/100;
+
         y = d3.scaleLinear()
-          .domain([0, max])
+          .domain([0, max+otstupProcent])
           .range([ height, 20 ]);
 
         // добавляем ось Y
@@ -514,18 +515,28 @@ export default {
                   opacity =  1
                 }
               })
-              if (j == data.length-1) { // если это последняя точка, то
-                opacity = 1;  // и постоянно ее отображаем
-                this.setAttribute('data-last-dote','true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
-                svg.append('text')   // текст легенды (название метрики)
-                  .attr('class','last-dot-text')
-                  .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y(d[metricsName[i]])-10})`) 
-                  .attr('font-size', `0.7em`)
-                  .attr('text-anchor','end')
-                  .style('fill', that.colorFrom.text)
-                  .text(d[metricsName[i]]);
-                
+              if (lastDot) {
+                if (j == data.length-1) { // если это последняя точка, то
+                  opacity = 1;  // и постоянно ее отображаем
+                  putLabelDot('data-last-dote','last-dot-text',d,y(d[metricsName[i]])-10,metricsName[i],this,that);
+                }
               }
+              if (d[`_${metricsName[i]}_caption`] && !this.getAttribute("data-last-dote")) {
+                opacity = 1;  // и постоянно ее отображаем
+                putLabelDot('data-with-caption','caption-dot-text',d,y(d[metricsName[i]])-10,`_${metricsName[i]}_caption`,this,that);
+              }
+              // if (j == data.length-1) { // если это последняя точка, то
+              //   opacity = 1;  // и постоянно ее отображаем
+              //   this.setAttribute('data-last-dote','true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
+              //   svg.append('text')   // текст легенды (название метрики)
+              //     .attr('class','last-dot-text')
+              //     .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y(d[metricsName[i]])-10})`) 
+              //     .attr('font-size', `0.7em`)
+              //     .attr('text-anchor','end')
+              //     .style('fill', that.colorFrom.text)
+              //     .text(d[metricsName[i]]);
+                
+              // }
               return opacity
             })
             .attr("class",`dot dot-${i}`)
@@ -593,7 +604,14 @@ export default {
                   if (extraDot.indexOf(dot['__data__']) == -1) {
                     dot.style=`opacity:0`;
                   }
+                  if (dot.getAttribute("data-with-caption")) {
+                    dot.style=`opacity:1`;
+                  }
                 })
+              }
+
+              if (this.getAttribute("data-with-caption")) { 
+                opacity = 1;
               }
 
               mustSee.forEach( item => {
@@ -871,13 +889,15 @@ export default {
                     opacity =  1;
                   }
                 })
-                if (j == data.length-1) { // если это последняя точка, то
-                  opacity = 1;  // и постоянно ее отображаем
-                  putLabelDot('data-last-dote','last-dot-text',i,d,metric,metric,this,that,10);
+                if (lastDot) {
+                  if (j == data.length-1) { // если это последняя точка, то
+                    opacity = 1;  // и постоянно ее отображаем
+                    putLabelDot('data-last-dote','last-dot-text',d,y[i](d[metric])-10,metric,this,that);
+                  }
                 }
                 if (d[`_${metric}_caption`] && !this.getAttribute("data-last-dote")) {
                   opacity = 1;  // и постоянно ее отображаем
-                  putLabelDot('data-with-caption','caption-dot-text',i,d,metric,`_${metric}_caption`,this,that,10);
+                  putLabelDot('data-with-caption','caption-dot-text',d,y[i](d[metric])-10,`_${metric}_caption`,this,that);
                 }
                 return opacity
               })
@@ -1032,13 +1052,15 @@ export default {
               .attr("y", function(d) { return y[i](d[metricOPt.name]); })
               .attr("width", x.bandwidth())
               .attr("height", function(d,j) { 
-                if (j == cutData.length - 1) {
-                  putLabelDot('data-last-bar','last-bar-text',i,d,metricOPt.name,metricOPt.name,this,that,5);
-                } else {
-                  if (d[`_${metricOPt.name}_caption`]) {
-                    putLabelDot('data-with-caption','caption-bar-text',i,d,metricOPt.name,`_${metricOPt.name}_caption`,this,that,5);
+                if (lastDot) {
+                  if (j == cutData.length - 1) {
+                    putLabelDot('data-last-bar','last-bar-text',d,y[i](d[metricOPt.name])-5,metricOPt.name,this,that,);
                   }
                 }
+                if (d[`_${metricOPt.name}_caption`]) {
+                  putLabelDot('data-with-caption','caption-bar-text',d,y[i](d[metricOPt.name])-5,`_${metricOPt.name}_caption`,this,that,);
+                }
+                
                 return startY - y[i](d[metricOPt.name]); 
                 
               })
@@ -1143,12 +1165,11 @@ export default {
       //   return name 
       // }
 
-      function putLabelDot (attr,classText,i,d,metric,metricText,dot,that,otstup) {
-
+      function putLabelDot (attr,classText,d,y,metricText,dot,that) {
         dot.setAttribute(attr,'true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
         svg.append('text')   // текст легенды (название метрики)
           .attr('class',classText)
-          .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y[i](d[metric])-otstup})`) 
+          .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y})`) 
           .attr('font-size', `0.7em`)
           .attr('text-anchor','end')
           .style('fill', that.colorFrom.text)

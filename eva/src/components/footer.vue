@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.32.15 [selectTypeAndBorderMulti]',
+      version: 'v 1.33.15 [labelDotChart]',
       color: { },
     } 
   },
