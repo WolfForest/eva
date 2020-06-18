@@ -424,18 +424,14 @@ export default {
             } 
           }
           if (i == data.length-1) { // если это последняя точка, то
-            this.setAttribute('fill',colors[0]); // красим точку в другой цвет
-            this.style="opacity:1"  // и постоянно ее отображаем
-            this.setAttribute('data-last-dote','true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
-            svg.append('text')   // текст легенды (название метрики)
-              .attr('class','last-dot-text')
-              .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y(d[metricsName[0]])-10})`) 
-              .attr('font-size', `0.7em`)
-              .attr('text-anchor','end')
-              .style('fill', colors[1])
-              .text(d[metricsName[0]]);
+            putLabelDot('data-last-dote','last-dot-text',d,metricsName[0],this);
             
           }
+          if (d[`_${metricsName[0]}_caption`] && !this.getAttribute("data-last-dote")) {
+            putLabelDot('data-with-caption','caption-dot-text',d,`_${metricsName[0]}_caption`,this);
+
+          }
+          
           return y(d[metricsName[0]]) 
         })
         .attr("r", 5)
@@ -463,7 +459,7 @@ export default {
           }
           this.style="opacity:1"})  // при наведении мышки точка появляется
         .on("mouseout", function() {
-          if (!this.getAttribute("data-anomaly") && !this.getAttribute("data-last-dote")){
+          if (!this.getAttribute("data-anomaly") && !this.getAttribute("data-last-dote") && !this.getAttribute("data-with-caption")){
             this.style="opacity:0"
           }
           tooltip
@@ -493,6 +489,19 @@ export default {
         .append("g")
         .attr("class", "brush")
         .call(brush);
+
+      function putLabelDot (attr,classText,d,metric,that) {
+        that.setAttribute('fill',colors[0]); // красим точку в другой цвет
+        that.style="opacity:1"  // и постоянно ее отображаем
+        that.setAttribute(attr,'true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
+        svg.append('text')   // текст легенды (название метрики)
+          .attr('class',classText)
+          .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y(d[metricsName[0]])-10})`) 
+          .attr('font-size', `0.7em`)
+          .attr('text-anchor','end')
+          .style('fill', colors[1])
+          .text(d[metric]);
+      }
 
                     
       function checkName(name) {  // функция которая проверяет не слишком ли длинное название и сокращает его
