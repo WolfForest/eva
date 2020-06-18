@@ -564,6 +564,7 @@
               <v-checkbox
                 v-model="metrics[i-1].manual"
                 :color="color.controls" 
+                :style="{color:color.text}"
                 class="item-metric checkbox"
                 label="Автоматически/Вручную"
                 hide-details

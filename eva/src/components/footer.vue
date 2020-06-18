@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.35.15 [linesOnChart]',
+      version: 'v 1.35.16 [coupleBugs]',
       color: { },
     } 
   },

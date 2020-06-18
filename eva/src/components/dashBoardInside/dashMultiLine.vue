@@ -1,7 +1,7 @@
 <template>
   <div 
     ref="lineChart"
-    class="multiLine-block" 
+    class="multiLine-block"
   >
     <div 
       v-if="props.nodata"
@@ -119,12 +119,25 @@ export default {
     height: function() {
       return this.heightFrom
     },
+    // metrics: function() {
+    //   if (this.props.metrics) {
+    //     let metrics = this.props.metrics.filter( (item,i) => {
+    //       if (i != 0) {
+    //         return item
+    //       }
+    //     })
+    //     this.setMetrics(metrics);
+    //   }
+    //   return true
+    // },
     getDataStart: function() {
+
+      
 
       let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
       sizeLine['width'] = this.width;
       sizeLine['height'] = this.height;
-      
+       console.log('asdasd')
 
       if (sizeLine.width > 0 && sizeLine.height > 0) {  // если размеры получены выше нуля
         
@@ -137,6 +150,7 @@ export default {
             let onlyNum = true;
             let key = Object.keys(this.dataRest[0])[0];
             typeof(this.dataRest[0][key]) != 'number' ? onlyNum = false : false
+
             if (onlyNum){  // если все-таки число
               if(this.dataRest[0][key] > 1000000000 && this.dataRest[0][key] < 2000000000) {
                 time = true;
@@ -150,9 +164,9 @@ export default {
               if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
                 metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
               }
-              
               if (this.props.legends.length == 0) {
                 this.props.metrics = [];
+                
                 let metricsName = Object.keys(this.props.result[0]).filter( item => {
                   if (item.indexOf('caption') == -1 && item.indexOf('annotation') == -1) {
                     return item
@@ -183,8 +197,14 @@ export default {
               } else {
                 this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
               }
+
+              let metrics = this.props.metrics.filter( (item,i) => {
+                if (i != 0) {
+                  return item
+                }
+              })
                       
-              this.setMetrics();
+              //this.setMetrics(metrics);
                                         
             } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
               this.props.nodata = true;  // показываем сообщение о некорректности данных
@@ -201,8 +221,8 @@ export default {
 
   },
   methods: {
-    setMetrics: function() {
-      this.$store.commit('setMetricsMulti', {metrics: this.props.metrics, idDash: this.idDash, id: this.id });
+    setMetrics: function(metrics) {
+      this.$store.commit('setMetricsMulti', {metrics: metrics, idDash: this.idDash, id: this.id });
     },
     createLineChart: function (props,that,sizeLine,time,united,lastDot,metricsOpt) {  // создает график
 
@@ -213,6 +233,8 @@ export default {
       if (screen.width <= 1600) {
         otstupBottom = 40;
       }
+
+     
              
 
       let otstupTop = this.$refs.legends.getBoundingClientRect().height;
@@ -321,6 +343,8 @@ export default {
           return item
         }
       })
+
+      
 
 
       if (time) {
@@ -526,12 +550,12 @@ export default {
               if (lastDot) {
                 if (j == data.length-1) { // если это последняя точка, то
                   opacity = 1;  // и постоянно ее отображаем
-                  putLabelDot('data-last-dote','last-dot-text',d,y(d[metricsName[i]])-10,metricsName[i],this,that);
+                  putLabelDot('data-last-dote',`last-dot-text-${metricsName[i]}`,d,y(d[metricsName[i]])-5,metricsName[i],this,that);
                 }
               }
               if (d[`_${metricsName[i]}_caption`] && !this.getAttribute("data-last-dote")) {
                 opacity = 1;  // и постоянно ее отображаем
-                putLabelDot('data-with-caption','caption-dot-text',d,y(d[metricsName[i]])-10,`_${metricsName[i]}_caption`,this,that);
+                putLabelDot('data-with-caption',`caption-dot-text-${metricsName[i]}`,d,y(d[metricsName[i]])-5,`_${metricsName[i]}_caption`,this,that);
               }
 
               if (annotation.length != 0) {
@@ -543,18 +567,6 @@ export default {
 
                 })
               }
-              // if (j == data.length-1) { // если это последняя точка, то
-              //   opacity = 1;  // и постоянно ее отображаем
-              //   this.setAttribute('data-last-dote','true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
-              //   svg.append('text')   // текст легенды (название метрики)
-              //     .attr('class','last-dot-text')
-              //     .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y(d[metricsName[i]])-10})`) 
-              //     .attr('font-size', `0.7em`)
-              //     .attr('text-anchor','end')
-              //     .style('fill', that.colorFrom.text)
-              //     .text(d[metricsName[i]]);
-                
-              // }
               return opacity
             })
             .attr("class",`dot dot-${i}`)
@@ -773,7 +785,6 @@ export default {
               .range([parseFloat(step)+20,startY  ]));
 
             
-
             // добавляем ось Y
             svg.append("g")
               .call(d3.axisLeft(y[i]).tickValues([maxY]));
@@ -926,12 +937,12 @@ export default {
                 if (lastDot) {
                   if (j == data.length-1) { // если это последняя точка, то
                     opacity = 1;  // и постоянно ее отображаем
-                    putLabelDot('data-last-dote','last-dot-text',d,y[i](d[metric])-10,metric,this,that);
+                    putLabelDot('data-last-dote',`last-dot-text-${metric}`,d,y[i](d[metric])-5,metric,this,that);
                   }
                 }
                 if (d[`_${metric}_caption`] && !this.getAttribute("data-last-dote")) {
                   opacity = 1;  // и постоянно ее отображаем
-                  putLabelDot('data-with-caption','caption-dot-text',d,y[i](d[metric])-10,`_${metric}_caption`,this,that);
+                  putLabelDot('data-with-caption',`caption-dot-text-${metric}`,d,y[i](d[metric])-5,`_${metric}_caption`,this,that);
                 }
                 return opacity
               })
@@ -1212,6 +1223,7 @@ export default {
           .attr("y1", 20)
           .attr("x2", x(d[xMetric]*secondTransf))
           .attr("y2", height)
+          .attr("xVal", d[xMetric]*secondTransf)
           .attr("stroke", colors[i])
           .style("opacity", "0.7")
 
@@ -1220,6 +1232,7 @@ export default {
           .attr("cx",  x(d[xMetric]*secondTransf) )
           .attr("cy", 20)
           .attr("r", 5)
+          .attr("xVal", d[xMetric]*secondTransf)
           .attr("opacity", "0.7")
           .attr("fill", colors[i])
           .attr("class","dot-vertical")
@@ -1248,7 +1261,7 @@ export default {
         dot.setAttribute(attr,'true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
         svg.append('text')   // текст легенды (название метрики)
           .attr('class',classText)
-          .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y})`) 
+          .attr('transform', `translate(${x(d[xMetric]*secondTransf)-5},${y})`) 
           .attr('font-size', `0.7em`)
           .attr('text-anchor','end')
           .style('fill', that.colorFrom.text)
@@ -1359,6 +1372,8 @@ export default {
 
         function changeZoom(dauration,i) {  // функция которая перерисовывает все линии
           let lineChange;
+          let dotLabelPos = [];
+          let lastDotPos = null;
           if (united) {
             lineChange = line;
           } else {
@@ -1384,8 +1399,52 @@ export default {
             .selectAll(`.dot-${i}`)
             .transition()
             .duration(dauration)
-            .attr("cx", function(d) { return x(d[xMetric]*secondTransf) } )
+            .attr("cx", function(d) { 
+              let yVal = null;
+              if (united) { 
+                yVal = y(d[metricsName[i]]);
+              } else {
+                yVal = y[i](d[metricsName[i]]);
+              }
+              if (this.getAttribute('data-with-caption')){
+                dotLabelPos.push({x: x(d[xMetric]*secondTransf),y: yVal});
+              }  
+              if (this.getAttribute('data-last-dote')){
+                lastDotPos = {x: x(d[xMetric]*secondTransf),y: yVal};
+              } 
+              return x(d[xMetric]*secondTransf) } )
             .attr("cy", function(d) { if (united) { return y(d[metricsName[i]]) } else { return y[i](d[metricsName[i]]) } }  )
+ 
+          svg
+            .selectAll(`.caption-dot-text-${metricsName[i]}`)
+            .transition()
+            .duration(dauration) 
+            .attr('transform', function(d,i) { return `translate(${dotLabelPos[i].x},${dotLabelPos[i].y})`})
+
+          if (lastDotPos != null) {
+            svg
+              .select(`.last-dot-text-${metricsName[i]}`)
+              .transition()
+              .duration(dauration) 
+              .attr('transform', `translate(${lastDotPos.x},${lastDotPos.y})`)
+          }
+
+          let group = svg.selectAll(".vetical-line-group")
+
+          group
+            .selectAll(".vetical-line")
+            .transition()
+            .duration(dauration) 
+            .attr("x1", function() { return x(this.getAttribute("xVal")) } )
+            .attr("x2", function() { return  x(this.getAttribute("xVal")) } )
+
+          group
+            .selectAll(".dot-vertical")
+            .transition()
+            .duration(dauration) 
+            .attr("cx",  function() {  return x(this.getAttribute("xVal")) } )
+          
+
         
         }
 
