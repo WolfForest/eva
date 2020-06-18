@@ -96,7 +96,7 @@ export default {
     picker: ['visible','level'],
     graph: ['visible','level','boxShadow'],
     single: ['visible','level','subnumber','color','boxShadow','fontSize'],
-    button: ['visible','level','color','backgroundcolor','name'],
+    button: ['visible','level','color','backgroundcolor','name','fontSize'],
     textarea: ['visible','level'],
     guntt: ['visible','level','timeFormat'],
     tile: ['visible','level','widthTile','heightTile'],

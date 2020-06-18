@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.33.15 [labelDotChart]',
+      version: 'v 1.34.15 [fontButton]',
       color: { },
     } 
   },

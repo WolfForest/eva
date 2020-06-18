@@ -7,7 +7,7 @@
   >
     <div 
       class="name" 
-      :style="{color:optionsData.colorText,height:`${height}px`,lineHeight:`${height-dataMode}px`,background:optionsData.background}"
+      :style="{color:optionsData.colorText,height:`${height}px`,fontSize:`${fontSize}px`,lineHeight:`${height-dataMode}px`,background:optionsData.background}"
     >
       {{ optionsData.name }}
     </div>
@@ -73,7 +73,15 @@ export default {
         this.optionsData.colorText = this.color.text;
       }
       return true
-    }
+    },
+    fontSize: function() {
+      let options = this.$store.getters.getOptions({idDash: this.idDash, id: this.id});
+      if(options.fontSize){
+        return options.fontSize.split('px')[0]
+      } else {
+        return '30'
+      }
+    },
   },  
   methods: {
     setClick: function() {
