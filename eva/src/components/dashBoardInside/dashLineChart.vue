@@ -127,7 +127,9 @@ export default {
   methods: {
     createLineChart: function (props,that,sizeLine,time) {  // создает график
 
-      let colors = [this.color.controls,this.color.text,this.color.controlsActive]; // основные используемые цвета
+      let colors = [this.color.controls,this.color.text,this.color.controlsActive,
+        '#660099','#3366FF','#e5194a','#fbbe18','#26295a','#228B22',
+      ]; // основные используемые цвета
   
       let otstupBottom = 60;
       if (screen.width <= 1600) {
@@ -256,7 +258,13 @@ export default {
       } 
       if ((width+ margin.left + margin.right) < 300) {
         deliter = 6;
-      }          
+      }    
+      
+      let annotation = Object.keys(data[0]).filter( item => {
+        if (item.indexOf('annotation') != -1) {
+          return item
+        }
+      })
 
 
 
@@ -429,8 +437,17 @@ export default {
           }
           if (d[`_${metricsName[0]}_caption`] && !this.getAttribute("data-last-dote")) {
             putLabelDot('data-with-caption','caption-dot-text',d,`_${metricsName[0]}_caption`,this);
-
           }
+          if (annotation.length != 0) {
+            
+            annotation.forEach( (item,i) => {
+              if (d[item]) {
+                verticalLine(d,item,i);
+              }
+
+            })
+          }
+
           
           return y(d[metricsName[0]]) 
         })
@@ -489,6 +506,51 @@ export default {
         .append("g")
         .attr("class", "brush")
         .call(brush);
+
+      function verticalLine(d,item,i) {
+        let group = svg
+          .append("g")
+          .attr("class","vetical-line-group");
+        
+
+        group
+          .append("line")
+          .attr("class","vetical-line")
+          .attr("x1", x(d[xMetric]*secondTransf))
+          .attr("y1", 20)
+          .attr("x2", x(d[xMetric]*secondTransf))
+          .attr("y2", height)
+          .attr("stroke", colors[i+2])
+          .style("opacity", "0.7")
+
+        group
+          .append("circle")
+          .attr("cx",  x(d[xMetric]*secondTransf) )
+          .attr("cy", 20)
+          .attr("r", 5)
+          .attr("opacity", "0.7")
+          .attr("fill", colors[i+2])
+          .attr("class","dot-vertical")
+          .on("mouseover", function() {
+            tooltip
+              .style("opacity","1")
+              .style("visibility","visible")
+              .html(`<p>${d[item]}</p>`)
+              .style("top", (event.layerY-30)+"px")
+              .style("right","auto")
+              .style("left",(event.layerX+20)+"px");
+            if ((event.layerX+100) > width){
+              tooltip
+                .style("left","auto")
+                .style("right",(width - event.layerX+110)+"px");
+            }
+          })  // при наведении мышки точка появляется
+          .on("mouseout", function() {
+            tooltip
+              .style("opacity","0")
+              .style("visibility","hidden")
+          }) 
+      }
 
       function putLabelDot (attr,classText,d,metric,that) {
         that.setAttribute('fill',colors[0]); // красим точку в другой цвет
