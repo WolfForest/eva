@@ -30,7 +30,8 @@ export default new VueRouter({
     },
     {
       path: '/dashboards/:id',  // если страница дашборда
-      component: require('../components/mainTitle.vue').default,  
+      component: require('../components/mainTitle.vue').default, 
+      props: true
     },
     {
       path: '/forms/',  // если страница форм

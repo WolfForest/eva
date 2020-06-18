@@ -580,16 +580,19 @@ export default {
     },
     changeOptions: function(mode) {
       let level = this.props.options.level;
+      let opacity = 1;
       if(mode) {
         this.props.differentOptions.visible = true;
       } else {
         if (!this.props.options.visible) {
           this.props.differentOptions.visible = false;
-          level = '-1';
+          opacity = 0;
         } else {
           this.props.differentOptions.visible = true;
+          opacity = 1;
         }
       }
+      this.$emit('SetOpacity',opacity);
       this.$emit('SetLevel',level);
     },
     checkFilter: function() {

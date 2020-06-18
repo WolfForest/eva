@@ -15,7 +15,7 @@
       <dash-panel-bord  
         :idDashFrom="idDash" 
         :colorFrom="color" 
-        :style="{top:top}" 
+        :style="{top:top, display:display}" 
         @changeMode="changeMode" 
         @openProfile="event => {openProfile = event}" 
         @openSettings="openSettings" 
@@ -132,6 +132,13 @@ export default {
     },
     theme: function() {
       return this.$store.getters.getTheme
+    },
+    display: function() {
+      if (this.$route.query.header === 'false'){
+        return 'none'
+      } else {
+        return 'flex'
+      }
     }
   },  
   watch: {

@@ -84,6 +84,20 @@ export default {
     },
   },  
   methods: {
+    actionOpen: function(targetLink, header ,widthPersent, heightPersent) {
+      //размер нового окна
+      const _width = screen.width*widthPersent;
+      const _height = screen.height*heightPersent;
+
+      //устанавливаем положение нового окна.
+      const _left = (screen.width - screen.width*widthPersent) / 2;
+      const _top = (screen.height - screen.height*heightPersent) / 3;
+      
+      //адрес перехода
+      const _link =`${window.location.origin}/dashboards/${targetLink}${header==='false'|| header==='0' ?'?header=false':''}`
+      window.open(_link, '', 'width=' + _width + ', height=' + _height + ', top=' + _top + ', left=' + _left);
+    },
+
     setClick: function() {
       let events = this.$store.getters.getEvents({idDash: this.idDash, event: 'onclick', element: this.id, partelement: 'empty'});
       if (events.length != 0) {
@@ -93,6 +107,8 @@ export default {
           } else if (item.action == 'go') {
             this.$store.commit('letEventGo', {event: item, idDash: this.idDash });
             this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
+          } else if (item.action.toLowerCase() === 'open'.toLowerCase()){//если экшен open
+            this.actionOpen(item.target.toLowerCase(), item.header, item.widthPersent, item.heightPersent)
           }
         })
       }

@@ -6,7 +6,7 @@
     :y="props.top"  
     :draggable="props.draggable" 
     :resizable="props.resizable" 
-    :style="{zIndex:props.zIndex, outlineColor: color.controlsActive, background: color.controlsActive }" 
+    :style="{zIndex:props.zIndex, outlineColor: color.controlsActive, background: color.controlsActive, opacity:opacity }" 
     @dragging="onDrag"
     @resizing="onResize" 
     @dragstop="dragStopped" 
@@ -23,7 +23,8 @@
       @resizeElem="resizeSwitch" 
       @SetLevel="props.zIndex = $event" 
       @sendMove="sendMove" 
-      @sendSize="sizeSwitch"  
+      @sendSize="sizeSwitch" 
+      @SetOpacity="changeOpacity($event)" 
     />
   </vue-draggable-resizable>
 </template>
@@ -41,6 +42,7 @@ export default {
   },
   data () {
     return {
+      opacity: 1,
       props: {
         draggable: false,
         resizable: false,
@@ -49,7 +51,7 @@ export default {
         top: 0,
         left: 0,
         vue_drag: false,
-        zIndex: 1,
+        zIndex: 1
       }
     }
   },
@@ -131,6 +133,9 @@ export default {
     },
     calcSizePx(size,key) {
       return `${((size*100)/screen[key]).toFixed(1)}%`
+    },
+    changeOpacity(event){
+      this.opacity = event;
     }
   },
   created() {

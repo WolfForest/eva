@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.35.15 [linesOnChart]',
+      version: 'v 1.36.15 [SNMNGC-223]',
       color: { },
     } 
   },
