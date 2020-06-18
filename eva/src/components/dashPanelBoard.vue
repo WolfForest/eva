@@ -1347,7 +1347,7 @@ export default {
                 this.$set(this.event,'widthPersent',doing[3]);
                 this.$set(this.event,'heightPersent',doing[4]);
 
-                this.$set(this.event,'visibleHeader',doing[5]);
+                this.$set(this.event,'header',doing[5]);
 
               }
               this.events.push(this.event);
