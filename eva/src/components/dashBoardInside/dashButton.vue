@@ -76,21 +76,22 @@ export default {
     }
   },  
   methods: {
-    actionOpen: function() {
+    actionOpen: function(targetLink, widthPersent, heightPersent) {
       //размер нового окна
-      const _width = screen.width*0.7;
-      const _height = screen.height*0.6;
+      const _width = screen.width*widthPersent;
+      const _height = screen.height*heightPersent;
 
       //устанавливаем положение нового окна.
-      const _left = (screen.width - screen.width*0.7) / 2;
-      const _top = (screen.height - screen.height*0.6) / 3;
+      const _left = (screen.width - screen.width*widthPersent) / 2;
+      const _top = (screen.height - screen.height*heightPersent) / 3;
       
-      //открываем этот же адрес в браузерном попапе
-      window.open(window.location.href, '', 'width=' + _width + ', height=' + _height + ', top=' + _top + ', left=' + _left);
+      //адрес перехода
+      const _link =``
+      //window.location.href
+      window.open(_link, '', 'width=' + _width + ', height=' + _height + ', top=' + _top + ', left=' + _left);
     },
 
     setClick: function() {
-      this.actionOpen()
       let events = this.$store.getters.getEvents({idDash: this.idDash, event: 'onclick', element: this.id, partelement: 'empty'});
       if (events.length != 0) {
         events.forEach( item => {
@@ -99,8 +100,8 @@ export default {
           } else if (item.action == 'go') {
             this.$store.commit('letEventGo', {event: item, idDash: this.idDash });
             this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
-          } else if (item.action.toLowerCase() === 'open'.toLowerCase()){//если акшен modal
-        
+          } else if (item.action.toLowerCase() === 'open'.toLowerCase()){//если экшен modal
+            console.log(item)
           }
         })
       }
