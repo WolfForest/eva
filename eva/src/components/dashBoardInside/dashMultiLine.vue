@@ -67,6 +67,7 @@ export default {
   },
   data () {
     return {
+      metrics: [],
       props: {
         id: '',
         result: [],
@@ -86,7 +87,6 @@ export default {
           },
         ],
         legends: [],
-        metrics: [],
       }
     }
   },
@@ -137,7 +137,6 @@ export default {
       let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
       sizeLine['width'] = this.width;
       sizeLine['height'] = this.height;
-       console.log('asdasd')
 
       if (sizeLine.width > 0 && sizeLine.height > 0) {  // если размеры получены выше нуля
         
@@ -165,7 +164,7 @@ export default {
                 metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
               }
               if (this.props.legends.length == 0) {
-                this.props.metrics = [];
+                this.metrics = [];
                 
                 let metricsName = Object.keys(this.props.result[0]).filter( item => {
                   if (item.indexOf('caption') == -1 && item.indexOf('annotation') == -1) {
@@ -174,7 +173,7 @@ export default {
                 }); 
                                           
                 if (metricsName.length > 0) {
-                  this.props.metrics = [...[],...metricsName];
+                  this.metrics = [...[],...metricsName];
                   metricsName.splice(0,1)
 
                               
@@ -198,14 +197,6 @@ export default {
                 this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
               }
 
-              let metrics = this.props.metrics.filter( (item,i) => {
-                if (i != 0) {
-                  return item
-                }
-              })
-                      
-              //this.setMetrics(metrics);
-                                        
             } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
               this.props.nodata = true;  // показываем сообщение о некорректности данных
               this.props.result = [];  // очищаем массив результатов
@@ -220,9 +211,14 @@ export default {
     }
 
   },
+  watch: {
+    metrics: function() {
+      this.setMetrics();
+    }
+  },
   methods: {
-    setMetrics: function(metrics) {
-      this.$store.commit('setMetricsMulti', {metrics: metrics, idDash: this.idDash, id: this.id });
+    setMetrics: function() {
+      this.$store.commit('setMetricsMulti', {metrics: this.metrics, idDash: this.idDash, id: this.id });
     },
     createLineChart: function (props,that,sizeLine,time,united,lastDot,metricsOpt) {  // создает график
 
@@ -261,7 +257,7 @@ export default {
 
       let extraDot = checkExtraDot(props.result);
 
-      let metricsName = [...[],...that.props.metrics];  // массив из всех метрик что доступны на графике и в нужном нам порядке
+      let metricsName = [...[],...that.metrics];  // массив из всех метрик что доступны на графике и в нужном нам порядке
       metricsName.splice(0,1);
 
       if(metricsName.length == 0){ // если метрик вообще не найдено
@@ -955,7 +951,7 @@ export default {
                   xVal = `${xVal.getDate()}-${xVal.getMonth()+1}-${xVal.getFullYear()}`;
                 }
                 let text =  '';
-                that.props.metrics.forEach( key => {
+                that.metrics.forEach( key => {
                   if (key == xMetric) {
                     text += `<p><span>${key}</span> : ${xVal}</p>`;
                   } else {
@@ -1118,7 +1114,7 @@ export default {
                   xVal = `${xVal.getDate()}-${xVal.getMonth()+1}-${xVal.getFullYear()}`;
                 }
                 let text =  '';
-                that.props.metrics.forEach( key => {
+                that.metrics.forEach( key => {
                   if (key == xMetric) {
                     text += `<p><span>${key}</span> : ${xVal}</p>`;
                   } else {

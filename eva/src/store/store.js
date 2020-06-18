@@ -615,13 +615,14 @@ export default {  // приблизительный объект хранили�
     // });
     },
     setMetricsMulti: (state,dash) => {
-      //let metrics = [...[],...dash.metrics];
-      //console.log(dash.metrics)
+      let metrics = [...[],...dash.metrics];
+      metrics.splice(0,1);
+      //console.log(dash.idDash,dash.id)
       if (!state[dash.idDash][dash.id].metrics) {
         state[dash.idDash][dash.id].metrics = [];
       }
       //Vue.set(state[dash.idDash][dash.id], 'metrics',[]);
-      state[dash.idDash][dash.id].metrics = dash.metrics;
+      state[dash.idDash][dash.id].metrics = metrics;
     },
   },
   actions: {

@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - zoom change also dot label and line vertical
 
+- infinity loop - reason in call setMetricsMulti in computed getDataRest. made throw watcher
+
 ## [1.35.15] [linesOnChart]
 ### Added
 
