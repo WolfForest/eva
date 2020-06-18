@@ -1415,14 +1415,14 @@ export default {
             .selectAll(`.caption-dot-text-${metricsName[i]}`)
             .transition()
             .duration(dauration) 
-            .attr('transform', function(d,i) { return `translate(${dotLabelPos[i].x},${dotLabelPos[i].y})`})
+            .attr('transform', function(d,i) { return `translate(${dotLabelPos[i].x-5},${dotLabelPos[i].y-5})`})
 
           if (lastDotPos != null) {
             svg
               .select(`.last-dot-text-${metricsName[i]}`)
               .transition()
               .duration(dauration) 
-              .attr('transform', `translate(${lastDotPos.x},${lastDotPos.y})`)
+              .attr('transform', `translate(${lastDotPos.x-5},${lastDotPos.y-5})`)
           }
 
           let group = svg.selectAll(".vetical-line-group")
