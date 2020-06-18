@@ -31,11 +31,7 @@ export default new VueRouter({
     {
       path: '/dashboards/:id',  // если страница дашборда
       component: require('../components/mainTitle.vue').default, 
-      children: [
-        {
-          path: ":header"//если здесь false то скрываем header
-        }
-      ] 
+      props: true
     },
     {
       path: '/forms/',  // если страница форм

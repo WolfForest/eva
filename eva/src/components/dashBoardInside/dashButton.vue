@@ -86,7 +86,7 @@ export default {
       const _top = (screen.height - screen.height*heightPersent) / 3;
       
       //адрес перехода
-      const _link =`${window.location.origin}/dashboards/${targetLink}${header==='false'|| header==='0' ?'/false':''}`
+      const _link =`${window.location.origin}/dashboards/${targetLink}${header==='false'|| header==='0' ?'?header=false':''}`
       window.open(_link, '', 'width=' + _width + ', height=' + _height + ', top=' + _top + ', left=' + _left);
     },
 
@@ -100,7 +100,6 @@ export default {
             this.$store.commit('letEventGo', {event: item, idDash: this.idDash });
             this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
           } else if (item.action.toLowerCase() === 'open'.toLowerCase()){//если экшен open
-            console.log(item.header)
             this.actionOpen(item.target.toLowerCase(), item.header, item.widthPersent, item.heightPersent)
           }
         })
