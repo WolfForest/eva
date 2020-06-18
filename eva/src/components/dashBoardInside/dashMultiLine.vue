@@ -754,12 +754,21 @@ export default {
             if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
               
               // создаем область выделения
+              // brush = d3.brushX()                   // область выделения
+              //   .extent( [ [0,startY], [width, parseFloat(step*(i+1))+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
+              //   .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
+              // brush.id = i;
+
               brush = d3.brushX()                   // область выделения
                 .extent( [ [0,startY], [width, parseFloat(step*(i+1))+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
                 .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
               brush.id = i;
+
+              
+
               
             }
+            //console.log(brush)
 
             startY = parseFloat(step*(i+1))+20;
 
@@ -817,7 +826,7 @@ export default {
               })
               onelinesWithBreak.length == 1 ? mustSee.push(onelinesWithBreak[0]) : false;
               linesWithBreak.push(onelinesWithBreak);
-              AllLinesWithBreak.push(linesWithBreak);
+              AllLinesWithBreak[i] = (linesWithBreak);
               linesWithBreak.forEach( (lineItself,j) => {
                     
                 // Добовляем линию
@@ -1221,6 +1230,7 @@ export default {
           } else {
             lineChange = line[i];
           }
+          
 
           if (AllLinesWithBreak[i]) {
 

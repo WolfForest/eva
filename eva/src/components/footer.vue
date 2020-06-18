@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.31.15 [invisibleSelect]',
+      version: 'v 1.32.15 [selectTypeAndBorderMulti]',
       color: { },
     } 
   },

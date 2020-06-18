@@ -1335,7 +1335,8 @@ export default {
                 doing = doing[1].slice(0, doing[1].length-1).split(',');
                 this.$set(this.event,'target',doing[0]);
                 this.$set(this.event,'prop',[doing[1]]);
-                this.$set(this.event,'value',[doing[2]]);  
+                this.$set(this.event,'value',[doing[2]]); 
+                 
               }
               this.events.push(this.event);
               this.event ={};
