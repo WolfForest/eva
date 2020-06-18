@@ -88,7 +88,7 @@ export default {
     csvg: mdiBrush,
   }, 
   options: {
-    lineChart: ['visible','level','boxShadow'],
+    lineChart: ['visible','level','boxShadow','lastDot'],
     multiLine: ['visible','level','boxShadow','united','lastDot','metrics'], 
     barchart: ['visible','level','boxShadow'],
     table: ['visible','level','boxShadow','rowcolor','columncolor','cellcolor'],

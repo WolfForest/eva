@@ -616,6 +616,7 @@ export default {  // приблизительный объект хранили�
     },
     setMetricsMulti: (state,dash) => {
       let metrics = [...[],...dash.metrics];
+      metrics.splice(0,1);
       if (!state[dash.idDash][dash.id].metrics) {
         state[dash.idDash][dash.id].metrics = [];
       }

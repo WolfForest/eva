@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.34.15 [fontButton]',
+      version: 'v 1.35.15 [linesOnChart]',
       color: { },
     } 
   },

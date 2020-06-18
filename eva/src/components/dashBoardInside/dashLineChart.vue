@@ -104,6 +104,7 @@ export default {
             let time = false;
             let onlyNum = true;
             let key = Object.keys(this.dataRest[0])[0];
+            let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
             typeof(this.dataRest[0][key]) != 'number' ? onlyNum = false : false
             if (onlyNum){  // если все-таки число
               if(this.dataRest[0][key] > 1000000000 && this.dataRest[0][key] < 2000000000) {
@@ -111,7 +112,7 @@ export default {
               }
               this.props.nodata = false; // то убираем соощение о отсутствии данных
               this.props.result = this.dataRest;  // заносим все данные в переменную
-              this.createLineChart(this.props,this,sizeLine,time); // и собственно создаем график
+              this.createLineChart(this.props,this,sizeLine,time,lastDot); // и собственно создаем график
             } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
               this.props.nodata = true;  // показываем сообщение о некорректности данных
               this.props.result = [];  // очищаем массив результатов
@@ -125,7 +126,7 @@ export default {
     }
   },
   methods: {
-    createLineChart: function (props,that,sizeLine,time) {  // создает график
+    createLineChart: function (props,that,sizeLine,time,lastDot) {  // создает график
 
       let colors = [this.color.controls,this.color.text,this.color.controlsActive,
         '#660099','#3366FF','#e5194a','#fbbe18','#26295a','#228B22',
@@ -431,10 +432,12 @@ export default {
               this.setAttribute('data-anomaly','true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
             } 
           }
-          if (i == data.length-1) { // если это последняя точка, то
-            putLabelDot('data-last-dote','last-dot-text',d,metricsName[0],this);
-            
+          if (lastDot) {
+            if (i == data.length-1) { // если это последняя точка, то
+              putLabelDot('data-last-dote','last-dot-text',d,metricsName[0],this);
+            }
           }
+          
           if (d[`_${metricsName[0]}_caption`] && !this.getAttribute("data-last-dote")) {
             putLabelDot('data-with-caption','caption-dot-text',d,`_${metricsName[0]}_caption`,this);
           }

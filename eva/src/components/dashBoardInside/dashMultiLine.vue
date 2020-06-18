@@ -153,14 +153,16 @@ export default {
               
               if (this.props.legends.length == 0) {
                 this.props.metrics = [];
-                let metricsName = Object.keys(this.props.result[0]).filter( (item,i) => {
-                  if (i != 0 && item.indexOf('caption') == -1) {
+                let metricsName = Object.keys(this.props.result[0]).filter( item => {
+                  if (item.indexOf('caption') == -1 && item.indexOf('annotation') == -1) {
                     return item
                   }
                 }); 
                                           
                 if (metricsName.length > 0) {
                   this.props.metrics = [...[],...metricsName];
+                  metricsName.splice(0,1)
+
                               
                   this.createLegends(metricsName);
 
@@ -204,7 +206,7 @@ export default {
     },
     createLineChart: function (props,that,sizeLine,time,united,lastDot,metricsOpt) {  // создает график
 
-      let colors = [this.color.controls,this.color.text,this.color.controlsActive]; // основные используемые цвета
+      let colors = [this.color.controls,this.color.text,this.color.controlsActive,'#660099','#3366FF','#e5194a',]; // основные используемые цвета
       let colorLine = this.colorLegends;
   
       let otstupBottom = 50;
@@ -238,7 +240,7 @@ export default {
       let extraDot = checkExtraDot(props.result);
 
       let metricsName = [...[],...that.props.metrics];  // массив из всех метрик что доступны на графике и в нужном нам порядке
- 
+      metricsName.splice(0,1);
 
       if(metricsName.length == 0){ // если метрик вообще не найдено
         this.props.nodata = true;  // показываем сообщение о некорректности данных
@@ -313,6 +315,12 @@ export default {
       if ((width+ margin.left + margin.right) < 250) {
         deliter = 6;
       } 
+
+      let annotation = Object.keys(data[0]).filter( item => {
+        if (item.indexOf('annotation') != -1) {
+          return item
+        }
+      })
 
 
       if (time) {
@@ -525,6 +533,16 @@ export default {
                 opacity = 1;  // и постоянно ее отображаем
                 putLabelDot('data-with-caption','caption-dot-text',d,y(d[metricsName[i]])-10,`_${metricsName[i]}_caption`,this,that);
               }
+
+              if (annotation.length != 0) {
+                annotation.forEach( (item,i) => {
+                  if (d[item]) {
+                    verticalLine(d,item,metricsName.length+1+i,tooltip);
+                    
+                  }
+
+                })
+              }
               // if (j == data.length-1) { // если это последняя точка, то
               //   opacity = 1;  // и постоянно ее отображаем
               //   this.setAttribute('data-last-dote','true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
@@ -552,7 +570,10 @@ export default {
                 if (key == xMetric) {
                   text += `<p><span>${key}</span> : ${xVal}</p>`;
                 } else {
-                  text += `<p><span>${key}</span> : ${d[key]}</p>`;
+                  if (key.indexOf('annotation') == -1) {
+                    text += `<p><span>${key}</span> : ${d[key]}</p>`;
+                  }
+                  
                 }
               })
               tooltip
@@ -675,6 +696,19 @@ export default {
           .attr("stroke", that.colorFrom.text)
           .style("stroke-dasharray", "3 3") 
           .attr("opacity", "0");
+
+        // создаем вертикальные линии
+
+        if (annotation.length != 0) {
+          annotation.forEach( (item,i) => {
+            data.forEach( d => {
+              if (d[item]) {
+                verticalLine(d,item,metricsName.length+1+i,tooltip);
+              }
+            })
+            
+          })
+        }
 
 
 
@@ -1064,7 +1098,7 @@ export default {
                 return startY - y[i](d[metricOPt.name]); 
                 
               })
-              .attr("fill", colors[0])
+              .attr("fill", this.colorLegends[i])
               .on('click', function(d) {return that.setClick({x: d[xMetric],y: d[metricOPt.name]},'click')})
               .on("mouseover", function(d) {
                 let xVal = d[xMetric]; 
@@ -1164,6 +1198,51 @@ export default {
       //   }
       //   return name 
       // }
+
+      function verticalLine(d,item,i,tooltip) {
+        let group = svg
+          .append("g")
+          .attr("class","vetical-line-group");
+        
+
+        group
+          .append("line")
+          .attr("class","vetical-line")
+          .attr("x1", x(d[xMetric]*secondTransf))
+          .attr("y1", 20)
+          .attr("x2", x(d[xMetric]*secondTransf))
+          .attr("y2", height)
+          .attr("stroke", colors[i])
+          .style("opacity", "0.7")
+
+        group
+          .append("circle")
+          .attr("cx",  x(d[xMetric]*secondTransf) )
+          .attr("cy", 20)
+          .attr("r", 5)
+          .attr("opacity", "0.7")
+          .attr("fill", colors[i])
+          .attr("class","dot-vertical")
+          .on("mouseover", function() {
+            tooltip
+              .style("opacity","1")
+              .style("visibility","visible")
+              .html(`<p>${d[item]}</p>`)
+              .style("top", (event.layerY-30)+"px")
+              .style("right","auto")
+              .style("left",(event.layerX+20)+"px");
+            if ((event.layerX+100) > width){
+              tooltip
+                .style("left","auto")
+                .style("right",(width - event.layerX+110)+"px");
+            }
+          })  // при наведении мышки точка появляется
+          .on("mouseout", function() {
+            tooltip
+              .style("opacity","0")
+              .style("visibility","hidden")
+          }) 
+      }
 
       function putLabelDot (attr,classText,d,y,metricText,dot,that) {
         dot.setAttribute(attr,'true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
