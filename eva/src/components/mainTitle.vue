@@ -137,7 +137,7 @@ export default {
       if (this.$route.query.header === 'false'){
         return 'none'
       } else {
-        return 'block'
+        return 'flex'
       }
     }
   },  
