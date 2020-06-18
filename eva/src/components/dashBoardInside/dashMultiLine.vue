@@ -152,11 +152,14 @@ export default {
               
               if (this.props.legends.length == 0) {
                 this.props.metrics = [];
-                let metricsName = Object.keys(this.props.result[0]);
+                let metricsName = Object.keys(this.props.result[0]).filter( (item,i) => {
+                  if (i != 0 && item.indexOf('caption') == -1) {
+                    return item
+                  }
+                }); 
                                           
                 if (metricsName.length > 0) {
                   this.props.metrics = [...[],...metricsName];
-                  metricsName.splice(0, 1)
                               
                   this.createLegends(metricsName);
 
@@ -233,13 +236,9 @@ export default {
 
       let extraDot = checkExtraDot(props.result);
 
-      let metricsName = [];  // массив из всех метрик что доступны на графике и в нужном нам порядке
+      let metricsName = [...[],...that.props.metrics];  // массив из всех метрик что доступны на графике и в нужном нам порядке
 
-      metricsName = Object.keys(data[0]).filter( (item,i) => {
-        if (i != 0) {
-          return item
-        }
-      });  
+      
       
 
       if(metricsName.length == 0){ // если метрик вообще не найдено
@@ -874,15 +873,11 @@ export default {
                 })
                 if (j == data.length-1) { // если это последняя точка, то
                   opacity = 1;  // и постоянно ее отображаем
-                  this.setAttribute('data-last-dote','true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
-                  svg.append('text')   // текст легенды (название метрики)
-                    .attr('class','last-dot-text')
-                    .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y[i](d[metric])-10})`) 
-                    .attr('font-size', `0.7em`)
-                    .attr('text-anchor','end')
-                    .style('fill', that.colorFrom.text)
-                    .text(d[metric]);
-                  
+                  putLabelDot('data-last-dote','last-dot-text',i,d,metric,metric,this,that,10);
+                }
+                if (d[`_${metric}_caption`] && !this.getAttribute("data-last-dote")) {
+                  opacity = 1;  // и постоянно ее отображаем
+                  putLabelDot('data-with-caption','caption-dot-text',i,d,metric,`_${metric}_caption`,this,that,10);
                 }
                 return opacity
               })
@@ -938,16 +933,26 @@ export default {
               })  // при наведении мышки точка появляется
               .on("mouseout", function(d) {
                 let opacity = 1;
-                if (!this.getAttribute("data-last-dote")) {
+                if (!this.getAttribute("data-last-dote") ) {
                   if (nullValue == -1) {
                     opacity = 0;
                   }
                   allDotHover.forEach( dot => {
+                    
                     if (extraDot.indexOf(dot['__data__']) == -1) {
                       dot.style=`opacity:0`;
                     }
+                    if (dot.getAttribute("data-with-caption")) {
+                      dot.style=`opacity:1`;
+                    }
                   })
                 }
+                if (this.getAttribute("data-with-caption")) { 
+                  opacity = 1;
+                }
+
+
+
               
                 mustSee.forEach( item => {
                   if (item[metric] == d[metric]) {
@@ -1016,6 +1021,8 @@ export default {
               }
             })
 
+      
+
             // добовляем сами столбики
             line[i].selectAll(`bar-${i}`)
               .data(cutData)
@@ -1024,7 +1031,17 @@ export default {
               .attr("x", function(d) { return x(d[xMetric]); })
               .attr("y", function(d) { return y[i](d[metricOPt.name]); })
               .attr("width", x.bandwidth())
-              .attr("height", function(d) { return startY - y[i](d[metricOPt.name]); })
+              .attr("height", function(d,j) { 
+                if (j == cutData.length - 1) {
+                  putLabelDot('data-last-bar','last-bar-text',i,d,metricOPt.name,metricOPt.name,this,that,5);
+                } else {
+                  if (d[`_${metricOPt.name}_caption`]) {
+                    putLabelDot('data-with-caption','caption-bar-text',i,d,metricOPt.name,`_${metricOPt.name}_caption`,this,that,5);
+                  }
+                }
+                return startY - y[i](d[metricOPt.name]); 
+                
+              })
               .attr("fill", colors[0])
               .on('click', function(d) {return that.setClick({x: d[xMetric],y: d[metricOPt.name]},'click')})
               .on("mouseover", function(d) {
@@ -1074,11 +1091,16 @@ export default {
 
               })  // при наведении мышки точка появляется
               .on("mouseout", function() {
-                allDotHover.forEach( dot => {
-                  if (extraDot.indexOf(dot['__data__']) == -1) {
-                    dot.style=`opacity:0`;
-                  }
-                })
+                if (!this.getAttribute("data-last-bar") ) {
+                  allDotHover.forEach( dot => {
+                    if (extraDot.indexOf(dot['__data__']) == -1) {
+                      dot.style=`opacity:0`;
+                    }
+                    if (dot.getAttribute("data-with-caption")) {
+                      dot.style=`opacity:1`;
+                    }
+                  })
+                }
               
                 // mustSee.forEach( item => {
                 //   if (item[metric] == d[metric]) {
@@ -1120,6 +1142,18 @@ export default {
       //   }
       //   return name 
       // }
+
+      function putLabelDot (attr,classText,i,d,metric,metricText,dot,that,otstup) {
+
+        dot.setAttribute(attr,'true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
+        svg.append('text')   // текст легенды (название метрики)
+          .attr('class',classText)
+          .attr('transform', `translate(${x(d[xMetric]*secondTransf)},${y[i](d[metric])-otstup})`) 
+          .attr('font-size', `0.7em`)
+          .attr('text-anchor','end')
+          .style('fill', that.colorFrom.text)
+          .text(d[metricText]);
+      }
 
                  
       function updateData () {  // функция которая вызывается каждый раз, когда происходит выделение области (brush)
