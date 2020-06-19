@@ -671,7 +671,7 @@ export default {
 
             
         let step = ((height-20)/metricsName.length).toFixed(5);
-        let startY = 20;
+        let startY = [20];
         let otstupProcent;
         y = [];
         line = [];
@@ -778,7 +778,7 @@ export default {
 
             y.push(d3.scaleLinear()
               .domain([minY, maxY+otstupProcent])
-              .range([parseFloat(step)+20,startY  ]));
+              .range([parseFloat(step)+20,startY[i]  ]));
 
             
             // добавляем ось Y
@@ -787,23 +787,45 @@ export default {
 
             
             if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
-              
+
+             // let startX = 0;
               // создаем область выделения
-              brush = d3.brushX()                   // область выделения
-                .extent( [ [0,startY], [width,parseFloat(step)+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
-                .on("end", updateData )               // каждый раз как область выделения изменится вызовется функция
-              brush.id = i;
+              // brush = () => {
+
+              // }
+              
+                //.call(brush);
+              // brush = d3.brushX(x)                   // область выделения
+              //   .extent( [ [0,startY], [width,parseFloat(step)+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
+              //   .on("start", () => { 
+              //     startX = d3.event.sourceEvent.layerX-50;
+              //   })
+              //   .on("brush", () => { 
+              //     if (d3.event.sourceEvent.layerX - startX-50 > 0) {
+              //       svg.select(".selection").attr('x', startX);
+              //       svg.select(".selection").attr('width', d3.event.sourceEvent.layerX - startX-50);
+              //       svg.select(".handle--w").attr('x',startX);
+              //       svg.select(".handle--e").attr('x',startX + d3.event.sourceEvent.layerX - startX-50);
+              //     } else {
+              //       svg.select(".selection").attr('x', startX + (d3.event.sourceEvent.layerX - startX-50));
+              //     }
+              //      console.log( svg.select(".selection").attr('x'), parseFloat(svg.select(".selection").attr('x')) + parseFloat(svg.select(".selection").attr('width')))
+              //    // console.log(d3.event.sourceEvent.layerX - startX-50)
+              //   })
+              //   .on("end", updateData )               // каждый раз как область выделения изменится вызовется функция
+              // brush.id = i;
 
             }
+
             
 
-            startY = parseFloat(step)+20;
+            startY.push(parseFloat(step)+20);
             
           } else {
             
             y.push(d3.scaleLinear()
               .domain([minY, maxY+otstupProcent])
-              .range([ parseFloat(step*(i+1))+20, startY ]));
+              .range([ parseFloat(step*(i+1))+20, startY[i] ]));
 
             // добавляем ось Y
             svg.append("g")
@@ -818,7 +840,7 @@ export default {
               // brush.id = i;
 
               brush = d3.brushX()                   // область выделения
-                .extent( [ [0,startY], [width, parseFloat(step*(i+1))+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
+                .extent( [ [0,startY[i]], [width, parseFloat(step*(i+1))+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
                 .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
               brush.id = i;
 
@@ -828,7 +850,7 @@ export default {
             }
             //console.log(brush)
 
-            startY = parseFloat(step*(i+1))+20;
+            startY.push(parseFloat(step*(i+1))+20);
 
 
           }
@@ -1036,10 +1058,57 @@ export default {
 
                           
             // добовляем область выделения 
-            line[i]
+            let selections = [];
+            let mouseDown = false;
+            let startX = 0;
+            let endX = 0;
+            let brush = line[i]
               .append("g")
               .attr("class", `brush-${i}`)
-              .call(brush);
+
+            brush
+              .append("rect")
+              .attr("class", `overlay-${i}`)
+              .attr("x", 0)
+              .style("fill","transparent")
+              .attr("y", startY[i])
+              .attr("width", width)
+              .attr("height", parseFloat(step*(i+1))+20)
+              .on("mousedown", () => {
+                // brush.selectAll()
+                mouseDown = true;
+                selections = brush.selectAll(`.selection-${i}`).nodes();
+                if (selections.lebgth != 0) {
+                  selections.forEach( (item,i) => {
+                    selections[i].remove()
+                  })
+                }
+                startX = event.layerX-50;
+                brush
+                  .append("rect")
+                  .attr("class", `selection-${i}`)
+                  .attr("x", startX)
+                  .attr("y",startY[i])
+                  .attr("width", 0)
+                  .attr("height", parseFloat(step*(i+1)))
+                  .style("fill",colors[2])
+                  .style("opacity","0.3")
+              })
+              .on("mousemove", () => {
+                if (mouseDown) {
+                  
+                  endX = event.layerX-50;
+                  brush.select(`.selection-${i}`)
+                    .attr("width", event.layerX-50 - startX)
+                }
+               
+              })
+              .on("mouseup", () => {
+                mouseDown = false;
+                console.log(startX,endX)
+              })
+
+              //.call(brush);
 
           } else if (Object.keys(metricOPt).length != 0 || metricOPt.type == 'Bar chart') {
             //line.push('Bar chart');  // добовляем в массив заглушку, чтобы собюсти порядок следования линий для линейных графиков
@@ -1268,6 +1337,8 @@ export default {
       function updateData () {  // функция которая вызывается каждый раз, когда происходит выделение области (brush)
 
         let extent = d3.event.selection;  // значения выделенной области
+
+        console.log(extent)
 
         if(extent){  // если область выделена всё-таки
 
