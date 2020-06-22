@@ -39,6 +39,22 @@
               />
             </v-card-text>
           </v-card>
+          <v-card  
+            class="product-block-itself" 
+            :style="{backgroundColor:color.backElement}"
+            @click="openQuis"
+          >   
+            <v-card-text 
+              class="product-text" 
+              :style="{color:color.text}"
+            >
+              Вопрос  <br>  Ответ
+              <p 
+                class="delimetr" 
+                :style="{backgroundColor:color.text}"
+              />
+            </v-card-text>
+          </v-card>
         </div>
       </v-container> 
     </v-content>
@@ -77,6 +93,9 @@ export default {
     openReport: function() {
       this.$store.commit('createReportSearch'); 
       this.$router.push(`/reports`); 
+    },
+    openQuis: function() {
+      //this.$router.push(`/reports`);
     },
   },
   mounted() {
