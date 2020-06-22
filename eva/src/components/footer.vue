@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.36.16 [SNMNGC-223]',
+      version: 'v 1.37.16 [brush]',
       color: { },
     } 
   },
