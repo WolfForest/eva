@@ -451,7 +451,11 @@ export default {  // приблизительный объект хранили�
             
           state[options.idDash][options.id].options.change = !state[options.idDash][options.id].options.change; // то ее всегда меняем на противоположную, давая понять, что натсройки обновились
         } else {  // для любой другой настройки
-          Vue.set(state[options.idDash][options.id].options, [item] , options.options[item]); // просто обновляем ее значение на новое
+          // if (item == 'metrics') {
+          //   console.log(state[options.idDash][options.id].options[item])
+          // }
+          
+          Vue.set(state[options.idDash][options.id].options, item , options.options[item]); // просто обновляем ее значение на новое
         }
       })
         

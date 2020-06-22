@@ -890,7 +890,10 @@ export default {
         this.options.tooltip = this.tooltip;
       }
       if (this.element.indexOf('multiLine') != -1) {
-        this.options.metrics = this.metrics;
+        let updateMetrics = this.metrics.map( item => {
+          return JSON.parse(JSON.stringify(item))
+        })
+        this.$set(this.options,'metrics',updateMetrics);
       }
 
       this.$store.commit('setOptions',  { idDash: this.idDash, id: this.element, options: this.options });
@@ -959,11 +962,13 @@ export default {
             this.$set(this.tooltip,'links', [...[],...options[item].links]);
             this.$set(this.tooltip,'buttons',[...[],...options[item].buttons]);
           } else if (item == 'metrics') {
+            //this.$set(this,'metrics',options[item]);
             this.metrics = options[item];
           } else {
             this.$set(this.options,item,options[item]);
           }
         } else {
+          
           this.$set(this.options,item,null);
           if (item == 'united') {
             this.$set(this.options,item,false);
@@ -971,6 +976,9 @@ export default {
           if (item == 'lastDot') {
             this.$set(this.options,item,false);
           }
+          if (item == 'metrics') {
+            this.metrics = [];
+          } 
           if (item == 'multiple') {
             this.$set(this.options,item,false);
           }

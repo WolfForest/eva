@@ -132,7 +132,7 @@ export default {
     // },
     getDataStart: function() {
 
-      
+      //console.log('asdasdd')
 
       let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
       sizeLine['width'] = this.width;
@@ -221,7 +221,6 @@ export default {
       this.$store.commit('setMetricsMulti', {metrics: this.metrics, idDash: this.idDash, id: this.id });
     },
     createLineChart: function (props,that,sizeLine,time,united,lastDot,metricsOpt) {  // создает график
-
       let colors = [this.color.controls,this.color.text,this.color.controlsActive,'#660099','#3366FF','#e5194a',]; // основные используемые цвета
       let colorLine = this.colorLegends;
   
@@ -272,6 +271,7 @@ export default {
       let x = null;
       let maxX = 0,minX =0;
       if (time) {
+        
         x = d3.scaleTime()
           .domain(d3.extent(data, function(d) { return  new Date(d[xMetric]*secondTransf) }))
           .range([ 0, width ]);
@@ -543,12 +543,12 @@ export default {
               if (lastDot) {
                 if (j == data.length-1) { // если это последняя точка, то
                   opacity = 1;  // и постоянно ее отображаем
-                  putLabelDot('data-last-dote',`last-dot-text-${metricsName[i]}`,d,y(d[metricsName[i]])-5,metricsName[i],this,that,brushObj);
+                  putLabelDot('data-last-dote',`last-dot-text-${metricsName[i]}`,d,y(d[metricsName[i]])-5,metricsName[i],this,that,'line',brushObj);
                 }
               }
               if (d[`_${metricsName[i]}_caption`] && !this.getAttribute("data-last-dote")) {
                 opacity = 1;  // и постоянно ее отображаем
-                putLabelDot('data-with-caption',`caption-dot-text-${metricsName[i]}`,d,y(d[metricsName[i]])-5,`_${metricsName[i]}_caption`,this,that,brushObj);
+                putLabelDot('data-with-caption',`caption-dot-text-${metricsName[i]}`,d,y(d[metricsName[i]])-5,`_${metricsName[i]}_caption`,this,that,'line',brushObj);
               }
 
               if (annotation.length != 0) {
@@ -1058,12 +1058,12 @@ export default {
                 if (lastDot) {
                   if (j == data.length-1) { // если это последняя точка, то
                     opacity = 1;  // и постоянно ее отображаем
-                    putLabelDot('data-last-dote',`last-dot-text-${metric}`,d,y[i](d[metric])-5,metric,this,that,brushObj);
+                    putLabelDot('data-last-dote',`last-dot-text-${metric}`,d,y[i](d[metric])-5,metric,this,that,'line',brushObj);
                   }
                 }
                 if (d[`_${metric}_caption`] && !this.getAttribute("data-last-dote")) {
                   opacity = 1;  // и постоянно ее отображаем
-                  putLabelDot('data-with-caption',`caption-dot-text-${metric}`,d,y[i](d[metric])-5,`_${metric}_caption`,this,that,brushObj);
+                  putLabelDot('data-with-caption',`caption-dot-text-${metric}`,d,y[i](d[metric])-5,`_${metric}_caption`,this,that,'line',brushObj);
                 }
                 return opacity
               })
@@ -1262,6 +1262,7 @@ export default {
 
 
           } else if (Object.keys(metricOPt).length != 0 || metricOPt.type == 'Bar chart') {
+            
             //line.push('Bar chart');  // добовляем в массив заглушку, чтобы собюсти порядок следования линий для линейных графиков
             let allDotHover = [];
             line.push(svg.append('g')  // основная линия графика
@@ -1271,7 +1272,15 @@ export default {
             // добавляем ось X 
             let x = d3.scaleBand()
               .range([ 0, width ])
-              .domain(data.map(function(d) {return d[xMetric]; }));
+              .domain(data.map(function(d) {return d[xMetric]*secondTransf; }));
+
+            
+
+            // x = d3.scaleTime()
+            //   .domain(d3.extent(data, function(d) { return  new Date(d[xMetric]*secondTransf) }))
+            //   .range([ 0, width ]);
+
+           // console.log(x.bandwidth(),time)
               //.padding(0.2);
                                             
             //let ticks = data;
@@ -1285,7 +1294,7 @@ export default {
             // }
 
             svg.append("g")
-              .attr("transform", "translate(0," + startY + ")")
+              .attr("transform", "translate(0," + startY[i+1] + ")")
               .call(d3.axisBottom(x))
               .style('opacity','0');
 
@@ -1302,27 +1311,26 @@ export default {
               }
             })
 
-      
 
             // добовляем сами столбики
             line[i].selectAll(`bar-${i}`)
               .data(cutData)
               .enter()
               .append("rect")
-              .attr("x", function(d) { return x(d[xMetric]); })
+              .attr("x", function(d) { return x(d[xMetric]*secondTransf); })
               .attr("y", function(d) { return y[i](d[metricOPt.name]); })
               .attr("width", x.bandwidth())
               .attr("height", function(d,j) { 
                 if (lastDot) {
                   if (j == cutData.length - 1) {
-                    putLabelDot('data-last-bar','last-bar-text',d,y[i](d[metricOPt.name])-5,metricOPt.name,this,that,);
+                    putLabelDot('data-last-bar','last-bar-text',d,y[i](d[metricOPt.name])-5,metricOPt.name,this,that,'bar');
                   }
                 }
                 if (d[`_${metricOPt.name}_caption`]) {
-                  putLabelDot('data-with-caption','caption-bar-text',d,y[i](d[metricOPt.name])-5,`_${metricOPt.name}_caption`,this,that,);
+                  putLabelDot('data-with-caption','caption-bar-text',d,y[i](d[metricOPt.name])-5,`_${metricOPt.name}_caption`,this,that,'bar');
                 }
                 
-                return startY - y[i](d[metricOPt.name]); 
+                return startY[i+1] - y[i](d[metricOPt.name]); 
                 
               })
               .attr("fill", this.colorLegends[i])
@@ -1493,28 +1501,32 @@ export default {
           }) 
       }
 
-      function putLabelDot (attr,classText,d,y,metricText,dot,that,brushObj) {
+      function putLabelDot (attr,classText,d,y,metricText,dot,that,elem,brushObj) {
         dot.setAttribute(attr,'true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
-        svg.append('text')   // текст легенды (название метрики)
+        let text = svg.append('text')   // текст легенды (название метрики)
           .attr('class',classText)
           .attr('transform', `translate(${x(d[xMetric]*secondTransf)-5},${y})`) 
           .attr('font-size', `0.7em`)
           .attr('text-anchor','end')
           .style('fill', that.colorFrom.text)
           .text(d[metricText])
-          .on("mouseover", function() {
-            if(brushObj.mouseDown) {
-              brushObj.selectionMove();
-            }
-          })
-          .on("mousemove", function() {
-            if(brushObj.mouseDown) {
-              brushObj.selectionMove();
-            }
-          })
-          .on("mouseup", () => {
-            brushObj.selectionUp();
-          })
+
+        if (elem == 'line') {
+          text
+            .on("mouseover", function() {
+              if(brushObj.mouseDown) {
+                brushObj.selectionMove();
+              }
+            })
+            .on("mousemove", function() {
+              if(brushObj.mouseDown) {
+                brushObj.selectionMove();
+              }
+            })
+            .on("mouseup", () => {
+              brushObj.selectionUp();
+            })
+        }
       }
 
                  
