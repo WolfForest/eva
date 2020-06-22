@@ -369,15 +369,7 @@ export default {
 
 
       // отрисуем сетку сперва для горизотнальных тиков
-      svg.selectAll("g.xAxis g.tick")
-        .append("line") // добавляем линию
-        .attr("class","grid-line-x") // добавляем класс
-        .attr("x1", 0)
-        .attr("x2", 0)
-        .attr("y1", 0)
-        .attr("y2", - (height-20))
-        .attr("stroke", colors[1])
-        .style("opacity", "0.3");
+      verticalLineX();
 
       // создаем область графика, все-что вне этой области не будет отрисованно
       let clip = svg.append("defs").append("svg:clipPath")
@@ -389,7 +381,7 @@ export default {
         .attr("y", 0);
 
 
-      let line,brush,y,AllLinesWithBreak;
+      let line,y,AllLinesWithBreak;
 
       d3.select(this.$el.querySelector('.dash-multi')).selectAll('.tooltip-separeted').remove();
       d3.select(this.$el.querySelector('.dash-multi')).selectAll('.tooltip').remove();
@@ -453,10 +445,15 @@ export default {
           .style("stroke-dasharray", "3 3") 
           .attr("opacity", "0");
 
-        // создаем область выделения
-        brush = d3.brushX()                   // область выделения
-          .extent( [ [0,0], [width,height] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
-          .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
+        let brushObj = {};
+        brushObj['selections'] = [];
+        brushObj['mouseDown'] = false;
+        brushObj['direction'] = 'right';
+        brushObj['startX'] = 0;
+        brushObj['endX'] = 0;
+        // brush = d3.brushX()                   // область выделения
+        //   .extent( [ [0,0], [width,height] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
+        //   .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
                        
         // строим основную линию
 
@@ -546,12 +543,12 @@ export default {
               if (lastDot) {
                 if (j == data.length-1) { // если это последняя точка, то
                   opacity = 1;  // и постоянно ее отображаем
-                  putLabelDot('data-last-dote',`last-dot-text-${metricsName[i]}`,d,y(d[metricsName[i]])-5,metricsName[i],this,that);
+                  putLabelDot('data-last-dote',`last-dot-text-${metricsName[i]}`,d,y(d[metricsName[i]])-5,metricsName[i],this,that,brushObj);
                 }
               }
               if (d[`_${metricsName[i]}_caption`] && !this.getAttribute("data-last-dote")) {
                 opacity = 1;  // и постоянно ее отображаем
-                putLabelDot('data-with-caption',`caption-dot-text-${metricsName[i]}`,d,y(d[metricsName[i]])-5,`_${metricsName[i]}_caption`,this,that);
+                putLabelDot('data-with-caption',`caption-dot-text-${metricsName[i]}`,d,y(d[metricsName[i]])-5,`_${metricsName[i]}_caption`,this,that,brushObj);
               }
 
               if (annotation.length != 0) {
@@ -615,6 +612,10 @@ export default {
                       
                 }
               });
+
+              if (brushObj.mouseDown) {
+                brushObj.selectionMove();
+              }
                                         
 
 
@@ -657,21 +658,114 @@ export default {
                 .attr("opacity","0")                                 
 
             })  // при уводе мышки исчезает, только если это не точка выходящяя порог
+            .on("mousedown", () => {
+              brushObj.selectionDown();
+            })
+            .on("mouseup", () => {
+              brushObj.selectionUp();
+            })
          
         })
 
                   
         // добовляем область выделения 
-        line
+        // line
+        //   .append("g")
+        //   .attr("class", "brush")
+        //   .call(brush);
+        let brush = line
           .append("g")
-          .attr("class", "brush")
-          .call(brush);
+          .attr("class", `brush`)
+
+        brush
+          .append("rect")
+          .attr("class", `overlay`)
+          //.attr("id", i)
+          .attr("x", 0)
+          .style("fill","transparent")
+          .attr("y", 20)
+          .attr("width", width)
+          .attr("height", height)
+          .attr("pointer-events","all")
+          .on("mousedown", () => {
+            brushObj.selectionDown();
+          })
+          .on("mousemove", () => {
+            brushObj.selectionMove();
+          })
+          .on("mouseup", () => {
+            brushObj.selectionUp();
+          })
+
+        brushObj['selectionDown'] =  () => {
+          brushObj.mouseDown = true;
+          brushObj.clearBrush();
+          brushObj.startX = event.layerX-50;
+          brush
+            .append("rect")
+            .attr("class", `selection`)
+            .attr("x", brushObj.startX)
+            .attr("y",20)
+            .attr("width", 0)
+            .attr("height", height)
+            .style("fill",colors[2])
+            .style("opacity","0.3")
+            .on("mousemove", () => {
+              brushObj.selectionMove();
+            })
+            .on("mouseup", () => {
+              
+              brushObj.selectionUp();
+            })
+        }
+
+        brushObj['selectionMove'] = () => {
+          if (brushObj.mouseDown) {
+
+            if ((event.layerX-50 - brushObj.startX) > 0) {
+              brushObj.direction = 'right';
+              brushObj.endX = event.layerX-50;
+              brush.select(`.selection`)
+                .attr("width", event.layerX-50 - brushObj.startX)
+            } else {
+              brushObj.direction = 'left';
+              brushObj.endX = brushObj.startX + (event.layerX-50 - brushObj.startX);
+              brush.select(`.selection`)
+                .attr("x", brushObj.startX + (event.layerX-50 - brushObj.startX))
+                .attr("width", -(event.layerX-50 - brushObj.startX))
+            }
+          
+          }
+        }
+
+        brushObj['selectionUp'] = () => { 
+          brushObj.mouseDown = false;
+          if (brushObj.direction == 'left') {
+            let change = 0;
+            change = brushObj.startX;
+            brushObj.startX = brushObj.endX;
+            brushObj.endX = change; 
+          }
+          if (brush.select(`.selection`).attr("width") > 5) {
+            updateData([brushObj.startX,brushObj.endX],brushObj,-1)
+          }
+          
+        }
+
+        brushObj['clearBrush'] = () => {
+          brushObj.selections = brush.selectAll(`.selection`).nodes();
+          if (brushObj.selections.length != 0) {
+            brushObj.selections.forEach( (item,i) => {
+              brushObj.selections[i].remove()
+            })
+          }
+        }
 
       } else {
 
             
         let step = ((height-20)/metricsName.length).toFixed(5);
-        let startY = 20;
+        let startY = [20];
         let otstupProcent;
         y = [];
         line = [];
@@ -778,7 +872,7 @@ export default {
 
             y.push(d3.scaleLinear()
               .domain([minY, maxY+otstupProcent])
-              .range([parseFloat(step)+20,startY  ]));
+              .range([ parseFloat(step)+20,startY[i] ]));
 
             
             // добавляем ось Y
@@ -786,49 +880,71 @@ export default {
               .call(d3.axisLeft(y[i]).tickValues([maxY]));
 
             
-            if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
-              
-              // создаем область выделения
-              brush = d3.brushX()                   // область выделения
-                .extent( [ [0,startY], [width,parseFloat(step)+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
-                .on("end", updateData )               // каждый раз как область выделения изменится вызовется функция
-              brush.id = i;
+            //if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
 
-            }
+            // let startX = 0;
+              // создаем область выделения
+              // brush = () => {
+
+              // }
+              
+                //.call(brush);
+              // brush = d3.brushX(x)                   // область выделения
+              //   .extent( [ [0,startY], [width,parseFloat(step)+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
+              //   .on("start", () => { 
+              //     startX = d3.event.sourceEvent.layerX-50;
+              //   })
+              //   .on("brush", () => { 
+              //     if (d3.event.sourceEvent.layerX - startX-50 > 0) {
+              //       svg.select(".selection").attr('x', startX);
+              //       svg.select(".selection").attr('width', d3.event.sourceEvent.layerX - startX-50);
+              //       svg.select(".handle--w").attr('x',startX);
+              //       svg.select(".handle--e").attr('x',startX + d3.event.sourceEvent.layerX - startX-50);
+              //     } else {
+              //       svg.select(".selection").attr('x', startX + (d3.event.sourceEvent.layerX - startX-50));
+              //     }
+              //      console.log( svg.select(".selection").attr('x'), parseFloat(svg.select(".selection").attr('x')) + parseFloat(svg.select(".selection").attr('width')))
+              //    // console.log(d3.event.sourceEvent.layerX - startX-50)
+              //   })
+              //   .on("end", updateData )               // каждый раз как область выделения изменится вызовется функция
+              // brush.id = i;
+
+            //}
+
             
 
-            startY = parseFloat(step)+20;
+            startY.push(parseFloat(step)+20);
             
           } else {
             
             y.push(d3.scaleLinear()
               .domain([minY, maxY+otstupProcent])
-              .range([ parseFloat(step*(i+1))+20, startY ]));
+              .range([ parseFloat(step*(i+1))+20, startY[i] ]));
 
             // добавляем ось Y
             svg.append("g")
               .call(d3.axisLeft(y[i]).tickValues([maxY]));
 
-            if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
+            // if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
               
-              // создаем область выделения
-              // brush = d3.brushX()                   // область выделения
-              //   .extent( [ [0,startY], [width, parseFloat(step*(i+1))+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
-              //   .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
-              // brush.id = i;
+            //   // создаем область выделения
+            //   // brush = d3.brushX()                   // область выделения
+            //   //   .extent( [ [0,startY], [width, parseFloat(step*(i+1))+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
+            //   //   .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
+            //   // brush.id = i;
 
-              brush = d3.brushX()                   // область выделения
-                .extent( [ [0,startY], [width, parseFloat(step*(i+1))+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
-                .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
-              brush.id = i;
-
-              
+            //   brush = d3.brushX()                   // область выделения
+            //     .extent( [ [0,startY[i]], [width, parseFloat(step*(i+1))+20] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
+            //     .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
+            //   brush.id = i;
 
               
-            }
+
+              
+            // }
             //console.log(brush)
 
-            startY = parseFloat(step*(i+1))+20;
+            startY.push(parseFloat(step*(i+1))+20);
 
 
           }
@@ -854,6 +970,15 @@ export default {
             let onelinesWithBreak = [];
             let mustSee = [];
             let allDotHover = [];
+
+            let brushObj = {};
+            brushObj['selections'] = [];
+            brushObj['mouseDown'] = false;
+            brushObj['direction'] = 'right';
+            brushObj['startX'] = 0;
+            brushObj['endX'] = 0;
+            
+
             if (extraDot.length > 0) {
               extraDot.forEach( (item,j) => {
                 if (metric == item.column) {
@@ -933,12 +1058,12 @@ export default {
                 if (lastDot) {
                   if (j == data.length-1) { // если это последняя точка, то
                     opacity = 1;  // и постоянно ее отображаем
-                    putLabelDot('data-last-dote',`last-dot-text-${metric}`,d,y[i](d[metric])-5,metric,this,that);
+                    putLabelDot('data-last-dote',`last-dot-text-${metric}`,d,y[i](d[metric])-5,metric,this,that,brushObj);
                   }
                 }
                 if (d[`_${metric}_caption`] && !this.getAttribute("data-last-dote")) {
                   opacity = 1;  // и постоянно ее отображаем
-                  putLabelDot('data-with-caption',`caption-dot-text-${metric}`,d,y[i](d[metric])-5,`_${metric}_caption`,this,that);
+                  putLabelDot('data-with-caption',`caption-dot-text-${metric}`,d,y[i](d[metric])-5,`_${metric}_caption`,this,that,brushObj);
                 }
                 return opacity
               })
@@ -988,6 +1113,10 @@ export default {
                     
                   }
                 });
+
+                if (brushObj.mouseDown) {
+                  brushObj.selectionMove();
+                }
                 
                 this.style="opacity:1"
 
@@ -1032,14 +1161,105 @@ export default {
 
 
               })  // при уводе мышки исчезает, только если это не точка выходящяя порог
+              .on("mousedown", () => {
+                brushObj.selectionDown();
+              })
+              .on("mouseup", () => {
+                brushObj.selectionUp();
+              })
 
 
                           
             // добовляем область выделения 
-            line[i]
+            
+            let brush = line[i]
               .append("g")
               .attr("class", `brush-${i}`)
-              .call(brush);
+
+            brush
+              .append("rect")
+              .attr("class", `overlay-${i}`)
+              //.attr("id", i)
+              .attr("x", 0)
+              .style("fill","transparent")
+              .attr("y", startY[i])
+              .attr("width", width)
+              .attr("height", parseFloat(step*(i+1))+20)
+              .attr("pointer-events","all")
+              .on("mousedown", () => {
+                brushObj.selectionDown();
+              })
+              .on("mousemove", () => {
+                brushObj.selectionMove();
+              })
+              .on("mouseup", () => {
+                brushObj.selectionUp();
+              })
+
+            brushObj['selectionDown'] =  () => {
+              brushObj.mouseDown = true;
+              brushObj.clearBrush();
+              brushObj.startX = event.layerX-50;
+              brush
+                .append("rect")
+                .attr("class", `selection-${i}`)
+                .attr("x", brushObj.startX)
+                .attr("y",startY[i])
+                .attr("width", 0)
+                .attr("height", parseFloat(step*(i+1)))
+                .style("fill",colors[2])
+                .style("opacity","0.3")
+                .on("mousemove", () => {
+                  brushObj.selectionMove();
+                })
+                .on("mouseup", () => {
+                  
+                  brushObj.selectionUp();
+                })
+            }
+
+            brushObj['selectionMove'] = () => {
+              if (brushObj.mouseDown) {
+
+                if ((event.layerX-50 - brushObj.startX) > 0) {
+                  brushObj.direction = 'right';
+                  brushObj.endX = event.layerX-50;
+                  brush.select(`.selection-${i}`)
+                    .attr("width", event.layerX-50 - brushObj.startX)
+                } else {
+                  brushObj.direction = 'left';
+                  brushObj.endX = brushObj.startX + (event.layerX-50 - brushObj.startX);
+                  brush.select(`.selection-${i}`)
+                    .attr("x", brushObj.startX + (event.layerX-50 - brushObj.startX))
+                    .attr("width", -(event.layerX-50 - brushObj.startX))
+                }
+              
+              }
+            }
+
+            brushObj['selectionUp'] = () => { 
+              brushObj.mouseDown = false;
+              if (brushObj.direction == 'left') {
+                let change = 0;
+                change = brushObj.startX;
+                brushObj.startX = brushObj.endX;
+                brushObj.endX = change; 
+              }
+              if (brush.select(`.selection-${i}`).attr("width") > 5) {
+                updateData([brushObj.startX,brushObj.endX],brushObj,i)
+              }
+              
+            }
+
+            brushObj['clearBrush'] = () => {
+              brushObj.selections = brush.selectAll(`.selection-${i}`).nodes();
+              if (brushObj.selections.length != 0) {
+                brushObj.selections.forEach( (item,i) => {
+                  brushObj.selections[i].remove()
+                })
+              }
+            }
+
 
           } else if (Object.keys(metricOPt).length != 0 || metricOPt.type == 'Bar chart') {
             //line.push('Bar chart');  // добовляем в массив заглушку, чтобы собюсти порядок следования линий для линейных графиков
@@ -1206,6 +1426,26 @@ export default {
       //   return name 
       // }
 
+      function verticalLineX() {
+        
+        let linesX = svg.selectAll(`.grid-line-x`).nodes();
+        if (linesX.length != 0) {
+          linesX.forEach( (item,i) => {
+            linesX[i].remove()
+          })
+        }
+
+        svg.selectAll("g.xAxis g.tick")
+          .append("line") // добавляем линию
+          .attr("class","grid-line-x") // добавляем класс
+          .attr("x1", 0)
+          .attr("x2", 0)
+          .attr("y1", 0)
+          .attr("y2", - (height-20))
+          .attr("stroke", colors[1])
+          .style("opacity", "0.3");
+      }
+
       function verticalLine(d,item,i,tooltip) {
         let group = svg
           .append("g")
@@ -1253,7 +1493,7 @@ export default {
           }) 
       }
 
-      function putLabelDot (attr,classText,d,y,metricText,dot,that) {
+      function putLabelDot (attr,classText,d,y,metricText,dot,that,brushObj) {
         dot.setAttribute(attr,'true');  // так же зададим атрибут сосбтвенный, чтобы потом понимать с какой точки мышка ушла
         svg.append('text')   // текст легенды (название метрики)
           .attr('class',classText)
@@ -1261,13 +1501,27 @@ export default {
           .attr('font-size', `0.7em`)
           .attr('text-anchor','end')
           .style('fill', that.colorFrom.text)
-          .text(d[metricText]);
+          .text(d[metricText])
+          .on("mouseover", function() {
+            if(brushObj.mouseDown) {
+              brushObj.selectionMove();
+            }
+          })
+          .on("mousemove", function() {
+            if(brushObj.mouseDown) {
+              brushObj.selectionMove();
+            }
+          })
+          .on("mouseup", () => {
+            brushObj.selectionUp();
+          })
       }
 
                  
-      function updateData () {  // функция которая вызывается каждый раз, когда происходит выделение области (brush)
+      function updateData (extent,brushObj,id) {  // функция которая вызывается каждый раз, когда происходит выделение области (brush)
 
-        let extent = d3.event.selection;  // значения выделенной области
+        //let extent = d3.event.selection;  // значения выделенной области
+       // console.log(extent)
 
         if(extent){  // если область выделена всё-таки
 
@@ -1277,17 +1531,19 @@ export default {
           } else {
             diapason = [parseFloat(x.invert(extent[0]).toFixed(5)),parseFloat(x.invert(extent[1]).toFixed(5))];
           }
-            
-          //console.log(diapason);
+        
           //that.$store.commit('setDiapasonDash', {diapason: diapason, id: props.id});  // заносим в хранилище
         
           that.setClick(diapason, 'select');  // вызываем функцию создающию токены
 
-          if (d3.event.target.id != undefined) {
-            zoom(extent,d3.event.target.id);  // делаем зумирование  графика
-          } else {
-            zoom(extent);  // делаем зумирование  графика
-          }
+
+
+          //if (d3.event.target.id != undefined) {
+            
+          zoom(extent,id,brushObj);  // делаем зумирование  графика
+          // } else {
+          //   zoom(extent,brushObj);  // делаем зумирование  графика
+          // }
 
                                 
                                   
@@ -1295,14 +1551,14 @@ export default {
         
       }
 
-      function zoom(extent,id) {  // функция делающяя зумирование графика
+      function zoom(extent,id,brushObj) {  // функция делающяя зумирование графика
         x.domain([ x.invert(extent[0]), x.invert(extent[1]) ]);  // меняем значения оси х на основе нашего выделенного диапазона
-        
-        if (id != undefined) {
-          line[id].select(`.brush-${id}`).call(brush.move, null);  // убираем область выделения
-        } else {
-          line.select(`.brush`).call(brush.move, null);  // убираем область выделения
-        }
+        // if (id != undefined) {
+        //   line[id].select(`.brush-${id}`).call(brush.move, null);  // убираем область выделения
+        // } else {
+        //   line.select(`.brush`).call(brush.move, null);  // убираем область выделения
+        // }
+        brushObj.clearBrush();
 
         if (time) {
           xAxis.transition().duration(secondTransf)
@@ -1320,8 +1576,12 @@ export default {
         } else {
           xAxis.transition().duration(1000).call(d3.axisBottom(x));
         }
-        if (id == undefined) {
+
+        verticalLineX();
+
+        if (id == -1) {
           metricsName.forEach( (item,i) => {
+            
             changeZoom(1000,i);   // вызываем функцию которая перересует все линии и точки как надо
           })
         } else {
@@ -1350,10 +1610,12 @@ export default {
             xAxis.transition().duration(1000).call(d3.axisBottom(x));
           }
 
-          metricsName.forEach( (item,i) => {
-            changeZoom(300,i);    // вызываем функцию которая перересует все линии и точки как надо
-          })
-          if (id == undefined) {
+          verticalLineX()
+
+          // metricsName.forEach( (item,i) => {
+          //   changeZoom(300,i);    // вызываем функцию которая перересует все линии и точки как надо
+          // })
+          if (id == -1) {
             metricsName.forEach( (item,i) => {
               changeZoom(300,i);   // вызываем функцию которая перересует все линии и точки как надо
             })
@@ -1376,8 +1638,11 @@ export default {
             lineChange = line[i];
           }
           
+          
 
           if (AllLinesWithBreak[i]) {
+
+            
 
             AllLinesWithBreak[i].forEach( (lineItself,j) => {
               lineChange  // основная линия

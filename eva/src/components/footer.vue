@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.37.16 [addQuis]',
+      version: 'v 1.37.17 [brush]',
       color: { },
     } 
   },
