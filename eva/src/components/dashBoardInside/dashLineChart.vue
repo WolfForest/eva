@@ -300,15 +300,7 @@ export default {
         .call(d3.axisLeft(y).ticks(y.ticks().length/2));
 
       // отрисуем сетку сперва для горизотнальных тиков
-      svg.selectAll("g.xAxis g.tick")
-        .append("line") // добавляем линию
-        .attr("class","grid-line-x") // добавляем класс
-        .attr("x1", 0)
-        .attr("x2", 0)
-        .attr("y1", 0)
-        .attr("y2", - (height-20))
-        .attr("stroke", that.colorFrom.text)
-        .style("opacity", "0.3");
+      verticalLineX();
 
 
       // и для вертикальных
@@ -344,10 +336,17 @@ export default {
         .text('');
                       
 
-      // создаем область выделения
-      let brush = d3.brushX()                   // область выделения
-        .extent( [ [0,0], [width,height] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
-        .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
+      // // создаем область выделения
+      // let brush = d3.brushX()                   // область выделения
+      //   .extent( [ [0,0], [width,height] ] )  // инициализируем область выделения на весь граф от начала до width, heigh
+      //   .on("end", updateData)               // каждый раз как область выделения изменится вызовется функция
+
+      let brushObj = {};
+      brushObj['selections'] = [];
+      brushObj['mouseDown'] = false;
+      brushObj['direction'] = 'right';
+      brushObj['startX'] = 0;
+      brushObj['endX'] = 0;
 
 
               
@@ -477,6 +476,11 @@ export default {
               .style("left","auto")
               .style("right",(width - event.layerX+110)+"px");
           }
+
+          if (brushObj.mouseDown) {
+            brushObj.selectionMove();
+          }
+
           this.style="opacity:1"})  // при наведении мышки точка появляется
         .on("mouseout", function() {
           if (!this.getAttribute("data-anomaly") && !this.getAttribute("data-last-dote") && !this.getAttribute("data-with-caption")){
@@ -486,6 +490,12 @@ export default {
             .style("opacity","0")
             .style("visibility","hidden")
         })  // при уводе мышки исчезает, только если это не точка выходящяя порог
+        .on("mousedown", () => {
+          brushObj.selectionDown();
+        })
+        .on("mouseup", () => {
+          brushObj.selectionUp();
+        })
 
 
       let legend =  svg.append('g')  // доволяем легенду
@@ -505,10 +515,121 @@ export default {
 
       
       // добовляем область выделения 
-      lineName[0]
+      // lineName[0]
+      //   .append("g")
+      //   .attr("class", `brush-${that.id}`)
+      //   .call(brush);
+
+      let brush = lineName[0]
         .append("g")
-        .attr("class", `brush-${that.id}`)
-        .call(brush);
+        .attr("class", `brush`)
+
+      brush
+        .append("rect")
+        .attr("class", `overlay`)
+        //.attr("id", i)
+        .attr("x", 0)
+        .style("fill","transparent")
+        .attr("y", 20)
+        .attr("width", width)
+        .attr("height", height)
+        .attr("pointer-events","all")
+        .on("mousedown", () => {
+          brushObj.selectionDown();
+        })
+        .on("mousemove", () => {
+          brushObj.selectionMove();
+        })
+        .on("mouseup", () => {
+          brushObj.selectionUp();
+        })
+
+      brushObj['selectionDown'] =  () => {
+        brushObj.mouseDown = true;
+        brushObj.clearBrush();
+        brushObj.startX = event.layerX-65;
+        brush
+          .append("rect")
+          .attr("class", `selection`)
+          .attr("x", brushObj.startX)
+          .attr("y",20)
+          .attr("width", 0)
+          .attr("height", height)
+          .style("fill",colors[2])
+          .style("opacity","0.3")
+          .on("mousemove", () => {
+            brushObj.selectionMove();
+          })
+          .on("mouseup", () => {
+            
+            brushObj.selectionUp();
+          })
+      }
+
+      brushObj['selectionMove'] = () => {
+        if (brushObj.mouseDown) {
+
+          if ((event.layerX-65 - brushObj.startX) > 0) {
+            brushObj.direction = 'right';
+            brushObj.endX = event.layerX-65;
+            brush.select(`.selection`)
+              .attr("width", event.layerX-65 - brushObj.startX)
+          } else {
+            brushObj.direction = 'left';
+            brushObj.endX = brushObj.startX + (event.layerX-65 - brushObj.startX);
+            brush.select(`.selection`)
+              .attr("x", brushObj.startX + (event.layerX-65 - brushObj.startX))
+              .attr("width", -(event.layerX-65 - brushObj.startX))
+          }
+        
+        }
+      }
+
+      brushObj['selectionUp'] = () => { 
+        brushObj.mouseDown = false;
+        if (brushObj.direction == 'left') {
+          let change = 0;
+          change = brushObj.startX;
+          brushObj.startX = brushObj.endX;
+          brushObj.endX = change; 
+        }
+        if (brush.select(`.selection`).attr("width") > 5) {
+          updateData([brushObj.startX,brushObj.endX],brushObj)
+        }
+        
+      }
+
+      brushObj['clearBrush'] = () => {
+        brushObj.selections = brush.selectAll(`.selection`).nodes();
+        if (brushObj.selections.length != 0) {
+          brushObj.selections.forEach( (item,i) => {
+            brushObj.selections[i].remove()
+          })
+        }
+      }
+
+
+
+
+      function verticalLineX() {
+        
+        let linesX = svg.selectAll(`.grid-line-x`).nodes();
+        if (linesX.length != 0) {
+          linesX.forEach( (item,i) => {
+            linesX[i].remove()
+          })
+        }
+
+        svg.selectAll("g.xAxis g.tick")
+          .append("line") // добавляем линию
+          .attr("class","grid-line-x") // добавляем класс
+          .attr("x1", 0)
+          .attr("x2", 0)
+          .attr("y1", 0)
+          .attr("y2", - (height-20))
+          .attr("stroke", colors[1])
+          .style("opacity", "0.3");
+      }
 
       function verticalLine(d,item,i) {
         let group = svg
@@ -567,7 +688,20 @@ export default {
           .attr('font-size', `0.7em`)
           .attr('text-anchor','end')
           .style('fill', colors[1])
-          .text(d[metric]);
+          .text(d[metric])
+          .on("mouseover", function() {
+            if(brushObj.mouseDown) {
+              brushObj.selectionMove();
+            }
+          })
+          .on("mousemove", function() {
+            if(brushObj.mouseDown) {
+              brushObj.selectionMove();
+            }
+          })
+          .on("mouseup", () => {
+            brushObj.selectionUp();
+          })
       }
 
                     
@@ -610,9 +744,9 @@ export default {
           
       }
                    
-      function updateData () {  // функция которая вызывается каждый раз, когда происходит выделение области (brush)
+      function updateData (extent,brushObj) {  // функция которая вызывается каждый раз, когда происходит выделение области (brush)
 
-        let extent = d3.event.selection;  // значения выделенной области
+        //let extent = d3.event.selection;  // значения выделенной области
 
 
         if(extent){  // если область выделена всё-таки
@@ -625,16 +759,17 @@ export default {
         
           that.setClick(diapason, 'select');  // вызываем функцию создающию токены
 
-          zoom(extent);  // делаем зумирование  графика
+          zoom(extent,brushObj);  // делаем зумирование  графика
               
         }
     
       }
 
-      function zoom(extent) {  // функция делающяя зумирование графика
+      function zoom(extent,brushObj) {  // функция делающяя зумирование графика
 
         x.domain([ x.invert(extent[0]), x.invert(extent[1]) ]);  // меняем значения оси х на основе нашего выделенного диапазона
-        lineName[0].select(`.brush-${that.id}`).call(brush.move, null);  // убираем область выделения
+        //lineName[0].select(`.brush-${that.id}`).call(brush.move, null);  // убираем область выделения
+        brushObj.clearBrush();
 
         if (time) {
           xAxis.transition().duration(secondTransf)
@@ -652,6 +787,8 @@ export default {
         } else {
           xAxis.transition().duration(1000).call(d3.axisBottom(x));
         }
+
+        verticalLineX();
               
 
         changeZoom(1000);   // вызываем функцию которая перересует все линии и точки как надо
@@ -676,6 +813,8 @@ export default {
             x.domain([minX, maxX])
             xAxis.transition().duration(1000).call(d3.axisBottom(x));
           }
+
+          verticalLineX();
                                  
 
           changeZoom(300);  // и вернем все линии  в исходное состояние
