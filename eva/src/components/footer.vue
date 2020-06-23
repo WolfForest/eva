@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.37.18 [twoMulti]',
+      version: 'v 1.38.18 [negativeValueBar]',
       color: { },
     } 
   },

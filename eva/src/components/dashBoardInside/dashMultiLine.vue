@@ -866,18 +866,30 @@ export default {
           //   .attr("height", parseFloat(step)+20)
           //   .attr("x", 0)
           //   .attr("y", startY);
+          let tickvals = [];
+          if (minY < 0) {
+            tickvals = [minY,0,maxY];
+          } else {
+            tickvals = [maxY];
+          }
 
 
           if (i == 0 ) {
+
+            
 
             y.push(d3.scaleLinear()
               .domain([minY, maxY+otstupProcent])
               .range([ parseFloat(step)+20,startY[i] ]));
 
+            //console.log(y[i].ticks())
+
+
+
             
             // добавляем ось Y
             svg.append("g")
-              .call(d3.axisLeft(y[i]).tickValues([maxY]));
+              .call(d3.axisLeft(y[i]).tickValues(tickvals));
 
             
             //if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
@@ -1300,6 +1312,10 @@ export default {
               }
             })
 
+            let negative = false;
+            if (minY < 0) {
+              negative = true;
+            }
 
             // добовляем сами столбики
             line[i].selectAll(`bar-${i}`)
@@ -1307,7 +1323,17 @@ export default {
               .enter()
               .append("rect")
               .attr("x", function(d) { return x(d[xMetric]*secondTransf); })
-              .attr("y", function(d) { return y[i](d[metricOPt.name]); })
+              .attr("y", function(d) { 
+                if (negative) {
+                  if (d[metricOPt.name] > 0) {
+                    return y[i](0)-Math.abs(y[i](d[metricOPt.name]) - y[i](0));
+                  } else { 
+                    return y[i](0)
+                  } 
+                } else {
+                  return y[i](d[metricOPt.name])
+                }
+              })
               .attr("width", function() {
                 if (time) {
                   return z.bandwidth()
@@ -1323,8 +1349,14 @@ export default {
                 if (d[`_${metricOPt.name}_caption`]) {
                   putLabelDot('data-with-caption','caption-bar-text',d,y[i](d[metricOPt.name])-5,`_${metricOPt.name}_caption`,this,that,'bar');
                 }
-                
-                return startY[i+1] - y[i](d[metricOPt.name]); 
+                if (d[metricOPt.name] == 0) {
+                  return 0
+                }
+                if (negative) {
+                  return Math.abs(y[i](d[metricOPt.name]) - y[i](0))
+                } else {
+                  return startY[i+1] - y[i](d[metricOPt.name]);
+                }
                 
               })
               .attr("fill", this.colorLegends[i])

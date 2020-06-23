@@ -1,6 +1,6 @@
 {
   "name": "eva",
-  "version": "1.37.18",
+  "version": "1.38.18",
   "description": "Evolution Vizualization Application",
   "main": "index.js",
   "scripts": {
