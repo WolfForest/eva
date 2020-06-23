@@ -1268,42 +1268,31 @@ export default {
             line.push(svg.append('g')  // основная линия графика
               .attr("clip-path", `url(#clip-${that.id})`)
             );
-                
-            // добавляем ось X 
-            let x = d3.scaleBand()
-              .range([ 0, width ])
-              .domain(data.map(function(d) {return d[xMetric]*secondTransf; }));
+            let z;
+            if (time) {
+              // Добавляем ось для bar chart, чтобы использовать его метод расчета ширины столбцов
+              z = d3.scaleBand()
+                .range([ 0, width ])
+                .domain(data.map(function(d) {return d[xMetric]*secondTransf; }));
 
-            
-
-            // x = d3.scaleTime()
-            //   .domain(d3.extent(data, function(d) { return  new Date(d[xMetric]*secondTransf) }))
-            //   .range([ 0, width ]);
-
-           // console.log(x.bandwidth(),time)
-              //.padding(0.2);
-                                            
-            //let ticks = data;
-
-            // if (data.length > 10) {
-            //   ticks = data.filter( (item,i) => {
-            //     if (i == 0 || i == data.length-1 || (i % (Math.round(data.length/9)) == 0)) {
-            //       return item
-            //     }
-            //   });
-            // }
+          
+              // добавляем ось X 
+              x = d3.scaleTime()
+                .domain(d3.extent(data, function(d) { return  new Date(d[xMetric]*secondTransf) }))
+                .range([ 0, width ]);
+            } else {
+              // добавляем ось X 
+              x = d3.scaleBand()
+                .range([ 0, width ])
+                .domain(data.map(function(d) {return d[xMetric]*secondTransf; }));
+            }
+      
 
             svg.append("g")
               .attr("transform", "translate(0," + startY[i+1] + ")")
               .call(d3.axisBottom(x))
               .style('opacity','0');
 
-            // // добавляем ось Y
-            // let y = d3.scaleLinear()
-            //   .domain([0, max])
-            //   .range([ height, 0]);
-            // svg.append("g")
-            //   .call(d3.axisLeft(y));
 
             let cutData = data.filter( item => {
               if (item[metricOPt.name] >= minY && item[metricOPt.name] <= maxY) {
@@ -1319,7 +1308,12 @@ export default {
               .append("rect")
               .attr("x", function(d) { return x(d[xMetric]*secondTransf); })
               .attr("y", function(d) { return y[i](d[metricOPt.name]); })
-              .attr("width", x.bandwidth())
+              .attr("width", function() {
+                if (time) {
+                  return z.bandwidth()
+                } else { 
+                  return x.bandwidth()} 
+              })
               .attr("height", function(d,j) { 
                 if (lastDot) {
                   if (j == cutData.length - 1) {

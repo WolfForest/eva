@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.37.17 [brush]',
+      version: 'v 1.37.18 [twoMulti]',
       color: { },
     } 
   },
