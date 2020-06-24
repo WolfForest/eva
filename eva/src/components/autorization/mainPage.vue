@@ -95,7 +95,7 @@ export default {
       this.$router.push(`/reports`); 
     },
     openQuis: function() {
-      //this.$router.push(`/reports`);
+      this.$router.push(`/quiz/list`);
     },
   },
   mounted() {
