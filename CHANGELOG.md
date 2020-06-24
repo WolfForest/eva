@@ -5,6 +5,88 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.40.18] [underlineButton]
+### Added
+
+- add underline of text in Button
+
+## [1.39.18] [styleLineMulti]
+### Changed
+
+- style of text ticks in multiline and add zero line
+
+## [1.38.18] [negativeValueBar]
+### Added
+
+- add negative value to bar
+
+- check zero value
+
+## [1.37.18] [twoMulti]
+### Fixed
+
+- fixed brush fraw on time line
+
+## [1.37.17] [brush]
+### Fixed
+
+- add custm brush instead d3.brush
+
+## [1.37.16] [addQuis]
+### Added
+
+- add new squar in main page to open Quis
+
+## [1.36.16] [SNMNGC-223]
+### Added
+
+- add new event on click open
+
+## [1.35.16] [coupleBugs]
+### Fixed
+
+- color in dark theme
+
+- color of chart same as color in legend
+
+- zoom change also dot label and line vertical
+
+- infinity loop - reason in call setMetricsMulti in computed getDataRest. made throw watcher
+
+## [1.35.15] [linesOnChart]
+### Added
+
+- add vertical line on charts
+
+## [1.34.15] [fontButton]
+### Added
+
+- add font-size button in settings
+
+## [1.33.15] [labelDotChart]
+### Added
+
+- set dot of "_name_caption" and add caption
+
+- lastdot set in settings
+
+## [1.32.15] [selectTypeAndBorderMulti]
+### Added
+
+- select wich type of chart we need
+
+- cut data of chart of Y axis
+
+## [1.31.15] [invisibleSelect]
+### Fixed
+
+- fix color in light theme of Select component
+
+## [1.31.14] [colorTheme]
+### Changed
+
+- change switch color theme
+
 ## [1.30.14] [notContainTable]
 ### Fixed
 

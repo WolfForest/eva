@@ -192,7 +192,7 @@
               class="discribe-option item" 
               :style="{color:color.text, borderColor:color.text}"
             >
-              Выбрать цвет которым подсветится нужная строка
+              Выбрать цвет которым подсветится нужный столбец
             </div>
             <div class="status-option item">
               <v-text-field 
@@ -220,7 +220,7 @@
               class="discribe-option item" 
               :style="{color:color.text, borderColor:color.text}"
             >
-              Выбрать цвет которым подсветится нужная строка
+              Выбрать цвет которым подсветится нужная ячейка
             </div>
             <div class="status-option item">
               <v-text-field 
@@ -435,6 +435,58 @@
             </div>
           </div>
           <div 
+            v-if="checkOptions('underline')"
+            class="option-item"
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              underline
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Подчеркивает текст кнопки
+            </div>
+            <div class="status-option item">
+              <v-switch  
+                v-model="options.underline"    
+                class="switch" 
+                :color="color.controls" 
+                :style="{color:color.text,}"
+                :label="String(options.underline)" 
+              />
+            </div>
+          </div>
+          <div 
+            v-if="checkOptions('lastDot')"
+            class="option-item" 
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              lastDot
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Показывать последнее значение
+            </div>
+            <div class="status-option item">
+              <v-switch  
+                v-model="options.lastDot" 
+                class="switch" 
+                :color="color.controls" 
+                :style="{color:color.text,}"
+                :label="String(options.lastDot)" 
+              />
+            </div>
+          </div>
+          <div 
             v-if="checkOptions('united')"
             class="option-item" 
           >
@@ -459,6 +511,105 @@
                 :label="String(options.united)" 
               />
             </div>
+          </div>
+         
+          <v-card-text 
+            v-if="!options.united && checkOptions('united')"
+            class="headline" 
+          >
+            <div 
+              class="settings-title" 
+              :style="{color:color.text,borderColor:color.text}"
+            >
+              Настройки режима United 
+            </div>
+          </v-card-text>
+          <div 
+            v-if="!options.united && checkOptions('united')"
+            class="options-block united-block"  
+          > 
+            <v-icon 
+              v-if="metrics.length==0"
+              class="icon-plus" 
+              :color="color.controls" 
+              @click="addMetrics"
+            >
+              {{ plus_icon }}
+            </v-icon>
+            <div 
+              v-for="i in metrics.length" 
+              :key="i"
+              class="options-item-tooltip"  
+            >
+              <v-select  
+                v-model="metrics[i-1].name"
+                :items="metricsName" 
+                :color="color.controls" 
+                :style="{color:color.text, fill: color.text}"  
+                hide-details  
+                outlined  
+                class="item-metric" 
+                label="Имя метрики"
+                @click="changeColor"
+              /> 
+              <v-select  
+                v-model="metrics[i-1].type"
+                :items="types" 
+                :color="color.controls" 
+                :style="{color:color.text, fill: color.text}"  
+                hide-details  
+                outlined  
+                class="item-metric" 
+                label="Тип графика"
+                @click="changeColor"
+              /> 
+              <v-text-field 
+                v-model="metrics[i-1].lowborder" 
+                clearable  
+                placeholder="0"  
+                label="Нижняя граница (ось Y)"
+                :color="color.text" 
+                :style="{color:color.text, background: 'transparent', borderColor: color.text}" 
+                :disabled="metrics[i-1].manual"
+                outlined 
+                class="item-metric border"  
+                hide-details
+              />
+              <v-text-field 
+                v-model="metrics[i-1].upborder" 
+                clearable  
+                placeholder="0"  
+                label="Верхняя граница (ось Y)"
+                :color="color.text" 
+                :style="{color:color.text, background: 'transparent', borderColor: color.text}" 
+                :disabled="metrics[i-1].manual"
+                outlined 
+                class="item-metric border"  
+                hide-details
+              />
+              <v-checkbox
+                v-model="metrics[i-1].manual"
+                :color="color.controls" 
+                :style="{color:color.text}"
+                class="item-metric checkbox"
+                label="Автоматически/Вручную"
+                hide-details
+              />
+              <v-icon 
+                class="icon-inside" 
+                :color="color.controls" 
+                @click="addMetrics"
+              >
+                {{ plus_icon }}
+              </v-icon>
+              <v-icon 
+                class="icon-inside" 
+                :color="color.controls"  
+                @click="deleteMetrics(i-1)"
+              >
+                {{ minus_icon }}
+              </v-icon>
+            </div> 
           </div>
           <div 
             v-if="checkOptions('multiple')"
@@ -715,7 +866,10 @@ export default {
         texts: [],                 
         links: [],
         buttons: [],
-      }
+      },
+      metrics: [],
+      types: ['Line chart', 'Bar chart'],
+      metricsName: [],
     }
   },
   computed: { 
@@ -728,6 +882,7 @@ export default {
           this.tooltipSettingShow = false;
         }
         this.prepareOptions();  // и подготовливаем модалку на основе этого элемента
+        this.metricsName = this.$store.getters.getMetricsMulti({idDash: this.idDash, id: this.element});
       }
       return this.$store.getters.getModalSettings(this.idDash).status;
     },
@@ -741,7 +896,7 @@ export default {
   },
   methods: {  
     setOptions: function() {  // отправляем настройки в хранилище
-    
+
       if(!this.options.level){
         this.options.level = 1;
       }
@@ -759,6 +914,12 @@ export default {
       //let options = {...{},...this.options};
       if (this.element.indexOf('csvg') != -1) {
         this.options.tooltip = this.tooltip;
+      }
+      if (this.element.indexOf('multiLine') != -1) {
+        let updateMetrics = this.metrics.map( item => {
+          return JSON.parse(JSON.stringify(item))
+        })
+        this.$set(this.options,'metrics',updateMetrics);
       }
 
       this.$store.commit('setOptions',  { idDash: this.idDash, id: this.element, options: this.options });
@@ -784,6 +945,9 @@ export default {
         this.tooltip.buttons.push({name: '',id: ''});
       }
     },
+    addMetrics: function() {
+      this.metrics.push({name: '', type: '', upborder: 0, lowborder: 0, manual: true})
+    },
     deleteFromTooltip: function(item,i) {
 
       if (item == 'text') {
@@ -792,6 +956,21 @@ export default {
         this.tooltip.links.splice(i, 1);
       }  else if (item == 'button') {
         this.tooltip.buttons.splice(i, 1);
+      }
+    },
+    deleteMetrics: function(i) {
+      this.metrics.splice(i, 1);
+    },
+    changeColor: function() {
+      if (document.querySelectorAll('.v-menu__content').length != 0){
+        
+        document.querySelectorAll('.v-menu__content').forEach( item => {
+          
+          item.style.boxShadow = `0 5px 5px -3px ${this.color.border},0 8px 10px 1px ${this.color.border},0 3px 14px 2px ${this.color.border}`;
+          item.style.background = this.color.back;
+          item.style.color = this.color.text;
+          item.style.border = `1px solid ${this.color.border}`;
+        })
       }
     },
     prepareOptions: function() {  //  понимает какие опции нужно вывести
@@ -808,15 +987,28 @@ export default {
             this.$set(this.tooltip,'texts', [...[],...options[item].texts]);
             this.$set(this.tooltip,'links', [...[],...options[item].links]);
             this.$set(this.tooltip,'buttons',[...[],...options[item].buttons]);
+          } else if (item == 'metrics') {
+            //this.$set(this,'metrics',options[item]);
+            this.metrics = options[item];
           } else {
             this.$set(this.options,item,options[item]);
           }
         } else {
+          
           this.$set(this.options,item,null);
           if (item == 'united') {
             this.$set(this.options,item,false);
           }
+          if (item == 'lastDot') {
+            this.$set(this.options,item,false);
+          }
+          if (item == 'metrics') {
+            this.metrics = [];
+          } 
           if (item == 'multiple') {
+            this.$set(this.options,item,false);
+          }
+          if (item == 'underline') {
             this.$set(this.options,item,false);
           }
         }
@@ -824,6 +1016,7 @@ export default {
       if (!this.options.change) {
         this.$set(this.options,'change',false);
       }
+
 
     }
          

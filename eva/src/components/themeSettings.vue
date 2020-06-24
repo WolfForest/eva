@@ -1,5 +1,42 @@
 <template>
-  <div 
+  <v-navigation-drawer
+    v-model="paleteShow"
+    fixed
+    class="theme-setting"
+    right
+    :color="colorFrom.text"
+    :style="{background: colorFrom.backElement}"
+  >
+    <div class="theme-btn">
+      <v-btn 
+        :color="colorFrom.controlsSystem" 
+        class="theme-choise-btn" 
+        @click="setTheme('light')"
+      >
+        Светлая тема
+      </v-btn> 
+      <v-btn 
+        :color="colorFrom.controlsSystem" 
+        class="theme-choise-btn" 
+        @click="setTheme('dark')"
+      >
+        Тёмная тема
+      </v-btn> 
+      <!-- <div 
+        class="just-btn theme-btn-light" 
+        @click="setTheme('light')"
+      >
+        Светлая тема
+      </div>
+      <div 
+        class="just-btn theme-btn-dark" 
+        @click="setTheme('dark')"
+      > 
+        Тёмная тема
+      </div> -->
+    </div>
+  </v-navigation-drawer>
+  <!-- <div 
     class="settings" 
     :class="{showSettings:active}" 
     :style="{background: color.back}"
@@ -144,7 +181,7 @@
             mode.sync="rgba" 
           />
         </div>
-      </div>  
+      </div>   
       <div class="color-item">
         <div class="color-row">
           <p 
@@ -170,7 +207,7 @@
             mode.sync="rgba" 
           />
         </div>
-      </div>
+      </div> 
       <div class="theme-btn">
         <div 
           class="just-btn theme-btn-light" 
@@ -185,20 +222,20 @@
           Тёмная тема
         </div>
       </div>
-      <v-btn 
+       <v-btn 
         small 
         :color="color.controls" 
         class="accept-btn" 
         @click="setNewColor"
       >
         Подтвердить
-      </v-btn>
+      </v-btn> 
     </div>
     <div 
       class="vertical-line" 
       :style="{background: color.controls}"
-    />
-  </div>
+    /> 
+  </div> -->
 </template>
 
 
@@ -208,11 +245,13 @@ import {  mdiChevronDown, mdiChevronUp } from '@mdi/js'
 
 export default {
   props: {
+    colorFrom: null,
+    paleteFrom: null,
     showFrom: null,
   },
   data () {
     return {
-      color: {},
+      paleteShow: false,
       switchers: {
         textBlock: {
           status: false,
@@ -246,6 +285,12 @@ export default {
       return this.showFrom 
     } 
   },  
+  watch: {
+    paleteFrom: function (palete) {
+      palete ? this.paleteShow = true : this.paleteShow = false;
+
+    },
+  },
   methods: {
     switchBlock: function(switcher) {
       Object.keys(this.switchers).forEach( item => {
@@ -261,32 +306,29 @@ export default {
         this.switchers[switcher].arrow = mdiChevronDown; 
       }
     },
-    setNewColor: function() {
-      this.color.change = !this.color.change;
-      this.$store.commit('setColor', this.color);
-    },
     setTheme: function(theme){
-      if (theme == 'light') {
-        this.color.text = '#333';
-        this.color.back = '#FFF';
-        this.color.backElement = '#FFF';
-        this.color.controls = '#008080';
-        this.color.controlsActive = '#FF6D70';
-        this.color.border = '#00000033';
-        this.color.change = !this.color.change;
-      } else {
-        this.color.text = '#FFFCFCFF';
-        this.color.back = '#07070EFF';
-        this.color.backElement = '#17171BFF';
-        this.color.controls = '#0B909C';
-        this.color.controlsActive = '#F5B910';
-        this.color.border = "#F1FFFF33";
-        this.color.change = !this.color.change;
-      }
+      this.$store.commit('setTheme', theme);
+      // if (theme == 'light') {
+      //   this.color.text = '#333';
+      //   this.color.back = '#FFF';
+      //   this.color.backElement = '#FFF';
+      //   this.color.controls = '#008080';
+      //   this.color.controlsActive = '#FF6D70';
+      //   this.color.border = '#00000033';
+      //   this.color.change = !this.color.change;
+      // } else {
+      //   this.color.text = '#FFFCFCFF';
+      //   this.color.back = '#07070EFF';
+      //   this.color.backElement = '#17171BFF';
+      //   this.color.controls = '#0B909C';
+      //   this.color.controlsActive = '#F5B910';
+      //   this.color.border = "#F1FFFF33";
+      //   this.color.change = !this.color.change;
+      // }
     },
   },
   mounted() {
-    this.color =  this.$store.getters.getColor;
+    //this.color =  this.$store.getters.getColor;
     
   } 
 }
@@ -296,7 +338,7 @@ export default {
 
 <style lang="sass" > 
   
-    @import '../sass/dashSettings.sass'
+    @import '../sass/themeSettings.sass'
 
    
 </style>

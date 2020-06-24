@@ -16,7 +16,6 @@
             <v-tabs   
               v-model="tab" 
               :color="color.text"  
-              :style="{background: color.backElement }"
               @change="getData"
             >
               <v-tabs-slider />
@@ -32,6 +31,7 @@
                 :key="i" 
                 class="item"
                 :value="`tab-${i}`" 
+                :style="{background: color.backElement}"
               >
                 <div 
                   v-if="dataLoading"
@@ -40,6 +40,7 @@
                   <v-skeleton-loader
                     type="table-tbody"
                     tile
+                    :style="{background: color.backElement}"
                   />
                 </div>
                 <div
@@ -53,6 +54,7 @@
                     :items.sync="originData"
                     :items-per-page="15"
                     class="aut-table"
+                    :data-id="`${i}`"
                     :sort-by="['roles']"
                   >
                     <template v-slot:item.color="{ item }">
@@ -146,6 +148,8 @@
 
 import {   mdiPencil,  mdiPlus, mdiTrashCanOutline  } from '@mdi/js'
 
+import themes from '../../js/themeSettings.js';
+
 export default {
 
   data () {
@@ -170,24 +174,23 @@ export default {
       dataDelete: {},
       curItem: {},
       permission: true,
-      color: { 
-        back: '#060606',
-        backElement: '#191919',
-        text: '#DADADA',
-        controls: '#6e96c5',
-        controlsSystem: '#004799',
-        controlsActive: '#41C4FF',
-        controlsInsideDash: '#DADADA',
-        panel: '#0D0D0D',
-        border: '#DADADA',
-      },
+      color: { },
     } 
   },
   computed: { 
     adminRool: function() {
       return this.adminRoot
+    },
+    theme: function() {
+      return this.$store.getters.getTheme
     }
   },  
+  watch: {
+    theme: function (theme) {
+      this.color = themes[theme];
+      
+    },
+  }, 
   methods: {
     setPermissions: function(event) {
       if (event.includes('admin_all')) {
@@ -242,6 +245,8 @@ export default {
             }
           })
         });
+        this.setColorHover(event.split('-')[1]);
+        console.log('sadasd')
       } else {
         this.originData = [];
       }
@@ -296,6 +301,31 @@ export default {
     setData: async function(role) {
       return await this.$store.auth.getters.getEssenceList(role,false)
     },
+    setColorHover: function(i) { 
+
+      let table = {};
+      let timeOut = setTimeout( async function tick() {
+      
+        if (document.querySelector(`[data-id="${i}"]`)) {
+          clearTimeout(timeOut);
+          table = document.querySelector(`[data-id="${i}"]`);
+          table.addEventListener('mouseover', event => {
+            if(event.target.tagName.toLowerCase() == 'td') {
+              event.target.parentElement.style =`background: ${this.color.controls} !important;color:${this.color.back}`;
+            }
+          })
+          table.addEventListener('mouseout', event => {
+            if(event.target.tagName.toLowerCase() == 'td') {
+              event.target.parentElement.style =`background: transparent !important;color:${this.color.text}`;
+            }
+          })
+
+        }  else {
+          timeOut = setTimeout(tick.bind(this), 100); 
+        }
+      }.bind(this), 0);
+      
+    },
     checkName: function(name) {
       if (name.length > 25) {
         return name.slice(0, 25) + '...'
@@ -335,6 +365,7 @@ export default {
   },
   mounted() {
     this.getData('tab-1');
+    this.color = themes[this.theme];
   } 
 }
 

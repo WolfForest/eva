@@ -451,7 +451,11 @@ export default {  // приблизительный объект хранили�
             
           state[options.idDash][options.id].options.change = !state[options.idDash][options.id].options.change; // то ее всегда меняем на противоположную, давая понять, что натсройки обновились
         } else {  // для любой другой настройки
-          Vue.set(state[options.idDash][options.id].options, [item] , options.options[item]); // просто обновляем ее значение на новое
+          // if (item == 'metrics') {
+          //   console.log(state[options.idDash][options.id].options[item])
+          // }
+          
+          Vue.set(state[options.idDash][options.id].options, item , options.options[item]); // просто обновляем ее значение на новое
         }
       })
         
@@ -566,8 +570,8 @@ export default {  // приблизительный объект хранили�
         
       return state[settings.idDash].modalSettings
     },
-    setColor: (state, color) => {    // устанавливает объект цвета в хранилище
-      state.color = color;
+    setTheme: (state, theme) => {    // устанавливает объект цвета в хранилище
+      Vue.set(state, 'theme', theme);
     },
     setGraphTree: (state, tree) => { // мтеод сохраняет структуру и позицию графа
       state[tree.idDash][tree.id].tree = tree.tree;
@@ -613,7 +617,17 @@ export default {  // приблизительный объект хранили�
     //     controlsActive: '#FF6D70',
     //     border: '#00000033',
     // });
-    }
+    },
+    setMetricsMulti: (state,dash) => {
+      let metrics = [...[],...dash.metrics];
+      metrics.splice(0,1);
+      //console.log(dash.idDash,dash.id)
+      if (!state[dash.idDash][dash.id].metrics) {
+        state[dash.idDash][dash.id].metrics = [];
+      }
+      //Vue.set(state[dash.idDash][dash.id], 'metrics',[]);
+      state[dash.idDash][dash.id].metrics = metrics;
+    },
   },
   actions: {
     
@@ -1087,6 +1101,12 @@ export default {  // приблизительный объект хранили�
 
       }
     },
+    getTheme(state) {
+      if (!state.theme) {
+        Vue.set(state, 'theme', 'light');
+      }
+      return state.theme
+    },
     // getColor(state) {  // получаем объект с цветовыми настройками
         
     //     if (!state.color) {  // если его нет то создаем шаблонный
@@ -1267,7 +1287,15 @@ export default {  // приблизительный объект хранили�
         return rest.importDash(dash,restAuth) // отправляем в файл storeRest.js 
       }
     },
-       
+    getMetricsMulti: (state) => {
+      return (dash) => {
+        if (!state[dash.idDash][dash.id].metrics) {
+          state[dash.idDash][dash.id].metrics = [];
+        }
+        return state[dash.idDash][dash.id].metrics
+
+      }
+    },
   },
 }
 

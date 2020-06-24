@@ -126,6 +126,12 @@ export default {
     }
 
   },
+  watch: {
+    color: function(color) {
+      this.$refs.tableBlock.style.color = color.text;
+      this.$refs.tableBlock.style.backgroundColor = color.backElement;
+    },
+  },
   methods: {
     createTitles: function(result) {
 

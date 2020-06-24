@@ -123,6 +123,7 @@ export default {
           } else {  // если нет
 
             let data = this.dataRest;
+            //let data = this.bar2;
             if (data[0]['_time'] && data[0]['value']) {
 
               this.nodata = false;

@@ -10,23 +10,34 @@
 
 <script>
 
+import themes from '../js/themeSettings.js';
 
 export default {
 
   data () {
     return {
-      version: 'v 1.30.14 [notContainTable]',
-      color: { 
-        text: '#DADADA',
-      },
+      version: 'v 1.40.18 [underlineButton]',
+      color: { },
     } 
   },
   computed: { 
 
+    theme: function() {
+      return this.$store.getters.getTheme
+    }
+  },  
+  watch: {
+    theme: function (theme) {
+      this.color = themes[theme];
+      
+    },
   },  
   methods: {
 
   },
+  mounted() {
+    this.color = themes[this.theme];
+  }
 }
 
 
