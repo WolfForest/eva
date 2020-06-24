@@ -831,9 +831,7 @@ export default {
           }
 
 
-          otstupProcent = (10*max[i])/100;
-
-          
+          otstupProcent = (20*max[i])/100;
 
           let metricOPt = {};
           if (metricsOpt.length != 0) {
@@ -873,6 +871,10 @@ export default {
             tickvals = [maxY];
           }
 
+          
+
+          let textsNodes = [];
+
 
           if (i == 0 ) {
 
@@ -885,10 +887,11 @@ export default {
             //console.log(y[i].ticks())
 
 
-
+            
             
             // добавляем ось Y
             svg.append("g")
+              .attr("class",`yAxis-${i}`)
               .call(d3.axisLeft(y[i]).tickValues(tickvals));
 
             
@@ -935,7 +938,10 @@ export default {
 
             // добавляем ось Y
             svg.append("g")
-              .call(d3.axisLeft(y[i]).tickValues([maxY]));
+              .attr("class",`yAxis-${i}`)
+              .call(d3.axisLeft(y[i]).tickValues(tickvals));
+
+             //console.log(svg.selectAll(`.yAxis-${i} .tick`).select("text").nodes())
 
             // if (Object.keys(metricOPt).length == 0 || metricOPt.type == 'Line chart') {
               
@@ -960,6 +966,22 @@ export default {
 
 
           }
+       
+
+          textsNodes = svg.selectAll(`.yAxis-${i} .tick`).select("text").nodes();
+
+          textsNodes.forEach( (item,l) => {
+            if (textsNodes.length > 1) {
+              if (l == 0) {
+                item.style["transform"] = "translateY(-5px)";
+              } else if (l == textsNodes.length-1) {
+                item.style["transform"] = "translateY(5px)";
+              }
+            } else {
+              item.style["transform"] = "translateY(5px)";
+            }
+            
+          })
 
           // let cutData = data.filter( item => {
           //     if (item[metric] >= minY && item[metric] <= maxY) {
@@ -1035,6 +1057,22 @@ export default {
                     .x(function(d) {return x(d[xMetric]*secondTransf) })
                     .y(function(d) {return y[i](d[metric]) })
                   )
+
+                if (minY < 0) {
+                  line[i]
+                    .append("line") // добавляем линию
+                    .attr("class",`zero-line-${i}`) // добавляем класс
+                    .attr("x1", 0)
+                    .attr("x2", width)
+                    .attr("y1",y[i](0))
+                    .attr("y2", y[i](0))
+                    .style("stroke", colors[1]) 
+                    .style("stroke-dasharray", "3 3") 
+                    .attr("opacity", "0.3")
+
+                }
+
+                
               })
                                   
                                   

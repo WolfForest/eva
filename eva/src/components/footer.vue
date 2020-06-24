@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.38.18 [negativeValueBar]',
+      version: 'v 1.39.18 [styleLineMulti]',
       color: { },
     } 
   },
