@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.40.18 [underlineButton]',
+      version: 'v 1.40.18',
       color: { },
     } 
   },
