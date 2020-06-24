@@ -10,9 +10,16 @@
       :style="{color:optionsData.colorText,height:`${height}px`,fontSize:`${fontSize}px`,lineHeight:`${height-dataMode}px`,background:optionsData.background}"
     >
       {{ optionsData.name }}
+      <div 
+        v-if="underline"
+        class="underline" 
+        :style="{background:optionsData.colorText, width: `${underlineWidth}%`}"
+      />
     </div>
   </div>
 </template>
+
+
 
 
 <script>
@@ -39,6 +46,7 @@ export default {
         'background': '',
         'colorText': ''
       }, 
+      underline: false,
     } 
   },
   computed: {  // осоновные параметры, которые чатсо меняются и которы следует отслеживать
@@ -63,15 +71,22 @@ export default {
     },
     options: function() {
       let options = this.$store.getters.getOptions({idDash: this.idDash, id: this.id});
-      if (options.color || options.backgroundcolor || options.name) {
-        this.optionsData.name = options.name;
-        this.optionsData.background = options.backgroundcolor;
+      if (options.color) {
         this.optionsData.colorText = options.color;
-      }  else {
-        this.optionsData.name = '';
-        this.optionsData.background = 'transparent';
+      } else {
         this.optionsData.colorText = this.color.text;
       }
+      if (options.backgroundcolor) {
+        this.optionsData.background = options.backgroundcolor;
+      } else {
+        this.optionsData.background = 'transparent';
+      }
+      if (options.name) {
+        this.optionsData.name = options.name;
+      } else {
+        this.optionsData.name = '';
+      }
+      this.underline = options.underline;
       return true
     },
     fontSize: function() {
@@ -81,6 +96,19 @@ export default {
       } else {
         return '30'
       }
+    },
+    underlineWidth: function() {
+      let width = 70;
+      if (this.fontSize > 30) {
+        width = 90;
+      } else if (this.fontSize > 20) {
+        width = 70;
+      } else if (this.fontSize > 10) {
+        width = 50;
+      } else {
+        width = 30;
+      }
+      return width
     },
   },  
   methods: {

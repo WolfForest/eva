@@ -435,6 +435,32 @@
             </div>
           </div>
           <div 
+            v-if="checkOptions('underline')"
+            class="option-item"
+          >
+            <div 
+              class="name-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              underline
+            </div>
+            <div 
+              class="discribe-option item" 
+              :style="{color:color.text, borderColor:color.text}"
+            >
+              Подчеркивает текст кнопки
+            </div>
+            <div class="status-option item">
+              <v-switch  
+                v-model="options.underline"    
+                class="switch" 
+                :color="color.controls" 
+                :style="{color:color.text,}"
+                :label="String(options.underline)" 
+              />
+            </div>
+          </div>
+          <div 
             v-if="checkOptions('lastDot')"
             class="option-item" 
           >
@@ -980,6 +1006,9 @@ export default {
             this.metrics = [];
           } 
           if (item == 'multiple') {
+            this.$set(this.options,item,false);
+          }
+          if (item == 'underline') {
             this.$set(this.options,item,false);
           }
         }
