@@ -208,7 +208,9 @@ export default {
             this.$emit('setUsername',this.login);
             this.$emit('checkOver');
           }) 
-        } 
+        } else {
+          this.$router.push(`/`);
+        }
                          
       } else {
         this.$router.push(`/`);
