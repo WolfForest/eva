@@ -95,7 +95,8 @@ export default {
       this.$router.push(`/reports`); 
     },
     openQuis: function() {
-      this.$router.push(`/quiz/list`);
+      //this.$router.push(`/quiz/list`);
+      window.location.href = `/quiz/list`;  // используем window.location.href потому что /quiz/list внешняя ссылка а не часть приложения
     },
   },
   mounted() {
