@@ -766,7 +766,7 @@ export default {
             
         let step = ((height-20)/metricsName.length).toFixed(5);
         let startY = [20];
-        let otstupProcent;
+        let maxYTop,minYBottom;
         y = [];
         line = [];
         AllLinesWithBreak = [];
@@ -831,8 +831,7 @@ export default {
           }
 
 
-          otstupProcent = (20*max[i])/100;
-
+          
           let metricOPt = {};
           if (metricsOpt.length != 0) {
 
@@ -857,6 +856,9 @@ export default {
             }
           }
 
+          maxYTop = maxY + 0.1*maxY;
+          minYBottom = minY-0.1*Math.abs(minY);
+
           // svg.append("defs").append("svg:clipPath")
           //   .attr("id", `clip-${that.id}-${i}`)
           //   .append("svg:rect")
@@ -865,11 +867,18 @@ export default {
           //   .attr("x", 0)
           //   .attr("y", startY);
           let tickvals = [];
-          if (minY < 0) {
-            tickvals = [minY,0,maxY];
+          if (minYBottom == maxYTop) {
+            tickvals = [minYBottom];
           } else {
-            tickvals = [maxY];
+            if (minYBottom < 0) {
+              tickvals = [minYBottom,0,maxYTop];
+            } else if (minYBottom > 0) {
+              tickvals = [minYBottom,maxYTop];
+            } else {
+              tickvals = [maxYTop];
+            } 
           }
+          
 
           
 
@@ -881,7 +890,7 @@ export default {
             
 
             y.push(d3.scaleLinear()
-              .domain([minY, maxY+otstupProcent])
+              .domain([minYBottom, maxYTop])
               .range([ parseFloat(step)+20,startY[i] ]));
 
             //console.log(y[i].ticks())
@@ -933,7 +942,7 @@ export default {
           } else {
             
             y.push(d3.scaleLinear()
-              .domain([minY, maxY+otstupProcent])
+              .domain([minYBottom, maxYTop])
               .range([ parseFloat(step*(i+1))+20, startY[i] ]));
 
             // добавляем ось Y

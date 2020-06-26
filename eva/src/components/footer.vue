@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.40.19 [underlineButton]',
+      version: 'v 1.41.19 [improveYAxis]',
       color: { },
     } 
   },
