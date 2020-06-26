@@ -209,7 +209,7 @@ export default {
             this.$emit('checkOver');
           }) 
         } else {
-          this.$router.push(`/`);
+          this.exit();
         }
                          
       } else {
