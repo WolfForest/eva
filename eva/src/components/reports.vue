@@ -62,6 +62,33 @@
                 :style="{background: color.backElement, color: `${color.text} !important`}" 
                 placeholder="Введите запрос" 
               />
+              <router-link 
+                :to="{ path: '/reports'}" 
+                target="_blank"
+              >
+                <v-tooltip 
+                  bottom 
+                  :color="color.controlsActive" 
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      :color="color.controls"
+                      fab
+                      dark 
+                      small
+                      absolute
+                      class="new-btn"
+                      top
+                      right
+                      v-on="on"
+                      @click="openNewSearch"
+                    >
+                      <v-icon>{{ plus }}</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Открыть новое Исследование данных</span>
+                </v-tooltip>
+              </router-link>
               <v-tooltip 
                 bottom 
                 :color="color.controlsActive" 
@@ -205,7 +232,7 @@
 
 <script>
 
-import { mdiPlay, mdiSettings, mdiMerge } from '@mdi/js'
+import { mdiPlay, mdiSettings, mdiMerge,  mdiPlus } from '@mdi/js'
 import  settings  from '../js/componentsSettings.js';
 import themes from '../js/themeSettings.js';
 
@@ -217,6 +244,7 @@ export default {
         parametrs: {}
       },
       play: mdiPlay,
+      plus: mdiPlus,
       gear: mdiSettings,
       merge: mdiMerge,
       modal: false,
@@ -467,6 +495,9 @@ export default {
       this.size.width = Math.round(size.width) - 16;
       this.size.height = Math.round(size.height) - 66;
     },
+    openNewSearch: function() {
+      console.log('asdasd')
+    }
   },
   mounted() {
     this.search = this.$store.getters.getReportSearch;
