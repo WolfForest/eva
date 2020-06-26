@@ -7,14 +7,15 @@
   >
     <div 
       class="name" 
+      :class="{textDecoration:underline}"
       :style="{color:optionsData.colorText,height:`${height}px`,fontSize:`${fontSize}px`,lineHeight:`${height-dataMode}px`,background:optionsData.background}"
     >
       {{ optionsData.name }}
-      <div 
+      <!-- <div 
         v-if="underline"
         class="underline" 
         :style="{background:optionsData.colorText, width: `${underlineWidth}%`}"
-      />
+      /> -->
     </div>
   </div>
 </template>

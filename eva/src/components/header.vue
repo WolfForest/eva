@@ -189,6 +189,7 @@ export default {
   },
   methods: {
     getCookie: async function() {
+      //console.log(this.$jwt.hasToken())
       if(this.$jwt.hasToken()) {
         this.login = this.$jwt.decode().username;
         //let id = this.$jwt.decode().user_id;
@@ -200,7 +201,6 @@ export default {
             return {status: 300, result: 'Post не создался, возможно из-за неточностей в запросе'}
           }) 
 
-                   
         if (response.status == 200) {  // если получилось
           await response.json().then( res => {  // переводим полученные данные из json в нормальный объект
             permissions = res.data;
@@ -208,7 +208,9 @@ export default {
             this.$emit('setUsername',this.login);
             this.$emit('checkOver');
           }) 
-        } 
+        } else {
+          this.exit();
+        }
                          
       } else {
         this.$router.push(`/`);

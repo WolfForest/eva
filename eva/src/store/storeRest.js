@@ -43,7 +43,7 @@ export default {
                   clearTimeout(timeOut);
                 }
     
-                // отправляем get запрос с параметрами ИС
+                // отправляем get запрос с параметрами ИД
                             
                 responseGet = await fetch(`/api/checkjob?original_otl=${encodeURIComponent(searchFrom.otl)}&tws=${searchFrom.tws}&twf=${searchFrom.twf}&cache_ttl=${searchFrom.cache_ttl}`, {
                   method: 'GET',
@@ -53,6 +53,15 @@ export default {
                     resEvents = data;
                     return data.status;
                   })  
+                  .catch( error => {
+                    console.log(error);
+                    restAuth.putLog(`Запрос выполнить не удалось.&nbsp;&nbsp;Ошибка: ${error}`);
+                    status = 'failed'; 
+                    result = [];
+                    clearTimeout(timeOut);
+                    
+                  })
+
         
                 if (responseGet != 200 && responseGet != 0) {  // если запрос не прошел то вернем ответ с ошибкой
                   status = 'failed';
@@ -65,7 +74,7 @@ export default {
                     status = res.status;
                     return res;
                   });
-                  result = dataEvents;    
+                  result = dataEvents;  
                 }
                 if (status == 'nocache' || status == 'notfound') { // УДАЛИТЬ
                   countNoCache++;
