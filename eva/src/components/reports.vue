@@ -81,7 +81,6 @@
                       top
                       right
                       v-on="on"
-                      @click="openNewSearch"
                     >
                       <v-icon>{{ plus }}</v-icon>
                     </v-btn>
@@ -473,6 +472,7 @@ export default {
           }
         );
       })
+      
                
       return result 
 
@@ -482,22 +482,24 @@ export default {
       this.modal = false;
     },
     openStatistic: function(statistic) {
-      if (this.statisticKey == statistic.text) {
-        this.showStatistic = !this.showStatistic;
+      if (this.showStatistic) {
+        if (this.statisticKey == statistic.text) {
+          this.showStatistic = false;
+        } else {
+          this.statisticKey = statistic.text;
+          this.statistic = statistic.static;
+        }
       } else {
         this.showStatistic = true;
         this.statisticKey = statistic.text;
         this.statistic = statistic.static;
-      } 
+      }
     },
     calcSize: function() {
       let size = this.$refs.vis.$el.getBoundingClientRect();
       this.size.width = Math.round(size.width) - 16;
       this.size.height = Math.round(size.height) - 66;
     },
-    openNewSearch: function() {
-      console.log('asdasd')
-    }
   },
   mounted() {
     this.search = this.$store.getters.getReportSearch;

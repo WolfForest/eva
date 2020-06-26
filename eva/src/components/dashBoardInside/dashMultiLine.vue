@@ -856,7 +856,7 @@ export default {
             }
           }
 
-          maxYTop = maxY + 0.1*maxY;
+          maxYTop = maxY + 0.1*Math.abs(maxY);
           minYBottom = minY-0.1*Math.abs(minY);
 
           // svg.append("defs").append("svg:clipPath")
@@ -872,11 +872,9 @@ export default {
           } else {
             if (minYBottom < 0) {
               tickvals = [minYBottom,0,maxYTop];
-            } else if (minYBottom > 0) {
-              tickvals = [minYBottom,maxYTop];
             } else {
-              tickvals = [maxYTop];
-            } 
+              tickvals = [minYBottom,maxYTop];
+            }
           }
           
 

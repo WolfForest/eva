@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.41.19 [improveYAxis]',
+      version: 'v 1.41.20 [statisticField]',
       color: { },
     } 
   },
