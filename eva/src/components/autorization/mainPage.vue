@@ -48,7 +48,7 @@
               class="product-text" 
               :style="{color:color.text}"
             >
-              Вопрос  <br>  Ответ
+              Вопрос  <br>  ответ
               <p 
                 class="delimetr" 
                 :style="{backgroundColor:color.text}"
