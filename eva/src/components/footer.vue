@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.41.21 [currentTime]',
+      version: 'v 1.41.22 [oneSearchMultiSelect]',
       color: { },
     } 
   },
