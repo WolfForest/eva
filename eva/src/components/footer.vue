@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.41.22 [oneSearchMultiSelect]',
+      version: 'v 1.41.23 [tooLargeLogs]',
       color: { },
     } 
   },
