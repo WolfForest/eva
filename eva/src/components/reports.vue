@@ -12,7 +12,8 @@
         >
           <v-card 
             class="static-block" 
-            :style="{background: color.backElement, color: color.text}">
+            :style="{background: color.backElement, color: color.text}"
+          >
             <v-card-title class="static-title">
               <p>Статистика</p>
               <div 

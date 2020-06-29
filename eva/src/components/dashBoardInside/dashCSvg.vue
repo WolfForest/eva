@@ -209,7 +209,7 @@ export default {
       } else {
         this.otstupBottom = 10; 
       }
-      this.checkSize();
+     // this.checkSize();
     },
     dataRestFrom: function(dataRest) {
         
@@ -250,8 +250,8 @@ export default {
         this.$emit('setLoading',false);
       }
     },
-    checkSize: function() {
-      if (this.svg != 'Нет данных для отображения') {
+    checkSize: function() {this.$refs.csvg
+      if (this.svg != 'Нет данных для отображения' && this.svg != '') {
         let timeOut = setTimeout( function tick() {
           if (this.$refs.csvg.querySelector('svg') != null ) {
             clearTimeout(timeOut);
