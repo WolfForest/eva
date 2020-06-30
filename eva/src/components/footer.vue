@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.42.23 [improveBarChart]',
+      version: 'v 1.43.23 [limitlessCheck]',
       color: { },
     } 
   },

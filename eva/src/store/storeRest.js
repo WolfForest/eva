@@ -34,7 +34,7 @@ export default {
 
             let cycle = new Promise((resolve) => {
 
-              let i = 0;
+              //let i = 0;
 
               let timeOut = setTimeout( async function tick() {
             
@@ -80,13 +80,13 @@ export default {
                   countNoCache++;
                 }
                 // if (status == 'success' || i >100 || status == 'failed' || status == 'notfound' || status == 'nocache' ) {
-                if (status == 'success' || i >100 || status == 'failed'  || countNoCache >10 ) {
+                if (status == 'success'  || status == 'failed'  || countNoCache >10 ) {
                   clearTimeout(timeOut);
                   resolve(result);
                 }  else {
                   timeOut = setTimeout(tick, 2000); 
                 }
-                i++;
+                //i++;
               }, 0);
                               
             });
