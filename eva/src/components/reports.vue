@@ -179,7 +179,8 @@
                 :sizeTileFrom="''" 
                 :searchRep="true" 
                 :tooltipFrom="tooltipSvg"    
-                :dataRestFrom="data"    
+                :dataRestFrom="data" 
+                :dataReport="true"   
               />
               <v-tooltip 
                 bottom 

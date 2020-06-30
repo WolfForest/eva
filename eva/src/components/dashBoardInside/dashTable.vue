@@ -43,7 +43,8 @@ export default {
     colorFrom: null,
     idFrom: null,
     idDashFrom: null,
-    heightFrom: null
+    heightFrom: null,
+    dataReport: null,
   },
   data () {
     return {
@@ -81,7 +82,7 @@ export default {
       return this.colorFrom
     },
     height: function() {
-      let otstup = 120;
+      let otstup = 100;
       if (screen.width <= 1600) {
         otstup = 80;
       }
@@ -90,6 +91,9 @@ export default {
       }
       if(this.props.hideFooter) {
         otstup = 45;
+      }
+      if (this.dataReport) {
+        otstup = otstup-30;
       }
       let height = this.heightFrom-otstup; // 120 это размер блока с пагинацией таблицы + шапка с настройками самого блока
       return height
