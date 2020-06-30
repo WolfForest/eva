@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.41.23 [tooLargeLogs]',
+      version: 'v 1.42.23 [improveBarChart]',
       color: { },
     } 
   },

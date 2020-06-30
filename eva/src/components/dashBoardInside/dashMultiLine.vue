@@ -1383,7 +1383,8 @@ export default {
                 if (time) {
                   return z.bandwidth()
                 } else { 
-                  return x.bandwidth()} 
+                  return x.bandwidth()
+                } 
               })
               .attr("height", function(d,j) { 
                 if (lastDot) {
