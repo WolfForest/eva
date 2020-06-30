@@ -29,6 +29,7 @@
             outlined 
             class="select-exp" 
             :label="labelExp[element]" 
+            @click="changeColor"
           /> 
           <v-btn 
             small  
@@ -166,7 +167,8 @@ export default {
         list.unshift('Выбрать все');
         this.elements[this.element] = list;
       }
-    }
+    },
+    
   },
   methods: {
     exportDash: async function() {
@@ -239,6 +241,18 @@ export default {
     },
     closeModal: function() {
       this.$emit('closeModal');
+    },
+    changeColor: function() {
+      if (document.querySelectorAll('.v-menu__content').length != 0){
+        
+        document.querySelectorAll('.v-menu__content').forEach( item => {
+          
+          item.style.boxShadow = `0 5px 5px -3px ${this.color.border},0 8px 10px 1px ${this.color.border},0 3px 14px 2px ${this.color.border}`;
+          item.style.background = this.color.back;
+          item.style.color = this.color.text;
+          item.style.border = `1px solid ${this.color.border}`;
+        })
+      }
     },
   },
 }
