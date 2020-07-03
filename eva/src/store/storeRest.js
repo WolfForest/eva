@@ -72,6 +72,7 @@ export default {
                   let  dataEvents = await resEvents.json().then( res => {  // переводим полученные данные из json в нормальный объект
                     restAuth.putLog(`Запрос ${searchFrom.sid} в процессе выполнения.&nbsp;&nbsp;status: ${res.status}&nbsp;&nbsp;url: ${decodeURIComponent(resEvents.url)}`);
                     status = res.status;
+                    console.log(status)
                     return res;
                   });
                   result = dataEvents;  

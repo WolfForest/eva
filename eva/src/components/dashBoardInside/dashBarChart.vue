@@ -99,32 +99,47 @@ export default {
       return this.heightFrom
     },
     prepareBarChart: function() {
-      let otstupBottom = 55;
-      if (screen.width <= 1600) {
-        otstupBottom = 30;
-      }
-      let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
-      sizeLine['width'] = this.width;
-      sizeLine['height'] = this.height-otstupBottom;
 
-
-      if (sizeLine.width != 0 && sizeLine.height != 0) {  // если размеры получены выше нуля
-        if (this.dataRest.length > 0) {  // если данные от родителя тоже пришли
-          if(this.dataRest.error) {  // сомтрим если с ошибкой
-            this.nodataText = this.dataRest.error; // то выводим сообщение о ошибке
-            this.nodata = true;
-          } else {  // если нет
-            this.createBarChart(this,sizeLine);
-          }
-        }
+      if (this.width != 0 && this.height != 0 && this.dataRest.length > 0) {   // если размеры получены выше нуля и  если данные от родителя тоже пришли
+        this.getDataAsynchrony(); // вызываем функцию в которой будет происходить асинхронная отрисовка графика
       }
+ 
       return 'done'
     },
   },  
   methods: {
+    getDataAsynchrony: function () { 
+
+      let prom = new Promise( resolve => { // создаем promise чтобы затем отрисовать график асинхронно
+
+        let otstupBottom = 55;
+        if (screen.width <= 1600) {
+          otstupBottom = 30;
+        }
+     
+        let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
+        sizeLine['width'] = this.width;
+        sizeLine['height'] = this.height-otstupBottom;
+
+        if(this.dataRest.error) {  // сомтрим если с ошибкой
+          this.nodataText = this.dataRest.error; // то выводим сообщение о ошибке
+          this.nodata = true;
+        } else {  // если нет
+          resolve(sizeLine)
+        }
+
+      })
+
+      prom.then( (sizeLine) => { // как раз тут делаем асинхронность
+        this.createBarChart(this,sizeLine);
+      })
+
+     
+    },
     createBarChart: function(that,sizeLine) {
       
-
+      console.log('create barchart')
+      
       let data = this.dataRest;
 
       this.nodata = false;

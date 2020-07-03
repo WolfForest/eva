@@ -238,6 +238,7 @@ export default {
       this.$emit('setLoading',true);
       let response = await  this.$store.getters.getSvg(svg);
       if (response != '') {
+        console.log('create svg')
         this.$emit('setLoading',false);
         this.svg = response;
         this.noMsg = 1;

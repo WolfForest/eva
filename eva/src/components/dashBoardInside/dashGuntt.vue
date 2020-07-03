@@ -143,14 +143,28 @@ export default {
   }, 
   methods: {
     prepareChart: function(dataRest) {
-      let sizeChart = {'width': 0,'height': 0};  // получаем размеры от родителя
-      sizeChart['width'] = this.widthFrom;
-      sizeChart['height'] = this.heightFrom;
-      this.actions[0].capture = Object.keys(dataRest[0]);
-      this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
-      this.createChart(sizeChart,this,dataRest);
+
+      let prom = new Promise( resolve => { // создаем promise чтобы затем отрисовать график асинхронно
+
+        let sizeChart = {'width': 0,'height': 0};  // получаем размеры от родителя
+        sizeChart['width'] = this.widthFrom;
+        sizeChart['height'] = this.heightFrom;
+        this.actions[0].capture = Object.keys(dataRest[0]);
+        this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
+        resolve(sizeChart)
+
+      })
+
+      prom.then( sizeChart => { // как раз тут делаем асинхронность
+        this.createChart(sizeChart,this,dataRest);
+      })
+
+      
+      
     },
     createChart: function(sizeChart,that,dataRest) {
+
+      console.log('create guntt')
 
       let otstupBot = 30;
       if (screen.width <= 1600) {

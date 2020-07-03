@@ -179,7 +179,7 @@
                 :sizeTileFrom="''" 
                 :searchRep="true" 
                 :tooltipFrom="tooltipSvg"    
-                :dataRestFrom="data" 
+                :dataRestFrom="getDataRest" 
                 :dataReport="true"   
               />
               <v-tooltip 
@@ -251,7 +251,10 @@ export default {
       modal: false,
       loading: false,
       rows: [],
-      data: {},
+      data: {
+        data: []
+      },
+      test: [],
       statistic: [],
       showStatistic: false,
       statisticKey: null,
@@ -262,7 +265,6 @@ export default {
       },
       aboutElem: {},
       rowsCount: 9,
-      shema: {},
       unitedShow: false,
       unitedData: {
         color: '',
@@ -277,27 +279,51 @@ export default {
     } 
   },
   asyncComputed: {
-    async static_rows() {
+    // async static_rows() {
+    //   if (this.shouldGet) {
+    //      this.data =  await this.getData(`reports-${this.search.sid}`);
+    //       console.log('update report')
+    //     // let statistic = '';
+    //     // this.rows = [];
+    //     // if (this.data.data.length != 0) {
+    //     //   console.log('create data report')
+    //     //   this.shema = this.data.shema;
+    //     //   this.data = this.data.data;
+    //     //   // let text = '';
+    //     //   // Object.keys(this.shema).forEach( (item,i) => {
+    //     //   //   statistic = this.createStatistic(item);
+    //     //   //   text = `${item}&nbsp;&nbsp;&nbsp;[${this.shema[item]}]`;
+    //     //   //   this.rows.push({'id': i,'text': text,'static': statistic});
+    //     //   // })
+    //     // }
+    //      this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
+    //     return true
+    //   }    
+    // }, 
+    async getDataRest() {
       if (this.shouldGet) {
-        this.data =  await this.getData(`reports-${this.search.sid}`);
-        let statistic = '';
-        this.rows = [];
-        if (this.data.data.length != 0) {
-          this.shema = this.data.shema;
-          this.data = this.data.data;
-          let text = '';
-          Object.keys(this.shema).forEach( (item,i) => {
-            statistic = this.createStatistic(item);
-            text = `${item}&nbsp;&nbsp;&nbsp;[${this.shema[item]}]`;
-            this.rows.push({'id': i,'text': text,'static': statistic});
-          })
-        }
+        
+        // let res =  await this.getDataAsynchrony();
+        // if (res) {    
+        //   return res
+        // }
+       // await this.getDataAsynchrony()
         this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
-        return true
-      }    
-    }, 
+        
+        
+      }
+     // return 'done'
+      return await this.getDataAsynchrony()
+      
+    },
   },
   computed: { 
+    // getDataRest:  function() {
+    //   if (this.shouldGet) {
+    //     console.log(this.getDataAsynchrony());
+    //   }
+    //   return 'done'
+    // },
     shouldGet: function() {  // понимаем нужно ли запрашивтаь данные с реста
       return this.$store.getters.getShouldGet({id: 'table', idDash: 'reports'})
     },
@@ -316,7 +342,9 @@ export default {
         this.$set(this.aboutElem[item],'icon',settings.reports[item].icon);
         this.$set(this.aboutElem[item],'key',i);
       })
-      return this.$store.getters.getReportElement
+      let elem = ['table'];
+      return elem
+      //return this.$store.getters.getReportElement
     }, 
     theme: function() {
       return this.$store.getters.getTheme
@@ -329,6 +357,33 @@ export default {
     },
   }, 
   methods: {
+    getDataAsynchrony: async function() {
+     // this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false});
+     // if (this.shouldGet) {
+     // if (should) {
+        let data =  await this.getData(`reports-${this.search.sid}`);
+        let statistic = '';
+        this.rows = []; 
+        //console.log(data.data)
+        if (data.data.length != 0) {
+          //this.test = res.data;
+          
+          console.log('create data report')
+          let text = '';
+          Object.keys(data.shema).forEach( (item,i) => {
+            statistic = this.createStatistic(item,data.data);
+            text = `${item}&nbsp;&nbsp;&nbsp;[${data.shema[item]}]`;
+            this.rows.push({'id': i,'text': text,'static': statistic});
+          })
+          //this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
+          //this.data['data'] = data.data;
+          return data.data;
+        } 
+     // }
+
+      // this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
+     // return ['hello']
+    },
     launchSearch: async function() {
 
       this.search.sid = this.hashCode(this.search.original_otl);
@@ -336,6 +391,7 @@ export default {
       this.$store.auth.getters.putLog(`Запущен запрос  ${this.search.sid}`);
 
       this.loading = true;
+      console.log('launch search')
       let response = await this.$store.getters.getDataApi({search: this.search, idDash: 'reports'});
       // вызывая метод в хранилище  
 
@@ -345,6 +401,7 @@ export default {
         this.data = [];
         this.rows = [];
       } else {  // если все нормально
+        console.log('data ready')
     
         let responseDB = this.$store.getters.putIntoDB(response, this.search.sid, 'reports');
         responseDB
@@ -453,11 +510,11 @@ export default {
       }
       this.$store.commit('setOptions',  { idDash: 'reports', id: 'multiLine', options: {united: this.unitedData.united} });
     },
-    createStatistic: function(key) {
+    createStatistic: function(key,data) {
       let how_much = {};
       let result = [];
-      let length = this.data.length;
-      this.data.forEach( item => {
+      let length = data.length;
+      data.forEach( item => {
         if (how_much[item[key]]) {
           how_much[item[key]]++;
         } else {

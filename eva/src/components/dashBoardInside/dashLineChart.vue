@@ -90,43 +90,57 @@ export default {
       return this.heightFrom
     },
     getDataStart: function() {
-
-      let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
-      sizeLine['width'] = this.width;
-      sizeLine['height'] = this.height;
-
-      if (sizeLine.width != 0 && sizeLine.height != 0) {  // если размеры получены выше нуля
-      
-        if (this.dataRest.length > 0) {  // если данные от родителя тоже пришли
-          if(this.dataRest.error) {  // сомтрим если с ошибкой
-            this.props.message = this.dataRest.error; // то выводим сообщение о ошибке
-          } else {  // если нет
-            let time = false;
-            let onlyNum = true;
-            let key = Object.keys(this.dataRest[0])[0];
-            let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
-            typeof(this.dataRest[0][key]) != 'number' ? onlyNum = false : false
-            if (onlyNum){  // если все-таки число
-              if(this.dataRest[0][key] > 1000000000 && this.dataRest[0][key] < 2000000000) {
-                time = true;
-              }
-              this.props.nodata = false; // то убираем соощение о отсутствии данных
-              this.props.result = this.dataRest;  // заносим все данные в переменную
-              this.createLineChart(this.props,this,sizeLine,time,lastDot); // и собственно создаем график
-            } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
-              this.props.nodata = true;  // показываем сообщение о некорректности данных
-              this.props.result = [];  // очищаем массив результатов
-              this.props.message = "К сожалению данные не подходят к линейному графику";  // выводим сообщение
-              d3.select(this.$el.querySelector('.dash-graph')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
-            }
-          }
-        }
-      }         
+      if (this.width != 0 && this.height != 0 && this.dataRest.length > 0) {   // если размеры получены выше нуля и  если данные от родителя тоже пришли
+        this.getDataAsynchrony(); // вызываем функцию в которой будет происходить асинхронная отрисовка графика
+      }
+ 
       return 'done'
     }
   },
   methods: {
+    getDataAsynchrony: function () {
+
+      let prom = new Promise( resolve => { // создаем promise чтобы затем отрисовать график асинхронно
+
+     
+        let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
+        sizeLine['width'] = this.width;
+        sizeLine['height'] = this.height;
+
+        if(this.dataRest.error) {  // смотрим если с ошибкой
+          this.props.message = this.dataRest.error; // то выводим сообщение о ошибке
+        } else {  // если нет
+
+          resolve(sizeLine) // передаем в результат размеры графика
+        
+        } 
+
+      })
+
+      prom.then( (sizeLine) => { // как раз тут делаем асинхронность
+        let time = false;
+        let onlyNum = true;
+        let key = Object.keys(this.dataRest[0])[0];
+        let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
+        typeof(this.dataRest[0][key]) != 'number' ? onlyNum = false : false
+        if (onlyNum){  // если все-таки число
+          if(this.dataRest[0][key] > 1000000000 && this.dataRest[0][key] < 2000000000) {
+            time = true;
+          }
+          this.props.nodata = false; // то убираем соощение о отсутствии данных
+          this.props.result = this.dataRest;  // заносим все данные в переменную
+          this.createLineChart(this.props,this,sizeLine,time,lastDot); // и собственно создаем график
+        } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
+          this.props.nodata = true;  // показываем сообщение о некорректности данных
+          this.props.result = [];  // очищаем массив результатов
+          this.props.message = "К сожалению данные не подходят к линейному графику";  // выводим сообщение
+          d3.select(this.$el.querySelector('.dash-graph')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
+        }
+      })
+    },
     createLineChart: function (props,that,sizeLine,time,lastDot) {  // создает график
+
+    console.log('create line chart')
 
       let colors = [this.color.controls,this.color.text,this.color.controlsActive,
         '#660099','#3366FF','#e5194a','#fbbe18','#26295a','#228B22',

@@ -8,7 +8,8 @@
       :ref="id"
       v-model="props.input"
       :headers="props.titles"
-      :items.sync="getDataStart"
+      :items.sync="props.itemsForTable"
+      :data-status="getDataStart" 
       class="dash-table"
       :data-id="id"
       item-key="none"
@@ -64,7 +65,8 @@ export default {
         ],
         selected: {},
         justCreate: true,
-        hideFooter: false
+        hideFooter: false,
+        itemsForTable: [],
       }
     }
   },
@@ -76,6 +78,7 @@ export default {
       return this.idDashFrom
     },
     dataRest: function() {
+      console.log(this.dataRestFrom)
       return this.dataRestFrom
     },
     color: function() {
@@ -98,35 +101,46 @@ export default {
       let height = this.heightFrom-otstup; // 120 это размер блока с пагинацией таблицы + шапка с настройками самого блока
       return height
     },
-    createTable: function() { 
-      let result = [];  
+    // createTable: function() { 
+    //   let result = [];  
       
-      if (Object.keys(this.dataRest).length != 0) {
-        if(this.dataRest.error) {
-          this.props.message = this.dataRest.error;
-          this.props.nodata = true;
-        } else {
-          result = this.dataRest;
-          result.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
-          this.createTitles(result);
-          this.createTockens(result);
-          this.setColors();
-          this.clearColor();
-          this.setEventColor();
-          if (this.props.justCreate) {
-            this.selectRow();
-            this.props.justCreate = false;
-          }
+    //   if (Object.keys(this.dataRest).length != 0) {
+
+
+    //     if(this.dataRest.error) {
+    //       this.props.message = this.dataRest.error;
+    //       this.props.nodata = true;
+    //     } else {
+    //       console.log('table obtain data')
+    //       result = this.dataRest;
+    //       result.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
+    //       this.createTitles(result);
+    //       this.createTockens(result);
+    //       this.setColors();
+    //       this.clearColor();
+    //       this.setEventColor();
+    //       if (this.props.justCreate) {
+    //         this.selectRow();
+    //         this.props.justCreate = false;
+    //       }
             
-          this.props.nodata = false;
-        }
+    //       this.props.nodata = false;
+    //     }
+
+
+    //   } else {
+    //     this.props.nodata = true;
+    //   }
+    //   console.log('table done')
+    //   return result
+    // },
+    getDataStart: function() {
+      if (this.dataRest && Object.keys(this.dataRest).length != 0) { 
+       // this.getDataAsynchrony();
       } else {
         this.props.nodata = true;
       }
-      return result
-    },
-    getDataStart: function() {
-      return  this.createTable;
+      return 'done'
     }
 
   },
@@ -137,6 +151,33 @@ export default {
     },
   },
   methods: {
+    getDataAsynchrony: function () {
+      
+      let prom = new Promise( resolve => {
+        if(this.dataRest.error) {
+          this.props.message = this.dataRest.error;
+          this.props.nodata = true;
+        } else {
+          resolve()
+        }
+      })
+      prom.then( () => {
+        console.log('create table')
+        this.props.itemsForTable= this.dataRest;
+        this.props.itemsForTable.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
+        this.createTitles(this.props.itemsForTable);
+        this.createTockens(this.props.itemsForTable);
+        this.setColors();
+        this.clearColor();
+        this.setEventColor();
+        if (this.props.justCreate) {
+          this.selectRow();
+          this.props.justCreate = false;
+        }
+            
+        this.props.nodata = false;
+      })
+    },
     createTitles: function(result) {
 
       let titles = Object.keys(result[0]).map( item => {
