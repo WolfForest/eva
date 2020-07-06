@@ -178,9 +178,10 @@
                 :timeFormatFrom="''" 
                 :sizeTileFrom="''" 
                 :searchRep="true" 
-                :tooltipFrom="tooltipSvg"    
-                :dataRestFrom="getDataRest" 
-                :dataReport="true"   
+                :tooltipFrom="tooltipSvg"
+                :shouldGet="shouldGet"    
+                :dataReport="true" 
+                :searchSid="search.sid"  
               />
               <v-tooltip 
                 bottom 
@@ -300,22 +301,55 @@ export default {
     //     return true
     //   }    
     // }, 
-    async getDataRest() {
-      if (this.shouldGet) {
+
+    // async getDataRest() {
+    //   console.log(this.shouldGet)
+    //   if (this.shouldGet) {
         
-        // let res =  await this.getDataAsynchrony();
-        // if (res) {    
-        //   return res
-        // }
-       // await this.getDataAsynchrony()
-        this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
+    //     // let res =  await this.getDataAsynchrony();
+    //     // if (res) {    
+    //     //   return res
+    //     // }
+    //    // await this.getDataAsynchrony()
+     
+    //     this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
         
         
-      }
-     // return 'done'
-      return await this.getDataAsynchrony()
+        
+    //   }
+    //  // return 'done'
+    //  //return []
+    //   return await this.getDataAsynchrony()
       
-    },
+    // },
+
+
+    async static_rows() {
+      if (this.shouldGet) {
+        let data =  await this.getData(`reports-${this.search.sid}`);
+        
+        let statistic = '';
+        this.rows = [];
+        if (data.data.length != 0) {
+          
+          this.shema = data.shema;
+         // this.data = this.data.data;
+          let text = '';
+          Object.keys(this.shema).forEach( (item,i) => {
+            
+            statistic = this.createStatistic(item,data.data);
+            
+            text = `${item}&nbsp;&nbsp;&nbsp;[${this.shema[item]}]`;
+            this.rows.push({'id': i,'text': text,'static': statistic});
+
+            
+          })
+        }
+        this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
+        return true
+      }    
+    }, 
+
   },
   computed: { 
     // getDataRest:  function() {
@@ -357,33 +391,34 @@ export default {
     },
   }, 
   methods: {
-    getDataAsynchrony: async function() {
-     // this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false});
-     // if (this.shouldGet) {
-     // if (should) {
-        let data =  await this.getData(`reports-${this.search.sid}`);
-        let statistic = '';
-        this.rows = []; 
-        //console.log(data.data)
-        if (data.data.length != 0) {
-          //this.test = res.data;
+    // getDataAsynchrony: async function() {
+    //  // this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false});
+    //  // if (this.shouldGet) {
+    //  // if (should) {
+    //     let data =  await this.getData(`reports-${this.search.sid}`);
+    //     let statistic = '';
+    //     this.rows = []; 
+    //     //console.log(data.data)
+    //     if (data.data.length != 0) {
+    //       //this.test = data.data;
           
-          console.log('create data report')
-          let text = '';
-          Object.keys(data.shema).forEach( (item,i) => {
-            statistic = this.createStatistic(item,data.data);
-            text = `${item}&nbsp;&nbsp;&nbsp;[${data.shema[item]}]`;
-            this.rows.push({'id': i,'text': text,'static': statistic});
-          })
-          //this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
-          //this.data['data'] = data.data;
-          return data.data;
-        } 
-     // }
+    //       console.log('create data report')
+    //       let text = '';
+    //       Object.keys(data.shema).forEach( (item,i) => {
+    //         statistic = this.createStatistic(item,data.data);
+    //         text = `${item}&nbsp;&nbsp;&nbsp;[${data.shema[item]}]`;
+    //         this.rows.push({'id': i,'text': text,'static': statistic});
+    //       })
+    //       //this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
+    //       //this.data['data'] = data.data;
+    //       return data.data;
+    //     }  
+        
+    //  // }
 
-      // this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
-     // return ['hello']
-    },
+    //   // this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
+    //  // return ['hello']
+    // },
     launchSearch: async function() {
 
       this.search.sid = this.hashCode(this.search.original_otl);

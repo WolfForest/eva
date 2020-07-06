@@ -9,7 +9,6 @@
       v-model="props.input"
       :headers="props.titles"
       :items.sync="props.itemsForTable"
-      :data-status="getDataStart" 
       class="dash-table"
       :data-id="id"
       item-key="none"
@@ -41,11 +40,13 @@
 export default {
   props: {
     dataRestFrom: null,
+    shouldGet: null,
     colorFrom: null,
     idFrom: null,
     idDashFrom: null,
     heightFrom: null,
     dataReport: null,
+    searchSid: null,
   },
   data () {
     return {
@@ -67,9 +68,21 @@ export default {
         justCreate: true,
         hideFooter: false,
         itemsForTable: [],
-      }
+      },
     }
   },
+  // asyncComputed: {
+  //   async getDataStart() {
+  //     console.log(this.dataRestFrom)
+  //     if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
+  //       //await this.getDataAsynchrony();
+  //       return this.dataRestFrom
+  //     } else {
+  //       this.props.nodata = true;
+  //       return []
+  //     }
+  //   }
+  // },
   computed: {
     id: function() { 
       return this.idFrom
@@ -77,10 +90,16 @@ export default {
     idDash: function() { 
       return this.idDashFrom
     },
-    dataRest: function() {
-      console.log(this.dataRestFrom)
-      return this.dataRestFrom
-    },
+    // dataRest: function() {
+    //   console.log(this.dataRestFrom)
+    //   if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
+    //    // this.getDataAsynchrony(this.dataRestFrom);
+    //     //return this.dataRestFrom
+      
+    //   } else {
+    //     return []
+    //   }
+    // },
     color: function() {
       return this.colorFrom
     },
@@ -134,14 +153,20 @@ export default {
     //   console.log('table done')
     //   return result
     // },
-    getDataStart: function() {
-      if (this.dataRest && Object.keys(this.dataRest).length != 0) { 
-       // this.getDataAsynchrony();
-      } else {
-        this.props.nodata = true;
-      }
-      return 'done'
-    }
+    // getDataStart: function() {
+    //    console.log(this.dataRestFrom)
+    //   if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
+    //     this.getDataAsynchrony();
+      
+    //   } else {
+    //     this.props.nodata = true;
+    //   }
+    //   return 'done'
+    // }
+    readyData: function() {
+      console.log('ready')
+      return this.$store.temp.getters.getDataTemp
+    },
 
   },
   watch: {
@@ -149,24 +174,116 @@ export default {
       this.$refs.tableBlock.style.color = color.text;
       this.$refs.tableBlock.style.backgroundColor = color.backElement;
     },
+    shouldGet: function() {
+      if (this.shouldGet) {
+        
+        let data =  this.getData(`reports-${this.searchSid}`);
+        data.then( res => {
+
+          this.getDataAsynchrony(res.data)
+         // console.log(res.data.slice(1, 100))
+        // this.$store.temp.commit('setDataTemp',res.data);
+          this.props.itemsForTable = res.data;
+        })
+      }
+    }
   },
   methods: {
-    getDataAsynchrony: function () {
+    getData: function(searсhID) {   // асинхронная функция для получения даных с реста
+        
+      let db = null;
+      //let result = null;
+
+      let request = indexedDB.open("EVA",1);  
+
+      request.onerror = function(event) {
+        console.log("error: ",event);
+      };
+
+      request.onupgradeneeded = event => {
+        console.log('create');
+        db = event.target.result;
+        if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
+          db.createObjectStore('searches'); // create it
+        }
+
+        request.onsuccess = event => {
+          db = request.result;
+          console.log("successEvent: " + db);
+        };
+      }
+      let promise = new Promise((resolve, reject) => {
+
+        request.onsuccess =  event => {
+
+          db = request.result;
+
+          let transaction = db.transaction("searches"); // (1)
+
+          // получить хранилище объектов для работы с ним
+          let searches = transaction.objectStore("searches"); // (2)
+
+
+          let query = searches.get(String(searсhID)); // (3) return store.get('Ire Aderinokun');
+
+
+          query.onsuccess = event => { // (4)
+            if (query.result) {
+              resolve(query.result);
+            } else {
+              resolve([]);
+            }
+          };
+
+          query.onerror = function() {
+            console.log("Ошибка", query.error);
+          };
+    
+
+        };    
+
+      });
+
+      return promise
+    },
+
+    // getDataAsynchrony: async function () {
+      
+     
+    //   if(this.dataRestFrom.error) {
+    //     this.props.message = this.dataRestFrom.error;
+    //     this.props.nodata = true;
+    //   } else {
+    //     console.log('create table')
+    //     this.dataRestFrom.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
+    //     this.createTitles(this.dataRestFrom);
+    //     this.createTockens(this.dataRestFrom);
+    //     this.setColors();
+    //     this.clearColor();
+    //     this.setEventColor();
+    //     if (this.props.justCreate) {
+    //       this.selectRow();
+    //       this.props.justCreate = false;
+    //     }
+            
+    //     this.props.nodata = false;
+    //   }
+    // },
+    getDataAsynchrony: function (data) {
       
       let prom = new Promise( resolve => {
-        if(this.dataRest.error) {
-          this.props.message = this.dataRest.error;
+        if(data.error) {
+          this.props.message = data.error;
           this.props.nodata = true;
         } else {
-          resolve()
+          resolve(data)
         }
       })
-      prom.then( () => {
+      prom.then( (data) => {
         console.log('create table')
-        this.props.itemsForTable= this.dataRest;
-        this.props.itemsForTable.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
-        this.createTitles(this.props.itemsForTable);
-        this.createTockens(this.props.itemsForTable);
+        data.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
+        this.createTitles(data);
+        this.createTockens(data);
         this.setColors();
         this.clearColor();
         this.setEventColor();
