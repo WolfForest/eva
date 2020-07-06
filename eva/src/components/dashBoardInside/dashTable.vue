@@ -163,10 +163,6 @@ export default {
     //   }
     //   return 'done'
     // }
-    readyData: function() {
-      console.log('ready')
-      return this.$store.temp.getters.getDataTemp
-    },
 
   },
   watch: {
