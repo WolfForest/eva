@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v # 1.43.26 [checkImpExp]',
+      version: 'v # 1.44.26 [newSetting]',
       color: { },
     } 
   },

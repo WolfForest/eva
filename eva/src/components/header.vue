@@ -51,6 +51,7 @@
             <v-icon 
               class="palete"  
               color="white" 
+              :data-theme="theme"
               v-on="on"
               @click="paleteShow = !paleteShow"
             >
@@ -178,16 +179,22 @@ export default {
       }
     },
     theme: function() {
+      this.color = themes[this.$store.getters.getTheme];
+      this.getTheme(this.$store.getters.getTheme);
       return this.$store.getters.getTheme
     }
   },  
-  watch: {
-    theme: function (theme) {
-      this.color = themes[theme];
-      
-    },
-  },
   methods: {
+    getTheme: async function(theme) {
+      
+      let themeBack = await this.$store.getters.getThemeBack();
+      if (themeBack.setting && themeBack.setting != '') {
+        let settings = JSON.parse(themeBack.setting);
+        if (settings.theme != theme) {
+          this.$store.commit('setTheme', settings.theme);
+        }
+      }
+    },
     getCookie: async function() {
       //console.log(this.$jwt.hasToken())
       if(this.$jwt.hasToken()) {
