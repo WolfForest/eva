@@ -172,43 +172,55 @@ export default {
     },
     shouldGet: function() {
       if (this.shouldGet) {
-        
-        let data =  this.getData(`reports-${this.searchSid}`);
-        data.then( res => {
 
-          this.getDataAsynchrony(res.data)
-         // console.log(res.data.slice(1, 100))
-        // this.$store.temp.commit('setDataTemp',res.data);
-          this.props.itemsForTable = res.data;
-        })
+        this.getData();
+        console.log('done')
+        // let data =  this.getData(`reports-${this.searchSid}`);
+        // data.then( res => {
+
+        //   this.getDataAsynchrony(res.data)
+
+        //   this.props.itemsForTable = res.data;
+        // })
       }
     }
   },
   methods: {
-    getData: function(searсhID) {   // асинхронная функция для получения даных с реста
+    getData: function() {
+
+       
+   
+
+      this.$worker.run( (searсhID) => {
         
-      let db = null;
-      //let result = null;
+        let db = null;
+        //let result = null;
+        
+        let request = indexedDB.open("EVA",1); 
+        
+        console.log(request.onsuccess)
+        
 
-      let request = indexedDB.open("EVA",1);  
-
-      request.onerror = function(event) {
-        console.log("error: ",event);
-      };
-
-      request.onupgradeneeded = event => {
-        console.log('create');
-        db = event.target.result;
-        if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
-          db.createObjectStore('searches'); // create it
-        }
-
-        request.onsuccess = event => {
-          db = request.result;
-          console.log("successEvent: " + db);
+        request.onerror = function(event) {
+          
+          console.log("error: ",event);
         };
-      }
-      let promise = new Promise((resolve, reject) => {
+
+        request.onupgradeneeded = event => {
+          
+          console.log('create');
+          db = event.target.result;
+          if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
+            db.createObjectStore('searches'); // create it
+          }
+
+          request.onsuccess = event => {
+            db = request.result;
+            console.log("successEvent: " + db);
+          };
+        }
+        
+        
 
         request.onsuccess =  event => {
 
@@ -225,9 +237,10 @@ export default {
 
           query.onsuccess = event => { // (4)
             if (query.result) {
-              resolve(query.result);
+              console.log(query.result)
+              postMessage(query.result);
             } else {
-              resolve([]);
+              postMessage([]);
             }
           };
 
@@ -238,10 +251,77 @@ export default {
 
         };    
 
-      });
 
-      return promise
+
+
+
+      }, [`reports-${this.searchSid}`])
+        .then(result => {
+          console.log(result)
+        })
+        .catch(e => {
+          console.error(e)
+        })
     },
+    // getData: function(searсhID) {   // асинхронная функция для получения даных с реста
+
+
+        
+    //   let db = null;
+    //   //let result = null;
+
+    //   let request = indexedDB.open("EVA",1);  
+
+    //   request.onerror = function(event) {
+    //     console.log("error: ",event);
+    //   };
+
+    //   request.onupgradeneeded = event => {
+    //     console.log('create');
+    //     db = event.target.result;
+    //     if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
+    //       db.createObjectStore('searches'); // create it
+    //     }
+
+    //     request.onsuccess = event => {
+    //       db = request.result;
+    //       console.log("successEvent: " + db);
+    //     };
+    //   }
+    //   let promise = new Promise((resolve, reject) => {
+
+    //     request.onsuccess =  event => {
+
+    //       db = request.result;
+
+    //       let transaction = db.transaction("searches"); // (1)
+
+    //       // получить хранилище объектов для работы с ним
+    //       let searches = transaction.objectStore("searches"); // (2)
+
+
+    //       let query = searches.get(String(searсhID)); // (3) return store.get('Ire Aderinokun');
+
+
+    //       query.onsuccess = event => { // (4)
+    //         if (query.result) {
+    //           resolve(query.result);
+    //         } else {
+    //           resolve([]);
+    //         }
+    //       };
+
+    //       query.onerror = function() {
+    //         console.log("Ошибка", query.error);
+    //       };
+    
+
+    //     };    
+
+    //   });
+
+    //   return promise
+    // },
 
     // getDataAsynchrony: async function () {
       

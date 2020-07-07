@@ -30,6 +30,9 @@ import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';  // подключ�
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';  // подключаем стили для этого компонента
 Vue.component('DTPicker', VueCtkDateTimePicker);   // сопоставляем подключенный компонент с комопнентом vue
 
+import VueWorker from 'vue-worker';  // ппозволяет использовать web workers
+Vue.use(VueWorker);
+
 
 // далее объявляем компоненты так как потом будем их вызывать в html коде
 
