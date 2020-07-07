@@ -246,7 +246,6 @@ export default {
           })
         });
         this.setColorHover(event.split('-')[1]);
-        console.log('sadasd')
       } else {
         this.originData = [];
       }
