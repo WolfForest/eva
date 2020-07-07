@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.43.25 [heightTabel]',
+      version: 'v ## 1.43.26 [checkImpExp]',
       color: { },
     } 
   },
