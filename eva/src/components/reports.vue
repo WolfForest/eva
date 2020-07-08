@@ -181,7 +181,7 @@
                 :tooltipFrom="tooltipSvg"
                 :shouldGet="shouldGet"    
                 :dataReport="true" 
-                :searchSid="search.sid"  
+                :dataRestFrom="data" 
               />
               <v-tooltip 
                 bottom 
@@ -252,9 +252,7 @@ export default {
       modal: false,
       loading: false,
       rows: [],
-      data: {
-        data: []
-      },
+      data: [],
       test: [],
       statistic: [],
       showStatistic: false,
@@ -326,28 +324,31 @@ export default {
 
     async static_rows() {
       if (this.shouldGet) {
-        let data =  await this.getData(`reports-${this.search.sid}`);
+        //console.log('yep')
+        // let data =  await this.getData(`reports-${this.search.sid}`);
+        //this.data = ['hello','kitty'];
         
-        let statistic = '';
-        this.rows = [];
-        if (data.data.length != 0) {
+        // let statistic = '';
+        // this.rows = [];
+        // if (data.data.length != 0) {
           
-          this.shema = data.shema;
-         // this.data = this.data.data;
-          let text = '';
-          Object.keys(this.shema).forEach( (item,i) => {
+        //   this.shema = data.shema;
+        //  // this.data = this.data.data;
+        //   let text = '';
+        //   Object.keys(this.shema).forEach( (item,i) => {
             
-            statistic = this.createStatistic(item,data.data);
+        //     statistic = this.createStatistic(item,data.data);
             
-            text = `${item}&nbsp;&nbsp;&nbsp;[${this.shema[item]}]`;
-            this.rows.push({'id': i,'text': text,'static': statistic});
+        //     text = `${item}&nbsp;&nbsp;&nbsp;[${this.shema[item]}]`;
+        //     this.rows.push({'id': i,'text': text,'static': statistic});
 
             
-          })
-        }
-        this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
-        return true
-      }    
+        //   })
+        // }
+        this.getData();
+      }  
+      this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
+      return true  
     }, 
 
   },
@@ -391,34 +392,42 @@ export default {
     },
   }, 
   methods: {
-    // getDataAsynchrony: async function() {
-    //  // this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false});
-    //  // if (this.shouldGet) {
-    //  // if (should) {
-    //     let data =  await this.getData(`reports-${this.search.sid}`);
-    //     let statistic = '';
-    //     this.rows = []; 
-    //     //console.log(data.data)
-    //     if (data.data.length != 0) {
-    //       //this.test = data.data;
-          
-    //       console.log('create data report')
-    //       let text = '';
-    //       Object.keys(data.shema).forEach( (item,i) => {
-    //         statistic = this.createStatistic(item,data.data);
-    //         text = `${item}&nbsp;&nbsp;&nbsp;[${data.shema[item]}]`;
-    //         this.rows.push({'id': i,'text': text,'static': statistic});
-    //       })
-    //       //this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
-    //       //this.data['data'] = data.data;
-    //       return data.data;
-    //     }  
-        
-    //  // }
+    getData: function() {
 
-    //   // this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
-    //  // return ['hello']
-    // },
+      let blob = new Blob([`onmessage=${this.getDataFromDb().toString()}`], { type: "text/javascript" }); // создаем blob объект чтобы с его помощью использовать функцию для web worker
+
+      let blobURL = window.URL.createObjectURL(blob); // создаем ссылку из нашего blob ресурса
+
+      let worker = new Worker(blobURL); // создаем новый worker и передаем ссылку на наш blob объект
+
+      worker.onmessage = function(event) { // при успешном выполнении функции что передали в blob изначально сработает этот код
+
+  
+        let statistic = '';
+        this.rows = [];
+        if (event.data.data.length != 0) {
+          
+          this.shema = event.data.shema;
+          this.data = event.data.data;
+
+          let text = '';
+          Object.keys(this.shema).forEach( (item,i) => {
+            
+            statistic = this.createStatistic(item,event.data.data);
+            
+            text = `${item}&nbsp;&nbsp;&nbsp;[${this.shema[item]}]`;
+            this.rows.push({'id': i,'text': text,'static': statistic});
+
+            
+          })
+        }
+
+      }.bind(this);
+
+      worker.postMessage(`reports-${this.search.sid}`);   // запускаем воркер на выполнение
+
+
+    },
     launchSearch: async function() {
 
       this.search.sid = this.hashCode(this.search.original_otl);
@@ -456,30 +465,30 @@ export default {
       return otl.split('').reduce((prevHash, currVal) =>
         (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
     },
-    getData: function(searсhID) {   // асинхронная функция для получения даных с реста
-        
-      let db = null;
-      //let result = null;
+    getDataFromDb: function() {
+      return function(event)  {
+        let db = null;
 
-      let request = indexedDB.open("EVA",1);  
+        let searchSid = event.data;
 
-      request.onerror = function(event) {
-        console.log("error: ",event);
-      };
+        let request = indexedDB.open("EVA",1);  
 
-      request.onupgradeneeded = event => {
-        console.log('create');
-        db = event.target.result;
-        if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
-          db.createObjectStore('searches'); // create it
-        }
-
-        request.onsuccess = event => {
-          db = request.result;
-          console.log("successEvent: " + db);
+        request.onerror = function(event) {
+          console.log("error: ",event);
         };
-      }
-      let promise = new Promise((resolve, reject) => {
+
+        request.onupgradeneeded = event => {
+          console.log('create');
+          db = event.target.result;
+          if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
+            db.createObjectStore('searches'); // create it
+          }
+
+          request.onsuccess = event => {
+            db = request.result;
+            console.log("successEvent: " + db);
+          };
+        }
 
         request.onsuccess =  event => {
 
@@ -491,14 +500,14 @@ export default {
           let searches = transaction.objectStore("searches"); // (2)
 
 
-          let query = searches.get(String(searсhID)); // (3) return store.get('Ire Aderinokun');
+          let query = searches.get(String(searchSid)); // (3) return store.get('Ire Aderinokun');
 
 
           query.onsuccess = event => { // (4)
             if (query.result) {
-              resolve(query.result);
+              self.postMessage(query.result);  // сообщение которое будет передаваться как результат выполнения функции
             } else {
-              resolve([]);
+              self.postMessage([]);  // сообщение которое будет передаваться как результат выполнения функции
             }
           };
 
@@ -507,11 +516,10 @@ export default {
           };
     
 
-        };    
+        };   
 
-      });
 
-      return promise
+      }
     },
     openSettings: function() {
       this.modal = true;

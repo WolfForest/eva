@@ -2,13 +2,13 @@
   <div 
     ref="tableBlock"
     class="table-block" 
-  >
+  > 
     <v-data-table
       v-show="!props.nodata"
       :ref="id"
       v-model="props.input"
       :headers="props.titles"
-      :items.sync="props.itemsForTable"
+      :items.sync="dataRest"
       class="dash-table"
       :data-id="id"
       item-key="none"
@@ -46,7 +46,6 @@ export default {
     idDashFrom: null,
     heightFrom: null,
     dataReport: null,
-    searchSid: null,
   },
   data () {
     return {
@@ -67,7 +66,6 @@ export default {
         selected: {},
         justCreate: true,
         hideFooter: false,
-        itemsForTable: [],
       },
     }
   },
@@ -90,16 +88,15 @@ export default {
     idDash: function() { 
       return this.idDashFrom
     },
-    // dataRest: function() {
-    //   console.log(this.dataRestFrom)
-    //   if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
-    //    // this.getDataAsynchrony(this.dataRestFrom);
-    //     //return this.dataRestFrom
+    dataRest: function() {
+      if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
+        this.getDataAsynchrony(this.dataRestFrom);
+        return this.dataRestFrom
       
-    //   } else {
-    //     return []
-    //   }
-    // },
+      } else {
+        return []
+      }
+    },
     color: function() {
       return this.colorFrom
     },
@@ -170,125 +167,49 @@ export default {
       this.$refs.tableBlock.style.color = color.text;
       this.$refs.tableBlock.style.backgroundColor = color.backElement;
     },
-    shouldGet: function() {
-      if (this.shouldGet) {
+    // shouldGet: function() {
+    //   //console.log('should')
+    //   if (this.shouldGet) {
 
-        this.getData();
-        console.log('done')
-        // let data =  this.getData(`reports-${this.searchSid}`);
-        // data.then( res => {
+    //    //this.getData();
+    //    //console.log(this.dataRestFrom)
 
-        //   this.getDataAsynchrony(res.data)
+    //     //this.props.itemsForTable = [{hello: 'hello'}];
 
-        //   this.props.itemsForTable = res.data;
-        // })
-      }
-    }
+    //    // this.getDataAsynchrony(this.props.itemsForTable)
+
+
+    //   }
+    // },
+    // dataRestFrom: function() {
+    //   console.log('yep')
+    // }
   },
   methods: {
-    getData: function() {
+    // getDataFromDb: function() {
+    //   return function(event)  {
+    //     let db = null;
 
-       
-   
+    //     let searchSid = event.data;
 
-      this.$worker.run( (searсhID) => {
-        
-        let db = null;
-        //let result = null;
-        
-        let request = indexedDB.open("EVA",1); 
-        
-        console.log(request.onsuccess)
-        
+    //     let request = indexedDB.open("EVA",1);  
 
-        request.onerror = function(event) {
-          
-          console.log("error: ",event);
-        };
-
-        request.onupgradeneeded = event => {
-          
-          console.log('create');
-          db = event.target.result;
-          if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
-            db.createObjectStore('searches'); // create it
-          }
-
-          request.onsuccess = event => {
-            db = request.result;
-            console.log("successEvent: " + db);
-          };
-        }
-        
-        
-
-        request.onsuccess =  event => {
-
-          db = request.result;
-
-          let transaction = db.transaction("searches"); // (1)
-
-          // получить хранилище объектов для работы с ним
-          let searches = transaction.objectStore("searches"); // (2)
-
-
-          let query = searches.get(String(searсhID)); // (3) return store.get('Ire Aderinokun');
-
-
-          query.onsuccess = event => { // (4)
-            if (query.result) {
-              console.log(query.result)
-              postMessage(query.result);
-            } else {
-              postMessage([]);
-            }
-          };
-
-          query.onerror = function() {
-            console.log("Ошибка", query.error);
-          };
-    
-
-        };    
-
-
-
-
-
-      }, [`reports-${this.searchSid}`])
-        .then(result => {
-          console.log(result)
-        })
-        .catch(e => {
-          console.error(e)
-        })
-    },
-    // getData: function(searсhID) {   // асинхронная функция для получения даных с реста
-
-
-        
-    //   let db = null;
-    //   //let result = null;
-
-    //   let request = indexedDB.open("EVA",1);  
-
-    //   request.onerror = function(event) {
-    //     console.log("error: ",event);
-    //   };
-
-    //   request.onupgradeneeded = event => {
-    //     console.log('create');
-    //     db = event.target.result;
-    //     if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
-    //       db.createObjectStore('searches'); // create it
-    //     }
-
-    //     request.onsuccess = event => {
-    //       db = request.result;
-    //       console.log("successEvent: " + db);
+    //     request.onerror = function(event) {
+    //       console.log("error: ",event);
     //     };
-    //   }
-    //   let promise = new Promise((resolve, reject) => {
+
+    //     request.onupgradeneeded = event => {
+    //       console.log('create');
+    //       db = event.target.result;
+    //       if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
+    //         db.createObjectStore('searches'); // create it
+    //       }
+
+    //       request.onsuccess = event => {
+    //         db = request.result;
+    //         console.log("successEvent: " + db);
+    //       };
+    //     }
 
     //     request.onsuccess =  event => {
 
@@ -300,14 +221,14 @@ export default {
     //       let searches = transaction.objectStore("searches"); // (2)
 
 
-    //       let query = searches.get(String(searсhID)); // (3) return store.get('Ire Aderinokun');
+    //       let query = searches.get(String(searchSid)); // (3) return store.get('Ire Aderinokun');
 
 
     //       query.onsuccess = event => { // (4)
     //         if (query.result) {
-    //           resolve(query.result);
+    //           self.postMessage(query.result);  // сообщение которое будет передаваться как результат выполнения функции
     //         } else {
-    //           resolve([]);
+    //           self.postMessage([]);  // сообщение которое будет передаваться как результат выполнения функции
     //         }
     //       };
 
@@ -316,34 +237,34 @@ export default {
     //       };
     
 
-    //     };    
+    //     };   
 
-    //   });
 
-    //   return promise
-    // },
-
-    // getDataAsynchrony: async function () {
-      
-     
-    //   if(this.dataRestFrom.error) {
-    //     this.props.message = this.dataRestFrom.error;
-    //     this.props.nodata = true;
-    //   } else {
-    //     console.log('create table')
-    //     this.dataRestFrom.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
-    //     this.createTitles(this.dataRestFrom);
-    //     this.createTockens(this.dataRestFrom);
-    //     this.setColors();
-    //     this.clearColor();
-    //     this.setEventColor();
-    //     if (this.props.justCreate) {
-    //       this.selectRow();
-    //       this.props.justCreate = false;
-    //     }
-            
-    //     this.props.nodata = false;
     //   }
+    // },
+    // getData: function() {
+
+    //   let blob = new Blob([`onmessage=${this.getDataFromDb().toString()}`], { type: "text/javascript" }); // создаем blob объект чтобы с его помощью использовать функцию для web worker
+
+    //   let blobURL = window.URL.createObjectURL(blob); // создаем ссылку из нашего blob ресурса
+
+    //   let worker = new Worker(blobURL); // создаем новый worker и передаем ссылку на наш blob объект
+
+    //   worker.onmessage = function(event) { // при успешном выполнении функции что передали в blob изначально сработает этот код
+
+    //     this.props.itemsForTable = event.data.data;
+    //     if (event.data.data && Object.keys(event.data.data).length != 0) { 
+    //       this.getDataAsynchrony(event.data.data);
+        
+    //     } else {
+    //       this.props.nodata = true;
+    //     }
+
+    //   }.bind(this);
+
+    //   worker.postMessage(`reports-${this.searchSid}`);   // запускаем воркер на выполнение
+
+
     // },
     getDataAsynchrony: function (data) {
       
