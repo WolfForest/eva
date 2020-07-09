@@ -2,6 +2,7 @@
   <div 
     ref="tableBlock"
     class="table-block" 
+    :data-change="change"
   > 
     <v-data-table
       v-show="!props.nodata"
@@ -9,7 +10,7 @@
       v-model="props.input"
       :headers="props.titles"
       :items.sync="props.itemsForTable"
-      class="dash-table"
+      class="dash-table report-table"
       :data-id="id"
       item-key="none"
       :hide-default-footer="props.hideFooter"
@@ -46,6 +47,8 @@ export default {
     idDashFrom: null,
     heightFrom: null,
     dataReport: null,
+    activeElemFrom: null,
+    
   },
   data () {
     return {
@@ -70,18 +73,6 @@ export default {
       },
     }
   },
-  // asyncComputed: {
-  //   async getDataStart() {
-  //     console.log(this.dataRestFrom)
-  //     if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
-  //       //await this.getDataAsynchrony();
-  //       return this.dataRestFrom
-  //     } else {
-  //       this.props.nodata = true;
-  //       return []
-  //     }
-  //   }
-  // },
   computed: {
     id: function() { 
       return this.idFrom
@@ -95,6 +86,22 @@ export default {
     //   }
     //   return true
     // },
+    change: function() {
+      if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) {
+        if (this.dataReport) {
+          
+          if (this.activeElemFrom == this.id) {
+            this.getDataAsynchrony(this.dataRestFrom);
+          } else {
+            this.props.itemsForTable = [];
+          }
+        } else {
+         // this.getDataAsynchrony(this.dataRestFrom);
+        }
+        
+      }
+      return true
+    },
     color: function() {
       return this.colorFrom
     },
@@ -115,49 +122,7 @@ export default {
       let height = this.heightFrom-otstup; // 120 это размер блока с пагинацией таблицы + шапка с настройками самого блока
       return height
     },
-    // createTable: function() { 
-    //   let result = [];  
-      
-    //   if (Object.keys(this.dataRest).length != 0) {
-
-
-    //     if(this.dataRest.error) {
-    //       this.props.message = this.dataRest.error;
-    //       this.props.nodata = true;
-    //     } else {
-    //       console.log('table obtain data')
-    //       result = this.dataRest;
-    //       result.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
-    //       this.createTitles(result);
-    //       this.createTockens(result);
-    //       this.setColors();
-    //       this.clearColor();
-    //       this.setEventColor();
-    //       if (this.props.justCreate) {
-    //         this.selectRow();
-    //         this.props.justCreate = false;
-    //       }
-            
-    //       this.props.nodata = false;
-    //     }
-
-
-    //   } else {
-    //     this.props.nodata = true;
-    //   }
-    //   console.log('table done')
-    //   return result
-    // },
-    // getDataStart: function() {
-    //    console.log(this.dataRestFrom)
-    //   if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
-    //     this.getDataAsynchrony();
-      
-    //   } else {
-    //     this.props.nodata = true;
-    //   }
-    //   return 'done'
-    // }
+ 
 
   },
   watch: {
@@ -165,110 +130,19 @@ export default {
       this.$refs.tableBlock.style.color = color.text;
       this.$refs.tableBlock.style.backgroundColor = color.backElement;
     },
-    // shouldGet: function() {
-    //   //console.log('should')
-    //   if (this.shouldGet) {
-
-    //    //this.getData();
-    //    //console.log(this.dataRestFrom)
-
-    //     //this.props.itemsForTable = [{hello: 'hello'}];
-
-    //    // this.getDataAsynchrony(this.props.itemsForTable)
-
-
+    // activeElemFrom: function() {
+    //   if (this.dataReport && this.activeElemFrom == this.id && this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) {
+    //     console.log('start')
     //   }
     // },
-    dataRestFrom: function() {
-      //console.log('yep')
-      if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
-
-        this.getDataAsynchrony(this.dataRestFrom);
-      }
-    }
+    // dataRestFrom: function() {
+    //   if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
+    //       console.log('startdata')
+    //    // this.getDataAsynchrony(this.dataRestFrom);
+    //   }
+    // }
   },
   methods: {
-    // getDataFromDb: function() {
-    //   return function(event)  {
-    //     let db = null;
-
-    //     let searchSid = event.data;
-
-    //     let request = indexedDB.open("EVA",1);  
-
-    //     request.onerror = function(event) {
-    //       console.log("error: ",event);
-    //     };
-
-    //     request.onupgradeneeded = event => {
-    //       console.log('create');
-    //       db = event.target.result;
-    //       if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
-    //         db.createObjectStore('searches'); // create it
-    //       }
-
-    //       request.onsuccess = event => {
-    //         db = request.result;
-    //         console.log("successEvent: " + db);
-    //       };
-    //     }
-
-    //     request.onsuccess =  event => {
-
-    //       db = request.result;
-
-    //       let transaction = db.transaction("searches"); // (1)
-
-    //       // получить хранилище объектов для работы с ним
-    //       let searches = transaction.objectStore("searches"); // (2)
-
-
-    //       let query = searches.get(String(searchSid)); // (3) return store.get('Ire Aderinokun');
-
-
-    //       query.onsuccess = event => { // (4)
-    //         if (query.result) {
-    //           self.postMessage(query.result);  // сообщение которое будет передаваться как результат выполнения функции
-    //         } else {
-    //           self.postMessage([]);  // сообщение которое будет передаваться как результат выполнения функции
-    //         }
-    //       };
-
-    //       query.onerror = function() {
-    //         console.log("Ошибка", query.error);
-    //       };
-    
-
-    //     };   
-
-
-    //   }
-    // },
-    // getData: function() {
-
-    //   let blob = new Blob([`onmessage=${this.getDataFromDb().toString()}`], { type: "text/javascript" }); // создаем blob объект чтобы с его помощью использовать функцию для web worker
-
-    //   let blobURL = window.URL.createObjectURL(blob); // создаем ссылку из нашего blob ресурса
-
-    //   let worker = new Worker(blobURL); // создаем новый worker и передаем ссылку на наш blob объект
-
-    //   worker.onmessage = function(event) { // при успешном выполнении функции что передали в blob изначально сработает этот код
-
-    //     this.props.itemsForTable = event.data.data;
-    //     if (event.data.data && Object.keys(event.data.data).length != 0) { 
-    //       this.getDataAsynchrony(event.data.data);
-        
-    //     } else {
-    //       this.props.nodata = true;
-    //     }
-
-    //   }.bind(this);
-
-    //   worker.postMessage(`reports-${this.searchSid}`);   // запускаем воркер на выполнение
-
-
-    // },
-
 
     getDataAsynchrony: function (data) {
       

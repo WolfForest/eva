@@ -172,6 +172,7 @@
                 :key="i" 
                 :idFrom="i" 
                 :colorFrom="color"  
+                :activeElemFrom="activeElem"
                 idDashFrom="reports" 
                 :widthFrom="size.width" 
                 :heightFrom="size.height" 
@@ -274,7 +275,8 @@ export default {
         'texts': [],
         'links': [],
         'buttons': []
-      }
+      },
+      activeElem: 'table',
     } 
   },
   asyncComputed: {
@@ -324,27 +326,7 @@ export default {
 
     async static_rows() {
       if (this.shouldGet) {
-        //console.log('yep')
-        // let data =  await this.getData(`reports-${this.search.sid}`);
-        //this.data = ['hello','kitty'];
-        
-        // let statistic = '';
-        // this.rows = [];
-        // if (data.data.length != 0) {
-          
-        //   this.shema = data.shema;
-        //  // this.data = this.data.data;
-        //   let text = '';
-        //   Object.keys(this.shema).forEach( (item,i) => {
-            
-        //     statistic = this.createStatistic(item,data.data);
-            
-        //     text = `${item}&nbsp;&nbsp;&nbsp;[${this.shema[item]}]`;
-        //     this.rows.push({'id': i,'text': text,'static': statistic});
-
-            
-        //   })
-        // }
+  
         this.getData();
       }  
       this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
@@ -377,7 +359,7 @@ export default {
         this.$set(this.aboutElem[item],'icon',settings.reports[item].icon);
         this.$set(this.aboutElem[item],'key',i);
       })
-      let elem = ['table'];
+      let elem = ['table','lineChart'];
       return elem
       //return this.$store.getters.getReportElement
     }, 
@@ -421,6 +403,8 @@ export default {
             
           })
         }
+
+        worker.terminate();
 
       }.bind(this);
 
@@ -538,6 +522,7 @@ export default {
           this.$set(this.aboutElem[item],'show',false);
           this.$set(this.aboutElem[item],'color',this.color.text);
         } else {
+          this.activeElem = item;
           this.$set(this.aboutElem[item],'show',true);
           this.$set(this.aboutElem[item],'color',this.color.controls);
         }

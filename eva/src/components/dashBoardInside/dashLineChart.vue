@@ -12,8 +12,8 @@
     <div  
       v-show="!dataLoading" 
       :class="props.class" 
-      class="dash-graph" 
-      :data-status="getDataStart"
+      class="dash-graph report-lineChart" 
+      :data-change="change"
     />
     <div 
       v-show="dataLoading"
@@ -43,6 +43,8 @@ export default {
     idFrom: null,
     idDashFrom: null,
     dataLoadingFrom: null,
+    activeElemFrom: null,
+    dataReport: null,
   },
   data () {
     return {
@@ -74,9 +76,9 @@ export default {
     idDash: function() { 
       return this.idDashFrom
     },
-    dataRest: function() {
-      return this.dataRestFrom
-    },
+    // dataRest: function() {
+    //   return this.dataRestFrom
+    // },
     color: function() {
       return this.colorFrom
     },
@@ -89,13 +91,32 @@ export default {
     height: function() {
       return this.heightFrom
     },
-    getDataStart: function() {
-      if (this.width != 0 && this.height != 0 && this.dataRest.length > 0) {   // если размеры получены выше нуля и  если данные от родителя тоже пришли
-        this.getDataAsynchrony(); // вызываем функцию в которой будет происходить асинхронная отрисовка графика
-      }
+    // getDataStart: function() {
+    //   if (this.width != 0 && this.height != 0 && this.dataRest.length > 0) {   // если размеры получены выше нуля и  если данные от родителя тоже пришли
+    //     //this.getDataAsynchrony(); // вызываем функцию в которой будет происходить асинхронная отрисовка графика
+    //   }
  
-      return 'done'
-    }
+    //   return 'done'
+    // },
+    change: function() {
+      if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0 && this.width != 0 && this.height != 0) {
+        if (this.dataReport) {
+          
+          if (this.activeElemFrom == this.id) {
+            this.getDataAsynchrony();
+          } else {
+            let graphics = d3.select(this.$el.querySelector('.dash-graph')).selectAll('svg').nodes();
+            if(graphics.length != 0){  // если график уже есть
+              graphics[0].remove(); // удаляем его
+            }
+          }
+        } else {
+          // this.getDataAsynchrony(this.dataRestFrom);
+        }
+        
+      }
+      return true
+    },
   },
   methods: {
     getDataAsynchrony: function () {
@@ -107,8 +128,8 @@ export default {
         sizeLine['width'] = this.width;
         sizeLine['height'] = this.height;
 
-        if(this.dataRest.error) {  // смотрим если с ошибкой
-          this.props.message = this.dataRest.error; // то выводим сообщение о ошибке
+        if(this.dataRestFrom.error) {  // смотрим если с ошибкой
+          this.props.message = this.dataRestFrom.error; // то выводим сообщение о ошибке
         } else {  // если нет
 
           resolve(sizeLine) // передаем в результат размеры графика
@@ -120,15 +141,15 @@ export default {
       prom.then( (sizeLine) => { // как раз тут делаем асинхронность
         let time = false;
         let onlyNum = true;
-        let key = Object.keys(this.dataRest[0])[0];
+        let key = Object.keys(this.dataRestFrom[0])[0];
         let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
-        typeof(this.dataRest[0][key]) != 'number' ? onlyNum = false : false
+        typeof(this.dataRestFrom[0][key]) != 'number' ? onlyNum = false : false
         if (onlyNum){  // если все-таки число
-          if(this.dataRest[0][key] > 1000000000 && this.dataRest[0][key] < 2000000000) {
+          if(this.dataRestFrom[0][key] > 1000000000 && this.dataRestFrom[0][key] < 2000000000) {
             time = true;
           }
           this.props.nodata = false; // то убираем соощение о отсутствии данных
-          this.props.result = this.dataRest;  // заносим все данные в переменную
+          this.props.result = this.dataRestFrom;  // заносим все данные в переменную
           this.createLineChart(this.props,this,sizeLine,time,lastDot); // и собственно создаем график
         } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
           this.props.nodata = true;  // показываем сообщение о некорректности данных
