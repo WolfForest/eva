@@ -8,7 +8,7 @@
       :ref="id"
       v-model="props.input"
       :headers="props.titles"
-      :items.sync="dataRest"
+      :items.sync="props.itemsForTable"
       class="dash-table"
       :data-id="id"
       item-key="none"
@@ -66,6 +66,7 @@ export default {
         selected: {},
         justCreate: true,
         hideFooter: false,
+        itemsForTable: []
       },
     }
   },
@@ -88,15 +89,12 @@ export default {
     idDash: function() { 
       return this.idDashFrom
     },
-    dataRest: function() {
-      if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
-        this.getDataAsynchrony(this.dataRestFrom);
-        return this.dataRestFrom
-      
-      } else {
-        return []
-      }
-    },
+    // dataRest: function() {
+    //   if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
+    //     this.getDataAsynchrony(this.dataRestFrom);
+    //   }
+    //   return true
+    // },
     color: function() {
       return this.colorFrom
     },
@@ -181,9 +179,13 @@ export default {
 
     //   }
     // },
-    // dataRestFrom: function() {
-    //   console.log('yep')
-    // }
+    dataRestFrom: function() {
+      //console.log('yep')
+      if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
+
+        this.getDataAsynchrony(this.dataRestFrom);
+      }
+    }
   },
   methods: {
     // getDataFromDb: function() {
@@ -266,6 +268,8 @@ export default {
 
 
     // },
+
+
     getDataAsynchrony: function (data) {
       
       let prom = new Promise( resolve => {
@@ -290,8 +294,11 @@ export default {
         }
             
         this.props.nodata = false;
+        this.props.itemsForTable = data;
       })
     },
+
+
     createTitles: function(result) {
 
       let titles = Object.keys(result[0]).map( item => {
