@@ -7,7 +7,7 @@
     >
       <div 
         class="tile-block"
-        :data-status="dataRest"
+        :data-status="change"
       >
         <div 
           v-for="i in dataTile.length" 
@@ -42,6 +42,8 @@ export default {
     sizeTileFrom: null,  // размер плиток 
     heightFrom: null,  // высота родительского элемента
     dataModeFrom: null,  // включена ли шапка
+    activeElemFrom: null,
+    dataReport: null,
   },
   data () {
     return {
@@ -64,7 +66,20 @@ export default {
     idDash: function() { 
       return this.idDashFrom
     },
-    dataRest: function() {
+    // dataRest: function() {
+    //   if (!this.dataRestFrom.length || this.dataRestFrom.length == 0) {
+    //     this.noMsg = true;
+    //     this.msgText = "Нет данных для отображения";
+    //   } else if (!this.dataRestFrom[0].caption || !this.dataRestFrom[0].color) {
+    //     this.noMsg = true;
+    //     this.msgText = "Ожидается поле caption и color";
+    //   } else {
+    //     this.pushDataAsynchrony();
+        
+    //   }
+    //   return 'done'
+    // },
+    change: function() {
       if (!this.dataRestFrom.length || this.dataRestFrom.length == 0) {
         this.noMsg = true;
         this.msgText = "Нет данных для отображения";
@@ -72,10 +87,20 @@ export default {
         this.noMsg = true;
         this.msgText = "Ожидается поле caption и color";
       } else {
-        this.pushDataAsynchrony();
+        if (this.dataReport) {
+          
+          if (this.activeElemFrom == this.id) {
+            this.pushDataAsynchrony();
+          } else {
+            this.dataTile = [];
+          }
+        } else {
+          this.pushDataAsynchrony();
+        }
+        
         
       }
-      return 'done'
+      return true
     },
     otstupBottom: function() {
       let otstup = null;
@@ -116,7 +141,6 @@ export default {
       });
 
       prom.then( () => { // как раз тут делаем асинхронность
-      console.log('create tile')
         this.dataTile = [];
         this.noMsg = false;
         this.dataRestFrom.forEach( (item) => {

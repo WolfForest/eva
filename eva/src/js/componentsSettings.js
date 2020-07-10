@@ -102,7 +102,7 @@ export default {
     tile: ['visible','level','widthTile','heightTile'],
     csvg: ['visible','level','tooltip']
   },
-  reporstElements: ['table','lineChart','multiLine','barchart','graph','guntt','tile','csvg'],
+  reporstElements: ['table','lineChart','multiLine','barchart','guntt','tile','csvg'],
   reports: {
     table: {
       tooltip: 'Таблица',

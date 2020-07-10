@@ -111,11 +111,11 @@ export default {
             }
           }
         } else {
-          // this.getDataAsynchrony(this.dataRestFrom);
+          this.getDataAsynchrony();
         }
         
       }
-      return true
+      return true  
     },
   },
   methods: {
@@ -161,7 +161,6 @@ export default {
     },
     createLineChart: function (props,that,sizeLine,time,lastDot) {  // создает график
 
-    console.log('create line chart')
 
       let colors = [this.color.controls,this.color.text,this.color.controlsActive,
         '#660099','#3366FF','#e5194a','#fbbe18','#26295a','#228B22',

@@ -2,7 +2,7 @@
   <div class="dash-barchart-block">
     <div 
       class="dash-barchart"
-      :data-status="prepareBarChart"
+      :data-status="change"
     >
       <p 
         v-if="nodata" 
@@ -28,6 +28,8 @@ export default {
     colorFrom: null,  // цветовые переменные
     widthFrom: null,
     heightFrom: null,
+    activeElemFrom: null,
+    dataReport: null,
   },
   data () {
     return {
@@ -86,9 +88,9 @@ export default {
     idDash: function() { 
       return this.idDashFrom
     },
-    dataRest: function() {
-      return this.dataRestFrom
-    },
+    // dataRest: function() {
+    //   return this.dataRestFrom
+    // },
     color: function() {
       return this.colorFrom
     },
@@ -98,13 +100,30 @@ export default {
     height: function() {
       return this.heightFrom
     },
-    prepareBarChart: function() {
+    // prepareBarChart: function() {
 
-      if (this.width != 0 && this.height != 0 && this.dataRest.length > 0) {   // если размеры получены выше нуля и  если данные от родителя тоже пришли
-        this.getDataAsynchrony(); // вызываем функцию в которой будет происходить асинхронная отрисовка графика
-      }
+    //   if (this.width != 0 && this.height != 0 && this.dataRest.length > 0) {   // если размеры получены выше нуля и  если данные от родителя тоже пришли
+    //     this.getDataAsynchrony(); // вызываем функцию в которой будет происходить асинхронная отрисовка графика
+    //   }
  
-      return 'done'
+    //   return 'done'
+    // },
+    change: function() {
+      if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0 && this.width != 0 && this.height != 0) {
+        if (this.dataReport) {
+          
+          if (this.activeElemFrom == this.id) {
+            this.getDataAsynchrony();
+          } else {
+            d3.select(this.$el.querySelector('.dash-barchart')).selectAll('svg').remove();
+            d3.select(this.$el.querySelector('.dash-barchart')).selectAll('.tooltip').remove();
+          }
+        } else {
+          this.getDataAsynchrony();
+        }
+        
+      }
+      return true  
     },
   },  
   methods: {
@@ -121,8 +140,8 @@ export default {
         sizeLine['width'] = this.width;
         sizeLine['height'] = this.height-otstupBottom;
 
-        if(this.dataRest.error) {  // сомтрим если с ошибкой
-          this.nodataText = this.dataRest.error; // то выводим сообщение о ошибке
+        if(this.dataRestFrom.error) {  // сомтрим если с ошибкой
+          this.nodataText = this.dataRestFrom.error; // то выводим сообщение о ошибке
           this.nodata = true;
         } else {  // если нет
           resolve(sizeLine)
@@ -138,9 +157,8 @@ export default {
     },
     createBarChart: function(that,sizeLine) {
       
-      console.log('create barchart')
       
-      let data = this.dataRest;
+      let data = this.dataRestFrom;
 
       this.nodata = false;
 
@@ -185,7 +203,7 @@ export default {
 
       let time = false;
 
-      if(this.dataRest[0][xMetric] > 1000000000 && this.dataRest[0][xMetric] < 2000000000) {
+      if(this.dataRestFrom[0][xMetric] > 1000000000 && this.dataRestFrom[0][xMetric] < 2000000000) {
         time = true;
       }
 

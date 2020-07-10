@@ -177,7 +177,7 @@
                 :widthFrom="size.width" 
                 :heightFrom="size.height" 
                 :timeFormatFrom="''" 
-                :sizeTileFrom="''" 
+                :sizeTileFrom="{width: '', height: ''}" 
                 :searchRep="true" 
                 :tooltipFrom="tooltipSvg"
                 :shouldGet="shouldGet"    
@@ -359,9 +359,8 @@ export default {
         this.$set(this.aboutElem[item],'icon',settings.reports[item].icon);
         this.$set(this.aboutElem[item],'key',i);
       })
-      let elem = ['table','lineChart'];
-      return elem
-      //return this.$store.getters.getReportElement
+      this.activeElem = 'table';
+      return this.$store.getters.getReportElement
     }, 
     theme: function() {
       return this.$store.getters.getTheme

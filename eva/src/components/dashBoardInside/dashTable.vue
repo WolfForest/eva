@@ -96,7 +96,7 @@ export default {
             this.props.itemsForTable = [];
           }
         } else {
-         // this.getDataAsynchrony(this.dataRestFrom);
+          this.getDataAsynchrony(this.dataRestFrom);
         }
         
       }
@@ -155,7 +155,6 @@ export default {
         }
       })
       prom.then( (data) => {
-        console.log('create table')
         data.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
         this.createTitles(data);
         this.createTockens(data);

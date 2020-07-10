@@ -13,7 +13,7 @@
       v-show="!dataLoading" 
       :class="props.class" 
       class="dash-multi" 
-      :data-status="getDataStart"
+      :data-status="change"
     />
     <div 
       v-show="dataLoading"
@@ -64,6 +64,8 @@ export default {
     idFrom: null,
     idDashFrom: null,
     dataLoadingFrom: null,
+    activeElemFrom: null,
+    dataReport: null,
   },
   data () {
     return {
@@ -97,10 +99,10 @@ export default {
     idDash: function() { 
       return this.idDashFrom
     },
-    dataRest: function() {
-      this.props.legends = [];
-      return this.dataRestFrom
-    },
+    // dataRest: function() {
+    //   this.props.legends = [];
+    //   return this.dataRestFrom
+    // },
     color: function() {
       return this.colorFrom
     },
@@ -130,93 +132,115 @@ export default {
     //   }
     //   return true
     // },
-    getDataStart: function() {
+    change: function() {
+      if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0 && this.width != 0 && this.height != 0) {
+        this.props.legends = [];
+        if (this.dataReport) {
+          
+          if (this.activeElemFrom == this.id) {
+            this.getDataAsynchrony();
+          } else {
 
-      //console.log('asdasdd')
-
-      if (this.width != 0 && this.height != 0 && this.dataRest.length > 0) {   // если размеры получены выше нуля и  если данные от родителя тоже пришли
-        this.getDataAsynchrony(); // вызываем функцию в которой будет происходить асинхронная отрисовка графика
-      }
- 
-      return 'done'
-
-      // let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
-      // sizeLine['width'] = this.width;
-      // sizeLine['height'] = this.height;
-
-      // if (sizeLine.width > 0 && sizeLine.height > 0) {  // если размеры получены выше нуля
+            let graphics = d3.select(this.$el.querySelector('.dash-multi')).selectAll('svg').nodes(); // получаем область в которой будем рисовтаь график 
+      
+            if(graphics.length != 0){  // если график уже есть
+              graphics[0].remove(); // удаляем его
+            }
+          }
+        } else {
+          this.getDataAsynchrony();
+        }
         
-      //   if (this.dataRest.length > 0) {  // если данные от родителя тоже пришли
-      //     if(this.dataRest.error) {  // сомтрим если с ошибкой
-      //       this.props.message = this.dataRest.error; // то выводим сообщение о ошибке
-      //     } else {  // если нет
-      //       console.log('multilinechart is obtain data')
+      }
+      return true  
+    },
+    // getDataStart: function() {
+
+    //   //console.log('asdasdd')
+
+    //   if (this.width != 0 && this.height != 0 && this.dataRest.length > 0) {   // если размеры получены выше нуля и  если данные от родителя тоже пришли
+    //     this.getDataAsynchrony(); // вызываем функцию в которой будет происходить асинхронная отрисовка графика
+    //   }
+ 
+    //   return 'done'
+
+    //   // let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
+    //   // sizeLine['width'] = this.width;
+    //   // sizeLine['height'] = this.height;
+
+    //   // if (sizeLine.width > 0 && sizeLine.height > 0) {  // если размеры получены выше нуля
+        
+    //   //   if (this.dataRest.length > 0) {  // если данные от родителя тоже пришли
+    //   //     if(this.dataRest.error) {  // сомтрим если с ошибкой
+    //   //       this.props.message = this.dataRest.error; // то выводим сообщение о ошибке
+    //   //     } else {  // если нет
+    //   //       console.log('multilinechart is obtain data')
             
-      //       let time = false;
-      //       let onlyNum = true;
-      //       let key = Object.keys(this.dataRest[0])[0];
-      //       typeof(this.dataRest[0][key]) != 'number' ? onlyNum = false : false
+    //   //       let time = false;
+    //   //       let onlyNum = true;
+    //   //       let key = Object.keys(this.dataRest[0])[0];
+    //   //       typeof(this.dataRest[0][key]) != 'number' ? onlyNum = false : false
 
-      //       if (onlyNum){  // если все-таки число
-      //         if(this.dataRest[0][key] > 1000000000 && this.dataRest[0][key] < 2000000000) {
-      //           time = true;
-      //         }
+    //   //       if (onlyNum){  // если все-таки число
+    //   //         if(this.dataRest[0][key] > 1000000000 && this.dataRest[0][key] < 2000000000) {
+    //   //           time = true;
+    //   //         }
 
-      //         this.props.nodata = false; // то убираем соощение о отсутствии данных
-      //         this.props.result = this.dataRest;  // заносим все данные в переменную
-      //         let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
-      //         let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
-      //         let metricsOpt = [];
-      //         if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
-      //           metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
-      //         }
-      //         if (this.props.legends.length == 0) {
-      //           this.metrics = [];
+    //   //         this.props.nodata = false; // то убираем соощение о отсутствии данных
+    //   //         this.props.result = this.dataRest;  // заносим все данные в переменную
+    //   //         let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
+    //   //         let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
+    //   //         let metricsOpt = [];
+    //   //         if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
+    //   //           metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
+    //   //         }
+    //   //         if (this.props.legends.length == 0) {
+    //   //           this.metrics = [];
                 
-      //           let metricsName = Object.keys(this.props.result[0]).filter( item => {
-      //             if (item.indexOf('caption') == -1 && item.indexOf('annotation') == -1) {
-      //               return item
-      //             }
-      //           }); 
+    //   //           let metricsName = Object.keys(this.props.result[0]).filter( item => {
+    //   //             if (item.indexOf('caption') == -1 && item.indexOf('annotation') == -1) {
+    //   //               return item
+    //   //             }
+    //   //           }); 
                                           
-      //           if (metricsName.length > 0) {
-      //             this.metrics = [...[],...metricsName];
-      //             metricsName.splice(0,1)
+    //   //           if (metricsName.length > 0) {
+    //   //             this.metrics = [...[],...metricsName];
+    //   //             metricsName.splice(0,1)
 
                               
-      //             this.createLegends(metricsName);
+    //   //             this.createLegends(metricsName);
 
-      //             let timeOut = setTimeout( function tick() {
-      //               if (this.$refs && this.props.legends.length > 0 ) {    
-      //                 clearTimeout(timeOut);
-      //                 this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
-      //               }  else {
-      //                 timeOut = setTimeout(tick.bind(this), 100); 
-      //               }
-      //             }.bind(this), 0);
+    //   //             let timeOut = setTimeout( function tick() {
+    //   //               if (this.$refs && this.props.legends.length > 0 ) {    
+    //   //                 clearTimeout(timeOut);
+    //   //                 this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
+    //   //               }  else {
+    //   //                 timeOut = setTimeout(tick.bind(this), 100); 
+    //   //               }
+    //   //             }.bind(this), 0);
 
-      //           } else {
-      //             this.props.message = 'Данные не подходят для построения графика';
-      //             this.props.nodata = true; 
-      //           }
+    //   //           } else {
+    //   //             this.props.message = 'Данные не подходят для построения графика';
+    //   //             this.props.nodata = true; 
+    //   //           }
 
-      //         } else {
-      //           this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
-      //         }
+    //   //         } else {
+    //   //           this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
+    //   //         }
 
-      //       } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
-      //         this.props.nodata = true;  // показываем сообщение о некорректности данных
-      //         this.props.result = [];  // очищаем массив результатов
-      //         this.props.message = "К сожалению данные не подходят к линейному графику";  // выводим сообщение
-      //         d3.select(this.$el.querySelector('.dash-multi')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
-      //       }
-      //     }
-      //   }
-      // }    
-      //  console.log('multilinechart done')     
-      // return 'done'
+    //   //       } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
+    //   //         this.props.nodata = true;  // показываем сообщение о некорректности данных
+    //   //         this.props.result = [];  // очищаем массив результатов
+    //   //         this.props.message = "К сожалению данные не подходят к линейному графику";  // выводим сообщение
+    //   //         d3.select(this.$el.querySelector('.dash-multi')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
+    //   //       }
+    //   //     }
+    //   //   }
+    //   // }    
+    //   //  console.log('multilinechart done')     
+    //   // return 'done'
     
-    }
+    // }
 
   },
   watch: {
@@ -233,8 +257,8 @@ export default {
         sizeLine['width'] = this.width;
         sizeLine['height'] = this.height;
 
-        if(this.dataRest.error) {  // смотрим если с ошибкой
-          this.props.message = this.dataRest.error; // то выводим сообщение о ошибке
+        if(this.dataRestFrom.error) {  // смотрим если с ошибкой
+          this.props.message = this.dataRestFrom.error; // то выводим сообщение о ошибке
         } else {  // если нет
 
           resolve(sizeLine) // передаем в результат размеры графика
@@ -244,20 +268,19 @@ export default {
       })
 
       prom.then( (sizeLine) => { 
-      console.log('create multilinechart')
         
         let time = false;
         let onlyNum = true;
-        let key = Object.keys(this.dataRest[0])[0];
-        typeof(this.dataRest[0][key]) != 'number' ? onlyNum = false : false
+        let key = Object.keys(this.dataRestFrom[0])[0];
+        typeof(this.dataRestFrom[0][key]) != 'number' ? onlyNum = false : false
 
         if (onlyNum){  // если все-таки число
-          if(this.dataRest[0][key] > 1000000000 && this.dataRest[0][key] < 2000000000) {
+          if(this.dataRestFrom[0][key] > 1000000000 && this.dataRestFrom[0][key] < 2000000000) {
             time = true;
           }
 
           this.props.nodata = false; // то убираем соощение о отсутствии данных
-          this.props.result = this.dataRest;  // заносим все данные в переменную
+          this.props.result = this.dataRestFrom;  // заносим все данные в переменную
           let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
           let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
           let metricsOpt = [];
