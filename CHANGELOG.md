@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - set asynchrony all create components. Then draw only one component per time. Then get data from rest throw web worker.
 
+## [1.44.26] [newSetting]
+### Adde
+
+- put theme setting in back and check on front
+
+## [1.43.26] [checkImpExp]
+### Fixed
+
+- add check which kind of file user want to import (groups or dashs)
+
 ## [1.43.25] [heightTabel]
 ### Fixed
 

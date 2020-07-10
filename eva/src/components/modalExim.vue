@@ -208,25 +208,38 @@ export default {
         this.msgImp.color = 'controlsActive';
         this.msgImp.opacity = '1';
       } else {
-        let formData =  new FormData();
-        if (this.element == 'dash') {
-          formData.append('group', this.curName);
-          formData.append('body', this.file);
-        } else {
-          formData.append('body', this.file);
-        }
-        let response = await this.$store.getters.importDash({element: this.element,formData: formData});
-        try {
-          let res = JSON.parse(response);  // тут проверяем может ли распарситься ответ от сервера
-          this.msgImp.text = 'Импорт прошел успешно';
-          this.msgImp.color = 'controls';
-          this.msgImp.opacity = '1';
-        }
-        catch {
-          this.msgImp.text = 'Импортировать не удалось';
+        let extantion = this.file.name.split('.');
+        extantion = extantion[extantion.length-1];
+        if (extantion != this.element) {
+          if (this.element == 'group') {
+            this.msgImp.text = 'Выберите файл c группами';
+          } else {
+            this.msgImp.text = 'Выберите файл c дашбордами';
+          }
           this.msgImp.color = 'controlsActive';
           this.msgImp.opacity = '1';
-        } 
+        } else {
+
+          let formData =  new FormData();
+          if (this.element == 'dash') {
+            formData.append('group', this.curName);
+            formData.append('body', this.file);
+          } else {
+            formData.append('body', this.file);
+          }
+          let response = await this.$store.getters.importDash({element: this.element,formData: formData});
+          try {
+            let res = JSON.parse(response);  // тут проверяем может ли распарситься ответ от сервера
+            this.msgImp.text = 'Импорт прошел успешно';
+            this.msgImp.color = 'controls';
+            this.msgImp.opacity = '1';
+          }
+          catch {
+            this.msgImp.text = 'Импортировать не удалось';
+            this.msgImp.color = 'controlsActive';
+            this.msgImp.opacity = '1';
+          } 
+        }
       }
       setTimeout( () => {
         this.msgImp.opacity = '0'; 

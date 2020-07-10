@@ -307,7 +307,16 @@ export default {
       }
     },
     setTheme: function(theme){
+      // let formData =  new FormData();
+      // formData.append('setting', {theme: theme});
+
       this.$store.commit('setTheme', theme);
+      let settings = JSON.stringify({
+        theme: theme,
+      });
+      this.$store.commit('setThemeBack', JSON.stringify({setting: settings}));
+
+
       // if (theme == 'light') {
       //   this.color.text = '#333';
       //   this.color.back = '#FFF';

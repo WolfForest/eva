@@ -573,6 +573,9 @@ export default {  // приблизительный объект хранили�
     setTheme: (state, theme) => {    // устанавливает объект цвета в хранилище
       Vue.set(state, 'theme', theme);
     },
+    setThemeBack: (state, theme) => {    // устанавливает объект цвета в хранилище
+      rest.setThemeBack(theme,restAuth);
+    },
     setGraphTree: (state, tree) => { // мтеод сохраняет структуру и позицию графа
       state[tree.idDash][tree.id].tree = tree.tree;
       state[tree.idDash][tree.id].direct = tree.direct;
@@ -1106,6 +1109,13 @@ export default {  // приблизительный объект хранили�
         Vue.set(state, 'theme', 'light');
       }
       return state.theme
+      
+    },
+    getThemeBack(state) {
+      return () => {
+        return rest.getThemeBack(restAuth)
+      }
+      
     },
     // getColor(state) {  // получаем объект с цветовыми настройками
         
