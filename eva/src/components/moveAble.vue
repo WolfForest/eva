@@ -6,6 +6,7 @@
     :y="props.top"  
     :draggable="props.draggable" 
     :resizable="props.resizable" 
+    :grid="[60,60]"
     :style="{zIndex:props.zIndex, outlineColor: color.controlsActive, background: color.controlsActive, opacity:opacity }" 
     @dragging="onDrag"
     @resizing="onResize" 
@@ -51,7 +52,8 @@ export default {
         top: 0,
         left: 0,
         vue_drag: false,
-        zIndex: 1
+        zIndex: 1,
+        step: {},
       }
     }
   },
@@ -71,14 +73,12 @@ export default {
   },
   methods: {
     onResize: function (x, y, width, height) {  // получаем позицию и размер элемента
-      
       this.props.top = x
       this.props.left = y
       this.props.width = width
       this.props.height = height
     },
     onDrag: function (x, y) {   // получаем позицию элемнета
-      
       this.props.top = y
       this.props.left = x
       document.querySelector('.aplication').style.height =  `${document.body.scrollHeight}px`; // растягиваем контейнер на высоту страницы
@@ -109,10 +109,14 @@ export default {
       this.props.draggable = !this.props.draggable;
     },
     sendMove() {  // отправляем позицию элемнета в хранилище
+      let header;
+      screen.width > 1400 ? header = 50 : header = 40;
       // let left = this.calcSizePx(this.props.left,'width');
       // let top = this.calcSizePx(this.props.top,'height');
       // this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
-      this.$store.commit('setPosDash', {top: this.props.top,left: this.props.left, id: this.id, idDash: this.idDash});
+      let top = Math.round((this.props.top-header)/this.step.hor);
+      let left =  Math.round(this.props.left/this.step.vert);
+      this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
     },
     resizeSwitch() {  // переключаем возможность изменения размеров элемента
       this.props.resizable = !this.props.resizable;
@@ -122,29 +126,34 @@ export default {
     //  let width = this.calcSizePx(this.$el.offsetWidth,'width');
     //  let height = this.calcSizePx(this.$el.offsetHeight,'height');
     //  this.$store.commit('setSizeDash', {width: width, height: height, id: this.id, idDash: this.idDash});
-      this.$store.commit('setSizeDash', {width: this.$el.offsetWidth, height: this.$el.offsetHeight, id: this.id, idDash: this.idDash});
+      let width = Math.round(this.$el.offsetWidth/this.step.vert);
+      let height = Math.round(this.$el.offsetHeight/this.step.hor);
+      this.$store.commit('setSizeDash', {width: width, height: height, id: this.id, idDash: this.idDash});
     },
-    calcSizeProc(size,key) {
-      let newSize = size;
-      if (!Number(size)) {
-        newSize = (parseFloat(size)*screen[key])/100;
-      }
-      return Number(newSize.toFixed(1))
-    },
-    calcSizePx(size,key) {
-      return `${((size*100)/screen[key]).toFixed(1)}%`
-    },
+    // calcSizeProc(size,key) {
+    //   let newSize = size;
+    //   if (!Number(size)) {
+    //     newSize = (parseFloat(size)*screen[key])/100;
+    //   }
+    //   return Number(newSize.toFixed(1))
+    // },
+    // calcSizePx(size,key) {
+    //   return `${((size*100)/screen[key]).toFixed(1)}%`
+    // },
     changeOpacity(event){
       this.opacity = event;
     }
   },
   created() {
+    this.step = {vert: 60, hor: 60};
+    let header;
+    screen.width > 1400 ? header = 50 : header = 40;
     let pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
-    this.props.left = this.calcSizeProc(pos.left,'width');
-    this.props.top = this.calcSizeProc(pos.top,'height');
+    this.props.left = pos.left*this.step.vert;
+    this.props.top = (pos.top*this.step.hor)+header;
     let size = this.$store.getters.getSizeDash({idDash: this.idDash, id: this.id});
-    let width = this.calcSizeProc(size.width,'width');
-    let height = this.calcSizeProc(size.height,'height');
+    let width = size.width*this.step.vert;
+    let height = size.height*this.step.hor;
     this.props.width = width;
     this.props.height =height;
   },

@@ -52,6 +52,11 @@
         style="margin-bottom:40px"
       >
         <v-container class="dash-container">
+          <div
+            class="overlay-grid"
+            :style="{background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / 60px 60px,
+            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / 60px 60px`,height:heightOverlay}"
+          />
           <move-able 
             v-for="elem in elements" 
             :key="hash(elem)"  
@@ -105,6 +110,7 @@ export default {
       letElements: false,
       prepared: false,
       colorChange: false,
+      heightOverlay: '100vh'
     }
   },   
   computed: {
@@ -188,15 +194,16 @@ export default {
   mounted() {
     let otstup = 0;
           
-
     window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)
       if (document.querySelector('.aplication')) {
+        
         if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
           otstup = 40;
         } else {
           otstup = 0;
         }
         document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
+        this.heightOverlay = `${document.body.clientHeight-50}px`;
       }
     })
     this.color = themes[this.theme];
@@ -240,6 +247,15 @@ export default {
     .aplication .dash-container {
         max-width: 100%;
         padding: 0;
+    }
+
+    .overlay-grid {
+      position: absolute;
+      top: 50px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.2;
     }
     
 </style>

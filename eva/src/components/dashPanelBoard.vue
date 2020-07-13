@@ -1197,13 +1197,25 @@ export default {
         this.$set(this.newDashBoard,type,{});
         this.$set(this.newDashBoard[type],'name_elem',type[0].toUpperCase() + type.substring(1));
 
+        let step = {vert: 60, hor: 60};
 
-        this.$set(this.newDashBoard[type],'width',settings.size[type].width);
-        this.$set(this.newDashBoard[type],'height',settings.size[type].height); 
+        let size = this.calcGrid(settings.size[type].height, settings.size[type].width,step,'size');
+
+        this.$set(this.newDashBoard[type],'width',size.vert);
+        this.$set(this.newDashBoard[type],'height',size.hor); 
+
+        let pos = this.calcGrid(coord.top, coord.left,step,'pos');
+        
+        this.$set(this.newDashBoard[type],'top',pos.hor+pageYOffset);
+        this.$set(this.newDashBoard[type],'left',pos.vert);
+
+        // this.$set(this.newDashBoard[type],'width',settings.size[type].width);
+        // this.$set(this.newDashBoard[type],'height',settings.size[type].height); 
        
-        let size ={top: coord.top, left: coord.left};
-        this.$set(this.newDashBoard[type],'top',size.top+pageYOffset);
-        this.$set(this.newDashBoard[type],'left',size.left);
+        // let size ={top: coord.top, left: coord.left};
+        // this.$set(this.newDashBoard[type],'top',size.top+pageYOffset);
+        // this.$set(this.newDashBoard[type],'left',size.left);
+
         this.$set(this.newDashBoard[type],'should',false);
         this.$set(this.newDashBoard[type],'search',-1);
         this.$set(this.newDashBoard[type],'switch',false);
@@ -1216,9 +1228,19 @@ export default {
       }
 
     },
-    calcSizePx(size,key) {
-      return `${((size*100)/screen[key]).toFixed(1)}%`
+    calcGrid: function(top,left,step,action){
+      let size = {},header;
+      screen.width > 1400 ? header = 50 : header = 40;
+      action == 'size' ? header = 0 : false;
+      size.vert = Math.round(left/step.vert);
+      //size.vert = leftCoord*step.vert;
+      size.hor = Math.round((top-header)/step.hor);
+      //size.hor = (topCoord*step.hor)+header;
+      return size
     },
+    // calcSizePx(size,key) {
+    //   return `${((size*100)/screen[key]).toFixed(1)}%`
+    // },
     checkPos: function(size) {
       let result = {top: 0, left: 0};
       let clientWidth = document.querySelector('#app').clientWidth;
