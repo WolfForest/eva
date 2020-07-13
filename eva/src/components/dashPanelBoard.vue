@@ -12,9 +12,8 @@
       </div>
       <div 
         class="title-edit" 
-        :style="editSwitch"
       >
-        <v-tooltip 
+        <!-- <v-tooltip 
           bottom 
           :color="color.controlsActive" 
         >
@@ -29,6 +28,22 @@
             </v-icon> 
           </template>
           <span>Поменять режим отображения</span>
+        </v-tooltip> -->
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive" 
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class="edit" 
+              :style="{color:'#DADADA'}"
+              v-on="on"
+              @click="gearShow = !gearShow"
+            >
+              {{ gear }}
+            </v-icon> 
+          </template>
+          <span>Открыть настройки дашборда</span>
         </v-tooltip>
       </div>
     </div>
@@ -601,12 +616,17 @@
       :dataSidFrom="scheduleSid"
       @cancel="activeSchedule=false" 
     />
+    <dash-settings 
+      :color-from="color" 
+      :gear-from="gearShow"
+      @changeMode="setEditMode"
+    />
   </div>
 </template>
 
 <script>
 
-import { mdiPlusBox, mdiPlay, mdiEye, mdiArrowDownBold, mdiContentSave, mdiAccount,    mdiHomeVariantOutline,  mdiSettings, mdiHelpCircleOutline, mdiClockOutline,  mdiDatabase,mdiTableEdit,mdiCodeTags, mdiTrashCanOutline, mdiMinusBox, mdiToolbox ,   mdiPencil,  mdiVariable, mdiCheckBold,  mdiSwapVerticalBold } from '@mdi/js'
+import { mdiPlusBox, mdiPlay, mdiEye,  mdiArrowDownBold, mdiContentSave, mdiAccount,    mdiHomeVariantOutline,  mdiSettings, mdiHelpCircleOutline, mdiClockOutline,  mdiDatabase,mdiTableEdit,mdiCodeTags, mdiTrashCanOutline, mdiMinusBox, mdiToolbox ,   mdiPencil,  mdiVariable, mdiCheckBold,  mdiSwapVerticalBold } from '@mdi/js'
 
 //import { match } from 'minimatch'
 
@@ -657,6 +677,7 @@ export default {
       opensave: false,
       openexim: false,
       sign: true,
+      gearShow: false,
       gear: mdiSettings,
       exim: mdiSwapVerticalBold,
       home: mdiHomeVariantOutline,
@@ -772,13 +793,13 @@ export default {
         return `fill:#DADADA`;
       }
     },
-    editSwitch: function() {
-      if (this.edit_elem) {
-        return  'opacity:1';
-      } else {
-        return 'opacity:0.5';
-      }
-    },
+    // editSwitch: function() {
+    //   if (this.edit_elem) {
+    //     return  'opacity:1';
+    //   } else {
+    //     return 'opacity:0.5';
+    //   }
+    // },
     textareaEv: function() {
       let eventFull = this.$store.getters.getEventFull(this.idDash);
       if (eventFull != ''){
@@ -831,6 +852,9 @@ export default {
     openSchedule: function(id) {
       this.scheduleSid = id;
       this.activeSchedule = true;
+    },
+    openSettingsDash: function() {
+      console.log('open')
     },
     openEdit: function(id) {   // окно с редактированием search
       this.openSearch();  // то открываем его 

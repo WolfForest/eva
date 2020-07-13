@@ -193,7 +193,7 @@ export default {
   },
   mounted() {
     let otstup = 0;
-          
+    
     window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)
       if (document.querySelector('.aplication')) {
         
@@ -206,6 +206,7 @@ export default {
         this.heightOverlay = `${document.body.clientHeight-50}px`;
       }
     })
+    this.heightOverlay = `${document.body.clientHeight-50}px`;
     this.color = themes[this.theme];
   }
 }

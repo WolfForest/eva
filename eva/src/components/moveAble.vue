@@ -6,7 +6,7 @@
     :y="props.top"  
     :draggable="props.draggable" 
     :resizable="props.resizable" 
-    :grid="[60,60]"
+    :grid="props.grid"
     :style="{zIndex:props.zIndex, outlineColor: color.controlsActive, background: color.controlsActive, opacity:opacity }" 
     @dragging="onDrag"
     @resizing="onResize" 
@@ -54,6 +54,7 @@ export default {
         vue_drag: false,
         zIndex: 1,
         step: {},
+        grid: [60,60]
       }
     }
   },
