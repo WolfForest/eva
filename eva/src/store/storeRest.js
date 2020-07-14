@@ -38,7 +38,7 @@ export default {
 
               let timeOut = setTimeout( async function tick() {
             
-                if (status == 'failed') {
+                if (status == 'failed') { 
                   result.push('failed');
                   clearTimeout(timeOut);
                 }

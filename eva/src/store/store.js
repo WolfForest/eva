@@ -631,6 +631,24 @@ export default {  // приблизительный объект хранили�
       //Vue.set(state[dash.idDash][dash.id], 'metrics',[]);
       state[dash.idDash][dash.id].metrics = metrics;
     },
+    setSizeGrid: (state,sizeGrid) => {
+      if (!state[sizeGrid.id].grid) {
+        Vue.set(state[sizeGrid.id], 'grid', {});
+      }
+      state[sizeGrid.id].grid = sizeGrid.grid;
+    },
+    setDragResize: (state,dragRes) => {
+      if (!state[dragRes.id].dragRes) {
+        Vue.set(state[dragRes.id], 'dragRes', 'true');
+      }
+      state[dragRes.id].dragRes = dragRes.item;
+    },
+    setGridShow: (state, gridShow) => {
+      if (!state[gridShow.id].gridShow) {
+        Vue.set(state[gridShow.id], 'gridShow', 'true');
+      }
+      state[gridShow.id].gridShow = gridShow.item;
+    },
   },
   actions: {
     
@@ -1304,6 +1322,32 @@ export default {  // приблизительный объект хранили�
         }
         return state[dash.idDash][dash.id].metrics
 
+      }
+    },
+    getSizeGrid: (state) => {
+      return (id) => {
+        if (!state[id].grid) {
+          Vue.set(state[id], 'grid', {});
+          Vue.set(state[id].grid, 'vert', '32');
+          Vue.set(state[id].grid, 'hor', '18');
+        }
+        return state[id].grid
+      }
+    },
+    getDragResize: (state) => {
+      return (id) => {
+        if (!state[id].dragRes) {
+          Vue.set(state[id], 'dragRes', 'true');
+        }
+        return state[id].dragRes
+      }
+    },
+    getGridShow: (state) => {
+      return (id) => {
+        if (!state[id].gridShow) {
+          Vue.set(state[id], 'gridShow', 'true');
+        }
+        return state[id].gridShow
       }
     },
   },

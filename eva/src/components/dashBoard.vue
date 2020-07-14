@@ -78,7 +78,7 @@
               </template>
               <span>Источник данных</span>
             </v-tooltip>
-            <v-tooltip 
+            <!-- <v-tooltip 
               bottom 
               :color="color.controlsActive"  
             >
@@ -109,7 +109,7 @@
                 </v-icon>
               </template>
               <span>Переместить</span>
-            </v-tooltip>
+            </v-tooltip> -->
             <v-tooltip 
               v-if="props.edit_icon"
               bottom  
@@ -446,32 +446,32 @@ export default {
       props.edit_icon=true;
       this.$store.commit('setNameDash', {name: props.name, id: this.element, idDash: this.idDash });
     },
-    moveElem: function (props) {  // переключаем режим разрешения перемещения элемента 
-      if (props.move_elem) {
-        props.arrow_coral = 'controlsActive';
-        this.$emit('moveElem');  // так как это переключается у родителя, мы вынуждены вызывать событие на родителе и передавтаь туда данные
-        props.move_elem = !props.move_elem;
-      } else {
-        props.arrow_coral = 'controlsInsideDash';
-        this.$emit('moveElem');
-        this.$emit('sendMove');
-        props.move_elem = !props.move_elem;
-      }
-    },
-    resizeElem: function (props) {  // тоже самое для режима изменения размера
-      if (props.resize_elem) {
-        props.resize_arrow_coral = 'controlsActive';
-        props.transition = !props.transition;
-        this.$emit('resizeElem');
-        props.resize_elem = !props.resize_elem;
-      } else {
-        props.resize_arrow_coral = 'controlsInsideDash';
-        props.transition = !props.transition;
-        this.$emit('resizeElem');
-        this.$emit('sendSize');
-        props.resize_elem = !props.resize_elem;
-      }
-    },
+    // moveElem: function (props) {  // переключаем режим разрешения перемещения элемента 
+    //   if (props.move_elem) {
+    //     props.arrow_coral = 'controlsActive';
+    //     this.$emit('moveElem');  // так как это переключается у родителя, мы вынуждены вызывать событие на родителе и передавтаь туда данные
+    //     props.move_elem = !props.move_elem;
+    //   } else {
+    //     props.arrow_coral = 'controlsInsideDash';
+    //     this.$emit('moveElem');
+    //     this.$emit('sendMove');
+    //     props.move_elem = !props.move_elem;
+    //   }
+    // },
+    // resizeElem: function (props) {  // тоже самое для режима изменения размера
+    //   if (props.resize_elem) {
+    //     props.resize_arrow_coral = 'controlsActive';
+    //     props.transition = !props.transition;
+    //     this.$emit('resizeElem');
+    //     props.resize_elem = !props.resize_elem;
+    //   } else {
+    //     props.resize_arrow_coral = 'controlsInsideDash';
+    //     props.transition = !props.transition;
+    //     this.$emit('resizeElem');
+    //     this.$emit('sendSize');
+    //     props.resize_elem = !props.resize_elem;
+    //   }
+    // },
     chooseDS: function() {  // открываем модальное окно с выбором ИС (источник данных)
       this.$store.commit('setModalSearch',  { id: this.idDash, status: true, elem: this.element } );
     },

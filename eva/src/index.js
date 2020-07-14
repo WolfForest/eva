@@ -19,10 +19,10 @@ import router from './route/index.js'  // подключаем файл с на�
 
 import screenshot from './plugins/screenshot.js'  // подключаем файл с настройками плагина для скриншотов
 
-import VueGridLayout from 'vue-grid-layout'  // сетка на главной странице
+//import VueGridLayout from 'vue-grid-layout'  // сетка на главной странице
 
 import AsyncComputed from 'vue-async-computed'  // позволяет создавтаь асинхронные computed
-
+ 
 import VueDraggableResizable from 'vue-draggable-resizable'   // подключаем библиотеку для перемещения и изменения размеров dashboard
 Vue.component('vue-draggable-resizable', VueDraggableResizable) // сопоставляем подключенный компонент с комопнентом vue
 

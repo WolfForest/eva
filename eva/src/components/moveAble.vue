@@ -1,16 +1,17 @@
 <template>
   <vue-draggable-resizable 
+    ref="dragres"
     :w="props.width" 
     :h="props.height" 
     :x="props.left" 
-    :y="props.top"  
-    :draggable="props.draggable" 
-    :resizable="props.resizable" 
+    :y="props.top" 
+    :draggable="dragRes" 
+    :resizable="dragRes" 
+    :data-grid="sizeGrid"
     :grid="props.grid"
     :style="{zIndex:props.zIndex, outlineColor: color.controlsActive, background: color.controlsActive, opacity:opacity }" 
-    @dragging="onDrag"
-    @resizing="onResize" 
-    @dragstop="dragStopped" 
+    @resizestop="sendSize"
+    @dragstop="sendMove" 
   >
     <dash-board 
       :dataModeFrom="dataMode" 
@@ -20,11 +21,7 @@
       :idDashFrom="idDash" 
       :dataPageFrom="dataPageFrom" 
       :dataElemFrom="id" 
-      @moveElem="moveSwitch" 
-      @resizeElem="resizeSwitch" 
       @SetLevel="props.zIndex = $event" 
-      @sendMove="sendMove" 
-      @sendSize="sizeSwitch" 
       @SetOpacity="changeOpacity($event)" 
     />
   </vue-draggable-resizable>
@@ -71,65 +68,131 @@ export default {
     color: function() {
       return this.colorFrom
     },
+    dragRes: function() {
+      let dragRes = this.$store.getters.getDragResize(this.idDash);
+      dragRes == 'true' ? dragRes = true : dragRes = false;
+      return dragRes;
+    },
+    sizeGrid: function() {
+      let grid = this.$store.getters.getSizeGrid(this.idDash);
+      if (grid.vert != '') {
+        this.props.grid[0] = this.calcSizeGrid(grid.vert,'vert');
+      }
+      if (grid.hor != '') {
+        this.props.grid[1] = this.calcSizeGrid(grid.hor,'hor');
+      }
+      this.drawElement();
+      return true
+    }
   },
   methods: {
-    onResize: function (x, y, width, height) {  // получаем позицию и размер элемента
-      this.props.top = x
-      this.props.left = y
-      this.props.width = width
-      this.props.height = height
-    },
-    onDrag: function (x, y) {   // получаем позицию элемнета
-      this.props.top = y
-      this.props.left = x
-      document.querySelector('.aplication').style.height =  `${document.body.scrollHeight}px`; // растягиваем контейнер на высоту страницы
-    },
-    dragStopped: function(left,top) {
-      
-      //let result = {top: 0, left: 0};
-      let clientWidth = document.querySelector('#app').clientWidth;
-      if (top < 50) {
-        this.props.top = 70;
-      } 
-      if (left < 0) {
-        this.props.left = 20;
-      } 
-      if ((left+this.props.width) >  clientWidth) {
-        this.props.left = clientWidth - this.props.width - 20
-      } 
-    },
-    resize(newRect) {  // если перемещение разрешено то будем заносить позицию и размер для смены даных о элементе
-      if (this.props.draggable) {
-        this.props.width = newRect.width;
-        this.props.height = newRect.height;
-        this.props.top = newRect.top;
-        this.props.left = newRect.left;
+    calcSizeGrid: function(numb, type) {
+      let size = 0;
+      if (type == 'vert') {
+        size = Math.round(screen.width/Number(numb));
+      } else {
+        size = Math.round(screen.height/Number(numb));
       }
+      return size
+
     },
-    moveSwitch() {  // переключает возможность транспортировки
-      this.props.draggable = !this.props.draggable;
-    },
-    sendMove() {  // отправляем позицию элемнета в хранилище
+    drawElement: function() {
+      this.step = JSON.parse(JSON.stringify(this.$store.getters.getSizeGrid(this.idDash)));
+      this.step.vert = Math.round(screen.width/Number(this.step.vert));
+      this.step.hor = Math.round(screen.height/Number(this.step.hor));
+     
       let header;
       screen.width > 1400 ? header = 50 : header = 40;
-      // let left = this.calcSizePx(this.props.left,'width');
-      // let top = this.calcSizePx(this.props.top,'height');
-      // this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
-      let top = Math.round((this.props.top-header)/this.step.hor);
-      let left =  Math.round(this.props.left/this.step.vert);
+      let pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
+      
+      this.props.left = pos.left*this.step.vert;
+      this.props.top = (pos.top*this.step.hor)+header;
+      // if(this.$refs.dragres) {
+      //   setTimeout( ()=> {  // очень плохое решение, но лучше не придумал. Дело в том, что плагин не верно выставляет отступ сверху
+      //                       // и нам приходится его перезаписывать, но если перезаписать сразу, то плагин выполнит действия позже, чем мы,
+      //                       // поэтому приходится идти на хитрость. 
+      //     this.$refs.dragres.$el.style.transform = `translate(${this.props.left}px, ${this.props.top}px) !important `;
+      //   }, 0)
+      // }
+      let size = this.$store.getters.getSizeDash({idDash: this.idDash, id: this.id});
+      let width = size.width*this.step.vert;
+      let height = size.height*this.step.hor;
+      this.props.width = width;
+      this.props.height =height;
+    },
+    // onResize: function (x, y, width, height) {  // получаем позицию и размер элемента
+    //   this.props.top = y
+    //   this.props.left = x
+    //   this.props.width = width
+    //   this.props.height = height
+      
+    // },
+    // onDrag: function (x, y) {   // получаем позицию элемнета
+      
+    //   this.props.top = y
+    //   this.props.left = x
+    //   document.querySelector('.aplication').style.height =  `${document.body.scrollHeight}px`; // растягиваем контейнер на высоту страницы
+    // },
+    // dragStopped: function(left,top) {
+      
+      
+    //   //let result = {top: 0, left: 0};
+    //   let clientWidth = document.querySelector('#app').clientWidth;
+    //   if (top < 50) {
+    //     this.props.top = 70;
+    //   } 
+    //   if (left < 0) {
+    //     this.props.left = 20;
+    //   } 
+    //   if ((left+this.props.width) >  clientWidth) {
+    //     this.props.left = clientWidth - this.props.width - 20
+    //   } 
+    // },
+    // resize(newRect) {  // если перемещение разрешено то будем заносить позицию и размер для смены даных о элементе
+    //   if (this.props.draggable) {
+    //     this.props.width = newRect.width;
+    //     this.props.height = newRect.height;
+    //     this.props.top = newRect.top;
+    //     this.props.left = newRect.left;
+    //   }
+    // },
+    // moveSwitch() {  // переключает возможность транспортировки
+    //   this.props.draggable = !this.props.draggable;
+    // },
+    sendMove(x,y) {  // отправляем позицию элемнета в хранилище
+      let topFrom = y;
+      let leftFrom = x;
+      //let clientWidth = document.querySelector('#app').clientWidth;
+      if (topFrom < 50) {
+        topFrom = 70;
+      } 
+      if (leftFrom < 0) {
+        leftFrom = 20;
+      } 
+      // if ((left+this.props.width) >  clientWidth) {   ПОДУМАТЬ ОБ ЭТОМ
+      //   this.props.left = clientWidth - this.props.width - 20
+      // } 
+      let header;
+      screen.width > 1400 ? header = 50 : header = 40;
+      let top = Math.round((topFrom-header)/this.step.hor);
+      let left =  Math.round(leftFrom/this.step.vert);
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
+
     },
-    resizeSwitch() {  // переключаем возможность изменения размеров элемента
-      this.props.resizable = !this.props.resizable;
-      this.props.vue_drag_none = !this.props.vue_drag_none;
-    },
-    sizeSwitch() {  // отправляем размер элемента
-    //  let width = this.calcSizePx(this.$el.offsetWidth,'width');
-    //  let height = this.calcSizePx(this.$el.offsetHeight,'height');
-    //  this.$store.commit('setSizeDash', {width: width, height: height, id: this.id, idDash: this.idDash});
-      let width = Math.round(this.$el.offsetWidth/this.step.vert);
-      let height = Math.round(this.$el.offsetHeight/this.step.hor);
-      this.$store.commit('setSizeDash', {width: width, height: height, id: this.id, idDash: this.idDash});
+    // resizeSwitch() {  // переключаем возможность изменения размеров элемента
+    //   this.props.resizable = !this.props.resizable;
+    //   this.props.vue_drag_none = !this.props.vue_drag_none;
+    // },
+    sendSize(x,y,width,height) {  // отправляем размер элемента
+      let header;
+      screen.width > 1400 ? header = 50 : header = 40;
+      let top = Math.round((y-header)/this.step.hor);
+      let left =  Math.round(x/this.step.vert);
+      this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
+      let newWidth = Math.round(width/this.step.vert);
+      let newHeight = Math.round(height/this.step.hor);
+      this.$store.commit('setSizeDash', {width: newWidth, height: newHeight, id: this.id, idDash: this.idDash});
+      
     },
     // calcSizeProc(size,key) {
     //   let newSize = size;
@@ -146,17 +209,7 @@ export default {
     }
   },
   created() {
-    this.step = {vert: 60, hor: 60};
-    let header;
-    screen.width > 1400 ? header = 50 : header = 40;
-    let pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
-    this.props.left = pos.left*this.step.vert;
-    this.props.top = (pos.top*this.step.hor)+header;
-    let size = this.$store.getters.getSizeDash({idDash: this.idDash, id: this.id});
-    let width = size.width*this.step.vert;
-    let height = size.height*this.step.hor;
-    this.props.width = width;
-    this.props.height =height;
+    this.drawElement()
   },
 }
 </script>
@@ -170,6 +223,7 @@ export default {
   box-sizing: border-box;
   outline: none ;
   border-radius: 4px;
+  transition: transform ease 0.3s
 }
 .vdr.active.resizable{
   outline-color: inherit;

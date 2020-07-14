@@ -23,6 +23,72 @@
         :style="{color:colorFrom.text,}" 
         :label="String(mode)" 
       />
+      <div 
+        class="divider-setting" 
+        :style="{background: colorFrom.controls}"
+      />
+    </div>
+    <div class="setting">
+      <div class="labelSetting">
+        Размер сетки
+      </div>
+      <div class="sizeGrid">
+        <v-text-field 
+          v-model="sizeGrid.vert" 
+          placeholder="24"  
+          label="Вертикально"
+          :color="colorFrom.text" 
+          :style="{color:colorFrom.text, background: 'transparent', borderColor: colorFrom.text}" 
+          outlined 
+          class="sizeGridItem"  
+          hide-details
+          @blur="sendSizeGrid"
+        />
+        <v-text-field 
+          v-model="sizeGrid.hor" 
+          placeholder="24"  
+          label="Горизонтально"
+          :color="colorFrom.text" 
+          :style="{color:colorFrom.text, background: 'transparent', borderColor: colorFrom.text}" 
+          outlined 
+          class="sizeGridItem"  
+          hide-details
+          @blur="sendSizeGrid"
+        />
+      </div>
+      <div 
+        class="divider-setting" 
+        :style="{background: colorFrom.controls}"
+      />
+    </div>
+    <div class="setting">
+      <div class="labelSetting">
+        Перемещать/ изменять размер компонента
+      </div>
+      <v-switch  
+        v-model="dragresable" 
+        class="switch" 
+        :color="colorFrom.controls" 
+        :style="{color:colorFrom.text,}" 
+        :label="String(dragresable)" 
+      />
+      <div 
+        class="divider-setting" 
+        :style="{background: colorFrom.controls}"
+      />
+    </div>
+    
+    <div class="setting">
+      <div class="labelSetting">
+        Показывать сетку
+      </div>
+      <v-switch  
+        v-model="gridShow" 
+        class="switch" 
+        :color="colorFrom.controls" 
+        :style="{color:colorFrom.text,}" 
+        :label="String(gridShow)" 
+      />
     </div>
   </v-navigation-drawer>
 </template>
@@ -30,18 +96,24 @@
 
 <script>
 
-import {  mdiChevronDown, mdiChevronUp } from '@mdi/js'
 
 export default {
   props: {
     colorFrom: null,
     gearFrom: null,
+    idDashFrom: null,
   },
   data () {
     return {
       gearShow: false,
       settings: {},
-      mode: true
+      mode: true,
+      sizeGrid: {
+        vert: '32',
+        hor: '18'
+      },
+      dragresable: true,
+      gridShow: true
     } 
   },
   computed: {
@@ -54,11 +126,20 @@ export default {
       gear ? this.gearShow = true : this.gearShow = false;
 
     },
-    mode: function(mode) {
+    mode: function() {
       this.$emit("changeMode");
+    },
+    dragresable: function() {
+      this.$store.commit('setDragResize', {id: this.idDashFrom,item: String(this.dragresable)});
+    },
+    gridShow: function() {
+      this.$store.commit('setGridShow', {id: this.idDashFrom,item: String(this.gridShow)});
     }
   },
   methods: {
+    sendSizeGrid: function() {
+      this.$store.commit('setSizeGrid', {id: this.idDashFrom,grid: JSON.parse(JSON.stringify(this.sizeGrid))});
+    },
   //   switchBlock: function(switcher) {
   //     Object.keys(this.switchers).forEach( item => {
   //       if (item != switcher) {
@@ -105,7 +186,12 @@ export default {
   },
   mounted() {
     //this.color =  this.$store.getters.getColor;
-    
+    let grid = this.$store.getters.getSizeGrid(this.idDashFrom);
+    this.sizeGrid.vert = grid.vert;
+    this.sizeGrid.hor = grid.hor;
+    let dragRes = this.$store.getters.getDragResize(this.idDashFrom);
+    dragRes == 'true' ? dragRes = true : dragRes = false;
+    this.dragresable =  dragRes;
   } 
 }
 

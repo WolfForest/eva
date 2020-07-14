@@ -619,6 +619,7 @@
     <dash-settings 
       :color-from="color" 
       :gear-from="gearShow"
+      :idDashFrom="idDashFrom"
       @changeMode="setEditMode"
     />
   </div>
@@ -852,9 +853,6 @@ export default {
     openSchedule: function(id) {
       this.scheduleSid = id;
       this.activeSchedule = true;
-    },
-    openSettingsDash: function() {
-      console.log('open')
     },
     openEdit: function(id) {   // окно с редактированием search
       this.openSearch();  // то открываем его 
@@ -1217,11 +1215,13 @@ export default {
         this.avatar = null;  // и у нас тоже его очищаем
 
         // Создаем новый элемнет на дашборде (стандартные настройки любого элемента)
-
+ 
         this.$set(this.newDashBoard,type,{});
         this.$set(this.newDashBoard[type],'name_elem',type[0].toUpperCase() + type.substring(1));
 
-        let step = {vert: 60, hor: 60};
+        let step = JSON.parse(JSON.stringify(this.$store.getters.getSizeGrid(this.idDash)));
+        step.vert = Math.round(screen.width/Number(step.vert));
+        step.hor = Math.round(screen.height/Number(step.hor));
 
         let size = this.calcGrid(settings.size[type].height, settings.size[type].width,step,'size');
 

@@ -53,9 +53,11 @@
       >
         <v-container class="dash-container">
           <div
+            v-if="gridShow"
             class="overlay-grid"
-            :style="{background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / 60px 60px,
-            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / 60px 60px`,height:heightOverlay}"
+            :data-grid="sizeGrid"
+            :style="{background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
+            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontal}px ${horizontal}px`,height:heightOverlay}"
           />
           <move-able 
             v-for="elem in elements" 
@@ -110,7 +112,9 @@ export default {
       letElements: false,
       prepared: false,
       colorChange: false,
-      heightOverlay: '100vh'
+      heightOverlay: '100vh',
+      vertical: 60,
+      horizontal: 60,
     }
   },   
   computed: {
@@ -145,7 +149,22 @@ export default {
       } else {
         return 'flex'
       }
-    }
+    },
+    sizeGrid: function() {
+      let grid = this.$store.getters.getSizeGrid(this.idDash);
+      if (grid.vert != '') {
+        this.vertical = this.calcSizeGrid(grid.vert,'vert');
+      }
+      if (grid.hor != '') {
+        this.horizontal = this.calcSizeGrid(grid.hor,'hor');
+      }
+      return true
+    },
+    gridShow: function() {
+      let gridShow = this.$store.getters.getGridShow(this.idDash);
+      gridShow == 'true' ? gridShow = true : gridShow = false;
+      return gridShow;
+    },
   },  
   watch: {
     theme: function (theme) {
@@ -162,6 +181,16 @@ export default {
     },
     openSettings: function() {
       this.showSetting = !this.showSetting;
+    },
+    calcSizeGrid: function(numb, type) {
+      let size = 0;
+      if (type == 'vert') {
+        size = Math.round(screen.width/Number(numb));
+      } else {
+        size = Math.round(screen.height/Number(numb));
+      }
+      return size
+
     },
     setPermissions: function(event) { 
       if (event.includes('admin_all')) {
@@ -257,6 +286,7 @@ export default {
       width: 100%;
       height: 100%;
       opacity: 0.2;
+      transition: all ease 0.3s
     }
     
 </style>
