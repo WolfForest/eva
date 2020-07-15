@@ -36,7 +36,7 @@ describe('Компонент reports.vue', () => {  // тест самого к�
   })
 
   it('Получает элементы для отображения визуализаций', () => {
-    expect(wrapper.vm.elements).toHaveLength(8)
+    expect(wrapper.vm.elements).toHaveLength(7)
   })
 
 })
