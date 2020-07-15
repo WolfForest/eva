@@ -1350,6 +1350,11 @@ export default {  // приблизительный объект хранили�
         return state[id].gridShow
       }
     },
+    loadPaper: () => {
+      return (paper) => {
+        return rest.loadPaper(paper,restAuth)
+      }
+    }
   },
 }
 

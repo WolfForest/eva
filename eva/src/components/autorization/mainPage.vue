@@ -55,6 +55,22 @@
               />
             </v-card-text>
           </v-card>
+          <v-card  
+            class="product-block-itself" 
+            :style="{backgroundColor:color.backElement}"
+            @click="openPaper"
+          >   
+            <v-card-text 
+              class="product-text" 
+              :style="{color:color.text}"
+            >
+              Конструирование  <br>  отчетов
+              <p 
+                class="delimetr" 
+                :style="{backgroundColor:color.text}"
+              />
+            </v-card-text>
+          </v-card>
         </div>
       </v-container> 
     </v-content>
@@ -93,6 +109,9 @@ export default {
     openReport: function() {
       this.$store.commit('createReportSearch'); 
       this.$router.push(`/reports`); 
+    },
+    openPaper: function() {
+      this.$router.push(`/papers`); 
     },
     openQuis: function() {
       //this.$router.push(`/quiz/list`);

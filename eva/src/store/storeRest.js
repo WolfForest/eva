@@ -428,10 +428,36 @@ export default {
         data = res; 
         restAuth.putLog(`Настройки пользователя обновились успешно.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
       }).catch( error => {
-        restAuth.putLog(`Настройки пользователя обновить не удалось..&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+        restAuth.putLog(`Настройки пользователя обновить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
       }) 
     }  else {
-      restAuth.putLog(`Настройки пользователя обновить не удалось..&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
+      restAuth.putLog(`Настройки пользователя обновить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
+      return response
+    }
+
+    return data
+  },
+  async loadPaper(paper,restAuth) { 
+    let data = [];
+
+    let response = await fetch(`/api/eva/reports/load`, {  // сперва нужно подать post запрос
+      method: 'POST',
+      body: paper,
+      // mode: 'no-cors'
+    })
+      .catch (error => {
+        restAuth.putLog(`Загрузить отчет не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+        return response
+      }) 
+    if (response.status == 200) {  // если получилось
+      await response.text().then( res => {  // переводим полученные данные из json в нормальный объект
+        data = res; 
+        restAuth.putLog(`Отчет загружен успешно.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+      }).catch( error => {
+        restAuth.putLog(`Загрузить отчет не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+      }) 
+    }  else {
+      restAuth.putLog(`Загрузить отчет не удалось..&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
       return response
     }
 
