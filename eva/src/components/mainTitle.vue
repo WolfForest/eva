@@ -288,5 +288,12 @@ export default {
       opacity: 0.2;
       transition: all ease 0.3s
     }
+    .dash-grid-layout {
+      margin-top: 50px
+    }
+    .dash-grid-layout .dash-grid-item {
+      background: black;
+      color: white;
+    }
     
 </style>
