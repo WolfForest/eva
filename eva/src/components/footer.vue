@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.3.0 [tooBigData]',
+      version: 'v 1.3.0 [gridDash]',
       color: { },
     } 
   },
