@@ -107,13 +107,6 @@ export default {
       
       this.props.left = pos.left*this.step.vert;
       this.props.top = (pos.top*this.step.hor)+header;
-      // if(this.$refs.dragres) {
-      //   setTimeout( ()=> {  // очень плохое решение, но лучше не придумал. Дело в том, что плагин не верно выставляет отступ сверху
-      //                       // и нам приходится его перезаписывать, но если перезаписать сразу, то плагин выполнит действия позже, чем мы,
-      //                       // поэтому приходится идти на хитрость. 
-      //     this.$refs.dragres.$el.style.transform = `translate(${this.props.left}px, ${this.props.top}px) !important `;
-      //   }, 0)
-      // }
       let size = this.$store.getters.getSizeDash({idDash: this.idDash, id: this.id});
       let width = size.width*this.step.vert;
       let height = size.height*this.step.hor;
@@ -211,6 +204,11 @@ export default {
   created() {
     this.drawElement()
   },
+  updated() {
+    if(this.$refs.dragres) {
+      this.$refs.dragres.$el.style.transform = `translate(${this.props.left}px, ${this.props.top}px)`;
+    }
+  }
 }
 </script>
 
