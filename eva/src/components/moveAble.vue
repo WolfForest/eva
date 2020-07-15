@@ -1,10 +1,10 @@
 <template>
   <vue-draggable-resizable 
     ref="dragres"
-    :w="props.width" 
-    :h="props.height" 
-    :x="props.left" 
-    :y="props.top" 
+    :w="width" 
+    :h="height" 
+    :x="left" 
+    :y="top" 
     :draggable="dragRes" 
     :resizable="dragRes" 
     :data-grid="sizeGrid"
@@ -16,8 +16,8 @@
     <dash-board 
       :dataModeFrom="dataMode" 
       :colorFrom="color" 
-      :width="props.width"  
-      :height="props.height"  
+      :width="width"  
+      :height="height"  
       :idDashFrom="idDash" 
       :dataPageFrom="dataPageFrom" 
       :dataElemFrom="id" 
@@ -41,13 +41,11 @@ export default {
   data () {
     return {
       opacity: 1,
+      top: 0,
+      left: 0,
+      width: 0, // 0 не должен быть, по умолчанию беруться эти настройки
+      height: 0, 
       props: {
-        draggable: false,
-        resizable: false,
-        width: 0, // 0 не должен быть, по умолчанию беруться эти настройки
-        height: 0, 
-        top: 0,
-        left: 0,
         vue_drag: false,
         zIndex: 1,
         step: {},
@@ -71,6 +69,7 @@ export default {
     dragRes: function() {
       let dragRes = this.$store.getters.getDragResize(this.idDash);
       dragRes == 'true' ? dragRes = true : dragRes = false;
+      this.moveLater(); // функция которая перезапишет правильные позиции элемента
       return dragRes;
     },
     sizeGrid: function() {
@@ -83,7 +82,28 @@ export default {
       }
       this.drawElement();
       return true
-    }
+    },
+  },
+  watch: {
+    top: function() {
+      if (this.top < 0) {
+        this.top = 50;
+      } 
+
+      this.moveLater(); // функция которая перезапишет правильные позиции элемента
+    },
+    left: function() {
+      let clientWidth = document.querySelector('#app').clientWidth;
+  
+      if (this.left < 0) {
+        this.left = 0;
+      } 
+      if ((this.left+this.width) >  clientWidth) {
+        this.left = clientWidth - this.width;
+      } 
+
+      this.moveLater(); // функция которая перезапишет правильные позиции элемента
+    },
   },
   methods: {
     calcSizeGrid: function(numb, type) {
@@ -105,13 +125,21 @@ export default {
       screen.width > 1400 ? header = 50 : header = 40;
       let pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
       
-      this.props.left = pos.left*this.step.vert;
-      this.props.top = (pos.top*this.step.hor)+header;
+      this.left = pos.left*this.step.vert;
+      this.top = (pos.top*this.step.hor)+header;
       let size = this.$store.getters.getSizeDash({idDash: this.idDash, id: this.id});
       let width = size.width*this.step.vert;
       let height = size.height*this.step.hor;
-      this.props.width = width;
-      this.props.height =height;
+      this.width = width;
+      this.height =height;
+
+    },
+    moveLater: function() {
+      if(this.$refs.dragres) {
+        setTimeout( () => { // нужно запускать немного с задержкой, чтобы точно обновить после работы плагина
+          this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${this.top}px)`;
+        },150)
+      }
     },
     // onResize: function (x, y, width, height) {  // получаем позицию и размер элемента
     //   this.props.top = y
@@ -156,11 +184,9 @@ export default {
       let topFrom = y;
       let leftFrom = x;
       //let clientWidth = document.querySelector('#app').clientWidth;
-      if (topFrom < 50) {
-        topFrom = 70;
-      } 
+   
       if (leftFrom < 0) {
-        leftFrom = 20;
+        leftFrom = 0;
       } 
       // if ((left+this.props.width) >  clientWidth) {   ПОДУМАТЬ ОБ ЭТОМ
       //   this.props.left = clientWidth - this.props.width - 20
@@ -169,6 +195,10 @@ export default {
       screen.width > 1400 ? header = 50 : header = 40;
       let top = Math.round((topFrom-header)/this.step.hor);
       let left =  Math.round(leftFrom/this.step.vert);
+      // if (top < 0) {
+      //   top = 0;
+      // } 
+      // console.log(top)
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
 
     },
@@ -205,9 +235,14 @@ export default {
     this.drawElement()
   },
   updated() {
-    if(this.$refs.dragres) {
-      this.$refs.dragres.$el.style.transform = `translate(${this.props.left}px, ${this.props.top}px)`;
-    }
+    
+    // setTimeout( ()=>{
+    //   //this.$refs.dragres.$el.style.height = '800px';
+    //   this.props.height = 800;
+    // },2000)
+    // if(this.$refs.dragres) {
+    //   //this.$refs.dragres.$el.style.transform = `translate(${this.props.left}px, ${this.props.top}px)`;
+    // }
   }
 }
 </script>
