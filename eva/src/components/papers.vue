@@ -11,6 +11,7 @@
         >
           <v-card 
             class="file-block" 
+            :data-ready="dataReady"
             :style="{background: color.backElement, color: color.text}"
           >
             <div
@@ -29,7 +30,7 @@
                 small 
                 :color="color.controls" 
                 class="file-btn" 
-                @click="fileBlock=3"
+                @click="getAllPapers"
               >
                 Выбрать отчет
               </v-btn>
@@ -71,6 +72,45 @@
                 Отправить отчет
               </v-btn>
             </div>
+            <div
+              v-show="fileBlock==3"
+              class="get-file-block"
+            >
+              <v-icon
+                :color="color.controls"
+                class="arrow-back"
+                medium
+                @click="returnArrow"
+              >
+                {{ arrowBack }}
+              </v-icon>
+              <v-autocomplete 
+                v-model="selectedFile" 
+                :items="allFiles"  
+                outlined 
+                :style="{color:color.text, fill: color.text}"
+                :color="color.controls" 
+                hide-details  
+                class="file-get-itself"
+                label="Выбрать отчет"  
+                @click="changeColor" 
+              />
+              <div 
+                class="error-msg" 
+                :class="{showError:showError}"
+                :style="{color:color.controls}"
+              >
+                {{ errorMsg }}
+              </div>
+              <v-btn 
+                small 
+                :color="color.controls" 
+                class="file-get-btn" 
+                @click="choosePaper"
+              >
+                Получить отчет
+              </v-btn>
+            </div>
           </v-card>
           <v-card 
             class="search-block" 
@@ -96,37 +136,12 @@
                 spellcheck="false" 
                 flat 
                 no-resize 
-                hide-details  
+                hide-details 
+                :data-ready="dataReady"
                 :rows="rowsCount"
                 :style="{background: color.backElement, color: `${color.text} !important`}" 
                 placeholder="Введите запрос" 
               />
-              <router-link 
-                :to="{ path: '/reports'}" 
-                target="_blank"
-              >
-                <v-tooltip 
-                  bottom 
-                  :color="color.controlsActive" 
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      :color="color.controls"
-                      fab
-                      dark 
-                      small
-                      absolute
-                      class="new-btn"
-                      top
-                      right
-                      v-on="on"
-                    >
-                      <v-icon>{{ plus }}</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Открыть новое Исследование данных</span>
-                </v-tooltip>
-              </router-link>
               <v-tooltip 
                 bottom 
                 :color="color.controlsActive" 
@@ -173,6 +188,99 @@
             </v-card-text>
           </v-card>
           <v-card
+            class="stepper-paper"
+            :style="{background: color.backElement, color: color.text}"
+          >
+            <v-stepper 
+              ref="steppers"
+              v-model="move"
+              alt-labels 
+            >
+              <v-stepper-header>
+                <v-stepper-step 
+                  step="1" 
+                  :complete="steps['1'].complete"
+                  :color="steps['1'].status"
+                  :rules="steps['1'].error" 
+                >
+                  Готов к работе
+                </v-stepper-step>
+
+                <div 
+                  :style="{borderColor:color.text}"   
+                  class="loading-divider" 
+                  :class="{loading:steps['1'].loading}" 
+                >
+                  <div 
+                    class="loading-overlay"
+                    :style="{background: color.text}"  
+                  />
+                  <div 
+                    class="loading-bar " 
+                    :style="{background: color.controls}" 
+                  />
+                </div>
+
+                <v-stepper-step 
+                  step="2" 
+                  :complete="steps['2'].complete"
+                  :color="steps['2'].status"
+                  :rules="steps['2'].error" 
+                >
+                  Получаю данные об отчете
+                </v-stepper-step>
+
+                <div 
+                  :style="{borderColor:color.text}"   
+                  class="loading-divider" 
+                  :class="{loading:steps['2'].loading}" 
+                >
+                  <div 
+                    class="loading-overlay"
+                    :style="{background: color.text}"  
+                  />
+                  <div 
+                    class="loading-bar " 
+                    :style="{background: color.controls}" 
+                  />
+                </div>
+
+                <v-stepper-step 
+                  step="3"
+                  :complete="steps['3'].complete"
+                  :color="steps['3'].status"
+                  :rules="steps['3'].error" 
+                >
+                  {{ steps['3'].text }}
+                </v-stepper-step>
+
+                <div 
+                  :style="{borderColor:color.text}"   
+                  class="loading-divider" 
+                  :class="{loading:steps['3'].loading}" 
+                >
+                  <div 
+                    class="loading-overlay"
+                    :style="{background: color.text}"  
+                  />
+                  <div 
+                    class="loading-bar " 
+                    :style="{background: color.controls}" 
+                  />
+                </div>
+
+                <v-stepper-step 
+                  step="4"
+                  :complete="steps['4'].complete"
+                  :color="steps['4'].status"
+                  :rules="steps['4'].error" 
+                >
+                  Обрабатываю отчет
+                </v-stepper-step>
+              </v-stepper-header>
+            </v-stepper>
+          </v-card>
+          <v-card
             ref="vis" 
             class="static-vis" 
             :style="{background: color.backElement, color: color.text}"
@@ -197,7 +305,7 @@
 <script>
 
 import { mdiPlay, mdiSettings, mdiArrowLeftBold , mdiPlus } from '@mdi/js'
-import  settings  from '../js/componentsSettings.js';
+//import  settings  from '../js/componentsSettings.js';
 import themes from '../js/themeSettings.js';
 
 export default {
@@ -213,7 +321,9 @@ export default {
       modal: false,
       loading: false,
       rows: [],
-      data: [],
+      data: [
+        {name: 'Kitty', date: '12 апреля 2020'}
+      ],
       size: {
         width: 0,
         height: 0,
@@ -225,7 +335,37 @@ export default {
       arrowBack: mdiArrowLeftBold,
       uploadFile: '',
       showError: false,
-      errorMsg: 'Выберите файл'
+      errorMsg: 'Выберите файл',
+      steps: {
+        "1": {
+          complete: true,
+          status: '',
+          loading: false,
+          error: [],
+        },
+        "2": {
+          complete: true,
+          status: '',
+          loading: false,
+          error: [],
+        },
+        "3": {
+          complete: false,
+          status: '',
+          loading: false,
+          error: [],
+          text: 'Выбрать отчет'
+        },
+        "4": {
+          complete: false,
+          status: '',
+          error: [],
+          text: 'Обработать отчет'
+        }
+      },
+      move: '2',
+      selectedFile: '',
+      allFiles: []
     } 
   },
   
@@ -256,7 +396,13 @@ export default {
     //   })
     //   this.activeElem = 'table';
     //   return this.$store.getters.getReportElement
-    // }, 
+    // },
+    dataReady: function() {
+      if (this.data.length != 0 && this.steps['3'].complete) {
+        this.getPaper();
+      }
+      return true
+    }, 
     theme: function() {
       return this.$store.getters.getTheme
     }
@@ -264,24 +410,107 @@ export default {
   watch: {
     theme: function (theme) {
       this.color = themes[theme];
-      
     },
   }, 
   methods: {
-    setPaper: function() {
+    setPaper: async function() {
       if (this.uploadFile == '') {
-        this.errorMsg = "Выберите файл";
-        this.showError = true;
-        setTimeout( () =>{
-          this.showError = false;
-        },2000)
+        this.message("Выберите файл");
       } else {
         let formData = new FormData();
         formData.append('file', this.uploadFile);
-        this.$store.getters.loadPaper(formData);
+        let result = await this.$store.getters.loadPaper(formData);
+        try {
+          if (JSON.parse(result).status == 'success') {
+            this.message("Файл успшено загружен");
+          } else {
+            this.message("Ошибка при загрузке файла");
+          }
+
+        } catch (error) {
+          this.message(`Ошибка: ${error}`);
+        }
       }
       
     },
+    choosePaper: async function() {
+      if (this.selectedFile == '') {
+        this.message("Выберит файл");
+      } else {
+        this.steps['2'].loading = false;
+        this.steps['3'].complete = true;
+        this.steps['3'].text = "Отчет выбран";
+        this.returnArrow();
+      }
+    },
+    message: function(text) {
+      this.errorMsg = text;
+      this.showError = true;
+      setTimeout( () =>{
+        this.showError = false;
+      },2000)
+    },
+    getPaper: async function() {
+      this.move=4;
+      this.steps['3'].loading = true;
+      this.steps['4'].text = 'Обрабатываю отчет';
+
+      let formData = new FormData();
+      formData.append('file', this.selectedFile);
+      formData.append('data', this.data);
+      let result = await this.$store.getters.getPaper(formData);
+      try {
+        if (JSON.parse(result).status == 'success') {
+          console.log(result)
+          // this.allFiles = JSON.parse(result).files;
+        } else {
+          // this.errorMsg = "Список отчетов получить не удалось. Вернитесь назад и попробуйте снова.";
+          // this.showError = true;
+          // this.steps['2'].loading = false;
+          // this.steps['3'].error = [() => false];
+          // this.steps['3'].text = 'Ошибка получения списка';
+        }
+
+      } catch (error) {
+        this.message(`Ошибка: ${error}`);
+      }
+
+    },
+    getAllPapers: async function() {
+      this.selectedFile = '';
+      this.fileBlock=3;
+      this.move=3;
+      this.steps['2'].loading = true;
+      this.steps['3'].complete = false;
+      this.steps['3'].text = 'Проверяю наличие отчета';
+      
+      let result = await this.$store.getters.getAllPaper();
+      try {
+        if (JSON.parse(result).status == 'success') {
+          this.allFiles = JSON.parse(result).files;
+        } else {
+          this.errorMsg = "Список отчетов получить не удалось. Вернитесь назад и попробуйте снова.";
+          this.showError = true;
+          this.steps['2'].loading = false;
+          this.steps['3'].error = [() => false];
+          this.steps['3'].text = 'Ошибка получения списка';
+        }
+
+      } catch (error) {
+        this.message(`Ошибка: ${error}`);
+      }
+    },
+    returnArrow: function() {
+      this.fileBlock=1;
+      this.steps['3'].error = [];
+      if (this.selectedFile == '') {
+        this.move=2;
+        this.steps['3'].text="Выбрать отчет";
+        this.steps['2'].loading = false;
+        this.steps['3'].complete = false;
+      }
+    },
+    
     
     // getData: function() {
 
@@ -326,10 +555,11 @@ export default {
       this.search.sid = this.hashCode(this.search.original_otl);
 
       this.$store.auth.getters.putLog(`Запущен запрос  ${this.search.sid}`);
+      console.log(this.search.sid)
 
       this.loading = true;
       console.log('launch search')
-      let response = await this.$store.getters.getDataApi({search: this.search, idDash: 'reports'});
+      let response = await this.$store.getters.getDataApi({search: this.search, idDash: 'papers'});
       // вызывая метод в хранилище  
 
       if (!response.data || response.data.length == 0) {  // если что-то пошло не так 
@@ -340,15 +570,15 @@ export default {
       } else {  // если все нормально
         console.log('data ready')
     
-        let responseDB = this.$store.getters.putIntoDB(response, this.search.sid, 'reports');
-        responseDB
-          .then(
-            result => {
-              let refresh =  this.$store.getters.refreshElements('reports', this.search.sid, );
-              this.loading = false;
-              this.$store.commit('setReportSearch',this.search);
-            },
-          );
+        // let responseDB = this.$store.getters.putIntoDB(response, this.search.sid, 'reports');
+        // responseDB
+        //   .then(
+        //     result => {
+        //       let refresh =  this.$store.getters.refreshElements('reports', this.search.sid, );
+        //       this.loading = false;
+        //       this.$store.commit('setReportSearch',this.search);
+        //     },
+        //   );
       }
     },
     setUsername: function(event) {
@@ -477,6 +707,18 @@ export default {
       this.search = Object.assign({},search);
       this.modal = false;
     },
+    changeColor: function() {
+      if (document.querySelectorAll('.v-menu__content').length != 0){
+        
+        document.querySelectorAll('.v-menu__content').forEach( item => {
+          
+          item.style.boxShadow = `0 5px 5px -3px ${this.color.border},0 8px 10px 1px ${this.color.border},0 3px 14px 2px ${this.color.border}`;
+          item.style.background = this.color.back;
+          item.style.color = this.color.text;
+          item.style.border = `1px solid ${this.color.border}`;
+        })
+      }
+    },
     // openStatistic: function(statistic) {
     //   if (this.showStatistic) {
     //     if (this.statisticKey == statistic.text) {
@@ -498,6 +740,8 @@ export default {
     // },
   },
   mounted() {
+    
+  
     // this.search = this.$store.getters.getReportSearch;
     // if (this.search.original_otl != '') {
     //   this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: true});
@@ -521,6 +765,12 @@ export default {
     }
     //this.unitedData.color=  this.color.controls;
     this.color = themes[this.theme];
+    Object.values(this.steps).forEach( item => {
+      item.status = this.color.controls;
+    })
+    this.$refs.steppers.$el.querySelectorAll('.v-stepper__step__step').forEach( item => {
+      item.style.background = this.color.border;
+    })
   } 
 }
 

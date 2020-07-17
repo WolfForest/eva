@@ -463,5 +463,53 @@ export default {
 
     return data
   },
+  async getAllPaper(restAuth) { 
+    let data = [];
+    let response = await fetch(`/api/eva/reports/getAll`)
+      .catch (error => {
+        restAuth.putLog(`Список отчетов получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+        return response
+      }) 
+    if (response.status == 200) {  // если получилось
+      await response.text().then( res => {  // переводим полученные данные из json в нормальный объект
+        data = res; 
+        restAuth.putLog(`Список отчетов успешно получен.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+      }).catch( error => {
+        restAuth.putLog(`Список отчетов получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+      }) 
+    }  else {
+      restAuth.putLog(`Список отчетов получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
+      return response
+    }
+
+    return data
+  },
+  async getPaper(restAuth,fileData) { 
+    let data = [];
+
+    let response = await fetch(`/api/eva/reports/get`, {  
+      method: 'POST',
+      body: fileData,
+      // mode: 'no-cors'
+    })
+      .catch (error => {
+        restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+        return response
+      }) 
+    if (response.status == 200) {  // если получилось
+      await response.text().then( res => {  // переводим полученные данные из json в нормальный объект
+        data = res; 
+        restAuth.putLog(`Отчет успешно получен.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+      }).catch( error => {
+        restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+      }) 
+    }  else {
+      restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
+      return response
+    }
+
+    return data
+  },
+  
  
 };

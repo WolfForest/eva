@@ -111,6 +111,7 @@ export default {
       this.$router.push(`/reports`); 
     },
     openPaper: function() {
+      this.$store.commit('createPaperSearch'); 
       this.$router.push(`/papers`); 
     },
     openQuis: function() {

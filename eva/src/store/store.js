@@ -600,7 +600,14 @@ export default {  // приблизительный объект хранили�
         })
       } 
     },
+    createPaperSearch: (state) => {
         
+      if (!state.papers) {
+        Vue.set(state, 'papers',{});
+        Vue.set(state.papers, 'searches', {});
+        Vue.set(state.papers, 'cursearch', 0);
+      } 
+    },  
     deleteDashFromMain: (state,dash) => {
       delete state[dash.id];
       let name = dash.name[0].toUpperCase() + dash.name.slice(1);
@@ -1354,7 +1361,17 @@ export default {  // приблизительный объект хранили�
       return (paper) => {
         return rest.loadPaper(paper,restAuth)
       }
-    }
+    },
+    getAllPaper: () => {
+      return () => {
+        return rest.getAllPaper(restAuth)
+      }
+    },
+    getPaper: () => {
+      return (fileData) => {
+        return rest.getPaper(restAuth,fileData)
+      }
+    },
   },
 }
 
