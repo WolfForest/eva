@@ -188,6 +188,7 @@
             </v-card-text>
           </v-card>
           <v-card
+            ref="stepper"
             class="stepper-paper"
             :style="{background: color.backElement, color: color.text}"
           >
@@ -461,7 +462,7 @@ export default {
       let result = await this.$store.getters.getPaper(formData);
       try {
         if (JSON.parse(result).status == 'success') {
-          console.log(result)
+          this.createCsv(JSON.parse(result).file)
           // this.allFiles = JSON.parse(result).files;
         } else {
           // this.errorMsg = "Список отчетов получить не удалось. Вернитесь назад и попробуйте снова.";
@@ -499,6 +500,27 @@ export default {
       } catch (error) {
         this.message(`Ошибка: ${error}`);
       }
+    },
+    createCsv: function(csvFrom) {
+      let csv = JSON.parse(csvFrom);
+
+      let csvContent = "data:text/csv;charset=utf-8,"; // задаем кодировку csv файла
+        // let keys = Object.keys(res[0]); // получаем ключи для заголовков столбцов
+        // csvContent += encodeURIComponent(keys.join(',') + "\n"); // добавляем ключи в файл
+
+      console.log(csv)
+      // Object.values(csv).forEach( item =>  {
+
+      //   console.log(Object.values(item).join(","))
+
+      // })
+      csvContent += "hello kitty\nhello";
+      // csvContent += encodeURIComponent(Object.values(csv).map( item =>  Object.values(item).join(",")).join("\n")); // добовляем все значения по ключам в файл
+      let link = this.$refs.stepper.$el.appendChild(document.createElement("a")); // создаем ссылку
+      link.setAttribute('href', csvContent); // указываем ссылке что надо скачать наш файл csv
+      link.setAttribute("download", `test.xlsx`); // указываем имя файла 
+      link.click(); // жмем на скачку
+      link.remove(); // удаляем ссылку 
     },
     returnArrow: function() {
       this.fileBlock=1;
@@ -741,7 +763,6 @@ export default {
   },
   mounted() {
     
-  
     // this.search = this.$store.getters.getReportSearch;
     // if (this.search.original_otl != '') {
     //   this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: true});

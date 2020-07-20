@@ -1152,7 +1152,7 @@ export default {
         let csvContent = "data:text/csv;charset=utf-8,"; // задаем кодировку csv файла
         let keys = Object.keys(res[0]); // получаем ключи для заголовков столбцов
         csvContent += encodeURIComponent(keys.join(',') + "\n"); // добавляем ключи в файл
-        csvContent += encodeURIComponent(res.map( item =>  Object.values(item).join(",")).join("\n")); // добовляем все значения по клюам в файл
+        csvContent += encodeURIComponent(res.map( item =>  Object.values(item).join(",")).join("\n")); // добовляем все значения по ключам в файл
         let link = this.$refs.blockCode.appendChild(document.createElement("a")); // создаем ссылку
         link.setAttribute('href',csvContent); // указываем ссылке что надо скачать наш файл csv
         link.setAttribute("download", `${this.idDash}-${sid}.xlsx`); // указываем имя файла 
