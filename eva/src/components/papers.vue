@@ -457,7 +457,7 @@ export default {
 
       let formData = new FormData();
       formData.append('file', this.selectedFile);
-      formData.append('data', this.data);
+      formData.append('data', JSON.stringify(this.data[0]));
       let result = await this.$store.getters.getPaper(formData);
       try {
         if (JSON.parse(result).status == 'success') {
