@@ -276,11 +276,33 @@
                   :color="steps['4'].status"
                   :rules="steps['4'].error" 
                 >
-                  Обрабатываю отчет
+                  {{ steps['4'].text }}
                 </v-stepper-step>
               </v-stepper-header>
             </v-stepper>
           </v-card>
+          <div
+            class="report-download"
+          >
+            <v-tooltip 
+              bottom 
+              :color="color.controlsActive"
+            >
+              <template v-slot:activator="{ on }">
+                <v-icon 
+                  class="download-btn" 
+                  :color="color.controls"
+                  x-large
+                  :disabled="disabledDownload" 
+                  v-on="on" 
+                  @click="downloadFile"
+                >
+                  {{ save_icon }}
+                </v-icon>
+              </template>
+              <span>Скачать отчет</span>
+            </v-tooltip>
+          </div>
           <v-card
             ref="vis" 
             class="static-vis" 
@@ -305,7 +327,7 @@
 
 <script>
 
-import { mdiPlay, mdiSettings, mdiArrowLeftBold , mdiPlus } from '@mdi/js'
+import { mdiPlay, mdiSettings, mdiArrowLeftBold , mdiPlus, mdiContentSave } from '@mdi/js'
 //import  settings  from '../js/componentsSettings.js';
 import themes from '../js/themeSettings.js';
 
@@ -319,6 +341,7 @@ export default {
       play: mdiPlay,
       plus: mdiPlus,
       gear: mdiSettings,
+      save_icon: mdiContentSave,
       modal: false,
       loading: false,
       rows: [],
@@ -366,7 +389,9 @@ export default {
       },
       move: '2',
       selectedFile: '',
-      allFiles: []
+      allFiles: [],
+      disabledDownload: true,
+      fileLink: '',
     } 
   },
   
@@ -399,7 +424,7 @@ export default {
     //   return this.$store.getters.getReportElement
     // },
     dataReady: function() {
-      if (this.data.length != 0 && this.steps['3'].complete) {
+      if (this.steps['2'].complete && this.steps['3'].complete) {
         this.getPaper();
       }
       return true
@@ -452,6 +477,7 @@ export default {
       },2000)
     },
     getPaper: async function() {
+      console.log('adad')
       this.move=4;
       this.steps['3'].loading = true;
       this.steps['4'].text = 'Обрабатываю отчет';
@@ -462,7 +488,13 @@ export default {
       let result = await this.$store.getters.getPaper(formData);
       try {
         if (JSON.parse(result).status == 'success') {
-          this.createCsv(JSON.parse(result).file)
+          this.steps['3'].loading = false;
+          this.steps['4'].complete = true;
+          this.steps['4'].text = 'Отчет готов';
+          this.fileLink = JSON.parse(result).file;
+          this.disabledDownload = false;
+          //this.downloadFile(JSON.parse(result).file)
+
           // this.allFiles = JSON.parse(result).files;
         } else {
           // this.errorMsg = "Список отчетов получить не удалось. Вернитесь назад и попробуйте снова.";
@@ -484,6 +516,7 @@ export default {
       this.steps['2'].loading = true;
       this.steps['3'].complete = false;
       this.steps['3'].text = 'Проверяю наличие отчета';
+      this.clearReady();
       
       let result = await this.$store.getters.getAllPaper();
       try {
@@ -501,26 +534,21 @@ export default {
         this.message(`Ошибка: ${error}`);
       }
     },
-    createCsv: function(csvFrom) {
-      let csv = JSON.parse(csvFrom);
+    downloadFile: function() {
+      
+      let namefile = this.fileLink.split('/')[2];
 
-      let csvContent = "data:text/csv;charset=utf-8,"; // задаем кодировку csv файла
-        // let keys = Object.keys(res[0]); // получаем ключи для заголовков столбцов
-        // csvContent += encodeURIComponent(keys.join(',') + "\n"); // добавляем ключи в файл
-
-      console.log(csv)
-      // Object.values(csv).forEach( item =>  {
-
-      //   console.log(Object.values(item).join(","))
-
-      // })
-      csvContent += "hello kitty\nhello";
-      // csvContent += encodeURIComponent(Object.values(csv).map( item =>  Object.values(item).join(",")).join("\n")); // добовляем все значения по ключам в файл
       let link = this.$refs.stepper.$el.appendChild(document.createElement("a")); // создаем ссылку
-      link.setAttribute('href', csvContent); // указываем ссылке что надо скачать наш файл csv
-      link.setAttribute("download", `test.xlsx`); // указываем имя файла 
+      link.setAttribute('href', this.fileLink); // указываем ссылке что надо скачать наш файл csv
+      link.setAttribute("download", namefile); // указываем имя файла 
       link.click(); // жмем на скачку
       link.remove(); // удаляем ссылку 
+    },
+    clearReady: function() {
+      this.steps['4'].complete = false;
+      this.steps['4'].text = 'Обработать отчет';
+      this.fileLink = '';
+      this.disabledDownload = true;
     },
     returnArrow: function() {
       this.fileBlock=1;
