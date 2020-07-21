@@ -228,7 +228,7 @@
                   :color="steps['2'].status"
                   :rules="steps['2'].error" 
                 >
-                  Получаю данные об отчете
+                  {{ steps['2'].text }}
                 </v-stepper-step>
 
                 <div 
@@ -345,9 +345,7 @@ export default {
       modal: false,
       loading: false,
       rows: [],
-      data: [
-        {name: 'Kitty', date: '12 апреля 2020'}
-      ],
+      data: [],
       size: {
         width: 0,
         height: 0,
@@ -368,10 +366,11 @@ export default {
           error: [],
         },
         "2": {
-          complete: true,
+          complete: false,
           status: '',
           loading: false,
           error: [],
+          text: 'Получать данные об отчете'
         },
         "3": {
           complete: false,
@@ -387,7 +386,7 @@ export default {
           text: 'Обработать отчет'
         }
       },
-      move: '2',
+      move: '1',
       selectedFile: '',
       allFiles: [],
       disabledDownload: true,
@@ -477,7 +476,6 @@ export default {
       },2000)
     },
     getPaper: async function() {
-      console.log('adad')
       this.move=4;
       this.steps['3'].loading = true;
       this.steps['4'].text = 'Обрабатываю отчет';
@@ -561,75 +559,82 @@ export default {
       }
     },
     
-    
-    // getData: function() {
+    getData: function() {
 
-    //   let blob = new Blob([`onmessage=${this.getDataFromDb().toString()}`], { type: "text/javascript" }); // создаем blob объект чтобы с его помощью использовать функцию для web worker
+      this.steps['2'].complete = false;
+      this.steps['1'].loading = true;
+      this.steps['2'].text = 'Получаю данные об отчете';
 
-    //   let blobURL = window.URL.createObjectURL(blob); // создаем ссылку из нашего blob ресурса
+      let blob = new Blob([`onmessage=${this.getDataFromDb().toString()}`], { type: "text/javascript" }); // создаем blob объект чтобы с его помощью использовать функцию для web worker
 
-    //   let worker = new Worker(blobURL); // создаем новый worker и передаем ссылку на наш blob объект
+      let blobURL = window.URL.createObjectURL(blob); // создаем ссылку из нашего blob ресурса
 
-    //   worker.onmessage = function(event) { // при успешном выполнении функции что передали в blob изначально сработает этот код
+      let worker = new Worker(blobURL); // создаем новый worker и передаем ссылку на наш blob объект
 
-  
-    //     let statistic = '';
-    //     this.rows = [];
-    //     if (event.data.data.length != 0) {
-          
-    //       this.shema = event.data.shema;
-    //       this.data = event.data.data;
+      worker.onmessage = function(event) { // при успешном выполнении функции что передали в blob изначально сработает этот код
 
-    //       let text = '';
-    //       Object.keys(this.shema).forEach( (item,i) => {
-            
-    //         statistic = this.createStatistic(item,event.data.data);
-            
-    //         text = `${item}&nbsp;&nbsp;&nbsp;[${this.shema[item]}]`;
-    //         this.rows.push({'id': i,'text': text,'static': statistic});
+        
+        if (event.data.length != 0) { 
+          this.data = event.data;
+          this.steps['2'].complete = true;
+          this.steps['1'].loading = false; 
+          this.steps['2'].text = 'Данные об отчете получены';
+        } else {
+          this.cancelSearch(); 
+        }
 
-            
-    //       })
-    //     }
+        worker.terminate();
 
-    //     worker.terminate();
+      }.bind(this);
 
-    //   }.bind(this);
-
-    //   worker.postMessage(`reports-${this.search.sid}`);   // запускаем воркер на выполнение
+      worker.postMessage(`papers-${this.search.sid}`);   // запускаем воркер на выполнение
 
 
-    // },
+    },
     launchSearch: async function() {
+
+      this.steps['2'].complete = false;
+      this.steps['1'].loading = true;
+      this.steps['2'].text = 'Получаю данные об отчете';
+
 
       this.search.sid = this.hashCode(this.search.original_otl);
 
       this.$store.auth.getters.putLog(`Запущен запрос  ${this.search.sid}`);
-      console.log(this.search.sid)
 
       this.loading = true;
       console.log('launch search')
       let response = await this.$store.getters.getDataApi({search: this.search, idDash: 'papers'});
       // вызывая метод в хранилище  
-
-      if (!response.data || response.data.length == 0) {  // если что-то пошло не так 
+      if (!response || response.length == 0) {  // если что-то пошло не так 
         this.loading = false;
         this.$store.commit('setErrorLogs',true);
         this.data = [];
         this.rows = [];
+        this.cancelSearch(); 
       } else {  // если все нормально
+       
         console.log('data ready')
-    
-        // let responseDB = this.$store.getters.putIntoDB(response, this.search.sid, 'reports');
-        // responseDB
-        //   .then(
-        //     result => {
-        //       let refresh =  this.$store.getters.refreshElements('reports', this.search.sid, );
-        //       this.loading = false;
-        //       this.$store.commit('setReportSearch',this.search);
-        //     },
-        //   );
+
+        let responseDB = this.$store.getters.putIntoDB(response, this.search.sid, 'papers');
+        responseDB
+          .then(
+            result => {
+              this.loading = false;
+              this.$store.commit('setPaperSearch',this.search);
+              this.data = response;
+              this.steps['2'].complete = true;
+              this.steps['1'].loading = false;
+              this.steps['2'].text = 'Данные об отчете получены';
+
+            },
+          );
       }
+    },
+    cancelSearch: function() {
+      this.steps['2'].complete = false;
+      this.steps['1'].loading = false;
+      this.steps['2'].text = 'Получить данные об отчете';
     },
     setUsername: function(event) {
       this.search.parametrs.username = event;
@@ -638,62 +643,62 @@ export default {
       return otl.split('').reduce((prevHash, currVal) =>
         (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
     },
-    // getDataFromDb: function() {
-    //   return function(event)  {
-    //     let db = null;
+    getDataFromDb: function() {
+      return function(event)  {
+        let db = null;
 
-    //     let searchSid = event.data;
+        let searchSid = event.data;
 
-    //     let request = indexedDB.open("EVA",1);  
+        let request = indexedDB.open("EVA",1);  
 
-    //     request.onerror = function(event) {
-    //       console.log("error: ",event);
-    //     };
+        request.onerror = function(event) {
+          console.log("error: ",event);
+        };
 
-    //     request.onupgradeneeded = event => {
-    //       console.log('create');
-    //       db = event.target.result;
-    //       if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
-    //         db.createObjectStore('searches'); // create it
-    //       }
+        request.onupgradeneeded = event => {
+          console.log('create');
+          db = event.target.result;
+          if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
+            db.createObjectStore('searches'); // create it
+          }
 
-    //       request.onsuccess = event => {
-    //         db = request.result;
-    //         console.log("successEvent: " + db);
-    //       };
-    //     }
+          request.onsuccess = event => {
+            db = request.result;
+            console.log("successEvent: " + db);
+          };
+        }
 
-    //     request.onsuccess =  event => {
+        request.onsuccess =  event => {
 
-    //       db = request.result;
+          db = request.result;
 
-    //       let transaction = db.transaction("searches"); // (1)
+          let transaction = db.transaction("searches"); // (1)
 
-    //       // получить хранилище объектов для работы с ним
-    //       let searches = transaction.objectStore("searches"); // (2)
-
-
-    //       let query = searches.get(String(searchSid)); // (3) return store.get('Ire Aderinokun');
+          // получить хранилище объектов для работы с ним
+          let searches = transaction.objectStore("searches"); // (2)
 
 
-    //       query.onsuccess = event => { // (4)
-    //         if (query.result) {
-    //           self.postMessage(query.result);  // сообщение которое будет передаваться как результат выполнения функции
-    //         } else {
-    //           self.postMessage([]);  // сообщение которое будет передаваться как результат выполнения функции
-    //         }
-    //       };
+          let query = searches.get(String(searchSid)); // (3) return store.get('Ire Aderinokun');
 
-    //       query.onerror = function() {
-    //         console.log("Ошибка", query.error);
-    //       };
+
+          query.onsuccess = event => { // (4)
+            if (query.result) {
+              self.postMessage(query.result);  // сообщение которое будет передаваться как результат выполнения функции
+            } else {
+              self.postMessage([]);  // сообщение которое будет передаваться как результат выполнения функции
+            }
+          };
+
+          query.onerror = function() {
+            console.log("Ошибка", query.error);
+          };
     
 
-    //     };   
+        };   
 
 
-    //   }
-    // },
+      }
+    },
     openSettings: function() {
       this.modal = true;
     },
@@ -791,10 +796,10 @@ export default {
   },
   mounted() {
     
-    // this.search = this.$store.getters.getReportSearch;
-    // if (this.search.original_otl != '') {
-    //   this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: true});
-    // }
+    this.search = this.$store.getters.getPaperSearch;
+    if (this.search.original_otl != '') {
+      this.getData();
+    }
     // this.calcSize();
     // this.$refs.search.$el.addEventListener ("keypress", event =>{
     //   if (event.ctrlKey && event.keyCode == 13) {
