@@ -43,6 +43,7 @@
           class="sizeGridItem"  
           hide-details
           @blur="sendSizeGrid"
+          @keyup.enter="sendSizeGrid"
         />
         <v-text-field 
           v-model="sizeGrid.hor" 
@@ -54,6 +55,7 @@
           class="sizeGridItem"  
           hide-details
           @blur="sendSizeGrid"
+          @keyup.enter="sendSizeGrid"
         />
       </div>
       <div 
