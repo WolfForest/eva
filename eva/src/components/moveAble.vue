@@ -135,6 +135,7 @@ export default {
 
     },
     moveLater: function() {
+     
       if(this.$refs.dragres) {
         this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${this.top}px)`;
        /* setTimeout( () => { // нужно запускать немного с задержкой, чтобы точно обновить после работы плагина
@@ -236,7 +237,7 @@ export default {
     this.drawElement()
   },
   updated() {
-   this.moveLater()
+   //this.moveLater()
     // setTimeout( ()=>{
     //   //this.$refs.dragres.$el.style.height = '800px';
     //   this.props.height = 800;
