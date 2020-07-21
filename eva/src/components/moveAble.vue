@@ -136,9 +136,10 @@ export default {
     },
     moveLater: function() {
       if(this.$refs.dragres) {
-        setTimeout( () => { // нужно запускать немного с задержкой, чтобы точно обновить после работы плагина
-          this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${this.top}px)`;
-        },150)
+        this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${this.top}px)`;
+       /* setTimeout( () => { // нужно запускать немного с задержкой, чтобы точно обновить после работы плагина
+          
+        },150)*/
       }
     },
     // onResize: function (x, y, width, height) {  // получаем позицию и размер элемента
@@ -235,7 +236,7 @@ export default {
     this.drawElement()
   },
   updated() {
-    
+   this.moveLater()
     // setTimeout( ()=>{
     //   //this.$refs.dragres.$el.style.height = '800px';
     //   this.props.height = 800;
