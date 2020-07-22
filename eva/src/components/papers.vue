@@ -482,7 +482,7 @@ export default {
 
       let formData = new FormData();
       formData.append('file', this.selectedFile);
-      formData.append('data', JSON.stringify(this.data[0]));
+      formData.append('data', JSON.stringify(this.data));
       let result = await this.$store.getters.getPaper(formData);
       try {
         if (JSON.parse(result).status == 'success') {
@@ -520,6 +520,7 @@ export default {
       try {
         if (JSON.parse(result).status == 'success') {
           this.allFiles = JSON.parse(result).files;
+          this.showError = false;
         } else {
           this.errorMsg = "Список отчетов получить не удалось. Вернитесь назад и попробуйте снова.";
           this.showError = true;
@@ -564,6 +565,8 @@ export default {
       this.steps['2'].complete = false;
       this.steps['1'].loading = true;
       this.steps['2'].text = 'Получаю данные об отчете';
+      this.move = 2;
+      this.clearReady();
 
       let blob = new Blob([`onmessage=${this.getDataFromDb().toString()}`], { type: "text/javascript" }); // создаем blob объект чтобы с его помощью использовать функцию для web worker
 
@@ -579,6 +582,7 @@ export default {
           this.steps['2'].complete = true;
           this.steps['1'].loading = false; 
           this.steps['2'].text = 'Данные об отчете получены';
+          this.steps['2'].error = [];
         } else {
           this.cancelSearch(); 
         }
@@ -596,6 +600,8 @@ export default {
       this.steps['2'].complete = false;
       this.steps['1'].loading = true;
       this.steps['2'].text = 'Получаю данные об отчете';
+      this.move = 2;
+      this.clearReady();
 
 
       this.search.sid = this.hashCode(this.search.original_otl);
@@ -607,10 +613,10 @@ export default {
       let response = await this.$store.getters.getDataApi({search: this.search, idDash: 'papers'});
       // вызывая метод в хранилище  
       if (!response || response.length == 0) {  // если что-то пошло не так 
+        console.log('yep')
         this.loading = false;
         this.$store.commit('setErrorLogs',true);
         this.data = [];
-        this.rows = [];
         this.cancelSearch(); 
       } else {  // если все нормально
        
@@ -626,6 +632,7 @@ export default {
               this.steps['2'].complete = true;
               this.steps['1'].loading = false;
               this.steps['2'].text = 'Данные об отчете получены';
+              this.steps['2'].error = [];
 
             },
           );
@@ -634,7 +641,9 @@ export default {
     cancelSearch: function() {
       this.steps['2'].complete = false;
       this.steps['1'].loading = false;
-      this.steps['2'].text = 'Получить данные об отчете';
+      this.steps['2'].text = 'Ошибка при получении данных';
+      this.steps['2'].error.push(() => 'false')
+
     },
     setUsername: function(event) {
       this.search.parametrs.username = event;
