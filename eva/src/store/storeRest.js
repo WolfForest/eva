@@ -510,6 +510,28 @@ export default {
 
     return data
   },
+  async getPaperVis(restAuth,url) { 
+    let data = [];
+
+    let response = await fetch(`${url}`)
+      .catch (error => {
+        restAuth.putLog(`Отчет для визуализации получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+        return response
+      }) 
+    if (response.status == 200) {  // если получилось
+      await response.text().then( res => {  // переводим полученные данные из json в нормальный объект
+        data = res; 
+        restAuth.putLog(`Отчет для визуализации успешно получен.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+      }).catch( error => {
+        restAuth.putLog(`Отчет для визуализации получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+      }) 
+    }  else {
+      restAuth.putLog(`Отчет для визуализации получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
+      return response
+    }
+
+    return data
+  },
   
  
 };

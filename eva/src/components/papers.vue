@@ -491,6 +491,7 @@ export default {
           this.steps['4'].text = 'Отчет готов';
           this.fileLink = JSON.parse(result).file;
           this.disabledDownload = false;
+          this.createVisPaper();
           //this.downloadFile(JSON.parse(result).file)
 
           // this.allFiles = JSON.parse(result).files;
@@ -714,59 +715,6 @@ export default {
     cancelModal: function() {
       this.modal = false;
     },
-    // changeTab: function(elem) {
-    //   if (elem == 'multiLine'){
-    //     this.unitedShow = true;
-    //   } else {
-    //     this.unitedShow = false;
-    //   }
-    //   Object.keys(this.aboutElem).forEach( item => {
-    //     if (item != elem) {
-    //       this.$set(this.aboutElem[item],'show',false);
-    //       this.$set(this.aboutElem[item],'color',this.color.text);
-    //     } else {
-    //       this.activeElem = item;
-    //       this.$set(this.aboutElem[item],'show',true);
-    //       this.$set(this.aboutElem[item],'color',this.color.controls);
-    //     }
-    //   })
-    // },
-    // changeUnited: function() {
-    //   if (!this.unitedData.united) {
-    //     this.unitedData.united = true;
-    //     this.unitedData.color = this.color.controlsActive;
-    //   } else {
-    //     this.unitedData.united = false;
-    //     this.unitedData.color = this.color.controls;
-    //   }
-    //   this.$store.commit('setOptions',  { idDash: 'reports', id: 'multiLine', options: {united: this.unitedData.united} });
-    // },
-    // createStatistic: function(key,data) {
-    //   let how_much = {};
-    //   let result = [];
-    //   let length = data.length;
-    //   data.forEach( item => {
-    //     if (how_much[item[key]]) {
-    //       how_much[item[key]]++;
-    //     } else {
-    //       how_much[item[key]] = 1 
-    //     }
-    //   })
-    //   Object.keys(how_much).forEach( item => {
-                    
-    //     result.push(
-    //       {
-    //         'value': item,
-    //         'count': how_much[item],
-    //         '%': Math.round((how_much[item]*100)/length)
-    //       }
-    //     );
-    //   })
-      
-               
-    //   return result 
-
-    // },
     setSearch: function(search) {
       this.search = Object.assign({},search);
       this.modal = false;
@@ -783,25 +731,26 @@ export default {
         })
       }
     },
-    // openStatistic: function(statistic) {
-    //   if (this.showStatistic) {
-    //     if (this.statisticKey == statistic.text) {
-    //       this.showStatistic = false;
-    //     } else {
-    //       this.statisticKey = statistic.text;
-    //       this.statistic = statistic.static;
-    //     }
-    //   } else {
-    //     this.showStatistic = true;
-    //     this.statisticKey = statistic.text;
-    //     this.statistic = statistic.static;
-    //   }
-    // },
-    // calcSize: function() {
-    //   let size = this.$refs.vis.$el.getBoundingClientRect();
-    //   this.size.width = Math.round(size.width) - 16;
-    //   this.size.height = Math.round(size.height) - 66;
-    // },
+    createVisPaper: async function() {
+      if (this.data.length == 1) {
+        let result = await this.$store.getters.getPaperVis(this.fileLink);
+        console.log(result)
+        // try {
+        //   if (JSON.parse(result).status == 'success') {
+        //     this.allFiles = JSON.parse(result).files;
+        //     this.showError = false;
+        //     console.log('right')
+        //   } else {
+        //     console.log('wrong')
+        //   }
+
+        // } catch (error) {
+        //   this.message(`Ошибка: ${error}`);
+        // }
+        
+      }
+      
+    },
   },
   mounted() {
     

@@ -1342,11 +1342,13 @@ export default {
               
               body = body.slice(1, body.length-1);      
               bodyArray = body.split(',');
+              
               bodyArray.forEach( (elem,i) => {
                 if(elem.indexOf('(') != -1) {
                   element = bodyArray.splice(0, i);
                 }
               })
+              
 
               if (this.event.event == 'OnDataCompare') { 
                 if (element.length > 2 && element[1].indexOf('[') == -1){
@@ -1364,6 +1366,7 @@ export default {
                 this.$set(this.event,'tokenval',element.splice(2, element.length-1).join(','));
               } else {
                 this.$set(this.event,'element',element[0]);//click
+                //console.log(element)
                 if (element[1]){
                   if (element[1].indexOf('[') != -1) {
                     let j = -1;
@@ -1391,7 +1394,7 @@ export default {
               doing = reg.exec(body)[0];
               doing = doing.split('(');
               this.$set(this.event,'action',doing[0]);
-              if (doing[0].toLowerCase() === 'set'.toLowerCase()) {
+              if (doing[0].toLowerCase() == 'set'.toLowerCase()) {
                 doing = doing[1].slice(0, doing[1].length-1).split(',');
                 this.$set(this.event,'target',doing[0]);
                 doing.splice(0,1);
@@ -1405,12 +1408,12 @@ export default {
                   this.$set(this.event,'value',doing[1].split(','));
                 } 
               
-              } else if(doing[0].toLowerCase() === 'go'.toLowerCase()) {///go
+              } else if(doing[0].toLowerCase() == 'go'.toLowerCase()) {///go
                 doing = doing[1].slice(0, doing[1].length-1).split(',');
                 this.$set(this.event,'target',doing[0]);
                 this.$set(this.event,'prop',[doing[1]]);
                 this.$set(this.event,'value',[doing[2]]);  
-              } else if(doing[0].toLowerCase() === 'open'.toLowerCase()){//open
+              } else if(doing[0].toLowerCase() == 'open'.toLowerCase()){//open
                 doing = doing[1].slice(0, doing[1].length-1).split(',');
 
                 this.$set(this.event,'target',doing[0]);
@@ -1422,6 +1425,19 @@ export default {
 
                 this.$set(this.event,'header',doing[5]);
 
+              } else if (doing[0].toLowerCase() == 'changeReport'.toLowerCase()) {
+                doing = doing[1].slice(0, doing[1].length-1).split(',');
+                this.$set(this.event,'sid',doing[0]);
+                if (doing[1].indexOf('[') != -1) {
+                  doing.splice(0, 1);
+                  let files = doing.map( item => {
+                    return item.replace('[', '').replace(']', '')
+                  })
+                  this.$set(this.event,'file',files);
+                } else {
+                  this.$set(this.event,'file',[doing[1]]);
+                }
+                
               }
               this.events.push(this.event);
               this.event ={};

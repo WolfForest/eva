@@ -1398,6 +1398,11 @@ export default {  // приблизительный объект хранили�
         return rest.getPaper(restAuth,fileData)
       }
     },
+    getPaperVis: () => {
+      return (url) => {
+        return rest.getPaperVis(restAuth,url)
+      }
+    },
   },
 }
 
