@@ -250,6 +250,22 @@
         >
           <template v-slot:activator="{ on }">
             <v-icon 
+              class=" search-clock" 
+              :color="color.controls" 
+              v-on="on"
+              @click="modalPaperSid=sear.sid,modalPaper=true"
+            >
+              {{ paper }}
+            </v-icon>
+          </template>
+          <span>Создать отчет</span>
+        </v-tooltip>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive"
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
               class="search-trash" 
               :color="color.controls"
               v-on="on" 
@@ -622,12 +638,19 @@
       :idDashFrom="idDashFrom"
       @changeMode="setEditMode"
     />
+    <modal-paper 
+      :color="color" 
+      :active="modalPaper"
+      :sid=" modalPaperSid"
+      :id-dash="idDash"
+      @cancelModal="cancelModal"
+    />
   </div>
 </template>
 
 <script>
 
-import { mdiPlusBox, mdiPlay, mdiEye,  mdiArrowDownBold, mdiContentSave, mdiAccount,    mdiHomeVariantOutline,  mdiSettings, mdiHelpCircleOutline, mdiClockOutline,  mdiDatabase,mdiTableEdit,mdiCodeTags, mdiTrashCanOutline, mdiMinusBox, mdiToolbox ,   mdiPencil,  mdiVariable, mdiCheckBold,  mdiSwapVerticalBold } from '@mdi/js'
+import { mdiPlusBox, mdiPlay, mdiEye, mdiFileDocumentOutline,  mdiArrowDownBold, mdiContentSave, mdiAccount,    mdiHomeVariantOutline,  mdiSettings, mdiHelpCircleOutline, mdiClockOutline,  mdiDatabase,mdiTableEdit,mdiCodeTags, mdiTrashCanOutline, mdiMinusBox, mdiToolbox ,   mdiPencil,  mdiVariable, mdiCheckBold,  mdiSwapVerticalBold } from '@mdi/js'
 
 //import { match } from 'minimatch'
 
@@ -667,6 +690,7 @@ export default {
       play: mdiPlay,
       clock: mdiClockOutline,
       download: mdiArrowDownBold,
+      paper: mdiFileDocumentOutline,
       help_elem: true,
       help_coral: 'fill:teal',
       opencode: false,
@@ -728,6 +752,8 @@ export default {
       colorErrorSave: '',
       createSearchBtn: '',
       disabledDS: {},
+      modalPaperSid: '',
+      modalPaper: false,
     }
   },
   computed: {
@@ -849,6 +875,7 @@ export default {
     },
     cancelModal: function() {
       this.activeModal  = false;
+      this.modalPaper =false;
     },
     openSchedule: function(id) {
       this.scheduleSid = id;
