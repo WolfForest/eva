@@ -93,7 +93,6 @@ export default {
       data: [],
       showError: false,
       errorMsg: 'Ошибка',
-      loading: true,
       gear: mdiSettings,
       loadingShow: false
     } 
