@@ -370,7 +370,7 @@ export default {
           status: '',
           loading: false,
           error: [],
-          text: 'Получать данные об отчете'
+          text: 'Сформировать запрос'
         },
         "3": {
           complete: false,
@@ -391,6 +391,7 @@ export default {
       allFiles: [],
       disabledDownload: true,
       fileLink: '',
+      dispSid: 0,
     } 
   },
   
@@ -460,7 +461,7 @@ export default {
     },
     choosePaper: async function() {
       if (this.selectedFile == '') {
-        this.message("Выберит файл");
+        this.message("Выберите файл");
       } else {
         this.steps['2'].loading = false;
         this.steps['3'].complete = true;
@@ -478,29 +479,30 @@ export default {
     getPaper: async function() {
       this.move=4;
       this.steps['3'].loading = true;
+      this.steps['4'].error = [];
       this.steps['4'].text = 'Обрабатываю отчет';
 
       let formData = new FormData();
       formData.append('file', this.selectedFile);
-      formData.append('data', JSON.stringify(this.data));
+      formData.append('cid', JSON.stringify(this.dispSid));
       let result = await this.$store.getters.getPaper(formData);
       try {
-        if (JSON.parse(result).status == 'success') {
+        if (result.status == 'success') {
           this.steps['3'].loading = false;
           this.steps['4'].complete = true;
           this.steps['4'].text = 'Отчет готов';
-          this.fileLink = JSON.parse(result).file;
+          this.fileLink = result.file;
           this.disabledDownload = false;
-          this.createVisPaper();
+          // this.createVisPaper();
           //this.downloadFile(JSON.parse(result).file)
 
           // this.allFiles = JSON.parse(result).files;
         } else {
           // this.errorMsg = "Список отчетов получить не удалось. Вернитесь назад и попробуйте снова.";
           // this.showError = true;
-          // this.steps['2'].loading = false;
-          // this.steps['3'].error = [() => false];
-          // this.steps['3'].text = 'Ошибка получения списка';
+          this.steps['3'].loading = false;
+          this.steps['4'].error = [() => false];
+          this.steps['4'].text = 'Ошибка обработки отчета';
         }
 
       } catch (error) {
@@ -514,7 +516,8 @@ export default {
       this.move=3;
       this.steps['2'].loading = true;
       this.steps['3'].complete = false;
-      this.steps['3'].text = 'Проверяю наличие отчета';
+      this.steps['3'].text = 'Жду выбора отчета';
+      this.steps['4'].error = [];
       this.clearReady();
       
       let result = await this.$store.getters.getAllPaper();
@@ -561,46 +564,47 @@ export default {
       }
     },
     
-    getData: function() {
+    // getData: function() {
 
-      this.steps['2'].complete = false;
-      this.steps['1'].loading = true;
-      this.steps['2'].text = 'Получаю данные об отчете';
-      this.move = 2;
-      this.clearReady();
+    //   this.steps['2'].complete = false;
+    //   this.steps['1'].loading = true;
+    //   this.steps['2'].text = 'Получаю данные об отчете';
+    //   this.move = 2;
+    //   this.clearReady();
 
-      let blob = new Blob([`onmessage=${this.getDataFromDb().toString()}`], { type: "text/javascript" }); // создаем blob объект чтобы с его помощью использовать функцию для web worker
+    //   let blob = new Blob([`onmessage=${this.getDataFromDb().toString()}`], { type: "text/javascript" }); // создаем blob объект чтобы с его помощью использовать функцию для web worker
 
-      let blobURL = window.URL.createObjectURL(blob); // создаем ссылку из нашего blob ресурса
+    //   let blobURL = window.URL.createObjectURL(blob); // создаем ссылку из нашего blob ресурса
 
-      let worker = new Worker(blobURL); // создаем новый worker и передаем ссылку на наш blob объект
+    //   let worker = new Worker(blobURL); // создаем новый worker и передаем ссылку на наш blob объект
 
-      worker.onmessage = function(event) { // при успешном выполнении функции что передали в blob изначально сработает этот код
+    //   worker.onmessage = function(event) { // при успешном выполнении функции что передали в blob изначально сработает этот код
 
         
-        if (event.data.length != 0) { 
-          this.data = event.data;
-          this.steps['2'].complete = true;
-          this.steps['1'].loading = false; 
-          this.steps['2'].text = 'Данные об отчете получены';
-          this.steps['2'].error = [];
-        } else {
-          this.cancelSearch(); 
-        }
+    //     if (event.data.length != 0) { 
+    //       this.data = event.data;
+    //       this.steps['2'].complete = true;
+    //       this.steps['1'].loading = false; 
+    //       this.steps['2'].text = 'Данные об отчете получены';
+    //       this.steps['2'].error = [];
+    //     } else {
+    //       this.cancelSearch(); 
+    //     }
 
-        worker.terminate();
+    //     worker.terminate();
 
-      }.bind(this);
+    //   }.bind(this);
 
-      worker.postMessage(`papers-${this.search.sid}`);   // запускаем воркер на выполнение
+    //   worker.postMessage(`papers-${this.search.sid}`);   // запускаем воркер на выполнение
 
 
-    },
+    // },
     launchSearch: async function() {
 
       this.steps['2'].complete = false;
       this.steps['1'].loading = true;
-      this.steps['2'].text = 'Получаю данные об отчете';
+      this.steps['2'].text = 'Валидирую запрос';
+      this.steps['4'].error = [];
       this.move = 2;
       this.clearReady();
 
@@ -614,35 +618,43 @@ export default {
       let response = await this.$store.getters.getDataApi({search: this.search, idDash: 'papers'});
       // вызывая метод в хранилище  
       if (!response || response.length == 0) {  // если что-то пошло не так 
-        console.log('yep')
         this.loading = false;
         this.$store.commit('setErrorLogs',true);
         this.data = [];
         this.cancelSearch(); 
       } else {  // если все нормально
+
+        this.loading = false;
+        this.$store.commit('setPaperSearch',this.search);
+        //this.data = response;
+        this.dispSid = response.sid;
+        this.steps['2'].complete = true;
+        this.steps['1'].loading = false;
+        this.steps['2'].text = 'Запрос сформирован';
+        this.steps['2'].error = [];
        
         console.log('data ready')
 
-        let responseDB = this.$store.getters.putIntoDB(response, this.search.sid, 'papers');
-        responseDB
-          .then(
-            result => {
-              this.loading = false;
-              this.$store.commit('setPaperSearch',this.search);
-              this.data = response;
-              this.steps['2'].complete = true;
-              this.steps['1'].loading = false;
-              this.steps['2'].text = 'Данные об отчете получены';
-              this.steps['2'].error = [];
+        // let responseDB = this.$store.getters.putIntoDB(response, this.search.sid, 'papers');
+        // responseDB
+        //   .then(
+        //     result => {
+        //       this.loading = false;
+        //       this.$store.commit('setPaperSearch',this.search);
+        //       this.data = response;
+        //       this.steps['2'].complete = true;
+        //       this.steps['1'].loading = false;
+        //       this.steps['2'].text = 'Данные об отчете получены';
+        //       this.steps['2'].error = [];
 
-            },
-          );
+        //     },
+        //   );
       }
     },
     cancelSearch: function() {
       this.steps['2'].complete = false;
       this.steps['1'].loading = false;
-      this.steps['2'].text = 'Ошибка при получении данных';
+      this.steps['2'].text = 'Запрос завершился ошибкой ';
       this.steps['2'].error.push(() => 'false')
 
     },
@@ -653,62 +665,62 @@ export default {
       return otl.split('').reduce((prevHash, currVal) =>
         (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
     },
-    getDataFromDb: function() {
-      return function(event)  {
-        let db = null;
+    // getDataFromDb: function() {
+    //   return function(event)  {
+    //     let db = null;
 
-        let searchSid = event.data;
+    //     let searchSid = event.data;
 
-        let request = indexedDB.open("EVA",1);  
+    //     let request = indexedDB.open("EVA",1);  
 
-        request.onerror = function(event) {
-          console.log("error: ",event);
-        };
+    //     request.onerror = function(event) {
+    //       console.log("error: ",event);
+    //     };
 
-        request.onupgradeneeded = event => {
-          console.log('create');
-          db = event.target.result;
-          if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
-            db.createObjectStore('searches'); // create it
-          }
+    //     request.onupgradeneeded = event => {
+    //       console.log('create');
+    //       db = event.target.result;
+    //       if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
+    //         db.createObjectStore('searches'); // create it
+    //       }
 
-          request.onsuccess = event => {
-            db = request.result;
-            console.log("successEvent: " + db);
-          };
-        }
+    //       request.onsuccess = event => {
+    //         db = request.result;
+    //         console.log("successEvent: " + db);
+    //       };
+    //     }
 
-        request.onsuccess =  event => {
+    //     request.onsuccess =  event => {
 
-          db = request.result;
+    //       db = request.result;
 
-          let transaction = db.transaction("searches"); // (1)
+    //       let transaction = db.transaction("searches"); // (1)
 
-          // получить хранилище объектов для работы с ним
-          let searches = transaction.objectStore("searches"); // (2)
-
-
-          let query = searches.get(String(searchSid)); // (3) return store.get('Ire Aderinokun');
+    //       // получить хранилище объектов для работы с ним
+    //       let searches = transaction.objectStore("searches"); // (2)
 
 
-          query.onsuccess = event => { // (4)
-            if (query.result) {
-              self.postMessage(query.result);  // сообщение которое будет передаваться как результат выполнения функции
-            } else {
-              self.postMessage([]);  // сообщение которое будет передаваться как результат выполнения функции
-            }
-          };
+    //       let query = searches.get(String(searchSid)); // (3) return store.get('Ire Aderinokun');
 
-          query.onerror = function() {
-            console.log("Ошибка", query.error);
-          };
+
+    //       query.onsuccess = event => { // (4)
+    //         if (query.result) {
+    //           self.postMessage(query.result);  // сообщение которое будет передаваться как результат выполнения функции
+    //         } else {
+    //           self.postMessage([]);  // сообщение которое будет передаваться как результат выполнения функции
+    //         }
+    //       };
+
+    //       query.onerror = function() {
+    //         console.log("Ошибка", query.error);
+    //       };
     
 
-        };   
+    //     };   
 
 
-      }
-    },
+    //   }
+    // },
     openSettings: function() {
       this.modal = true;
     },
@@ -756,7 +768,8 @@ export default {
     
     this.search = this.$store.getters.getPaperSearch;
     if (this.search.original_otl != '') {
-      this.getData();
+      //this.getData();
+      this.launchSearch();
     }
     // this.calcSize();
     // this.$refs.search.$el.addEventListener ("keypress", event =>{

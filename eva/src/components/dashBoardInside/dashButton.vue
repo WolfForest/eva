@@ -162,8 +162,8 @@ export default {
       formData.append('data', JSON.stringify(data));
       let result = await this.$store.getters.getPaper(formData);
       try {
-        if (JSON.parse(result).status == 'success') {
-          this.downloadFile(JSON.parse(result).file);
+        if (result.status == 'success') {
+          this.downloadFile(result.file);
 
         } else {
           return false

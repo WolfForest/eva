@@ -138,8 +138,8 @@ export default {
       formData.append('data', JSON.stringify(this.data));
       let result = await this.$store.getters.getPaper(formData);
       try {
-        if (JSON.parse(result).status == 'success') {
-          this.downloadFile(JSON.parse(result).file);
+        if (result.status == 'success') {
+          this.downloadFile(result.file);
           this.loadingShow = false;
           //this.showError = false;
         } else {

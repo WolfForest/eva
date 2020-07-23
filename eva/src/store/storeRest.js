@@ -91,6 +91,7 @@ export default {
               }, 0);
                               
             });
+
         
             cycle
               .then(
@@ -212,8 +213,12 @@ export default {
                       })
 
                     })
-
-                    resolveMain(allData)
+                    if (idDash == 'papers') {
+                      resolveMain({data: allData,sid: result.cid})
+                    } else {
+                      resolveMain(allData)
+                    }
+                    
 
                   }
     
@@ -485,7 +490,7 @@ export default {
     return data
   },
   async getPaper(restAuth,fileData) { 
-    let data = [];
+    let result = [];
 
     let response = await fetch(`/api/eva/reports/get`, {  
       method: 'POST',
@@ -498,8 +503,12 @@ export default {
       }) 
     if (response.status == 200) {  // если получилось
       await response.text().then( res => {  // переводим полученные данные из json в нормальный объект
-        data = res; 
-        restAuth.putLog(`Отчет успешно получен.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+        result = JSON.parse(res); 
+        if (result.status == 'success') {
+          restAuth.putLog(`Отчет успешно получен.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+        } else {
+          restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${result.status}&nbsp;&nbsp;url: ${result.description}`);
+        }
       }).catch( error => {
         restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
       }) 
@@ -508,7 +517,7 @@ export default {
       return response
     }
 
-    return data
+    return result
   },
   async getPaperVis(restAuth,url) { 
     let data = [];
