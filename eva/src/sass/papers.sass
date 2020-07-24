@@ -226,7 +226,7 @@
                   .loading-bar
                       animation: loading 1.5s ease infinite 
 
-            .report-download
+            .paper-download
               float: left
               width: 2%
               margin-left: 1%
@@ -239,145 +239,191 @@
 
             .static-vis
                 float: left
+                position: relative
                 width: 100%
                 margin-top: 1vh
                 height: 56vh
+                display: flex
+                flex-flow: column nowrap
+                justify-content: center
+                align-items: flex-start
 
-                .title-vis
-                    width: 100%
-                    height: 50px
+                .vis-tabs
+                  width: auto
+                  margin-bottom: 10px
+
+                  .v-tabs-bar
+                    height: 40px
+
+                  .v-tab
+                    text-transform: none
+                    padding: 0 8px
+                    border-right: 2px solid
+                    background: inherit
+                    border-radius: 4px
+                    color: white
                     position: relative
-                    padding: 0
 
-                    .divider-tab
-                        position: absolute
-                        width: 100%
-                        height: 1px
-                        opacity: 0.4
-                        bottom: 0
+                  .v-tab--active
 
-                    .title-icon
-                        margin: 0 10px 
-                        width: 30px
-                        height: 30px
-                        cursor: pointer
+                    &::after
+                      content: ''
+                      position: absolute
+                      width: 80%
+                      left: 50%
+                      transform: translateX(-50%)
+                      bottom: 15%
+                      height: 1px
+                      background: white
+                      transition: all 0.3s ease
+
+
+
+                .vis-content
+                  overflow: auto
+                  width: 100%
+                  display: flex
+                  flex-flow: row
+                  justify-content: center
+                  align-items: flex-start
+
+                  
+
+                // .title-vis
+                //     width: 100%
+                //     height: 50px
+                //     position: relative
+                //     padding: 0
+
+                //     .divider-tab
+                //         position: absolute
+                //         width: 100%
+                //         height: 1px
+                //         opacity: 0.4
+                //         bottom: 0
+
+                //     .title-icon
+                //         margin: 0 10px 
+                //         width: 30px
+                //         height: 30px
+                //         cursor: pointer
                     
 
-                .errormsg
-                    text-align: center
+                // .errormsg
+                //     text-align: center
 
 
                         
 
-@media screen and (max-width: 2560px) and (min-width: 1920px)
+// @media screen and (max-width: 2560px) and (min-width: 1920px)
 
-    .reports-app-main
+//     .reports-app-main
 
-        .container-report
+//         .container-report
 
-            .report-block
+//             .report-block
 
-                .static-block
-                    height: 91vh
+//                 .static-block
+//                     height: 91vh
 
-                    .static-title
-                        font-size: 20px
+//                     .static-title
+//                         font-size: 20px
                 
-                    .static-overflow-block
-                        height: 82vh
+//                     .static-overflow-block
+//                         height: 82vh
 
-                        .static-row
-                            font-size: 18px
+//                         .static-row
+//                             font-size: 18px
 
-                .statistic-block
-                    max-height: 91vh
+//                 .statistic-block
+//                     max-height: 91vh
 
                     
-                .search-block
+//                 .search-block
                     
-                    .search-card-block
-                        height: 32vh
+//                     .search-card-block
+//                         height: 32vh
 
-                    .v-input__slot
-                        height: 29vh
+//                     .v-input__slot
+//                         height: 29vh
 
-                        textarea
-                            font-size: 18px
-                            line-height: 30px
-                            margin: 0px
+//                         textarea
+//                             font-size: 18px
+//                             line-height: 30px
+//                             margin: 0px
 
-                .static-vis
-                    height: 58vh
+//                 .static-vis
+//                     height: 58vh
 
-@media screen and (max-width: 1600px) 
+// @media screen and (max-width: 1600px) 
 
-    .reports-app-main
+//     .reports-app-main
 
-        .container-report
+//         .container-report
 
-            .report-block
+//             .report-block
 
-                .static-block
+//                 .static-block
 
-                    .static-title
-                        font-size: 16px
+//                     .static-title
+//                         font-size: 16px
                 
-                    .static-overflow-block
+//                     .static-overflow-block
 
-                        .static-row
-                            font-size: 14px
+//                         .static-row
+//                             font-size: 14px
 
-                .search-block
+//                 .search-block
                     
-                    .v-input__slot
+//                     .v-input__slot
 
-                        textarea
-                            font-size: 14px
-                            line-height: 24px
-                            margin: 0
+//                         textarea
+//                             font-size: 14px
+//                             line-height: 24px
+//                             margin: 0
 
-@media screen and (max-width: 1440px)
+// @media screen and (max-width: 1440px)
 
-    .reports-app-main
+//     .reports-app-main
 
-        .container-report
+//         .container-report
 
-            .report-block
+//             .report-block
 
-                .static-block
-                    height: 80vh
+//                 .static-block
+//                     height: 80vh
 
-                    .static-title
-                        font-size: 14px
-                        margin-bottom: 10px
+//                     .static-title
+//                         font-size: 14px
+//                         margin-bottom: 10px
                 
-                    .static-overflow-block
-                        height: 64vh
+//                     .static-overflow-block
+//                         height: 64vh
 
-                        .static-row
-                            font-size: 12px
+//                         .static-row
+//                             font-size: 12px
 
-                .statistic-block
-                    max-height: 80vh
+//                 .statistic-block
+//                     max-height: 80vh
                     
-                .search-block
+//                 .search-block
                     
-                    .search-card-block
-                        height: 25vh
+//                     .search-card-block
+//                         height: 25vh
 
-                    .v-input__slot
-                        height: 20vh
+//                     .v-input__slot
+//                         height: 20vh
 
-                        textarea
-                            font-size: 12px
-                            line-height: 20px
-                            margin: 0px
+//                         textarea
+//                             font-size: 12px
+//                             line-height: 20px
+//                             margin: 0px
 
-                .static-vis
-                    height: 54vh
+//                 .static-vis
+//                     height: 54vh
 
-                    .v-card__text
-                        height: inherit
+//                     .v-card__text
+//                         height: inherit
 
-                        // .v-data-table__wrapper
-                        //     height: 195px !important
+//                         // .v-data-table__wrapper
+//                         //     height: 195px !important

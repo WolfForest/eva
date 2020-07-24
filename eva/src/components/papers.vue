@@ -282,7 +282,7 @@
             </v-stepper>
           </v-card>
           <div
-            class="report-download"
+            class="paper-download"
           >
             <v-tooltip 
               bottom 
@@ -303,12 +303,28 @@
               <span>Скачать отчет</span>
             </v-tooltip>
           </div>
-          <v-card
-            ref="vis" 
+          <v-card 
             class="static-vis" 
             :style="{background: color.backElement, color: color.text}"
           >
-            hello kitty
+            <v-tabs 
+              v-show="tabs.length>1"
+              class="vis-tabs"
+              hide-slider
+              @change="changeVisTab"
+            >
+              <v-tab
+                v-for="name in tabs"
+                :key="name"
+                :style="{borderColor:color.back,background: color.controls}"
+              >
+                {{ name }}
+              </v-tab>
+            </v-tabs>
+            <div 
+              ref="vis"
+              class="vis-content"
+            />
           </v-card>
         </div>
       </v-container> 
@@ -392,6 +408,8 @@ export default {
       disabledDownload: true,
       fileLink: '',
       dispSid: 0,
+      tabs: [],
+      html: [],
     } 
   },
   
@@ -486,27 +504,22 @@ export default {
       formData.append('file', this.selectedFile);
       formData.append('cid', JSON.stringify(this.dispSid));
       let result = await this.$store.getters.getPaper(formData);
-      try {
-        if (result.status == 'success') {
-          this.steps['3'].loading = false;
-          this.steps['4'].complete = true;
-          this.steps['4'].text = 'Отчет готов';
-          this.fileLink = result.file;
-          this.disabledDownload = false;
-          // this.createVisPaper();
-          //this.downloadFile(JSON.parse(result).file)
+      if (result.status == 'success') {
+        this.steps['3'].loading = false;
+        this.steps['4'].complete = true;
+        this.steps['4'].text = 'Отчет готов';
+        this.fileLink = result.file;
+        this.disabledDownload = false;
+        this.createVisPaper(result.html,result.names);
+        //this.downloadFile(JSON.parse(result).file)
 
-          // this.allFiles = JSON.parse(result).files;
-        } else {
-          // this.errorMsg = "Список отчетов получить не удалось. Вернитесь назад и попробуйте снова.";
-          // this.showError = true;
-          this.steps['3'].loading = false;
-          this.steps['4'].error = [() => false];
-          this.steps['4'].text = 'Ошибка обработки отчета';
-        }
-
-      } catch (error) {
-        this.message(`Ошибка: ${error}`);
+        // this.allFiles = JSON.parse(result).files;
+      } else {
+        // this.errorMsg = "Список отчетов получить не удалось. Вернитесь назад и попробуйте снова.";
+        // this.showError = true;
+        this.steps['3'].loading = false;
+        this.steps['4'].error = [() => false];
+        this.steps['4'].text = 'Ошибка обработки отчета';
       }
 
     },
@@ -743,26 +756,27 @@ export default {
         })
       }
     },
-    createVisPaper: async function() {
-      if (this.data.length == 1) {
-        let result = await this.$store.getters.getPaperVis(this.fileLink);
-        console.log(result)
-        // try {
-        //   if (JSON.parse(result).status == 'success') {
-        //     this.allFiles = JSON.parse(result).files;
-        //     this.showError = false;
-        //     console.log('right')
-        //   } else {
-        //     console.log('wrong')
-        //   }
-
-        // } catch (error) {
-        //   this.message(`Ошибка: ${error}`);
-        // }
-        
+    createVisPaper: function(html,names) {
+      this.tabs = [];
+      this.html = [];
+      if (names.length == 1) {
+        this.$refs.vis.innerHTML = html[0];
+      } else if (names.length<6) {
+        this.tabs = names;
+        this.html = html;
+      } else {
+        this.$refs.vis.innerHTML = 'К сожалению файлов слишком много для визуального отображения';
       }
+      // if (html.length == 1) {
+      //   this.$refs.vis.innerHTML = html;
+      // } else {
+      //   console.log(html)
+      // }
       
     },
+    changeVisTab: function(number){
+      this.$refs.vis.innerHTML = this.html[number];
+    }
   },
   mounted() {
     
