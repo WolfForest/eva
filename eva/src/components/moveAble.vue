@@ -45,7 +45,6 @@ export default {
       left: 0,
       width: 0, // 0 не должен быть, по умолчанию беруться эти настройки
       height: 0,
-      moveCount:0, 
       props: {
         vue_drag: false,
         zIndex: 1,
@@ -70,7 +69,6 @@ export default {
     dragRes: function() {
       let dragRes = this.$store.getters.getDragResize(this.idDash);
       dragRes == 'true' ? dragRes = true : dragRes = false;
-      this.moveLater(); // функция которая перезапишет правильные позиции элемента
       return dragRes;
     },
     sizeGrid: function() {
@@ -90,8 +88,6 @@ export default {
       if (this.top < 0) {
         this.top = 50;
       } 
-
-      this.moveLater(); // функция которая перезапишет правильные позиции элемента
     },
     left: function() {
       let clientWidth = document.querySelector('#app').clientWidth;
@@ -102,13 +98,7 @@ export default {
       if ((this.left+this.width) >  clientWidth) {
         this.left = clientWidth - this.width;
       } 
-
-      this.moveLater(); // функция которая перезапишет правильные позиции элемента
     },
-
-    moveCount: function () {
-      this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${this.top}px)`;
-    }
   },
   methods: {
     calcSizeGrid: function(numb, type) {
@@ -138,11 +128,6 @@ export default {
       this.width = width;
       this.height =height;
 
-    },
-    moveLater: function() {
-      if(this.$refs.dragres) {
-        this.moveCount ++ 
-      }
     },
     // onResize: function (x, y, width, height) {  // получаем позицию и размер элемента
     //   this.props.top = y
@@ -236,6 +221,11 @@ export default {
   },
   created() {
     this.drawElement()
+  },
+  updated() {
+    if(this.$refs.dragres) {
+      this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${this.top}px)`;
+    }
   },
 }
 </script>
