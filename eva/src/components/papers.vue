@@ -755,7 +755,8 @@ export default {
       this.tabs = [];
       this.html = [];
       if (names.length == 1) {
-        this.$refs.vis.innerHTML = html[0];
+        let img = `<img class="vis-image" src="data:image/png;base64,${html[0]}" />`;
+        this.$refs.vis.innerHTML = img;
       } else if (names.length<6) {
         this.tabs = names;
         this.html = html;
@@ -770,7 +771,8 @@ export default {
       
     },
     changeVisTab: function(number){
-      this.$refs.vis.innerHTML = this.html[number];
+      let img = `<img class="vis-image" src="data:image/png;base64,${this.html[number]}" />`;
+      this.$refs.vis.innerHTML = img;
     }
   },
   mounted() {
