@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [UNRELEASED] [gridDash]
+## [UNRELEASED] [constructorPaper]
 ### Fixed
 
 - set asynchrony all create components. Then draw only one component per time. Then get data from rest throw web worker.
@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - change work with component on grid table
+
+### Added
+
+- new plugin, whom create papers (reports) from template and give link on download and preview
 
 ## [1.44.26] [newSetting]
 ### Adde
