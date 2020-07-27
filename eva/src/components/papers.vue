@@ -464,15 +464,10 @@ export default {
         let formData = new FormData();
         formData.append('file', this.uploadFile);
         let result = await this.$store.getters.loadPaper(formData);
-        try {
-          if (JSON.parse(result).status == 'success') {
-            this.message("Файл успшено загружен");
-          } else {
-            this.message("Ошибка при загрузке файла");
-          }
-
-        } catch (error) {
-          this.message(`Ошибка: ${error}`);
+        if (result.status == 'success') {
+          this.message("Файл успшено загружен");
+        } else {
+          this.message("Ошибка при загрузке файла");
         }
       }
       

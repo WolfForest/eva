@@ -455,9 +455,15 @@ export default {
         return response
       }) 
     if (response.status == 200) {  // если получилось
-      await response.text().then( res => {  // переводим полученные данные из json в нормальный объект
-        data = res; 
-        restAuth.putLog(`Отчет загружен успешно.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+      
+      await response.json().then( res => {  // переводим полученные данные из json в нормальный объект
+        data = res;
+        if (data.status == 'success') {
+          restAuth.putLog(`Отчет загружен успешно.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+        } else {
+          restAuth.putLog(`Загрузить отчет не удалось.&nbsp;&nbsp;status: ${data.status}&nbsp;&nbsp;error: ${data.description}`);
+        }
+        
       }).catch( error => {
         restAuth.putLog(`Загрузить отчет не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
       }) 
@@ -507,7 +513,7 @@ export default {
         if (result.status == 'success') {
           restAuth.putLog(`Отчет успешно получен.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
         } else {
-          restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${result.status}&nbsp;&nbsp;url: ${result.description}`);
+          restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${result.status}&nbsp;&nbsp;error: ${result.description}`);
         }
       }).catch( error => {
         restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
