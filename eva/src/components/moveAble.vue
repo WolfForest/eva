@@ -44,7 +44,8 @@ export default {
       top: 0,
       left: 0,
       width: 0, // 0 не должен быть, по умолчанию беруться эти настройки
-      height: 0, 
+      height: 0,
+      moveCount:0, 
       props: {
         vue_drag: false,
         zIndex: 1,
@@ -104,6 +105,10 @@ export default {
 
       this.moveLater(); // функция которая перезапишет правильные позиции элемента
     },
+
+    moveCount: function () {
+      this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${this.top}px)`;
+    }
   },
   methods: {
     calcSizeGrid: function(numb, type) {
@@ -135,12 +140,8 @@ export default {
 
     },
     moveLater: function() {
-     
       if(this.$refs.dragres) {
-        this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${this.top}px)`;
-       /* setTimeout( () => { // нужно запускать немного с задержкой, чтобы точно обновить после работы плагина
-          
-        },150)*/
+        this.moveCount ++ 
       }
     },
     // onResize: function (x, y, width, height) {  // получаем позицию и размер элемента
@@ -236,16 +237,6 @@ export default {
   created() {
     this.drawElement()
   },
-  updated() {
-   //this.moveLater()
-    // setTimeout( ()=>{
-    //   //this.$refs.dragres.$el.style.height = '800px';
-    //   this.props.height = 800;
-    // },2000)
-    // if(this.$refs.dragres) {
-    //   //this.$refs.dragres.$el.style.transform = `translate(${this.props.left}px, ${this.props.top}px)`;
-    // }
-  }
 }
 </script>
 
