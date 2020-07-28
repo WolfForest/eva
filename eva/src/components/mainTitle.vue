@@ -245,6 +245,8 @@ export default {
 
     html,body {
         background: #fafafa;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     .aplication {
         position: relative;
