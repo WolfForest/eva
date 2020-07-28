@@ -91,6 +91,7 @@ export default {
               }, 0);
                               
             });
+
         
             cycle
               .then(
@@ -212,8 +213,12 @@ export default {
                       })
 
                     })
-
-                    resolveMain(allData)
+                    if (idDash == 'papers') {
+                      resolveMain({data: allData,sid: result.cid})
+                    } else {
+                      resolveMain(allData)
+                    }
+                    
 
                   }
     
@@ -428,14 +433,120 @@ export default {
         data = res; 
         restAuth.putLog(`Настройки пользователя обновились успешно.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
       }).catch( error => {
-        restAuth.putLog(`Настройки пользователя обновить не удалось..&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+        restAuth.putLog(`Настройки пользователя обновить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
       }) 
     }  else {
-      restAuth.putLog(`Настройки пользователя обновить не удалось..&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
+      restAuth.putLog(`Настройки пользователя обновить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
       return response
     }
 
     return data
   },
+  async loadPaper(paper,restAuth) { 
+    let data = [];
+
+    let response = await fetch(`/api/eva/reports/load`, {  // сперва нужно подать post запрос
+      method: 'POST',
+      body: paper,
+      // mode: 'no-cors'
+    })
+      .catch (error => {
+        restAuth.putLog(`Загрузить отчет не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+        return response
+      }) 
+    if (response.status == 200) {  // если получилось
+      
+      await response.json().then( res => {  // переводим полученные данные из json в нормальный объект
+        data = res;
+        if (data.status == 'success') {
+          restAuth.putLog(`Отчет загружен успешно.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+        } else {
+          restAuth.putLog(`Загрузить отчет не удалось.&nbsp;&nbsp;status: ${data.status}&nbsp;&nbsp;error: ${data.description}`);
+        }
+        
+      }).catch( error => {
+        restAuth.putLog(`Загрузить отчет не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+      }) 
+    }  else {
+      restAuth.putLog(`Загрузить отчет не удалось..&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
+      return response
+    }
+
+    return data
+  },
+  async getAllPaper(restAuth) { 
+    let data = [];
+    let response = await fetch(`/api/eva/reports/getAll`)
+      .catch (error => {
+        restAuth.putLog(`Список отчетов получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+        return response
+      }) 
+    if (response.status == 200) {  // если получилось
+      await response.text().then( res => {  // переводим полученные данные из json в нормальный объект
+        data = res; 
+        restAuth.putLog(`Список отчетов успешно получен.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+      }).catch( error => {
+        restAuth.putLog(`Список отчетов получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+      }) 
+    }  else {
+      restAuth.putLog(`Список отчетов получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
+      return response
+    }
+
+    return data
+  },
+  async getPaper(restAuth,fileData) { 
+    let result = [];
+
+    let response = await fetch(`/api/eva/reports/get`, {  
+      method: 'POST',
+      body: fileData,
+      // mode: 'no-cors'
+    })
+      .catch (error => {
+        restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+        return response
+      }) 
+    if (response.status == 200) {  // если получилось
+      await response.text().then( res => {  // переводим полученные данные из json в нормальный объект
+        result = JSON.parse(res); 
+        if (result.status == 'success') {
+          restAuth.putLog(`Отчет успешно получен.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+        } else {
+          restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${result.status}&nbsp;&nbsp;error: ${result.description}`);
+        }
+      }).catch( error => {
+        restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+      }) 
+    }  else {
+      restAuth.putLog(`Отчет получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
+      return response
+    }
+
+    return result
+  },
+  async getPaperVis(restAuth,url) { 
+    let data = [];
+
+    let response = await fetch(`${url}`)
+      .catch (error => {
+        restAuth.putLog(`Отчет для визуализации получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+        return response
+      }) 
+    if (response.status == 200) {  // если получилось
+      await response.text().then( res => {  // переводим полученные данные из json в нормальный объект
+        data = res; 
+        restAuth.putLog(`Отчет для визуализации успешно получен.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+      }).catch( error => {
+        restAuth.putLog(`Отчет для визуализации получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+      }) 
+    }  else {
+      restAuth.putLog(`Отчет для визуализации получить не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
+      return response
+    }
+
+    return data
+  },
+  
  
 };
