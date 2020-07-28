@@ -1642,7 +1642,6 @@ export default {
         let group = svg
           .append("g")
           .attr("class","vetical-line-group");
-        
 
         group
           .append("line")
@@ -1652,7 +1651,7 @@ export default {
           .attr("x2", x(d[xMetric]*secondTransf))
           .attr("y2", height)
           .attr("xVal", d[xMetric]*secondTransf)
-          .attr("stroke", colors[i])
+          .attr("stroke", colorLine[i])
           .style("opacity", "0.7")
 
         group
@@ -1662,7 +1661,7 @@ export default {
           .attr("r", 5)
           .attr("xVal", d[xMetric]*secondTransf)
           .attr("opacity", "0.7")
-          .attr("fill", colors[i])
+          .attr("fill", colorLine[i])
           .attr("class","dot-vertical")
           .on("mouseover", function() {
             tooltip
