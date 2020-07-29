@@ -13,14 +13,14 @@
       :style="{background: colorFrom.panel}"
     />
     <div class="setting">
-      <div class="labelSetting">
+      <div class="labelSetting" :style="{color: colorFrom.text}">
         Поменять режим отображения
       </div>
       <v-switch  
         v-model="mode" 
         class="switch" 
         :color="colorFrom.controls" 
-        :style="{color:colorFrom.text,}" 
+        :style="{color:colorFrom.text}" 
         :label="String(mode)" 
       />
       <div 
@@ -29,7 +29,7 @@
       />
     </div>
     <div class="setting">
-      <div class="labelSetting">
+      <div class="labelSetting" :style="{color: colorFrom.text}">
         Размер сетки
       </div>
       <div class="sizeGrid">
@@ -64,7 +64,7 @@
       />
     </div>
     <div class="setting">
-      <div class="labelSetting">
+      <div class="labelSetting" :style="{color: colorFrom.text}">
         Перемещать/ изменять размер компонента
       </div>
       <v-switch  
@@ -81,7 +81,7 @@
     </div>
     
     <div class="setting">
-      <div class="labelSetting">
+      <div class="labelSetting" :style="{color: colorFrom.text}">
         Показывать сетку
       </div>
       <v-switch  
