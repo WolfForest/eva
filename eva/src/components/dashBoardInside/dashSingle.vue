@@ -172,6 +172,7 @@ export default {
             
     },
     setClick: function() {
+      
       let events = this.$store.getters.getEvents({idDash: this.idDash, event: 'onclick', element: this.id, partelement: 'empty'});
       if (events.length != 0) {
         events.forEach( item => {

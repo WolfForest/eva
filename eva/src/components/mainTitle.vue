@@ -161,7 +161,6 @@ export default {
       return true
     },
     gridShow: function() {
-      console.log(this.idDash)
       let gridShow = this.$store.getters.getGridShow(this.idDash);
       gridShow == 'true' ? gridShow = true : gridShow = false;
       return gridShow;

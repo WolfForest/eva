@@ -451,16 +451,20 @@ export default {
       // mode: 'no-cors'
     })
       .catch (error => {
+       
         restAuth.putLog(`Загрузить отчет не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
         return response
       }) 
+      
     if (response.status == 200) {  // если получилось
       
       await response.json().then( res => {  // переводим полученные данные из json в нормальный объект
         data = res;
         if (data.status == 'success') {
+          
           restAuth.putLog(`Отчет загружен успешно.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
         } else {
+          
           restAuth.putLog(`Загрузить отчет не удалось.&nbsp;&nbsp;status: ${data.status}&nbsp;&nbsp;error: ${data.description}`);
         }
         
