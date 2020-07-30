@@ -3,9 +3,7 @@
 
 window.Vue =  require('vue')
 require("fake-indexeddb/auto")
-
 import { enableFetchMocks } from 'jest-fetch-mock'
-enableFetchMocks()
 
 import { shallowMount} from '@vue/test-utils'
 import Paper from '../components/papers.vue'  // подключаем сам компонент который будем тестировать
@@ -14,17 +12,17 @@ import Paper from '../components/papers.vue'  // подключаем сам к�
 // подключаем нужные нам библиотеки 
 
 import store from '../store/index.js' // хранилилище local storage
-import storeAuth from '../storeAuth/index.js' // хранилище с эндпоинтами и логами
+import  rest from '../store/storeRest.js' // основное хранилище с эндпоинтами и логами
+import  restAuth from '../storeAuth/storeRest.js' // хранилище с эндпоинтами и логами
 import vuetify from 'vuetify'  // библотека для красивого отображения элементов
 Vue.use(vuetify)
 
-store.auth = storeAuth;
 
 // подключаем компоненты, которые нужны для этого компонента
 
 describe('Компонент papers.vue', () => {  // тест самого компонента
 
-
+  enableFetchMocks() // запускаем заглушки (mock) на fetch
   store.commit('createPaperSearch');  // дело в том, что чтобы работали остальные компоненты, сперва нужно добавить объект papers в store
 
 
@@ -33,13 +31,25 @@ describe('Компонент papers.vue', () => {  // тест самого ко
     stubs: ['header-top','modal-report','footer-bottom']
   });
 
-  it ('Загрузить файл на сервер', async () => {
-    const mockCallback = jest.fn()
-    store.auth.putLog('add some string in log', mockCallback)
+  const putLogMock = jest.fn(() => 'add some logs')  // задаем заглушку (mock) который будет имитировать функцию putLog, которая записывает логи
+  restAuth.putLog = putLogMock // указываем что при вызове метод putLog на самом деле будет вызвана заглушка
 
+  
+
+  it ('Загрузить файл на сервер',  () => {
+
+    expect(putLogMock()).toBe("add some logs");
 
     wrapper.setData({ uploadFile: 'test.xlsx' })
+    fetch.mockResponseOnce(JSON.stringify({ data: '12345' }))
+    //console.log(rest.loadPaper)
     wrapper.vm.setPaper()
+    // rest.loadPaper(restAuth).then(res => {
+    //   console.log(res)
+    // })
+    
+
+
     // fetch.mockResponseOnce(JSON.stringify({ data: '12345' }))
  
     // //assert on the response

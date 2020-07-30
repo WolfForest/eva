@@ -472,6 +472,7 @@ export default {
         restAuth.putLog(`Загрузить отчет не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
       }) 
     }  else {
+      
       restAuth.putLog(`Загрузить отчет не удалось..&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;statusText: ${response.statusText}`);
       return response
     }
