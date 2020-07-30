@@ -524,9 +524,12 @@ export default {  // приблизительный объект хранили�
           })
         })
 
+       
+
 
         if (id != -1) {
-    
+
+          
           event.route.push(`/dashboards/${id}`);
     
           let searches = state[id].searches;

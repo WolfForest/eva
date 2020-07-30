@@ -2,6 +2,7 @@
   <div 
     ref="single"
     class="dash-single" 
+    @click="setClick"
   >
     <v-card 
       v-show="!noMsg"
@@ -9,7 +10,6 @@
       outlined 
       :loading="dataLoading" 
       :lookSize="changeSize" 
-      @click="setClick"
     >
       <div 
         class="number"  
@@ -178,8 +178,8 @@ export default {
           if(item.action == 'set'){
             this.$store.commit('letEventSet', {events: events, idDash: this.idDash,  });
           } else if (item.action == 'go') {
-            this.$store.commit('letEventGo', {event: item, idDash: this.idDash });
-            this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
+            this.$store.commit('letEventGo', {event: item, idDash: this.idDash,  route: this.$router, store: this.$store });
+            //this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
           }
         })
       }

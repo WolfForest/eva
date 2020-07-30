@@ -137,8 +137,8 @@ export default {
           if(item.action == 'set'){
             this.$store.commit('letEventSet', {events: events, idDash: this.idDash,  });
           } else if (item.action == 'go') {
-            this.$store.commit('letEventGo', {event: item, idDash: this.idDash });
-            this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
+            this.$store.commit('letEventGo', {event: item, idDash: this.idDash, route: this.$router, store: this.$store });
+            //this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
           } else if (item.action.toLowerCase() === 'open'.toLowerCase()){//если экшен open
             this.actionOpen(item.target.toLowerCase(), item.header, item.widthPersent, item.heightPersent);
           }  else if (item.action.toLowerCase() === 'changeReport'.toLowerCase()){//если экшен open

@@ -2011,8 +2011,8 @@ export default {
             this.$store.commit('letEventSet', {events: events, idDash: this.idDash,  });
           } else if (item.action == 'go') {
             if (action != 'select') {
-              this.$store.commit('letEventGo', {event: item, idDash: this.idDash });
-              this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
+              this.$store.commit('letEventGo', {event: item, idDash: this.idDash, route: this.$router, store: this.$store });
+             // this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
             }
           }
         })
