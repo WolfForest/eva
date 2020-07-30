@@ -1399,7 +1399,12 @@ export default {
                 this.$set(this.event,'target',doing[0]);
                 doing.splice(0,1);
                 doing = doing.join(',');
-                doing = doing.match(/[^\[]+(?=\])/g);
+                if (doing.indexOf('[') != -1 && doing.indexOf(']') != -1) {
+                  doing = doing.match(/[^\[]+(?=\])/g);
+                } else {
+                  doing = doing.split(',');
+                }
+                
                 if (doing == null) {
                   this.$set(this.event,'prop',['']);
                   this.$set(this.event,'value',['']);

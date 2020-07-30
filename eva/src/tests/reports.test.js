@@ -25,7 +25,7 @@ describe('Компонент reports.vue', () => {  // тест самого к�
     store,
     stubs: ['header-top','dash-table','dash-guntt','dash-graph',
       'dash-lineChart','dash-multiLine','dash-barchart',
-      'dash-tile','dash-csvg','modal-report','footer-bottom']
+      'dash-tile','dash-csvg','modal-report','router-link','footer-bottom']
   });
 
 
