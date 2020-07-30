@@ -172,7 +172,21 @@ export default {
             
     },
     setClick: function() {
-      
+
+      let tockens = this.$store.getters.getTockens(this.idDash);
+      let tocken = {};
+
+      Object.keys(tockens).forEach( i =>{
+        tocken = {
+          name: tockens[i].name,
+          action: tockens[i].action,
+          capture: tockens[i].capture,
+        }
+        if (tockens[i].elem == this.id && tockens[i].action == 'click') {
+          this.$store.commit('setTocken', {tocken: tocken, idDash: this.idDash, value: this.number, store: this.$store });
+        } 
+      })
+
       let events = this.$store.getters.getEvents({idDash: this.idDash, event: 'onclick', element: this.id, partelement: 'empty'});
       if (events.length != 0) {
         events.forEach( item => {
