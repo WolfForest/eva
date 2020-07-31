@@ -47,10 +47,7 @@
           </v-btn>
         </div> 
       </v-card>
-      <v-content 
-        id="content" 
-        style="margin-bottom:40px"
-      >
+      <v-content id="content">
         <v-container class="dash-container">
           <!--<div
             v-if="gridShow"
@@ -63,6 +60,8 @@
             v-if="gridShow"
             class="overlay-grid"
             :data-grid="sizeGrid"
+             :style="{top:headerTop ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
+            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontal}px ${horizontal}px`,height:`calc(100vh - ${headerTop})`}"
           />
           <move-able 
             v-for="elem in elements" 
@@ -145,6 +144,13 @@ export default {
         return '0px'
       }
     },
+    headerTop: function (){
+      if(document.body.clientWidth <=1400){
+        return '40px'
+      } else {
+        return '50px'
+      }
+    },
     theme: function() {
       return this.$store.getters.getTheme
     },
@@ -190,9 +196,9 @@ export default {
     calcSizeGrid: function(numb, type) {
       let size = 0;
       if (type == 'vert') {
-        size = Math.round(screen.width/Number(numb));
+        size = Math.round(document.body.clientWidth/Number(numb));
       } else {
-        size = Math.round(screen.height/Number(numb));
+        size = Math.round(document.body.clientHeight/Number(numb));
       }
       return size
 
@@ -286,8 +292,6 @@ export default {
 
     .overlay-grid {
       position: absolute;
-      background: red;
-      top: 0;
       left: 0;
       width: 100%;
       opacity: 0.2;
