@@ -52,12 +52,17 @@
         style="margin-bottom:40px"
       >
         <v-container class="dash-container">
-          <div
+          <!--<div
             v-if="gridShow"
             class="overlay-grid"
             :data-grid="sizeGrid"
             :style="{background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
             rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontal}px ${horizontal}px`,height:heightOverlay}"
+          />-->
+           <div
+            v-if="gridShow"
+            class="overlay-grid"
+            :data-grid="sizeGrid"
           />
           <move-able 
             v-for="elem in elements" 
@@ -281,6 +286,7 @@ export default {
 
     .overlay-grid {
       position: absolute;
+      background: red;
       top: 0;
       left: 0;
       width: 100%;
