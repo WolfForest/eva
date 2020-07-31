@@ -316,6 +316,7 @@
               <v-tab
                 v-for="name in tabs"
                 :key="name"
+                class="vis-tab"
                 :style="{borderColor:color.back,background: color.controls}"
               >
                 {{ name }}
@@ -499,6 +500,7 @@ export default {
       formData.append('file', this.selectedFile);
       formData.append('cid', JSON.stringify(this.dispSid));
       let result = await this.$store.getters.getPaper(formData);
+      
       if (result.status == 'success') {
         this.steps['3'].loading = false;
         this.steps['4'].complete = true;
@@ -625,13 +627,14 @@ export default {
       console.log('launch search')
       let response = await this.$store.getters.getDataApi({search: this.search, idDash: 'papers'});
       // вызывая метод в хранилище  
+     
       if (!response || response.length == 0) {  // если что-то пошло не так 
+        
         this.loading = false;
         this.$store.commit('setErrorLogs',true);
         this.data = [];
         this.cancelSearch(); 
       } else {  // если все нормально
-
         this.loading = false;
         this.$store.commit('setPaperSearch',this.search);
         //this.data = response;
@@ -771,6 +774,7 @@ export default {
       
     },
     changeVisTab: function(number){
+      console.log('afs')
       let img = `<img class="vis-image" src="data:image/png;base64,${this.html[number]}" />`;
       this.$refs.vis.innerHTML = img;
     }

@@ -561,6 +561,8 @@ export default {  // приблизительный объект хранили�
                 
           });
 
+        } else {
+          console.log('it is')
         }
   
       }
@@ -1257,7 +1259,7 @@ export default {  // приблизительный объект хранили�
       }
            
     },
-    checkDataSearch:() => {
+    checkDataSearch: () => {
       return (sid) => {
         return new Promise((resolve, reject) => {
 

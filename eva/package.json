@@ -30,7 +30,6 @@
     "eslint": "^7.1.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-vue": "^6.2.2",
-    "fake-indexeddb": "^3.1.2",
     "file-loader": "^4.2.0",
     "html-webpack-plugin": "^4.3.0",
     "jest": "^25.3.0",

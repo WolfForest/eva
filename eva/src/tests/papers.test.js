@@ -2,7 +2,6 @@
 // test компонента papers.vue
 
 window.Vue =  require('vue')
-require("fake-indexeddb/auto")
 import { enableFetchMocks } from 'jest-fetch-mock'
 
 import { shallowMount} from '@vue/test-utils'
@@ -13,10 +12,11 @@ import Paper from '../components/papers.vue'  // подключаем сам к�
 
 import store from '../store/index.js' // хранилилище local storage
 import  rest from '../store/storeRest.js' // основное хранилище с эндпоинтами и логами
+import storeAuth from '../storeAuth/index.js' // подключаем файл с настройками хранилища Vuex (авторизация)
 import  restAuth from '../storeAuth/storeRest.js' // хранилище с эндпоинтами и логами
 import vuetify from 'vuetify'  // библотека для красивого отображения элементов
 Vue.use(vuetify)
-
+store.auth = storeAuth
 
 // подключаем компоненты, которые нужны для этого компонента
 
@@ -26,117 +26,84 @@ describe('Компонент papers.vue', () => {  // тест самого ко
   store.commit('createPaperSearch');  // дело в том, что чтобы работали остальные компоненты, сперва нужно добавить объект papers в store
 
 
-  let wrapper = shallowMount(Paper, { 
-    store,
-    stubs: ['header-top','modal-report','footer-bottom']
+  let wrapper = shallowMount(Paper, {   // при создании экземпляра объекта vue
+    store,    // передаем store (хранилище)
+    stubs: ['header-top','modal-report','footer-bottom'] // и делаем заглушки на компоненты которые мы не будем тестировать
   });
 
   const putLogMock = jest.fn(() => 'add some logs')  // задаем заглушку (mock) который будет имитировать функцию putLog, которая записывает логи
   restAuth.putLog = putLogMock // указываем что при вызове метод putLog на самом деле будет вызвана заглушка
 
-  
-
-  it ('Загрузить файл на сервер',  () => {
-
-    expect(putLogMock()).toBe("add some logs");
-
-    wrapper.setData({ uploadFile: 'test.xlsx' })
-    fetch.mockResponseOnce(JSON.stringify({ data: '12345' }))
-    //console.log(rest.loadPaper)
-    wrapper.vm.setPaper()
-    // rest.loadPaper(restAuth).then(res => {
-    //   console.log(res)
-    // })
-    
-
-
-    // fetch.mockResponseOnce(JSON.stringify({ data: '12345' }))
- 
-    // //assert on the response
-    // APIRequest('google').then(res => {
-    //   expect(res.data).toEqual('12345')
-    // })
+  beforeEach(() => {  // перед каждым новым тестом 
+    fetch.resetMocks()  // очищаем моки fetch
   })
 
-  // it('При выполнении запроса и успешного получения данных должен поменяться статус второго кружочка', async () => {
+  it ('Загрузить файл на сервер',  async () => {
 
-  //   wrapper.setData({ search: {
-  //     original_otl: "| inputlookup papersdata.csv",
-  //     sid: 1967812393,
-  //     parametrs: {
-  //       cache_ttl: 100,
-  //       field_extraction: false,
-  //       preview: false,
-  //       timeout: 100,
-  //       twf: 0,
-  //       tws: 0,
-  //       username: "admin"
-  //     }
-  //   }});
-  //   expect(wrapper.vm.search).toEqual({
-  //     original_otl: "| inputlookup papersdata.csv",
-  //     sid: 1967812393,
-  //     parametrs: {
-  //       cache_ttl: 100,
-  //       field_extraction: false,
-  //       preview: false,
-  //       timeout: 100,
-  //       twf: 0,
-  //       tws: 0,
-  //       username: "admin"
-  //     }
-  //   })
+    expect(putLogMock()).toBe("add some logs"); // ставим заглушку на функцию записи логов и проверяем что она отработала корреткно
+
+    wrapper.setData({ uploadFile: 'test.xlsx' }) // заносим файл имитируя выбор файла пользователем
+    fetch
+      .once(JSON.stringify({ status: 'success' })) // имитируем fetch запрос который вернет нужный объект,  loadPaper
+
+    await wrapper.vm.setPaper()  // запускаем функцию отправки файла на бэк
+
+
+    expect(wrapper.vm.errorMsg).toBe('Файл успшено загружен') // првоеряем что сообщение поменялось на успешное
+
+
+  })
+
+  it('При выполнении запроса и успешного получения данных должен поменяться статус второго кружочка', async () => {
+
+    wrapper.setData({ search: {   // заносим фиктивный запрос в соответсвующию переменную
+      original_otl: "| inputlookup papersdata.csv",
+      sid: 1967812393,
+      parametrs: {
+        cache_ttl: 100,
+        field_extraction: false,
+        preview: false,
+        timeout: 100,
+        twf: 0,
+        tws: 0,
+        username: "admin"
+      }
+    }});
     
-  //   // // const launchSearch = jest.fn(() => {
-
-  //   // //   fetch.mockImplementation(()=> {
-  //   // //     wrapper.vm.steps['2'].complete = true
-  //   // //     console.log('result ->'+wrapper.vm.steps['2'].complete)
-  //   // //   })
-      
-      
-  //   // // }); // так как реальная функция тянет много разных штук вроде IndexedDb, fetch  и т.д. 
-  //   // //                                                                             // то делаем имитацию функции, с нужным нам резльутатом
-  //   const launchSearch = jest.fn(() => {
-  //     wrapper.setData({ 
-  //       steps: {
-  //         '2': {
-  //           complete: true
-  //         }
-  //       }
-  //     })
-  //     wrapper.vm.steps['2'].complete = true
-  //   })
-  //   launchSearch()
-  //   expect(wrapper.vm.steps['2'].complete).toBe(true)
-  // })
+    fetch
+      .once(JSON.stringify({ status: 'success' }))  // makejob
+      .once(JSON.stringify({ status: 'success', cid: 16 })) // checkjob
+      .once(JSON.stringify({ status: 'success', data_urls: ['some/direct/data.json','some/shema/_SCHEMA'] }))  // getresult
+    
+    await wrapper.vm.launchSearch()  // запускаем функцию отправки файла на бэк 
+    expect(wrapper.vm.steps['2'].complete).toBe(true) 
+    
+  })
   
-  // it('При выборе файла и подтверждения выбора должен поменяться статус третьего кружочка', () => {
-  //   wrapper.setData({ selectedFile: 'test.xlsx'});
-  //   expect(wrapper.vm.selectedFile).toBe('test.xlsx')
-  //   wrapper.vm.choosePaper()
-  //   expect(wrapper.vm.steps['3'].complete).toBe(true)
-  // })
+  it('При выборе файла и подтверждения выбора должен поменяться статус третьего кружочка', async () => {
+    wrapper.setData({ selectedFile: 'test.xlsx'}) // заносим в переменную фиктивный файл
+    wrapper.vm.choosePaper()  // запускаем метод выбора файла
+    expect(wrapper.vm.steps['3'].complete).toBe(true) 
 
-  // // it('При выборе файла и выполнении запроса должен поменяться статус четвертого кружочка', () => {
-  // //   expect(wrapper.vm.steps['2'].complete).toBe(true)
-  // //   expect(wrapper.vm.steps['3'].complete).toBe(true)
-  // //   const response = {
-  // //     status: 'success',
-  // //     file: 'some link on file',
-  // //     html: 'some vis block',
-  // //     names: ['file1', 'file2']
-  // //   }
-  // //   fetch.mockImplementation(()=> response)
-  // //   // const getPaper = jest.fn(() => {
-  // //   //   wrapper.vm.steps['4'].complete = true
-  // //   //   wrapper.vm.fileLink = 'testlink'
-  // //   // }); // так как реальная функция тянет много разных штук вроде IndexedDb, fetch  и т.д. 
-  // //   //     // то делаем имитацию функции, с нужным нам резльутатом
-  // //   // getPaper()
-  // //   // expect(wrapper.vm.steps['4'].complete).toBe(true)
-  // //   // expect(wrapper.vm.fileLink).not.toEqual('')
-  // // })
+    // так как предыдущие тесты прошли успешно то автоматом запустился метод getPaper
+
+    fetch
+      .once(JSON.stringify({ 
+        status: 'success', 
+        file: 'some/link.zip', 
+        html: ['some image','anothe some img'], 
+        names: ['some name file', 'another some name file'] 
+      }))  // getPaper
+
+    await wrapper.vm.getPaper()   // запускаем метод обработки файла
+
+    expect(wrapper.vm.steps['4'].complete).toBe(true) 
+    expect(wrapper.vm.fileLink).toBe('some/link.zip')
+    expect(wrapper.vm.tabs).toEqual(['some name file', 'another some name file'])
+    expect(wrapper.vm.html).toEqual(['some image','anothe some img'])
+  })
+
+
 
 
 

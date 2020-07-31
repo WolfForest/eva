@@ -13,10 +13,10 @@ export default {
         restAuth.putLog(`Запрос выполнить не удалось.&nbsp;&nbsp;Ошибка: ${error}`);
         return []
       })  
-        
     if (response.status == 200) {  // если получилось 
 
       return response.json().then( answer => {
+        
         if (answer.status != 'success') {
           restAuth.putLog(`Запрос ${searchFrom.sid} запустился с ошибкой.&nbsp;&nbsp;status: ${answer.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${answer.error}`);
           return []
@@ -61,8 +61,6 @@ export default {
                     clearTimeout(timeOut);
                     
                   })
-
-        
                 if (responseGet != 200 && responseGet != 0) {  // если запрос не прошел то вернем ответ с ошибкой
                   status = 'failed';
                   result.push('failed');
@@ -107,7 +105,7 @@ export default {
                     resolveMain([])
                   } else {
                     restAuth.putLog(`Запрос ${searchFrom.sid} выполнился успешно.&nbsp;&nbsp;status: ${status}`);
-
+                    
                     let dataResponse =  await fetch(`/api/getresult?cid=${result.cid}`)
                       .catch (error => {
                         restAuth.putLog(`Получить данные из запроса ${searchFrom.sid} не удалось.&nbsp;&nbsp;status: ${status}&nbsp;&nbsp;Ошибка: ${error};`);
@@ -120,10 +118,10 @@ export default {
                     
                     let allData = new Promise(function(resolve, reject) {
 
-                    
+                      
                       dataResponse.json().then(async res => {
                         if(res.status == 'success') {
-                            
+                          
 
                           restAuth.putLog(`Данные из запроса ${searchFrom.sid}:&nbsp;&nbsp;${res.data_urls.join(' ; ')}`);
 
@@ -275,7 +273,6 @@ export default {
       restAuth.putLog(`Получить дашборды не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
       return response
     }
-
     return data
   },
   async getState(id,restAuth) { 
