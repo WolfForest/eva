@@ -281,10 +281,9 @@ export default {
 
     .overlay-grid {
       position: absolute;
-      top: 50px;
+      top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
       opacity: 0.2;
       transition: all ease 0.3s
     }
