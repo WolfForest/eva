@@ -82,6 +82,13 @@ export default {
       this.drawElement();
       return true
     },
+    headerTop: function (){
+      if(document.body.clientWidth <=1400){
+        return 40
+      } else {
+        return 50
+      }
+    },
   },
   watch: {
     top: function() {
@@ -104,17 +111,17 @@ export default {
     calcSizeGrid: function(numb, type) {
       let size = 0;
       if (type == 'vert') {
-        size = Math.round(screen.width/Number(numb));
+        size = Math.round(document.body.clientWidth/Number(numb));
       } else {
-        size = Math.round(screen.height/Number(numb));
+        size = Math.round((document.body.clientHeight-this.headerTop))/Number(numb);
       }
       return size
 
     },
     drawElement: function() {
       this.step = JSON.parse(JSON.stringify(this.$store.getters.getSizeGrid(this.idDash)));
-      this.step.vert = Math.round(screen.width/Number(this.step.vert));
-      this.step.hor = Math.round(screen.height/Number(this.step.hor));
+      this.step.vert = Math.round(document.body.clientWidth/Number(this.step.vert));
+      this.step.hor = Math.round((document.body.clientHeight-this.headerTop)/Number(this.step.hor));
      
       let header;
       screen.width > 1400 ? header = 50 : header = 40;
