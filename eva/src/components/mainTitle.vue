@@ -49,19 +49,12 @@
       </v-card>
       <v-content id="content">
         <v-container class="dash-container">
-          <!--<div
-            v-if="gridShow"
-            class="overlay-grid"
-            :data-grid="sizeGrid"
-            :style="{background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
-            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontal}px ${horizontal}px`,height:heightOverlay}"
-          />-->
            <div
             v-if="gridShow"
             class="overlay-grid"
             :data-grid="sizeGrid"
-             :style="{top:headerTop ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
-            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontal}px ${horizontal}px`,height:`calc(100vh - ${headerTop})`}"
+             :style="{top:`${headerTop}px` ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
+            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontal}px ${horizontal}px`}"
           />
           <move-able 
             v-for="elem in elements" 
@@ -146,9 +139,9 @@ export default {
     },
     headerTop: function (){
       if(document.body.clientWidth <=1400){
-        return '40px'
+        return 40
       } else {
-        return '50px'
+        return 50
       }
     },
     theme: function() {
@@ -198,7 +191,7 @@ export default {
       if (type == 'vert') {
         size = Math.round(document.body.clientWidth/Number(numb));
       } else {
-        size = Math.round(document.body.clientHeight/Number(numb));
+        size = Math.round(document.body.clientHeight-this.headerTop)/Number(numb);
       }
       return size
 
@@ -234,7 +227,7 @@ export default {
   mounted() {
     let otstup = 0;
     
-    window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)
+  /*  window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)
       if (document.querySelector('.aplication')) {
         
         if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
@@ -245,8 +238,8 @@ export default {
         document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
         this.heightOverlay = `${document.body.clientHeight-50}px`;
       }
-    })
-    this.heightOverlay = `${document.body.clientHeight-50}px`;
+    })*/
+    //this.heightOverlay = `${document.body.clientHeight-50}px`;
     this.color = themes[this.theme];
   }
 }
@@ -295,6 +288,7 @@ export default {
       left: 0;
       width: 100%;
       opacity: 0.2;
+      height: calc(100vh - 50px);
       transition: all ease 0.3s
     }
     .dash-grid-layout {
