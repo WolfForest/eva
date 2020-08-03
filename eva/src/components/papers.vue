@@ -48,6 +48,7 @@
                 {{ arrowBack }}
               </v-icon>
               <v-file-input 
+                ref="fileLoad"
                 :style="{color: color.text,fill: color.text}" 
                 :color="color.controls" 
                 class="file-load-itself" 
@@ -467,11 +468,19 @@ export default {
         let result = await this.$store.getters.loadPaper(formData);
         if (result.status == 'success') {
           this.message("Файл успшено загружен");
+          this.setPaperBack();
         } else {
           this.message("Ошибка при загрузке файла");
+          this.setPaperBack();
         }
       }
-      
+    },
+    setPaperBack: function() {
+      setTimeout( () =>{
+        this.fileBlock=1;
+        this.uploadFile='';
+        this.$refs.fileLoad.$el.querySelector('.v-input__append-inner button').click();
+      },2000)
     },
     choosePaper: async function() {
       if (this.selectedFile == '') {
