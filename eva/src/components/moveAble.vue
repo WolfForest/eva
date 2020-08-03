@@ -113,69 +113,31 @@ export default {
       if (type == 'vert') {
         size = Math.round(document.body.clientWidth/Number(numb));
       } else {
-        size = Math.round((document.body.clientHeight-this.headerTop))/Number(numb);
+        size = Math.round((document.body.clientHeight-this.headerTop)/Number(numb));
       }
+      console.log(size)
       return size
 
     },
     drawElement: function() {
       this.step = JSON.parse(JSON.stringify(this.$store.getters.getSizeGrid(this.idDash)));
       this.step.vert = Math.round(document.body.clientWidth/Number(this.step.vert));
-      this.step.hor = Math.round((document.body.clientHeight-this.headerTop)/Number(this.step.hor));
+      this.step.hor = Math.round((document.body.clientHeight - this.headerTop)/Number(this.step.hor));
      
-      let header;
-      screen.width > 1400 ? header = 50 : header = 40;
       let pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
-      
+
       this.left = pos.left*this.step.vert;
-      this.top = (pos.top*this.step.hor)+header;
+      this.top = pos.top*this.step.hor;
       let size = this.$store.getters.getSizeDash({idDash: this.idDash, id: this.id});
+
       let width = size.width*this.step.vert;
       let height = size.height*this.step.hor;
+
       this.width = width;
       this.height =height;
-
     },
-    // onResize: function (x, y, width, height) {  // получаем позицию и размер элемента
-    //   this.props.top = y
-    //   this.props.left = x
-    //   this.props.width = width
-    //   this.props.height = height
-      
-    // },
-    // onDrag: function (x, y) {   // получаем позицию элемнета
-      
-    //   this.props.top = y
-    //   this.props.left = x
-    //   document.querySelector('.aplication').style.height =  `${document.body.scrollHeight}px`; // растягиваем контейнер на высоту страницы
-    // },
-    // dragStopped: function(left,top) {
-      
-      
-    //   //let result = {top: 0, left: 0};
-    //   let clientWidth = document.querySelector('#app').clientWidth;
-    //   if (top < 50) {
-    //     this.props.top = 70;
-    //   } 
-    //   if (left < 0) {
-    //     this.props.left = 20;
-    //   } 
-    //   if ((left+this.props.width) >  clientWidth) {
-    //     this.props.left = clientWidth - this.props.width - 20
-    //   } 
-    // },
-    // resize(newRect) {  // если перемещение разрешено то будем заносить позицию и размер для смены даных о элементе
-    //   if (this.props.draggable) {
-    //     this.props.width = newRect.width;
-    //     this.props.height = newRect.height;
-    //     this.props.top = newRect.top;
-    //     this.props.left = newRect.left;
-    //   }
-    // },
-    // moveSwitch() {  // переключает возможность транспортировки
-    //   this.props.draggable = !this.props.draggable;
-    // },
     sendMove(x,y) {  // отправляем позицию элемнета в хранилище
+      console.log('sendMove')
       let topFrom = y;
       let leftFrom = x;
       //let clientWidth = document.querySelector('#app').clientWidth;
@@ -197,11 +159,8 @@ export default {
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
 
     },
-    // resizeSwitch() {  // переключаем возможность изменения размеров элемента
-    //   this.props.resizable = !this.props.resizable;
-    //   this.props.vue_drag_none = !this.props.vue_drag_none;
-    // },
     sendSize(x,y,width,height) {  // отправляем размер элемента
+      console.log('sendSize')
       let header;
       screen.width > 1400 ? header = 50 : header = 40;
       let top = Math.round((y-header)/this.step.hor);
@@ -212,16 +171,6 @@ export default {
       this.$store.commit('setSizeDash', {width: newWidth, height: newHeight, id: this.id, idDash: this.idDash});
       
     },
-    // calcSizeProc(size,key) {
-    //   let newSize = size;
-    //   if (!Number(size)) {
-    //     newSize = (parseFloat(size)*screen[key])/100;
-    //   }
-    //   return Number(newSize.toFixed(1))
-    // },
-    // calcSizePx(size,key) {
-    //   return `${((size*100)/screen[key]).toFixed(1)}%`
-    // },
     changeOpacity(event){
       this.opacity = event;
     }
@@ -230,9 +179,9 @@ export default {
     this.drawElement()
   },
   updated() {
-    if(this.$refs.dragres) {
+   /* if(this.$refs.dragres) {
       this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${this.top}px)`;
-    }
+    }*/
   },
 }
 </script>

@@ -236,11 +236,11 @@ export default {
           otstup = 0;
         }
         document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
-        //this.heightOverlay = `${document.body.clientHeight-50}px`;
+        this.heightOverlay = `${document.body.clientHeight-50}px`;
       }
     })
     
-    //this.heightOverlay = `${document.body.clientHeight-50}px`;
+    this.heightOverlay = `${document.body.clientHeight-50}px`;
     this.color = themes[this.theme];
   }
 }
