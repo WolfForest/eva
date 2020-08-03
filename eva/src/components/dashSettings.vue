@@ -2,11 +2,10 @@
   <v-navigation-drawer
     v-model="gearShow"
     fixed
-    class="theme-setting"
     width="300"
     left
     :color="colorFrom.text"
-    :style="{background: colorFrom.backElement}"
+    :style="{background: colorFrom.backElement, top: `${top}px`}"
   >
     <div
       class="line-setting"
@@ -121,6 +120,13 @@ export default {
   computed: {
     active: function() {  
       return this.showFrom 
+    }, 
+    top: function(){
+       if(document.body.clientWidth <=1400){
+        return 40
+      } else {
+        return 50
+      }
     } 
   },  
   watch: {
