@@ -189,9 +189,10 @@ export default {
     calcSizeGrid: function(numb, type) {
       let size = 0;
       if (type == 'vert') {
-        size = Math.round(document.body.clientWidth/Number(numb));
+        //toFixed(x) округление до х знака
+        size = Number((document.body.clientWidth/Number(numb)).toFixed(1));
       } else {
-        size = Math.round(document.body.clientHeight-this.headerTop)/Number(numb);
+        size = Number(((document.body.clientHeight-this.headerTop)/Number(numb)).toFixed(1));
       }
       return size
 

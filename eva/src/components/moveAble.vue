@@ -113,7 +113,7 @@ export default {
       if (type == 'vert') {
         size = Math.round(document.body.clientWidth/Number(numb));
       } else {
-        size = Math.round((document.body.clientHeight-this.headerTop)/Number(numb));
+        size = Number(((document.body.clientHeight-this.headerTop)/Number(numb)).toFixed(1));
       }
       console.log(size)
       return size
