@@ -115,7 +115,6 @@ export default {
       } else {
         size = Number(((document.body.clientHeight-this.headerTop)/Number(numb)).toFixed(1));
       }
-      console.log(size)
       return size
 
     },
