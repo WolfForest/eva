@@ -144,7 +144,7 @@ export default {
       if (leftFrom < 0) {
         leftFrom = 0;
       } 
-      //для количества ячеек по высоте округляем до целого
+
       let top = Math.round((topFrom - this.headerTop)/this.step.hor)
       let left =  Number((leftFrom/this.step.vert).toFixed(1));
 
@@ -168,6 +168,13 @@ export default {
   },
   created() {
     this.drawElement()
+  },
+  updated() {
+    if(this.$refs.dragres) {
+      let _pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
+      let _shift = _pos.top * this.step.hor + this.headerTop
+      this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${_shift}px)`;
+    }
   },
 }
 </script>
