@@ -233,8 +233,10 @@ export default {
         
         if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
           otstup = 40;
+          //добавляем размер
         } else {
           otstup = 0;
+          //просто сработало событие
         }
         document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
         this.heightOverlay = `${document.body.clientHeight-50}px`;

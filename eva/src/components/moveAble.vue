@@ -172,6 +172,7 @@ export default {
     this.drawElement()
   },
   updated() {
+    //поддятигание компонентов к сетке
     if(this.$refs.dragres) {
       let _pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
       let _shift = _pos.top * this.step.hor + this.headerTop
@@ -183,7 +184,7 @@ export default {
       if(this.left <= 0){
         this.left = 0
       }
-      
+
       this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${_shift}px)`;
     }
   },
