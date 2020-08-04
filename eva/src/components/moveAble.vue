@@ -156,7 +156,7 @@ export default {
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
 
       let newWidth =  Number((width/this.step.vert).toFixed(1));
-      let newHeight =Number((height/this.step.hor).toFixed(1));
+      let newHeight = Number((height/this.step.hor).toFixed(1));
       this.$store.commit('setSizeDash', {width: newWidth, height: newHeight, id: this.id, idDash: this.idDash});
       
     },
