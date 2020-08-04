@@ -91,10 +91,10 @@ export default {
     },
   },
   watch: {
-    top: function() {
-      if (this.top < 0) {
-        this.top = 50;
-      } 
+    top: function(val) {
+       if(val <= this.headerTop){
+         val = this.headerTop
+       }
     },
     left: function() {
       let clientWidth = document.querySelector('#app').clientWidth;
@@ -140,13 +140,15 @@ export default {
       let leftFrom = x;
       let topFrom = y;
       
-   
-      if (leftFrom < 0) {
-        leftFrom = 0;
-      } 
-
       let top = Math.round((topFrom - this.headerTop)/this.step.hor)
+      if (top < 0 ) { 
+        top = 0
+      }
+
       let left =  Number((leftFrom/this.step.vert).toFixed(1));
+      if (left < 0 ) {
+        left = 0
+      }
 
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
 
