@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - fix download throw event
 
+- loose reactivity from multiline (settings don`t apply before)
+
 ### Changed
 
 - change work with component on grid table

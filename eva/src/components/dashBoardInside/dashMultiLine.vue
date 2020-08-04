@@ -134,7 +134,6 @@ export default {
     // },
     change: function() {
       if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0 && this.width != 0 && this.height != 0) {
-        
         this.props.legends = [];
         if (this.dataReport) {
           
@@ -251,7 +250,12 @@ export default {
   },
   methods: {
     getDataAsynchrony: function() {
-      
+      let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
+      let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
+      let metricsOpt = [];
+      if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
+        metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
+      }
       let prom = new Promise( resolve => { // создаем promise чтобы затем отрисовать график асинхронно
 
      
@@ -283,12 +287,7 @@ export default {
 
           this.props.nodata = false; // то убираем соощение о отсутствии данных
           this.props.result = this.dataRestFrom;  // заносим все данные в переменную
-          let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
-          let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
-          let metricsOpt = [];
-          if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
-            metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
-          }
+          
           if (this.props.legends.length == 0) {
             this.metrics = [];
             
