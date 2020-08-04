@@ -504,7 +504,6 @@ export default {
       this.steps['3'].loading = true;
       this.steps['4'].error = [];
       this.steps['4'].text = 'Обрабатываю отчет';
-
       let formData = new FormData();
       formData.append('file', this.selectedFile);
       formData.append('cid', JSON.stringify(this.dispSid));

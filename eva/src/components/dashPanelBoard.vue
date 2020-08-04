@@ -1329,10 +1329,11 @@ export default {
     setEvents: function() {
       if (this.textarea_event != null  && this.textarea_event != '') {
         let events = this.textarea_event.split('\n');
-        let reg,body,bodyArray,element,doing;
+        let reg,body,bodyArray,element,doing,originItem;
 
         if (events.length != 0) {
           events.forEach( item => {  
+            originItem = item;
             item =  item.replace(/\s/g, ''); 
             if (item != ''){
               reg = new RegExp( /^[\s+]?[\w]+\(/, "g");
@@ -1366,7 +1367,6 @@ export default {
                 this.$set(this.event,'tokenval',element.splice(2, element.length-1).join(','));
               } else {
                 this.$set(this.event,'element',element[0]);//click
-                //console.log(element)
                 if (element[1]){
                   if (element[1].indexOf('[') != -1) {
                     let j = -1;
@@ -1442,7 +1442,9 @@ export default {
                 this.$set(this.event,'header',doing[5]);
 
               } else if (doing[0].toLowerCase() == 'changeReport'.toLowerCase()) {
-                doing = doing[1].slice(0, doing[1].length-1).split(',');
+                
+                doing = originItem.split(doing[0])[1];
+                doing =  doing.replace(/\(/g, '').replace(/\)/g, '').split(','); 
                 this.$set(this.event,'sid',doing[0]);
                 if (doing[1].indexOf('[') != -1) {
                   doing.splice(0, 1);

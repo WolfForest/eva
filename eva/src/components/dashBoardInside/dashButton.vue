@@ -157,12 +157,14 @@ export default {
       link.remove(); // удаляем ссылку 
     },
     getPaper: async function(file,data) {
+      this.$emit('setLoading',true);
       let formData = new FormData();
       formData.append('file', file);
       formData.append('data', JSON.stringify(data));
       let result = await this.$store.getters.getPaper(formData);
       try {
         if (result.status == 'success') {
+          this.$emit('setLoading',false);
           this.downloadFile(result.file);
 
         } else {

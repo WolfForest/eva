@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - loose reactivity from multiline (settings don`t apply before)
 
+- understand space in name of file in event
+
 ### Changed
 
 - change work with component on grid table
