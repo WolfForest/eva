@@ -167,11 +167,6 @@ export default {
   created() {
     this.drawElement()
   },
-  updated() {
-   /* if(this.$refs.dragres) {
-      this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${this.top}px)`;
-    }*/
-  },
 }
 </script>
 
