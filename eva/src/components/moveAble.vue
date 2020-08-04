@@ -137,37 +137,26 @@ export default {
       this.height =height;
     },
     sendMove(x,y) {  // отправляем позицию элемнета в хранилище
-      console.log('sendMove')
       let topFrom = y;
       let leftFrom = x;
-      //let clientWidth = document.querySelector('#app').clientWidth;
    
       if (leftFrom < 0) {
         leftFrom = 0;
       } 
-      // if ((left+this.props.width) >  clientWidth) {   ПОДУМАТЬ ОБ ЭТОМ
-      //   this.props.left = clientWidth - this.props.width - 20
-      // } 
-      let header;
-      screen.width > 1400 ? header = 50 : header = 40;
-      let top = Math.round((topFrom-header)/this.step.hor);
-      let left =  Math.round(leftFrom/this.step.vert);
-      // if (top < 0) {
-      //   top = 0;
-      // } 
-      // console.log(top)
+
+      let top = Number(((topFrom - this.headerTop)/this.step.hor).toFixed(1));
+      let left =  Number((leftFrom/this.step.vert).toFixed(1));
+
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
 
     },
     sendSize(x,y,width,height) {  // отправляем размер элемента
-      console.log('sendSize')
-      let header;
-      screen.width > 1400 ? header = 50 : header = 40;
-      let top = Math.round((y-header)/this.step.hor);
-      let left =  Math.round(x/this.step.vert);
+      let top = Number(((y - this.headerTop)/this.step.hor).toFixed(1));
+      let left =  Number((x/this.step.vert).toFixed(1));
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
-      let newWidth = Math.round(width/this.step.vert);
-      let newHeight = Math.round(height/this.step.hor);
+
+      let newWidth =  Number((width/this.step.vert).toFixed(1));
+      let newHeight =Number((height/this.step.hor).toFixed(1));
       this.$store.commit('setSizeDash', {width: newWidth, height: newHeight, id: this.id, idDash: this.idDash});
       
     },
