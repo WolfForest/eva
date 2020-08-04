@@ -4,6 +4,7 @@
     fixed
     width="300"
     left
+    class="left-dash-setting"
     :color="colorFrom.text"
     :style="{background: colorFrom.backElement, top: `${top}px`}"
   >
