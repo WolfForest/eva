@@ -148,10 +148,10 @@ export default {
       }
     }, 
     downloadFile: function(fileLink) {
-      
       let namefile = fileLink.split('/')[2];
+      let url = `${window.location.protocol}//${window.location.host}/${fileLink}`;
       let link = this.$refs.buttonEl.parentElement.appendChild(document.createElement("a")); // создаем ссылку
-      link.setAttribute('href', this.fileLink); // указываем ссылке что надо скачать наш файл csv
+      link.setAttribute('href', url); // указываем ссылке что надо скачать наш файл csv
       link.setAttribute("download", namefile); // указываем имя файла 
       link.click(); // жмем на скачку
       link.remove(); // удаляем ссылку 

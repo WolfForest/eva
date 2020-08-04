@@ -559,7 +559,6 @@ export default {
     downloadFile: function() {
       
       let namefile = this.fileLink.split('/')[2];
-
       let link = this.$refs.stepper.$el.appendChild(document.createElement("a")); // создаем ссылку
       link.setAttribute('href', this.fileLink); // указываем ссылке что надо скачать наш файл csv
       link.setAttribute("download", namefile); // указываем имя файла 
@@ -783,7 +782,6 @@ export default {
       
     },
     changeVisTab: function(number){
-      console.log('afs')
       let img = `<img class="vis-image" src="data:image/png;base64,${this.html[number]}" />`;
       this.$refs.vis.innerHTML = img;
     }
