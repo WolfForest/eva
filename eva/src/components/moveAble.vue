@@ -121,13 +121,13 @@ export default {
     },
     drawElement: function() {
       this.step = JSON.parse(JSON.stringify(this.$store.getters.getSizeGrid(this.idDash)));
-      this.step.vert = Math.round(document.body.clientWidth/Number(this.step.vert));
-      this.step.hor = Math.round((document.body.clientHeight - this.headerTop)/Number(this.step.hor));
-     
+      this.step.vert = Number((document.body.clientWidth/Number(this.step.vert)).toFixed(1));
+      this.step.hor = Number(((document.body.clientHeight - this.headerTop)/Number(this.step.hor)).toFixed(1))
       let pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
 
       this.left = pos.left*this.step.vert;
-      this.top = pos.top*this.step.hor;
+      this.top = pos.top*this.step.hor + this.headerTop;
+
       let size = this.$store.getters.getSizeDash({idDash: this.idDash, id: this.id});
 
       let width = size.width*this.step.vert;
