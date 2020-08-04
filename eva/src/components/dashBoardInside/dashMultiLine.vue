@@ -134,6 +134,7 @@ export default {
     // },
     change: function() {
       if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0 && this.width != 0 && this.height != 0) {
+        
         this.props.legends = [];
         if (this.dataReport) {
           
@@ -250,6 +251,7 @@ export default {
   },
   methods: {
     getDataAsynchrony: function() {
+      
       let prom = new Promise( resolve => { // создаем promise чтобы затем отрисовать график асинхронно
 
      
@@ -333,6 +335,7 @@ export default {
       this.$store.commit('setMetricsMulti', {metrics: this.metrics, idDash: this.idDash, id: this.id });
     },
     createLineChart: function (props,that,sizeLine,time,united,lastDot,metricsOpt) {  // создает график
+    
       let colors = [this.color.controls,this.color.text,this.color.controlsActive,'#660099','#3366FF','#e5194a',]; // основные используемые цвета
       let colorLine = this.colorLegends;
   
