@@ -137,21 +137,23 @@ export default {
       this.height =height;
     },
     sendMove(x,y) {  // отправляем позицию элемнета в хранилище
-      let topFrom = y;
       let leftFrom = x;
+      let topFrom = y;
+      
    
       if (leftFrom < 0) {
         leftFrom = 0;
       } 
-
-      let top = Number(((topFrom - this.headerTop)/this.step.hor).toFixed(1));
+      //для количества ячеек по высоте округляем до целого
+      let top = Math.round((topFrom - this.headerTop)/this.step.hor)
       let left =  Number((leftFrom/this.step.vert).toFixed(1));
 
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
 
     },
     sendSize(x,y,width,height) {  // отправляем размер элемента
-      let top = Number(((y - this.headerTop)/this.step.hor).toFixed(1));
+    //для количества ячеек по высоте  округляем до целого
+      let top = Math.round((y - this.headerTop)/this.step.hor)
       let left =  Number((x/this.step.vert).toFixed(1));
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
 
