@@ -175,6 +175,15 @@ export default {
     if(this.$refs.dragres) {
       let _pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
       let _shift = _pos.top * this.step.hor + this.headerTop
+
+      if(_shift <= this.headerTop){
+        _shift = this.headerTop
+      }
+
+      if(this.left <= 0){
+        this.left = 0
+      }
+      
       this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${_shift}px)`;
     }
   },
