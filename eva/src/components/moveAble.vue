@@ -89,6 +89,9 @@ export default {
         return 50
       }
     },
+    getSizeGrid: function(){
+      return this.$store.getters.getSizeGrid(this.idDash)
+    }
   },
   watch: {
     top: function(val) {
@@ -106,6 +109,13 @@ export default {
         this.left = clientWidth - this.width;
       } 
     },
+    getSizeGrid: function(){
+      //изменилась сетка -- задаем сетку для расчетов
+      this.setStep()
+      //перерисовывам
+      this.drawElement()
+
+    }
   },
   methods: {
     calcSizeGrid: function(numb, type) {
