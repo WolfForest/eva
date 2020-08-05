@@ -233,7 +233,6 @@ export default {
         
         if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
           //добавляем размер
-          console.log(this.horizontal)
           this.countScroll ++ 
           otstup = this.horizontal * this.countScroll;
         } else {

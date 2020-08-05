@@ -179,7 +179,7 @@ export default {
     if(this.$refs.dragres) {
       let _pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
       let _shift = _pos.top * this.step.hor + this.headerTop
-      console.log(_shift,'=', _pos.top, '*', this.step.hor,'+',this.headerTop)
+      
       if(_shift <= this.headerTop){
         _shift = this.headerTop
       }
