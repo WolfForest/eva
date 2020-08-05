@@ -126,7 +126,11 @@ export default {
       if (!this.permissionsFrom.includes('admin_all') && !this.permissionsFrom.includes('editdash')) {
         this.mode = false;
         this.dragresable = false;
-        this.gridShow = false;
+        this.gridShow = false;   
+      } else {
+        this.mode = true;
+        this.dragresable = true;
+        this.gridShow = true;  
       }
       return true
     } 

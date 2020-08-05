@@ -328,7 +328,9 @@ export default {
       document.cookie = `eva-dashPage=${JSON.stringify(group)}; max-age=3600; path=/`;
       this.getDashs(this.curGroup)
     },
-    setPermissions: function(event) { 
+    setPermissions: function(event) {
+      this.editDashPermission = false; 
+      this.editGroupPermission = false;
       if (event.includes('admin_all') || event.includes('managedash')) {
         this.editDashPermission = true;
       }   
