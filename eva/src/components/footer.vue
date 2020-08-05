@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: 'v 1.50.1 [setTockenSingle]',
+      version: 'v 1.50.1 [paperFromTest]',
       color: { },
     } 
   },

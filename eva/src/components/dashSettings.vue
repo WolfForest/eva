@@ -7,6 +7,7 @@
     left
     :color="colorFrom.text"
     :style="{background: colorFrom.backElement}"
+    :permissions="permissions"
   >
     <div
       class="line-setting"
@@ -102,6 +103,7 @@ export default {
     colorFrom: null,
     gearFrom: null,
     idDashFrom: null,
+    permissionsFrom: null
   },
   data () {
     return {
@@ -119,6 +121,14 @@ export default {
   computed: {
     active: function() {  
       return this.showFrom 
+    },
+    permissions: function() {
+      if (!this.permissionsFrom.includes('admin_all') && !this.permissionsFrom.includes('editdash')) {
+        this.mode = false;
+        this.dragresable = false;
+        this.gridShow = false;
+      }
+      return true
     } 
   },  
   watch: {
@@ -134,7 +144,7 @@ export default {
     },
     gridShow: function() {
       this.$store.commit('setGridShow', {id: this.idDashFrom,item: String(this.gridShow)});
-    }
+    },
   },
   methods: {
     sendSizeGrid: function() {

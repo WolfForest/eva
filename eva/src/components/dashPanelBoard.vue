@@ -30,6 +30,7 @@
           <span>Поменять режим отображения</span>
         </v-tooltip> -->
         <v-tooltip 
+          v-if="editPermission"
           bottom 
           :color="color.controlsActive" 
         >
@@ -635,6 +636,7 @@
     <dash-settings 
       :color-from="color" 
       :gear-from="gearShow"
+      :permissions-from="permissionsFrom"
       :idDashFrom="idDashFrom"
       @changeMode="setEditMode"
     />
@@ -660,6 +662,7 @@ export default {
   props: {
     idDashFrom: null,
     colorFrom: null,
+    permissionsFrom: null,
   },
   data () {
     return {
@@ -819,6 +822,12 @@ export default {
       } else {
         return `fill:#DADADA`;
       }
+    },
+    editPermission: function() {
+      if (this.permissionsFrom.includes('admin_all') || this.permissionsFrom.includes('editdash')) {
+        return true
+      }
+      return false
     },
     // editSwitch: function() {
     //   if (this.edit_elem) {
@@ -1078,23 +1087,23 @@ export default {
     
       this.$store.auth.getters.putLog(`Запущен запрос  ${event.sid}`);
       //   let response = await this.$store.getters.getDataAPI({search: event, idDash: this.idDash});  // собственно проводим все операции с данными 
-      let response = await this.$store.getters.getDataApi({search: event, idDash: this.idDash});
-      // вызывая метод в хранилище 
-      if ( response.length == 0) {  // если что-то пошло не так 
-        this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: true  });  
-        this.$set(this.loadings,event.sid,false);  // выключаем строку загрузки
-      } else {  // если все нормально
-        let responseDB = this.$store.getters.putIntoDB(response, event.sid, this.idDash);
-        responseDB
-          .then(
-            result => {
-              let refresh =  this.$store.getters.refreshElements(this.idDash, event.sid, );
-              this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: false  }); 
-              this.disabledDS[event.sid] = false;
-            },
-          );
-        this.$set(this.loadings,event.sid,false);  // выключаем полосу загрузки
-      }
+      // let response = await this.$store.getters.getDataApi({search: event, idDash: this.idDash});
+      // // вызывая метод в хранилище 
+      // if ( response.length == 0) {  // если что-то пошло не так 
+      //   this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: true  });  
+      //   this.$set(this.loadings,event.sid,false);  // выключаем строку загрузки
+      // } else {  // если все нормально
+      //   let responseDB = this.$store.getters.putIntoDB(response, event.sid, this.idDash);
+      //   responseDB
+      //     .then(
+      //       result => {
+      //         let refresh =  this.$store.getters.refreshElements(this.idDash, event.sid, );
+      //         this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: false  }); 
+      //         this.disabledDS[event.sid] = false;
+      //       },
+      //     );
+      //   this.$set(this.loadings,event.sid,false);  // выключаем полосу загрузки
+      // }
     },
     yesSearch: function() {  // кнопка согласия на обновления если ИС или токен уже существует
       let elem = event.target.nodeName.toLowerCase() != 'button' ? event.target.parentElement : event.target;  // сперва берем родителя кнопки, и если не получилось поймать кнопку, то еще выше уровнеь берем
@@ -1554,7 +1563,10 @@ export default {
     if (eventFull != '') {
       this.textarea_event = eventFull;
     }
-    document.querySelector('.block-code').style.maxHeight = `${document.querySelector('#content').clientHeight-100}px`;
+    if (document.querySelector('.block-code')) {
+      document.querySelector('.block-code').style.maxHeight = `${document.querySelector('#content').clientHeight-100}px`;
+    }
+
     this.colorGear = 'controls';
     this.colorExim = 'controls';
     // this.fieldsets = document.querySelectorAll('fieldset');

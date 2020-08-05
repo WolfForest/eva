@@ -248,6 +248,7 @@ export default {  // приблизительный объект хранили�
     },
     setDash: (state, dash) => {  // обновляем порядок layout на странице
       let dashboard = dash.data;
+      
       if (!state[dashboard.id]) {
         
         Vue.set(state, dashboard.id , {});
@@ -359,7 +360,6 @@ export default {  // приблизительный объект хранили�
       state[layout.name] = state[layout.old_name];  // делаем копию дашборда
       state[layout.name].name = layout.name[0].toUpperCase() + layout.name.substring(1); // но меняем в нем имя с большой буквы для красоты
       delete state[layout.old_name];  // удаляем старый дашборд с которого скопировали
-
       let layouts = state.layouts.map( item => {  // пробегаем массив дашбордов и в нем заменяем имя старого дашборда на новый
         if (item == layout.old_name) {
           return layout.name
@@ -1115,6 +1115,7 @@ export default {  // приблизительный объект хранили�
       }
     },
     getEventFull(state) {  // получаем скриншот страницы
+     
       return (id) => {
         if (state[id].eventFull) {
           return state[id].eventFull
@@ -1233,7 +1234,9 @@ export default {  // приблизительный объект хранили�
                     
               if (!state[id]) { 
                 Vue.set(state, id, {});
+               
                 if (stateFrom.body != '') {
+                  
                   Vue.set(state, id, JSON.parse(stateFrom.body));
                 }
                 Vue.set(state[id], 'name', stateFrom.name);

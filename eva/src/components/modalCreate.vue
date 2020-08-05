@@ -169,7 +169,6 @@ export default {
     dashFrom: null,
     curGroupFrom: null,
     nameGroupFrom: null,
-    permissionsFrom: null,
   },
   data () {
     return {
