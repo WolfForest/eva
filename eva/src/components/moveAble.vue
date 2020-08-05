@@ -119,10 +119,12 @@ export default {
       return size
 
     },
-    drawElement: function() {
+    setStep: function() {
       this.step = JSON.parse(JSON.stringify(this.$store.getters.getSizeGrid(this.idDash)));
       this.step.vert = Number((document.body.clientWidth/Number(this.step.vert)).toFixed(1));
       this.step.hor = Number(((document.body.clientHeight - this.headerTop)/Number(this.step.hor)).toFixed(1))
+    },
+    drawElement: function() {
       let pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
 
       this.left = pos.left*this.step.vert;
@@ -169,6 +171,7 @@ export default {
     }
   },
   created() {
+    this.setStep()
     this.drawElement()
   },
   updated() {
@@ -176,7 +179,7 @@ export default {
     if(this.$refs.dragres) {
       let _pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
       let _shift = _pos.top * this.step.hor + this.headerTop
-
+      console.log(_shift,'=', _pos.top, '*', this.step.hor,'+',this.headerTop)
       if(_shift <= this.headerTop){
         _shift = this.headerTop
       }

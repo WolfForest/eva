@@ -53,7 +53,7 @@
             v-if="gridShow"
             class="overlay-grid"
             :data-grid="sizeGrid"
-             :style="{top:`${headerTop}px` ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
+             :style="{height: `calc(100vh - ${headerTop}px + ${(countScroll+1)*horizontal}px)`,top:`${headerTop}px` ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
             rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontal}px ${horizontal}px`}"
           />
           <move-able 
@@ -109,9 +109,9 @@ export default {
       letElements: false,
       prepared: false,
       colorChange: false,
-      heightOverlay: '100vh',
       vertical: 60,
       horizontal: 60,
+      countScroll: 0, // сколько раз запустили увеличение размера на скролл
     }
   },   
   computed: {
@@ -232,18 +232,18 @@ export default {
       if (document.querySelector('.aplication')) {
         
         if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
-          otstup = 40;
           //добавляем размер
+          console.log(this.horizontal)
+          this.countScroll ++ 
+          otstup = this.horizontal * this.countScroll;
         } else {
           otstup = 0;
           //просто сработало событие
         }
         document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
-        this.heightOverlay = `${document.body.clientHeight-50}px`;
       }
     })
     
-    this.heightOverlay = `${document.body.clientHeight-50}px`;
     this.color = themes[this.theme];
   }
 }
@@ -292,7 +292,6 @@ export default {
       left: 0;
       width: 100%;
       opacity: 0.2;
-      height: calc(100vh - 50px);
       transition: all ease 0.3s
     }
     .dash-grid-layout {
