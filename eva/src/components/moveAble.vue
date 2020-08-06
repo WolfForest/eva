@@ -187,6 +187,7 @@ export default {
   updated() {
     //поддятигание компонентов к сетке
     if(this.$refs.dragres) {
+      //поддтяжка кординат
       let _pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
       let _shift = _pos.top * this.step.hor + this.headerTop
       
@@ -198,6 +199,10 @@ export default {
         this.left = 0
       }
       this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${_shift}px)`;
+
+      //поддтяжка высоты
+      let size = this.$store.getters.getSizeDash({idDash: this.idDash, id: this.id});
+      this.$refs.dragres.$el.style.height = `${size.height * this.step.hor}px`
     }
   },
 }
