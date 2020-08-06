@@ -109,7 +109,7 @@ export default {
         this.left = clientWidth - this.width;
       } 
     },
-    getSizeGrid: function(){
+    getSizeGrid: function() {
       //изменилась сетка -- задаем сетку для расчетов
       this.setStep()
       //перерисовывам

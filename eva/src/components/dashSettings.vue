@@ -6,7 +6,7 @@
     left
     class="left-dash-setting"
     :color="colorFrom.text"
-    :style="{background: colorFrom.backElement, top: `${top}px`}"
+    :style="{background: colorFrom.backElement, borderTop:`2px solid ${colorFrom.panel}`,borderBottom:`2px solid ${colorFrom.panel}`}"
   >
     <div
       class="line-setting"
@@ -122,13 +122,6 @@ export default {
     active: function() {  
       return this.showFrom 
     }, 
-    top: function(){
-       if(document.body.clientWidth <=1400){
-        return 40
-      } else {
-        return 50
-      }
-    } 
   },  
   watch: {
     gearFrom: function (gear) {
