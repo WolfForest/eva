@@ -5,7 +5,10 @@
     class="theme-setting"
     right
     :color="colorFrom.text"
-    :style="{background: colorFrom.backElement}"
+    :style="{background: colorFrom.backElement, 
+            borderTop:`2px solid ${colorFrom.panel}`,
+            borderBottom:`2px solid ${colorFrom.panel}`,
+            borderLeft:`2px solid ${colorFrom.panel}`}"
   >
     <div class="theme-btn">
       <v-btn 
