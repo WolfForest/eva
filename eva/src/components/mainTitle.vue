@@ -226,8 +226,8 @@ export default {
     }
   },
   mounted() {
-    let otstup = 0;
     let  _startClientHeight = document.body.clientHeight - this.headerTop
+    let otstup = _startClientHeight;
     window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)       
       if (document.querySelector('.aplication')) {
         if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
