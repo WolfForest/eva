@@ -474,6 +474,7 @@ export default {  // приблизительный объект хранили�
         item.value == 'true' ? item.value = true: false // переводи строковое значение в bolean
         item.value == 'false' ? item.value = false: false
         Vue.set( state[events.idDash][item.target].options, item.prop , item.value);
+        console.log('done set color')
       })
     },
     letEventGo: (state,event) => {  // при переходе на другой дашборд нам нужно обновить определенный токен

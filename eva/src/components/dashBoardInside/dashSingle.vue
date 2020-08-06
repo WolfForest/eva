@@ -59,7 +59,7 @@ export default {
         },
       ],
       noMsg: true,
-      msgText: 'Нет данных для отображения'
+      msgText: 'Нет данных для отображения',
     } 
   },
   computed: {
@@ -100,10 +100,11 @@ export default {
     },
     color: function() {
       let options = this.$store.getters.getOptions({idDash: this.idDash, id: this.id});
+      console.log(options)
       let color = this.colorFrom.controls;
       if(options.color){
         color = options.color;
-      }  
+      } 
       return color
     },
     changeSize: function() {
@@ -170,7 +171,10 @@ export default {
         flag = -1;
       });
 
+      
+
       events = this.$store.getters.getEvents({idDash: this.idDash, event: 'onValueCompare', element: this.id});
+      
 
       let treshold, color, value;
 
@@ -188,6 +192,7 @@ export default {
           this.$store.commit('letEventSet', {events: [{target: item.target,prop: item.prop[0],value: ''}], idDash: this.idDash,  });
         }
       });
+
             
     },
     setClick: function() {
