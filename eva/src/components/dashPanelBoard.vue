@@ -1086,24 +1086,23 @@ export default {
 
     
       this.$store.auth.getters.putLog(`Запущен запрос  ${event.sid}`);
-      //   let response = await this.$store.getters.getDataAPI({search: event, idDash: this.idDash});  // собственно проводим все операции с данными 
-      // let response = await this.$store.getters.getDataApi({search: event, idDash: this.idDash});
-      // // вызывая метод в хранилище 
-      // if ( response.length == 0) {  // если что-то пошло не так 
-      //   this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: true  });  
-      //   this.$set(this.loadings,event.sid,false);  // выключаем строку загрузки
-      // } else {  // если все нормально
-      //   let responseDB = this.$store.getters.putIntoDB(response, event.sid, this.idDash);
-      //   responseDB
-      //     .then(
-      //       result => {
-      //         let refresh =  this.$store.getters.refreshElements(this.idDash, event.sid, );
-      //         this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: false  }); 
-      //         this.disabledDS[event.sid] = false;
-      //       },
-      //     );
-      //   this.$set(this.loadings,event.sid,false);  // выключаем полосу загрузки
-      // }
+      let response = await this.$store.getters.getDataApi({search: event, idDash: this.idDash}); // собственно проводим все операции с данными 
+      // вызывая метод в хранилище 
+      if ( response.length == 0) {  // если что-то пошло не так 
+        this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: true  });  
+        this.$set(this.loadings,event.sid,false);  // выключаем строку загрузки
+      } else {  // если все нормально
+        let responseDB = this.$store.getters.putIntoDB(response, event.sid, this.idDash);
+        responseDB
+          .then(
+            result => {
+              let refresh =  this.$store.getters.refreshElements(this.idDash, event.sid, );
+              this.$store.commit('setLoading', {search: event.sid, idDash: this.idDash, should: false, error: false  }); 
+              this.disabledDS[event.sid] = false;
+            },
+          );
+        this.$set(this.loadings,event.sid,false);  // выключаем полосу загрузки
+      }
     },
     yesSearch: function() {  // кнопка согласия на обновления если ИС или токен уже существует
       let elem = event.target.nodeName.toLowerCase() != 'button' ? event.target.parentElement : event.target;  // сперва берем родителя кнопки, и если не получилось поймать кнопку, то еще выше уровнеь берем
@@ -1349,10 +1348,8 @@ export default {
               this.$set(this.event,'event',reg.exec(item)[0].replace('(',''));
               reg = new RegExp( /\(.+\)/, "g");               
               body = reg.exec(item)[0];
-              
               body = body.slice(1, body.length-1);      
               bodyArray = body.split(',');
-              
               bodyArray.forEach( (elem,i) => {
                 if(elem.indexOf('(') != -1) {
                   element = bodyArray.splice(0, i);
@@ -1374,6 +1371,19 @@ export default {
                 this.$set(this.event,'compare',element[0]);
                 this.$set(this.event,'token',element[1]);
                 this.$set(this.event,'tokenval',element.splice(2, element.length-1).join(','));
+              } else if(this.event.event == 'onValueCompare') {
+                if (element.length == 2) {
+                  this.$set(this.event,'treshold',element[0]);
+                  this.$set(this.event,'color',element[1]);
+                } else {
+                  for (let i = 0; i< element.length; i++) {
+                    if (element[i].indexOf(']') != -1) {
+                      this.$set(this.event,'treshold',element.slice(0, i+1).join(','))
+                      this.$set(this.event,'color',element.slice(i+1, element.length).join(','))
+                      break
+                    }
+                  }
+                }
               } else {
                 this.$set(this.event,'element',element[0]);//click
                 if (element[1]){
@@ -1398,13 +1408,14 @@ export default {
                 }
 
               }
-            
               reg = new RegExp( /\w+\(.+\)/, "g");
               doing = reg.exec(body)[0];
               doing = doing.split('(');
               this.$set(this.event,'action',doing[0]);
               if (doing[0].toLowerCase() == 'set'.toLowerCase()) {
+                
                 doing = doing[1].slice(0, doing[1].length-1).split(',');
+               
                 this.$set(this.event,'target',doing[0]);
                 doing.splice(0,1);
                 doing = doing.join(',');
@@ -1419,7 +1430,11 @@ export default {
                   this.$set(this.event,'value',['']);
                 } else {
                   this.$set(this.event,'prop',doing[0].split(','));
-                  this.$set(this.event,'value',doing[1].split(','));
+                  if (doing[1]) {
+                    this.$set(this.event,'value',doing[1].split(','));
+                  } else {
+                    this.$set(this.event,'value',['']);
+                  }
                 } 
               
               } else if(doing[0].toLowerCase() == 'go'.toLowerCase()) {///go
