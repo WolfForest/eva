@@ -100,7 +100,6 @@ export default {
     },
     color: function() {
       let options = this.$store.getters.getOptions({idDash: this.idDash, id: this.id});
-      console.log(options)
       let color = this.colorFrom.controls;
       if(options.color){
         color = options.color;

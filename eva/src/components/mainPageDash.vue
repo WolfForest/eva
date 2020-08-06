@@ -193,7 +193,7 @@
                   absolute
                   top
                   right
-                  @click="() => {modalCreateGroup=true; createGroupFlag=false; actionBtn='create'; curGroup=-1}"
+                  @click="() => {modalCreateGroup=true; createGroupFlag=false; actionBtn='create'; curGroup=curGroup}"
                 >
                   <v-icon>
                     {{ plus }}
@@ -348,7 +348,7 @@ export default {
       }
     },
     goToDash: function(i) {
-      this.$store.commit('setDash',{data: this.allDashs[i],getters: this.$store.getters.checkAlreadyDash});
+      this.$store.commit('setDash',{data: this.allDashs[i], getters: this.$store.getters.checkAlreadyDash});
       this.$router.push(`/dashboards/${this.allDashs[i].id}`);
     },
     deleteElem: function() {

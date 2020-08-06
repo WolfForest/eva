@@ -549,6 +549,26 @@ export default {
 
     return data
   },
+  async getDashByName(param,restAuth) { 
+    let data = [];
+    let response = await fetch(`/api/dashByName?name="${param.name}"&idgroup=${param.idgroup}`)
+      .catch (error => {
+        restAuth.putLog(`Получить дашборд ${param.name} не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+        return []
+      }) 
+    if (response.status == 200) {  // если получилось
+      await response.json().then( res => {  // переводим полученные данные из json в нормальный объект
+        data = res.data; 
+        restAuth.putLog(`Дашборд ${param.name} получен.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+      }).catch( error => {
+        restAuth.putLog(`Получить дашборд ${param.name} не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}&nbsp;&nbsp;Ошибка: ${error}`);
+      }) 
+    }  else {
+      restAuth.putLog(`Получить дашборд ${param.name} не удалось.&nbsp;&nbsp;status: ${response.status}&nbsp;&nbsp;url: ${response.url}`);
+      return response
+    }
+    return data
+  },
   
  
 };
