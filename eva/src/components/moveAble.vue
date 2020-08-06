@@ -7,7 +7,7 @@
     :y="top" 
     :draggable="dragRes" 
     :resizable="dragRes" 
-    :data-grid="true"
+    :data-grid="sizeGrid"
     :style="{zIndex:props.zIndex, outlineColor: color.controlsActive, background: color.controlsActive, opacity:opacity }" 
     @resizestop="sendSize"
     @dragstop="sendMove" 

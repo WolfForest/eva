@@ -52,9 +52,9 @@
            <div
             v-if="gridShow"
             class="overlay-grid"
-            :data-grid="true"
-             :style="{height: `calc(100vh - ${headerTop}px + ${deltaHorizontal}px)`,top:`${headerTop}px` ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${verticalCell}px ${verticalCell}px,
-            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontalCell}px ${horizontalCell}px`}"
+            :data-grid="sizeGrid"
+             :style="{height: `calc(100vh - ${headerTop}px + ${(countScroll+1)*horizontal}px)`,top:`${headerTop}px` ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
+            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontal}px ${horizontal}px`}"
           />
           <move-able 
             v-for="elem in elements" 
@@ -63,9 +63,7 @@
             :colorFrom="color" 
             :idDashFrom="idDash" 
             :dataElem="elem" 
-            :dataPageFrom="page"
-            :verticalCell="verticalCell"
-            :horizontalCell="horizontalCell"
+            :dataPageFrom="page" 
           />
           <modal-delete 
             :colorFrom="color" 
@@ -111,11 +109,9 @@ export default {
       letElements: false,
       prepared: false,
       colorChange: false,
-      verticalCell: 60,
-      horizontalCell: 60,
-      deltaHorizontal:0,//сколько надо увеличить высоту overlay-grid,по первое знач-500,
-      startClientHeight:0,//первоначальная высота
-      startClientWidth:0, //первоначальная ширина
+      vertical: 60,
+      horizontal: 60,
+      countScroll: 0, // сколько раз запустили увеличение размера на скролл
     }
   },   
   computed: {
@@ -158,6 +154,16 @@ export default {
         return 'flex'
       }
     },
+    sizeGrid: function() {
+      let grid = this.$store.getters.getSizeGrid(this.idDash);
+      if (grid.vert != '') {
+        this.vertical = this.calcSizeGrid(grid.vert,'vert');
+      }
+      if (grid.hor != '') {
+        this.horizontal = this.calcSizeGrid(grid.hor,'hor');
+      }
+      return true
+    },
     gridShow: function() {
       let gridShow = this.$store.getters.getGridShow(this.idDash);
       gridShow == 'true' ? gridShow = true : gridShow = false;
@@ -179,6 +185,17 @@ export default {
     },
     openSettings: function() {
       this.showSetting = !this.showSetting;
+    },
+    calcSizeGrid: function(numb, type) {
+      let size = 0;
+      if (type == 'vert') {
+        //toFixed(x) округление до х знака
+        size = Number((document.body.clientWidth/Number(numb)).toFixed(1));
+      } else {
+        size = Number(((document.body.clientHeight-this.headerTop)/Number(numb)).toFixed(1));
+      }
+      return size
+
     },
     setPermissions: function(event) { 
       if (event.includes('admin_all')) {
@@ -206,46 +223,27 @@ export default {
         } 
         this.prepared = true;
       })
-    },
-    addScrollListener: function(){ 
-      //наблюдение за скроллом
-      let otstup = 0;
-      window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)       
+    }
+  },
+  mounted() {
+    let otstup = 0;
+    
+    window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)
       if (document.querySelector('.aplication')) {
+        
         if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
           //добавляем размер
-          otstup = this.horizontal;
+          console.log(this.horizontal)
+          this.countScroll ++ 
+          otstup = this.horizontal * this.countScroll;
         } else {
           otstup = 0;
           //просто сработало событие
         }
-        let _maxHeigth = (Math.round(document.querySelector('.aplication').clientHeight/this.horizontal)) * this.horizontal
-        this.deltaHorizontal = (_maxHeigth - this.startClientHeight)
-
         document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
-        }
-      })
-    },
-    createStartClient: function(){ 
-      //первоначальные значения высоты и ширины
-      this.startClientHeight = document.body.clientHeight - this.headerTop
-      this.startClientWidth = document.body.clientWidth
-    },
-    calcSizeCell: function(){
-      //размер ячейки
-      let grid = this.$store.getters.getSizeGrid(this.idDash);
-      this.verticalCell = (this.startClientWidth /grid.vert).toFixed(1);
-      this.horizontalCell =  (this.startClientHeight/ grid.hor).toFixed(1);
-    }
+      }
+    })
     
-  },
-  mounted() {
-    //первоначальные значения высоты и ширины
-    this.createStartClient();
-    //размер ячейки
-    this.calcSizeCell();
-    //наблюдение за скроллом
-    this.addScrollListener();    
     this.color = themes[this.theme];
   }
 }
