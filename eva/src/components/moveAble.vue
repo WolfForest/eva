@@ -7,8 +7,7 @@
     :y="top" 
     :draggable="dragRes" 
     :resizable="dragRes" 
-    :data-grid="sizeGrid"
-    :grid="props.grid"
+    :data-grid="true"
     :style="{zIndex:props.zIndex, outlineColor: color.controlsActive, background: color.controlsActive, opacity:opacity }" 
     @resizestop="sendSize"
     @dragstop="sendMove" 
@@ -37,6 +36,8 @@ export default {
     dataElem: null,
     colorFrom: null,
     dataPageFrom: null,
+    verticalCell: null,
+    horizontalCell: null
   },
   data () {
     return {
