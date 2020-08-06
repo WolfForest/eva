@@ -145,8 +145,8 @@ export default {
       let width = size.width*this.step.vert;
       let height = size.height*this.step.hor;
 
-      this.width = width;
-      this.height =height;
+      this.width  = width;
+      this.height = height;
     },
     sendMove(x,y) {  // отправляем позицию элемнета в хранилище
       let leftFrom = x;
@@ -157,7 +157,7 @@ export default {
         top = 0
       }
 
-      let left =  Number((leftFrom/this.step.vert).toFixed(1));
+      let left =  Math.round(leftFrom/this.step.vert);
       if (left < 0 ) {
         left = 0
       }
@@ -168,11 +168,11 @@ export default {
     sendSize(x,y,width,height) {  // отправляем размер элемента
     //для количества ячеек по высоте  округляем до целого
       let top = Math.round((y - this.headerTop)/this.step.hor)
-      let left =  Number((x/this.step.vert).toFixed(1));
+      let left =  Math.round(x/this.step.vert);
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
 
-      let newWidth =  Number((width/this.step.vert).toFixed(1));
-      let newHeight = Number((height/this.step.hor).toFixed(1));
+      let newWidth =  Math.round(width/this.step.vert);
+      let newHeight = Math.round(height/this.step.hor);
       this.$store.commit('setSizeDash', {width: newWidth, height: newHeight, id: this.id, idDash: this.idDash});
       
     },
@@ -197,7 +197,6 @@ export default {
       if(this.left <= 0){
         this.left = 0
       }
-
       this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${_shift}px)`;
     }
   },
