@@ -111,7 +111,7 @@ export default {
       colorChange: false,
       vertical: 60,
       horizontal: 60,
-      deltaHorizontal:0//сколько надо увеличить высоту overlay-grid
+      deltaHorizontal:0//сколько надо увеличить высоту overlay-grid,по первое знач-500
     }
   },   
   computed: {
@@ -227,7 +227,7 @@ export default {
   },
   mounted() {
     let  _startClientHeight = document.body.clientHeight - this.headerTop
-    let otstup = _startClientHeight;
+    let otstup = 0;
     window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)       
       if (document.querySelector('.aplication')) {
         if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
@@ -238,7 +238,7 @@ export default {
           //просто сработало событие
         }
         let _maxHeigth = (Math.round(document.querySelector('.aplication').clientHeight/this.horizontal)) * this.horizontal
-        this.deltaHorizontal = _maxHeigth - _startClientHeight
+        this.deltaHorizontal = (_maxHeigth - _startClientHeight)
 
         document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
       }
