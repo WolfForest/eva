@@ -36,7 +36,7 @@ export default {
     idDashFrom: null,
     dataElem: null,
     colorFrom: null,
-    dataPageFrom: null,
+    dataPageFrom: null
   },
   data () {
     return {
