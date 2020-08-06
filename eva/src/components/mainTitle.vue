@@ -53,7 +53,7 @@
             v-if="gridShow"
             class="overlay-grid"
             :data-grid="sizeGrid"
-             :style="{height: `calc(100vh - ${headerTop}px + ${(countScroll+1)*horizontal}px)`,top:`${headerTop}px` ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
+             :style="{height: `calc(100vh - ${headerTop}px + ${deltaHorizontal}px)`,top:`${headerTop}px` ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
             rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontal}px ${horizontal}px`}"
           />
           <move-able 
@@ -111,7 +111,7 @@ export default {
       colorChange: false,
       vertical: 60,
       horizontal: 60,
-      countScroll: 0, // сколько раз запустили увеличение размера на скролл
+      deltaHorizontal:0//сколько надо увеличить высоту overlay-grid
     }
   },   
   computed: {
@@ -226,20 +226,20 @@ export default {
     }
   },
   mounted() {
-    let otstup = 0;
-    
-    window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)
+    let  _startClientHeight = document.body.clientHeight - this.headerTop
+    let otstup = _startClientHeight;
+    window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)       
       if (document.querySelector('.aplication')) {
-        
         if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
           //добавляем размер
-          console.log(this.horizontal)
-          this.countScroll ++ 
-          otstup = this.horizontal * this.countScroll;
+          otstup = this.horizontal;
         } else {
           otstup = 0;
           //просто сработало событие
         }
+        let _maxHeigth = (Math.round(document.querySelector('.aplication').clientHeight/this.horizontal)) * this.horizontal
+        this.deltaHorizontal = _maxHeigth - _startClientHeight
+
         document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
       }
     })
