@@ -227,12 +227,12 @@ export default {
       if (document.querySelector('.aplication')) {
         if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
           //добавляем размер
-          otstup = this.horizontal;
+          otstup = this.horizontalCell;
         } else {
           otstup = 0;
           //просто сработало событие
         }
-        let _maxHeigth = (Math.round(document.querySelector('.aplication').clientHeight/this.horizontal)) * this.horizontal
+        let _maxHeigth = (Math.round(document.querySelector('.aplication').clientHeight/this.horizontalCell)) * this.horizontalCell
         this.deltaHorizontal = (_maxHeigth - this.startClientHeight)
 
         document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана

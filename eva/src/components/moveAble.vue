@@ -7,7 +7,7 @@
     :y="top" 
     :draggable="dragRes" 
     :resizable="dragRes" 
-    :data-grid="sizeGrid"
+    :data-grid="true"
     :grid="props.grid"
     :style="{zIndex:props.zIndex, outlineColor: color.controlsActive, background: color.controlsActive, opacity:opacity }" 
     @resizestop="sendSize"
@@ -36,7 +36,9 @@ export default {
     idDashFrom: null,
     dataElem: null,
     colorFrom: null,
-    dataPageFrom: null
+    dataPageFrom: null,
+    verticalCell:null,
+    horizontalCell:null
   },
   data () {
     return {
@@ -71,7 +73,7 @@ export default {
       dragRes == 'true' ? dragRes = true : dragRes = false;
       return dragRes;
     },
-    sizeGrid: function() {
+   /* sizeGrid: function() {
       let grid = this.$store.getters.getSizeGrid(this.idDash);
       if (grid.vert != '') {
         this.props.grid[0] = this.calcSizeGrid(grid.vert,'vert');
@@ -81,7 +83,7 @@ export default {
       }
       this.drawElement();
       return true
-    },
+    },*/
     headerTop: function (){
       if(document.body.clientWidth <=1400){
         return 40
@@ -89,9 +91,9 @@ export default {
         return 50
       }
     },
-    getSizeGrid: function(){
+    /*getSizeGrid: function(){
       return this.$store.getters.getSizeGrid(this.idDash)
-    }
+    }*/
   },
   watch: {
     top: function(val) {
@@ -109,16 +111,16 @@ export default {
         this.left = clientWidth - this.width;
       } 
     },
-    getSizeGrid: function() {
+   /* getSizeGrid: function() {
       //изменилась сетка -- задаем сетку для расчетов
       this.setStep()
       //перерисовывам
       this.drawElement()
 
-    }
+    }*/
   },
   methods: {
-    calcSizeGrid: function(numb, type) {
+    /*calcSizeGrid: function(numb, type) {
       let size = 0;
       if (type == 'vert') {
         //toFixed(x) округление до х знака
@@ -128,22 +130,22 @@ export default {
       }
       return size
 
-    },
-    setStep: function() {
+    },*/
+   /* setStep: function() {
       this.step = JSON.parse(JSON.stringify(this.$store.getters.getSizeGrid(this.idDash)));
       this.step.vert = Number((document.body.clientWidth/Number(this.step.vert)).toFixed(1));
       this.step.hor = Number(((document.body.clientHeight - this.headerTop)/Number(this.step.hor)).toFixed(1))
-    },
+    },*/
     drawElement: function() {
       let pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
 
-      this.left = pos.left*this.step.vert;
-      this.top = pos.top*this.step.hor + this.headerTop;
+      this.left = pos.left*this.verticalCell;
+      this.top = pos.top*this.horizontalCell + this.headerTop;
 
       let size = this.$store.getters.getSizeDash({idDash: this.idDash, id: this.id});
 
-      let width = size.width*this.step.vert;
-      let height = size.height*this.step.hor;
+      let width = size.width*this.verticalCell;
+      let height = size.height*this.horizontalCell;
 
       this.width  = width;
       this.height = height;
@@ -152,12 +154,12 @@ export default {
       let leftFrom = x;
       let topFrom = y;
       
-      let top = Math.round((topFrom - this.headerTop)/this.step.hor)
+      let top = Math.round((topFrom - this.headerTop)/this.horizontalCell)
       if (top < 0 ) { 
         top = 0
       }
 
-      let left =  Math.round(leftFrom/this.step.vert);
+      let left =  Math.round(leftFrom/this.verticalCell);
       if (left < 0 ) {
         left = 0
       }
@@ -167,28 +169,33 @@ export default {
     },
     sendSize(x,y,width,height) {  // отправляем размер элемента
     //для количества ячеек по высоте  округляем до целого
-      let top = Math.round((y - this.headerTop)/this.step.hor)
-      let left =  Math.round(x/this.step.vert);
+      let top = Math.round((y - this.headerTop)/this.horizontalCell)
+      let left =  Math.round(x/this.verticalCell);
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
 
-      let newWidth =  Math.round(width/this.step.vert);
-      let newHeight = Math.round(height/this.step.hor);
+      let newWidth =  Math.round(width/this.verticalCell);
+      let newHeight = Math.round(height/this.horizontalCell);
       this.$store.commit('setSizeDash', {width: newWidth, height: newHeight, id: this.id, idDash: this.idDash});
       
     },
     changeOpacity(event){
       this.opacity = event;
+    },
+    createGrid(){
+      this.props.grid=[this.verticalCell, this.horizontalCell]
     }
+
   },
   created() {
-    this.setStep()
+    //this.setStep()
+    this.createGrid()
     this.drawElement()
   },
   updated() {
     //поддятигание компонентов к сетке
     if(this.$refs.dragres) {
       let _pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
-      let _shift = _pos.top * this.step.hor + this.headerTop
+      let _shift = _pos.top * this.horizontalCell + this.headerTop
       
       if(_shift <= this.headerTop){
         _shift = this.headerTop
