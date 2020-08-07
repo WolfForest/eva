@@ -52,9 +52,9 @@
            <div
             v-if="gridShow"
             class="overlay-grid"
-            :data-grid="sizeGrid"
-             :style="{height: `calc(100vh - ${headerTop}px + ${deltaHorizontal}px)`,top:`${headerTop}px` ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
-            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontal}px ${horizontal}px`}"
+            :data-grid="true"
+             :style="{height: `calc(100vh - ${headerTop}px + ${deltaHorizontal}px)`,top:`${headerTop}px` ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${verticalCell}px ${verticalCell}px,
+            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontalCell}px ${horizontalCell}px`}"
           />
           <move-able 
             v-for="elem in elements" 
@@ -63,7 +63,10 @@
             :colorFrom="color" 
             :idDashFrom="idDash" 
             :dataElem="elem" 
-            :dataPageFrom="page" 
+            :dataPageFrom="page"
+            :horizontalCell="horizontalCell"
+            :verticalCell="verticalCell"
+             
           />
           <modal-delete 
             :colorFrom="color" 
@@ -109,9 +112,13 @@ export default {
       letElements: false,
       prepared: false,
       colorChange: false,
-      vertical: 60,
-      horizontal: 60,
-      deltaHorizontal:0//сколько надо увеличить высоту overlay-grid,по первое знач-500
+      deltaHorizontal:0,//сколько надо увеличить высоту overlay-grid,по первое знач-500,
+      startClientHeight:0,
+      startClientWidth:0,
+      verticalCell:0,
+      horizontalCell:0
+
+
     }
   },   
   computed: {
@@ -154,16 +161,6 @@ export default {
         return 'flex'
       }
     },
-    sizeGrid: function() {
-      let grid = this.$store.getters.getSizeGrid(this.idDash);
-      if (grid.vert != '') {
-        this.vertical = this.calcSizeGrid(grid.vert,'vert');
-      }
-      if (grid.hor != '') {
-        this.horizontal = this.calcSizeGrid(grid.hor,'hor');
-      }
-      return true
-    },
     gridShow: function() {
       let gridShow = this.$store.getters.getGridShow(this.idDash);
       gridShow == 'true' ? gridShow = true : gridShow = false;
@@ -185,17 +182,6 @@ export default {
     },
     openSettings: function() {
       this.showSetting = !this.showSetting;
-    },
-    calcSizeGrid: function(numb, type) {
-      let size = 0;
-      if (type == 'vert') {
-        //toFixed(x) округление до х знака
-        size = Number((document.body.clientWidth/Number(numb)).toFixed(1));
-      } else {
-        size = Number(((document.body.clientHeight-this.headerTop)/Number(numb)).toFixed(1));
-      }
-      return size
-
     },
     setPermissions: function(event) { 
       if (event.includes('admin_all')) {
@@ -223,12 +209,21 @@ export default {
         } 
         this.prepared = true;
       })
-    }
-  },
-  mounted() {
-    let  _startClientHeight = document.body.clientHeight - this.headerTop
-    let otstup = 0;
-    window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)       
+    },
+    createStartClient: function(){ 
+      //первоначальные значения высоты и ширины
+      this.startClientHeight = document.body.clientHeight - this.headerTop
+      this.startClientWidth = document.body.clientWidth
+    },
+    calcSizeCell: function(){
+      //размер ячейки
+      let grid = this.$store.getters.getSizeGrid(this.idDash);
+      this.verticalCell = Number((this.startClientWidth /grid.vert).toFixed(1));
+      this.horizontalCell = Number((this.startClientHeight/ grid.hor).toFixed(1));
+    },
+    addScrollListener: function(){ 
+      let otstup = 0;
+      window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)       
       if (document.querySelector('.aplication')) {
         if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
           //добавляем размер
@@ -238,12 +233,19 @@ export default {
           //просто сработало событие
         }
         let _maxHeigth = (Math.round(document.querySelector('.aplication').clientHeight/this.horizontal)) * this.horizontal
-        this.deltaHorizontal = (_maxHeigth - _startClientHeight)
+        this.deltaHorizontal = (_maxHeigth - this.startClientHeight)
 
         document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
       }
     })
-    
+
+    }
+  },
+  mounted() {
+    this.createStartClient();
+    this.calcSizeCell();
+    this.addScrollListener(); 
+
     this.color = themes[this.theme];
   }
 }
