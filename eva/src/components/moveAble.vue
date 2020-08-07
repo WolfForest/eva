@@ -165,7 +165,7 @@ export default {
     this.createGrid()
     this.drawElement()
   },
-  updated() {
+  /*updated() {
     //поддятигание компонентов к сетке
     if(this.$refs.dragres) {
       let _pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
@@ -180,7 +180,7 @@ export default {
       }
       this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${_shift}px)`;
     }
-  },
+  },*/
 }
 </script>
 
