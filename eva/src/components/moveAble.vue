@@ -1,6 +1,7 @@
 <template>
   <vue-draggable-resizable 
     ref="dragres"
+    :key="reload"
     :w="width" 
     :h="height" 
     :x="left" 
@@ -47,6 +48,7 @@ export default {
       left: 0,
       width: 0, // 0 не должен быть, по умолчанию беруться эти настройки
       height: 0,
+      reload: 0,
       props: {
         vue_drag: false,
         zIndex: 1,
@@ -98,10 +100,12 @@ export default {
       } 
     },
     verticalCell: function(){
+      this.reload ++ 
       this.createGrid()
       this.drawElement()
     },
     horizontalCell: function(){
+      this.reload ++ 
       this.createGrid()
       this.drawElement()
     }
