@@ -38,11 +38,11 @@ export default {
   },
   data () {
     return {
-      // actions: [
-      //     {name:'click',
-      //         capture: []
-      //     },
-      // ],
+      actions: [
+        {name: 'click',
+          capture: ['inverse']
+        },
+      ],
       optionsData: {
         'name': '',
         'background': '',
@@ -131,6 +131,36 @@ export default {
       this.getData(item.sid,item.file);
     },
     setClick: function() {
+
+      let tockens = this.$store.getters.getTockens(this.idDash);
+      let tocken = {};
+      let value = false;
+
+      Object.keys(tockens).forEach( i =>{
+        tocken = {
+          name: tockens[i].name,
+          action: tockens[i].action,
+          capture: tockens[i].capture,
+        }
+        if (tockens[i].elem == this.id && tockens[i].action == 'click' && tockens[i].capture == 'inverse') {
+
+          switch (tockens[i].value) {
+          case '':
+            value = true;
+            break
+          case true:
+            value = false;
+            break
+          case false:
+            value = true;
+            break
+          }
+          
+          this.$store.commit('setTocken', {tocken: tocken, idDash: this.idDash, value: value, store: this.$store });
+        } 
+      })
+
+
       let events = this.$store.getters.getEvents({idDash: this.idDash, event: 'onclick', element: this.id, partelement: 'empty'});
       if (events.length != 0) {
         events.forEach( item => {
@@ -263,6 +293,7 @@ export default {
   mounted() {
     this.$emit('hideDS',this.id);
     this.$emit('hideLoading');
+    this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id });
   } 
 }
 

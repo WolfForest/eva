@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - add get body of dashboard from back if it`s not exist in store yet
 
+- add action click and capture inverse for button component
+
 ## [1.44.26] [newSetting]
 ### Adde
 
