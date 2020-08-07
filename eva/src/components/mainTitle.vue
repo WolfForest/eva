@@ -166,12 +166,17 @@ export default {
       gridShow == 'true' ? gridShow = true : gridShow = false;
       return gridShow;
     },
+    getSizeGrid: function(){
+      return this.$store.getters.getSizeGrid(this.idDash)
+    }
   },  
   watch: {
     theme: function (theme) {
       this.color = themes[theme];
-      
     },
+     getSizeGrid: function() {
+       this.calcSizeCell()
+     }
   },
   methods: {
     hash: function(elem) {

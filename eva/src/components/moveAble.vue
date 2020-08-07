@@ -73,17 +73,6 @@ export default {
       dragRes == 'true' ? dragRes = true : dragRes = false;
       return dragRes;
     },
-   /* sizeGrid: function() {
-      let grid = this.$store.getters.getSizeGrid(this.idDash);
-      if (grid.vert != '') {
-        this.props.grid[0] = this.calcSizeGrid(grid.vert,'vert');
-      }
-      if (grid.hor != '') {
-        this.props.grid[1] = this.calcSizeGrid(grid.hor,'hor');
-      }
-      this.drawElement();
-      return true
-    },*/
     headerTop: function (){
       if(document.body.clientWidth <=1400){
         return 40
@@ -91,9 +80,6 @@ export default {
         return 50
       }
     },
-    /*getSizeGrid: function(){
-      return this.$store.getters.getSizeGrid(this.idDash)
-    }*/
   },
   watch: {
     top: function(val) {
@@ -111,31 +97,16 @@ export default {
         this.left = clientWidth - this.width;
       } 
     },
-   /* getSizeGrid: function() {
-      //изменилась сетка -- задаем сетку для расчетов
-      this.setStep()
-      //перерисовывам
+    verticalCell: function(){
+      this.createGrid()
       this.drawElement()
-
-    }*/
+    },
+    horizontalCell: function(){
+      this.createGrid()
+      this.drawElement()
+    }
   },
   methods: {
-    /*calcSizeGrid: function(numb, type) {
-      let size = 0;
-      if (type == 'vert') {
-        //toFixed(x) округление до х знака
-        size = Number((document.body.clientWidth/Number(numb)).toFixed(1));
-      } else {
-        size = Number(((document.body.clientHeight-this.headerTop)/Number(numb)).toFixed(1));
-      }
-      return size
-
-    },*/
-   /* setStep: function() {
-      this.step = JSON.parse(JSON.stringify(this.$store.getters.getSizeGrid(this.idDash)));
-      this.step.vert = Number((document.body.clientWidth/Number(this.step.vert)).toFixed(1));
-      this.step.hor = Number(((document.body.clientHeight - this.headerTop)/Number(this.step.hor)).toFixed(1))
-    },*/
     drawElement: function() {
       let pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
 
@@ -182,12 +153,11 @@ export default {
       this.opacity = event;
     },
     createGrid(){
-      this.props.grid=[this.verticalCell, this.horizontalCell]
+      this.props.grid = [this.verticalCell, this.horizontalCell]
     }
 
   },
   created() {
-    //this.setStep()
     this.createGrid()
     this.drawElement()
   },
