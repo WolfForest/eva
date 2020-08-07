@@ -485,9 +485,6 @@ export default {  // приблизительный объект хранили�
         Object.keys(state).forEach( key => {
           if (state[key].name) {
             if( state[key].name.toLowerCase() == item.target.toLowerCase()) {
-              if (state[key].tockens) {
-                tockensTarget = state[key].tockens;
-              }
               id = key;
             } 
           }
@@ -514,18 +511,6 @@ export default {  // приблизительный объект хранили�
           }
         })
 
-        item.prop.forEach( (itemProp,j) => {
-          tockensTarget.forEach( (itemTock,i) => {
-            if (itemProp == itemTock.name) {
-              if (itemTock.elem.indexOf('select') != -1) {
-                state[id][itemTock.elem].selected.elemDeep = values[j];
-              }
-              state[id].tockens[i].value = values[j];
-              changed.push(itemProp)
-            }
-          })
-        })
-
 
         if (id == -1) {
 
@@ -547,6 +532,25 @@ export default {  // приблизительный объект хранили�
 
 
         }
+
+        if (state[id].tockens) {
+          tockensTarget = state[id].tockens;
+        }
+
+
+        item.prop.forEach( (itemProp,j) => {
+          tockensTarget.forEach( (itemTock,i) => {
+            if (itemProp == itemTock.name) {
+              if (itemTock.elem.indexOf('select') != -1) {
+                state[id][itemTock.elem].selected.elemDeep = values[j];
+              }
+              state[id].tockens[i].value = values[j];
+              changed.push(itemProp)
+            }
+          })
+        })
+
+        
 
         event.route.push(`/dashboards/${id}`);
     

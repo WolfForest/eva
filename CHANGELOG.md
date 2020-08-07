@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - add event onValueCopare
 
+- add get body of dashboard from back if it`s not exist in store yet
+
 ## [1.44.26] [newSetting]
 ### Adde
 
