@@ -250,6 +250,12 @@ export default {
   },
   methods: {
     getDataAsynchrony: function() {
+      let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
+      let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
+      let metricsOpt = [];
+      if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
+        metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
+      }
       let prom = new Promise( resolve => { // создаем promise чтобы затем отрисовать график асинхронно
 
      
@@ -281,12 +287,7 @@ export default {
 
           this.props.nodata = false; // то убираем соощение о отсутствии данных
           this.props.result = this.dataRestFrom;  // заносим все данные в переменную
-          let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
-          let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
-          let metricsOpt = [];
-          if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
-            metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
-          }
+          
           if (this.props.legends.length == 0) {
             this.metrics = [];
             
@@ -333,6 +334,7 @@ export default {
       this.$store.commit('setMetricsMulti', {metrics: this.metrics, idDash: this.idDash, id: this.id });
     },
     createLineChart: function (props,that,sizeLine,time,united,lastDot,metricsOpt) {  // создает график
+    
       let colors = [this.color.controls,this.color.text,this.color.controlsActive,'#660099','#3366FF','#e5194a',]; // основные используемые цвета
       let colorLine = this.colorLegends;
   
@@ -1642,7 +1644,6 @@ export default {
         let group = svg
           .append("g")
           .attr("class","vetical-line-group");
-        
 
         group
           .append("line")
@@ -1652,7 +1653,7 @@ export default {
           .attr("x2", x(d[xMetric]*secondTransf))
           .attr("y2", height)
           .attr("xVal", d[xMetric]*secondTransf)
-          .attr("stroke", colors[i])
+          .attr("stroke", colorLine[i])
           .style("opacity", "0.7")
 
         group
@@ -1662,7 +1663,7 @@ export default {
           .attr("r", 5)
           .attr("xVal", d[xMetric]*secondTransf)
           .attr("opacity", "0.7")
-          .attr("fill", colors[i])
+          .attr("fill", colorLine[i])
           .attr("class","dot-vertical")
           .on("mouseover", function() {
             tooltip
@@ -2012,8 +2013,8 @@ export default {
             this.$store.commit('letEventSet', {events: events, idDash: this.idDash,  });
           } else if (item.action == 'go') {
             if (action != 'select') {
-              this.$store.commit('letEventGo', {event: item, idDash: this.idDash });
-              this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
+              this.$store.commit('letEventGo', {event: item, idDash: this.idDash, route: this.$router, store: this.$store });
+             // this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
             }
           }
         })

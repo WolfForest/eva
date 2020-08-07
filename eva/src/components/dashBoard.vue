@@ -491,6 +491,9 @@ export default {
       }
     },
     setLoading: function(event) {
+      if (this.element.indexOf('button') != -1) {
+        this.props.hideLoad = !event;
+      }
       this.props.loading = event;
     },
     deleteDashBoard: function ( props ) { // вызываем окно для удаления элемнета

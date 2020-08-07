@@ -222,6 +222,10 @@ export default {  // приблизительный объект хранили�
       Vue.set(state.reports.searches, search.sid , search);
       state.reports.table.search = search.sid;
     },
+    setPaperSearch: (state,search) => {
+      Vue.set(state.papers.searches, search.sid , search);
+      Vue.set(state.papers, 'cursearch' , search.sid);
+    },
     setSearchStatus: (state,status) => {  // отдельно можно проверить если ИС прикреплен то переключить и обновить
       if (state[status.idDash][status.id].search != -1) {
         state[status.idDash][status.id].switch = true;
@@ -520,9 +524,12 @@ export default {  // приблизительный объект хранили�
           })
         })
 
+       
+
 
         if (id != -1) {
-    
+
+          
           event.route.push(`/dashboards/${id}`);
     
           let searches = state[id].searches;
@@ -554,6 +561,8 @@ export default {  // приблизительный объект хранили�
                 
           });
 
+        } else {
+          console.log('it is')
         }
   
       }
@@ -600,7 +609,14 @@ export default {  // приблизительный объект хранили�
         })
       } 
     },
+    createPaperSearch: (state) => {
         
+      if (!state.papers) {
+        Vue.set(state, 'papers',{});
+        Vue.set(state.papers, 'searches', {});
+        Vue.set(state.papers, 'cursearch', 0);
+      } 
+    },  
     deleteDashFromMain: (state,dash) => {
       delete state[dash.id];
       let name = dash.name[0].toUpperCase() + dash.name.slice(1);
@@ -818,6 +834,7 @@ export default {  // приблизительный объект хранили�
         let reg = null;
 
 
+
         if (state[idDash].tockens){
 
           Object.keys(state[idDash].tockens).forEach( item => {  // если есть токены в запросе то меняем временные метки в зависимости от значения токена
@@ -857,6 +874,8 @@ export default {  // приблизительный объект хранили�
         }
 
         otl = otl.replace(/\r|\n/g,'');
+
+        
 
             
         let formData = new FormData();  // формируем объект для передачи RESTу
@@ -1013,6 +1032,25 @@ export default {  // приблизительный объект хранили�
         }
       }      
     },  
+    getPaperSearch: (state) => {
+      let key = state.papers.cursearch;
+      if (key != 0) {
+        return state.papers.searches[key]
+      } else {
+        return {
+          sid: '',
+          original_otl: '',
+          parametrs: {
+            tws: 0,
+            twf: 0,
+            timeout: 100,
+            preview: false,
+            field_extraction: false,
+            cache_ttl: 100
+          }
+        }
+      }      
+    }, 
     getReportElement: (state) => {
       return state.reports.elements  
     },  
@@ -1221,7 +1259,7 @@ export default {  // приблизительный объект хранили�
       }
            
     },
-    checkDataSearch:() => {
+    checkDataSearch: () => {
       return (sid) => {
         return new Promise((resolve, reject) => {
 
@@ -1348,6 +1386,26 @@ export default {  // приблизительный объект хранили�
           Vue.set(state[id], 'gridShow', 'true');
         }
         return state[id].gridShow
+      }
+    },
+    loadPaper: () => {
+      return (paper) => {
+        return rest.loadPaper(paper,restAuth)
+      }
+    },
+    getAllPaper: () => {
+      return () => {
+        return rest.getAllPaper(restAuth)
+      }
+    },
+    getPaper: () => {
+      return (fileData) => {
+        return rest.getPaper(restAuth,fileData)
+      }
+    },
+    getPaperVis: () => {
+      return (url) => {
+        return rest.getPaperVis(restAuth,url)
       }
     },
   },

@@ -250,6 +250,22 @@
         >
           <template v-slot:activator="{ on }">
             <v-icon 
+              class=" search-clock" 
+              :color="color.controls" 
+              v-on="on"
+              @click="modalPaperSid=sear.sid,modalPaper=true"
+            >
+              {{ paper }}
+            </v-icon>
+          </template>
+          <span>Создать отчет</span>
+        </v-tooltip>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive"
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
               class="search-trash" 
               :color="color.controls"
               v-on="on" 
@@ -622,12 +638,19 @@
       :idDashFrom="idDashFrom"
       @changeMode="setEditMode"
     />
+    <modal-paper 
+      :color="color" 
+      :active="modalPaper"
+      :sid=" modalPaperSid"
+      :id-dash="idDash"
+      @cancelModal="cancelModal"
+    />
   </div>
 </template>
 
 <script>
 
-import { mdiPlusBox, mdiPlay, mdiEye,  mdiArrowDownBold, mdiContentSave, mdiAccount,    mdiHomeVariantOutline,  mdiSettings, mdiHelpCircleOutline, mdiClockOutline,  mdiDatabase,mdiTableEdit,mdiCodeTags, mdiTrashCanOutline, mdiMinusBox, mdiToolbox ,   mdiPencil,  mdiVariable, mdiCheckBold,  mdiSwapVerticalBold } from '@mdi/js'
+import { mdiPlusBox, mdiPlay, mdiEye, mdiFileDocumentOutline,  mdiArrowDownBold, mdiContentSave, mdiAccount,    mdiHomeVariantOutline,  mdiSettings, mdiHelpCircleOutline, mdiClockOutline,  mdiDatabase,mdiTableEdit,mdiCodeTags, mdiTrashCanOutline, mdiMinusBox, mdiToolbox ,   mdiPencil,  mdiVariable, mdiCheckBold,  mdiSwapVerticalBold } from '@mdi/js'
 
 //import { match } from 'minimatch'
 
@@ -667,6 +690,7 @@ export default {
       play: mdiPlay,
       clock: mdiClockOutline,
       download: mdiArrowDownBold,
+      paper: mdiFileDocumentOutline,
       help_elem: true,
       help_coral: 'fill:teal',
       opencode: false,
@@ -728,6 +752,8 @@ export default {
       colorErrorSave: '',
       createSearchBtn: '',
       disabledDS: {},
+      modalPaperSid: '',
+      modalPaper: false,
     }
   },
   computed: {
@@ -849,6 +875,7 @@ export default {
     },
     cancelModal: function() {
       this.activeModal  = false;
+      this.modalPaper =false;
     },
     openSchedule: function(id) {
       this.scheduleSid = id;
@@ -1152,7 +1179,7 @@ export default {
         let csvContent = "data:text/csv;charset=utf-8,"; // задаем кодировку csv файла
         let keys = Object.keys(res[0]); // получаем ключи для заголовков столбцов
         csvContent += encodeURIComponent(keys.join(',') + "\n"); // добавляем ключи в файл
-        csvContent += encodeURIComponent(res.map( item =>  Object.values(item).join(",")).join("\n")); // добовляем все значения по клюам в файл
+        csvContent += encodeURIComponent(res.map( item =>  Object.values(item).join(",")).join("\n")); // добовляем все значения по ключам в файл
         let link = this.$refs.blockCode.appendChild(document.createElement("a")); // создаем ссылку
         link.setAttribute('href',csvContent); // указываем ссылке что надо скачать наш файл csv
         link.setAttribute("download", `${this.idDash}-${sid}.xlsx`); // указываем имя файла 
@@ -1302,10 +1329,11 @@ export default {
     setEvents: function() {
       if (this.textarea_event != null  && this.textarea_event != '') {
         let events = this.textarea_event.split('\n');
-        let reg,body,bodyArray,element,doing;
+        let reg,body,bodyArray,element,doing,originItem;
 
         if (events.length != 0) {
           events.forEach( item => {  
+            originItem = item;
             item =  item.replace(/\s/g, ''); 
             if (item != ''){
               reg = new RegExp( /^[\s+]?[\w]+\(/, "g");
@@ -1315,11 +1343,13 @@ export default {
               
               body = body.slice(1, body.length-1);      
               bodyArray = body.split(',');
+              
               bodyArray.forEach( (elem,i) => {
                 if(elem.indexOf('(') != -1) {
                   element = bodyArray.splice(0, i);
                 }
               })
+              
 
               if (this.event.event == 'OnDataCompare') { 
                 if (element.length > 2 && element[1].indexOf('[') == -1){
@@ -1364,12 +1394,17 @@ export default {
               doing = reg.exec(body)[0];
               doing = doing.split('(');
               this.$set(this.event,'action',doing[0]);
-              if (doing[0].toLowerCase() === 'set'.toLowerCase()) {
+              if (doing[0].toLowerCase() == 'set'.toLowerCase()) {
                 doing = doing[1].slice(0, doing[1].length-1).split(',');
                 this.$set(this.event,'target',doing[0]);
                 doing.splice(0,1);
                 doing = doing.join(',');
-                doing = doing.match(/[^\[]+(?=\])/g);
+                if (doing.indexOf('[') != -1 && doing.indexOf(']') != -1) {
+                  doing = doing.match(/[^\[]+(?=\])/g);
+                } else {
+                  doing = doing.split(',');
+                }
+                
                 if (doing == null) {
                   this.$set(this.event,'prop',['']);
                   this.$set(this.event,'value',['']);
@@ -1378,12 +1413,23 @@ export default {
                   this.$set(this.event,'value',doing[1].split(','));
                 } 
               
-              } else if(doing[0].toLowerCase() === 'go'.toLowerCase()) {///go
+              } else if(doing[0].toLowerCase() == 'go'.toLowerCase()) {///go
                 doing = doing[1].slice(0, doing[1].length-1).split(',');
                 this.$set(this.event,'target',doing[0]);
-                this.$set(this.event,'prop',[doing[1]]);
-                this.$set(this.event,'value',[doing[2]]);  
-              } else if(doing[0].toLowerCase() === 'open'.toLowerCase()){//open
+                let prop,value;
+                if (doing[1].indexOf('[') != -1) {
+                  doing.splice(0,1);
+                  doing = doing.join(',');
+                  doing = doing.match(/[^\[]+(?=\])/g);
+                  prop = doing[0].split(',');
+                  value = doing[1].split(',');
+                }else {
+                  prop = [doing[1]];
+                  value = [doing[2]];
+                }
+                this.$set(this.event,'prop',prop);
+                this.$set(this.event,'value',value);  
+              } else if(doing[0].toLowerCase() == 'open'.toLowerCase()){//open
                 doing = doing[1].slice(0, doing[1].length-1).split(',');
 
                 this.$set(this.event,'target',doing[0]);
@@ -1395,6 +1441,21 @@ export default {
 
                 this.$set(this.event,'header',doing[5]);
 
+              } else if (doing[0].toLowerCase() == 'changeReport'.toLowerCase()) {
+                
+                doing = originItem.split(doing[0])[1];
+                doing =  doing.replace(/\(/g, '').replace(/\)/g, '').split(','); 
+                this.$set(this.event,'sid',doing[0]);
+                if (doing[1].indexOf('[') != -1) {
+                  doing.splice(0, 1);
+                  let files = doing.map( item => {
+                    return item.replace('[', '').replace(']', '')
+                  })
+                  this.$set(this.event,'file',files);
+                } else {
+                  this.$set(this.event,'file',[doing[1]]);
+                }
+                
               }
               this.events.push(this.event);
               this.event ={};

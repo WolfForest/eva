@@ -5,15 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.45.0] [gridDash]
+## [UNRELEASED]
 ### Fixed
 
 - set asynchrony all create components. Then draw only one component per time. Then get data from rest throw web worker.
+
+- use another array of color for annotation
+
+- reused load file
+
+- fix download throw event
+
+- loose reactivity from multiline (settings don`t apply before)
+
+- understand space in name of file in event
 
 ### Changed
 
 - change work with component on grid table
 
+### Added
+- add cell grid for dashboards
+
+- new plugin, whom create papers (reports) from template and give link on download and preview
+
+- add set token in single
 ## [1.44.26] [newSetting]
 ### Adde
 
