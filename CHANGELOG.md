@@ -44,6 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - add timeFormet in multiline and remove linechart and barchart
 
+- add check tws twf on tocken
+
 ## [1.44.26] [newSetting]
 ### Adde
 

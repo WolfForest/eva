@@ -191,7 +191,9 @@ export default {  // приблизительный объект хранили�
         let response = {};
 
         searches.forEach( async item => {  // также при обновлении токена нужно заново запускать серч и обновлять информацию
-          if (item.original_otl.indexOf(`$${state[tocken.idDash].tockens[id].name}$`) != -1  ) {  // если в тексте запроса есть наш токен
+          if (item.original_otl.indexOf(`$${state[tocken.idDash].tockens[id].name}$`) != -1 ||  
+            String(item.parametrs.tws).indexOf(`$${state[tocken.idDash].tockens[id].name}$`) != -1 ||
+            String(item.parametrs.twf).indexOf(`$${state[tocken.idDash].tockens[id].name}$`) != -1 ) {  // если в тексте запроса есть наш токен
                 
 
             tocken.store.commit('setLoading', {search: item.sid, idDash: tocken.idDash, should: true, error: false});  
@@ -858,7 +860,6 @@ export default {  // приблизительный объект хранили�
         let reg = null;
 
 
-
         if (state[idDash].tockens){
 
           Object.keys(state[idDash].tockens).forEach( item => {  // если есть токены в запросе то меняем временные метки в зависимости от значения токена
@@ -876,8 +877,8 @@ export default {  // приблизительный объект хранили�
             if (typeof twf == 'string' && twf.indexOf(`$${state[idDash].tockens[item].name}$`) != -1) {
               twf = state[idDash].tockens[item].value
             }
-                    
-                        
+
+           
             if(state[idDash].tockens[item].elem == 'picker' && state[idDash].tockens[item].capture == 'start') {
               if (typeof search.parametrs.tws != 'number'){
                 if (search.parametrs.tws.indexOf(`$${state[idDash].tockens[item].name}$`) != -1) {
