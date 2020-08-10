@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [UNRELEASED]
 ### Fixed
 
+- fix start page css
+
 - set asynchrony all create components. Then draw only one component per time. Then get data from rest throw web worker.
 
 - use another array of color for annotation
