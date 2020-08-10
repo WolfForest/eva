@@ -455,8 +455,6 @@ export default {
         }
       })
 
-      
-
 
       if (time) {
         !timeFormat ? timeFormat = '%Y-%m-%d %H:%M:%S' : false;
@@ -1369,6 +1367,8 @@ export default {
                 brushObj.selectionUp();
               })
 
+              
+
             brushObj['selectionDown'] =  () => {
               brushObj.mouseDown = true;
               brushObj.clearBrush();
@@ -1379,7 +1379,7 @@ export default {
                 .attr("x", brushObj.startX)
                 .attr("y",startY[i])
                 .attr("width", 0)
-                .attr("height", parseFloat(step*(i+1)))
+                .attr("height", parseFloat(step))
                 .style("fill",colors[2])
                 .style("opacity","0.3")
                 .on("mousemove", () => {
@@ -1393,7 +1393,6 @@ export default {
 
             brushObj['selectionMove'] = () => {
               if (brushObj.mouseDown) {
-
                 if ((event.layerX-50 - brushObj.startX) > 0) {
                   brushObj.direction = 'right';
                   brushObj.endX = event.layerX-50;
