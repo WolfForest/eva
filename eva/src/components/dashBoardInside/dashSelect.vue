@@ -75,7 +75,7 @@
           hide-details  
           class="select"
           label="Значение"  
-          @change="setTocken" 
+          @blur="setTocken"
           @click="changeColor" 
         >
           <template 

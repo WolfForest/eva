@@ -25,6 +25,10 @@ export default new VueRouter({
       component: require('../components/reports.vue').default, 
     },
     {
+      path: '/papers',  // если главная страница
+      component: require('../components/papers.vue').default, 
+    },
+    {
       path: '/dashboards',  // если главная страница
       component: require('../components/mainPageDash.vue').default, 
     },

@@ -25,7 +25,7 @@ describe('Компонент reports.vue', () => {  // тест самого к�
     store,
     stubs: ['header-top','dash-table','dash-guntt','dash-graph',
       'dash-lineChart','dash-multiLine','dash-barchart',
-      'dash-tile','dash-csvg','modal-report','footer-bottom']
+      'dash-tile','dash-csvg','modal-report','router-link','footer-bottom']
   });
 
 
@@ -36,7 +36,7 @@ describe('Компонент reports.vue', () => {  // тест самого к�
   })
 
   it('Получает элементы для отображения визуализаций', () => {
-    expect(wrapper.vm.elements).toHaveLength(8)
+    expect(wrapper.vm.elements).toHaveLength(7)
   })
 
 })

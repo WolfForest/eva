@@ -2,14 +2,15 @@
   <div 
     ref="tableBlock"
     class="table-block" 
-  >
+    :data-change="change"
+  > 
     <v-data-table
       v-show="!props.nodata"
       :ref="id"
       v-model="props.input"
       :headers="props.titles"
-      :items.sync="getDataStart"
-      class="dash-table"
+      :items.sync="props.itemsForTable"
+      class="dash-table report-table"
       :data-id="id"
       item-key="none"
       :hide-default-footer="props.hideFooter"
@@ -40,10 +41,14 @@
 export default {
   props: {
     dataRestFrom: null,
+    shouldGet: null,
     colorFrom: null,
     idFrom: null,
     idDashFrom: null,
-    heightFrom: null
+    heightFrom: null,
+    dataReport: null,
+    activeElemFrom: null,
+    
   },
   data () {
     return {
@@ -63,8 +68,9 @@ export default {
         ],
         selected: {},
         justCreate: true,
-        hideFooter: false
-      }
+        hideFooter: false,
+        itemsForTable: []
+      },
     }
   },
   computed: {
@@ -74,14 +80,33 @@ export default {
     idDash: function() { 
       return this.idDashFrom
     },
-    dataRest: function() {
-      return this.dataRestFrom
+    // dataRest: function() {
+    //   if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
+    //     this.getDataAsynchrony(this.dataRestFrom);
+    //   }
+    //   return true
+    // },
+    change: function() {
+      if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) {
+        if (this.dataReport) {
+          
+          if (this.activeElemFrom == this.id) {
+            this.getDataAsynchrony(this.dataRestFrom);
+          } else {
+            this.props.itemsForTable = [];
+          }
+        } else {
+          this.getDataAsynchrony(this.dataRestFrom);
+        }
+        
+      }
+      return true
     },
     color: function() {
       return this.colorFrom
     },
     height: function() {
-      let otstup = 120;
+      let otstup = 100;
       if (screen.width <= 1600) {
         otstup = 80;
       }
@@ -91,39 +116,13 @@ export default {
       if(this.props.hideFooter) {
         otstup = 45;
       }
+      if (this.dataReport) {
+        otstup = otstup-30;
+      }
       let height = this.heightFrom-otstup; // 120 это размер блока с пагинацией таблицы + шапка с настройками самого блока
       return height
     },
-    createTable: function() { 
-      let result = [];  
-      
-      if (Object.keys(this.dataRest).length != 0) {
-        if(this.dataRest.error) {
-          this.props.message = this.dataRest.error;
-          this.props.nodata = true;
-        } else {
-          result = this.dataRest;
-          result.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
-          this.createTitles(result);
-          this.createTockens(result);
-          this.setColors();
-          this.clearColor();
-          this.setEventColor();
-          if (this.props.justCreate) {
-            this.selectRow();
-            this.props.justCreate = false;
-          }
-            
-          this.props.nodata = false;
-        }
-      } else {
-        this.props.nodata = true;
-      }
-      return result
-    },
-    getDataStart: function() {
-      return  this.createTable;
-    }
+ 
 
   },
   watch: {
@@ -131,8 +130,48 @@ export default {
       this.$refs.tableBlock.style.color = color.text;
       this.$refs.tableBlock.style.backgroundColor = color.backElement;
     },
+    // activeElemFrom: function() {
+    //   if (this.dataReport && this.activeElemFrom == this.id && this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) {
+    //     console.log('start')
+    //   }
+    // },
+    // dataRestFrom: function() {
+    //   if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0) { 
+    //       console.log('startdata')
+    //    // this.getDataAsynchrony(this.dataRestFrom);
+    //   }
+    // }
   },
   methods: {
+
+    getDataAsynchrony: function (data) {
+      
+      let prom = new Promise( resolve => {
+        if(data.error) {
+          this.props.message = data.error;
+          this.props.nodata = true;
+        } else {
+          resolve(data)
+        }
+      })
+      prom.then( (data) => {
+        data.length <= 100 ? this.props.hideFooter = true : this.props.hideFooter = false;
+        this.createTitles(data);
+        this.createTockens(data);
+        this.setColors();
+        this.clearColor();
+        this.setEventColor();
+        if (this.props.justCreate) {
+          this.selectRow();
+          this.props.justCreate = false;
+        }
+            
+        this.props.nodata = false;
+        this.props.itemsForTable = data;
+      })
+    },
+
+
     createTitles: function(result) {
 
       let titles = Object.keys(result[0]).map( item => {
@@ -194,8 +233,8 @@ export default {
                 this.$store.commit('letEventSet', {events: events, idDash: this.idDash });
               } else if (item.action == 'go') {
 
-                this.$store.commit('letEventGo', {event: item, idDash: this.idDash });
-                this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
+                this.$store.commit('letEventGo', {event: item, idDash: this.idDash, route: this.$router, store: this.$store });
+               // this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
 
               }
 

@@ -410,12 +410,13 @@ export default {
           break
 
         case 'hour':
-          period = Number(this.last.every) * 1000 *3600
+          period = Number(this.last.every) *1000 *3600
           break
         }
 
-        this.startForStore =  Date.now()-period;
-        this.endForStore = Date.now();
+
+        this.startForStore =  ((Date.now()-period)/1000).toFixed(0);
+        this.endForStore = ((Date.now())/1000).toFixed(0);
         this.start = null;
         this.end = null;
         this.range = null;

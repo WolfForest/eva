@@ -5,6 +5,85 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.51.0]
+### Fixed
+- set asynchrony all create components. Then draw only one component per time. Then get data from rest throw web worker.
+
+- use another array of color for annotation
+
+- reused load file
+
+- fix download throw event
+
+- loose reactivity from multiline (settings don`t apply before)
+
+- understand space in name of file in event
+
+### Changed
+
+- change work with component on grid table
+
+### Added
+- add cell grid for dashboards
+
+- new plugin, whom create papers (reports) from template and give link on download and preview
+
+- add set token in single
+## [1.44.26] [newSetting]
+### Adde
+
+- put theme setting in back and check on front
+
+## [1.43.26] [checkImpExp]
+### Fixed
+
+- add check which kind of file user want to import (groups or dashs)
+
+## [1.43.25] [heightTabel]
+### Fixed
+
+- correct height table in reports and dashboards
+
+## [1.43.24] [colorSelectExport]
+### Fixed
+
+- fix color of select in Export/Import component
+
+## [1.43.23] [limitlessCheck]
+### Changed
+
+- delete limit iteration in getDataApi
+
+## [1.42.23] [improveBarChart]
+### Changed
+
+- change bar chart component 
+
+## [1.41.23] [tooLargeLogs]
+### Fixed
+
+- cut logs until he don`t abowe 5 megabait
+
+## [1.41.22] [oneSearchMultiSelect]
+### Fixed
+
+- set tocken function will be work only on blur event
+
+## [1.41.21] [currentTime]
+### Fixed
+
+- fix time  amd set seconds, when we choose last some time
+
+## [1.41.20] [statisticField]
+### Fixed
+
+- fix check open/close in statistic block
+
+## [1.41.19] [improveYAxis]
+### Changed
+
+- change caption tick of Y axis
+
 ## [1.40.19] [underlineButton]
 ### Changed
 

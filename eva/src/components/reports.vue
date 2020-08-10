@@ -12,7 +12,8 @@
         >
           <v-card 
             class="static-block" 
-            :style="{background: color.backElement, color: color.text}">
+            :style="{background: color.backElement, color: color.text}"
+          >
             <v-card-title class="static-title">
               <p>Статистика</p>
               <div 
@@ -62,6 +63,32 @@
                 :style="{background: color.backElement, color: `${color.text} !important`}" 
                 placeholder="Введите запрос" 
               />
+              <router-link 
+                :to="{ path: '/reports'}" 
+                target="_blank"
+              >
+                <v-tooltip 
+                  bottom 
+                  :color="color.controlsActive" 
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      :color="color.controls"
+                      fab
+                      dark 
+                      small
+                      absolute
+                      class="new-btn"
+                      top
+                      right
+                      v-on="on"
+                    >
+                      <v-icon>{{ plus }}</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Открыть новое Исследование данных</span>
+                </v-tooltip>
+              </router-link>
               <v-tooltip 
                 bottom 
                 :color="color.controlsActive" 
@@ -145,14 +172,17 @@
                 :key="i" 
                 :idFrom="i" 
                 :colorFrom="color"  
+                :activeElemFrom="activeElem"
                 idDashFrom="reports" 
                 :widthFrom="size.width" 
                 :heightFrom="size.height" 
                 :timeFormatFrom="''" 
-                :sizeTileFrom="''" 
+                :sizeTileFrom="{width: '', height: ''}" 
                 :searchRep="true" 
-                :tooltipFrom="tooltipSvg"    
-                :dataRestFrom="data"    
+                :tooltipFrom="tooltipSvg"
+                :shouldGet="shouldGet"    
+                :dataReport="true" 
+                :dataRestFrom="data" 
               />
               <v-tooltip 
                 bottom 
@@ -205,7 +235,7 @@
 
 <script>
 
-import { mdiPlay, mdiSettings, mdiMerge } from '@mdi/js'
+import { mdiPlay, mdiSettings, mdiMerge,  mdiPlus } from '@mdi/js'
 import  settings  from '../js/componentsSettings.js';
 import themes from '../js/themeSettings.js';
 
@@ -217,12 +247,14 @@ export default {
         parametrs: {}
       },
       play: mdiPlay,
+      plus: mdiPlus,
       gear: mdiSettings,
       merge: mdiMerge,
       modal: false,
       loading: false,
       rows: [],
-      data: {},
+      data: [],
+      test: [],
       statistic: [],
       showStatistic: false,
       statisticKey: null,
@@ -233,7 +265,6 @@ export default {
       },
       aboutElem: {},
       rowsCount: 9,
-      shema: {},
       unitedShow: false,
       unitedData: {
         color: '',
@@ -244,31 +275,72 @@ export default {
         'texts': [],
         'links': [],
         'buttons': []
-      }
+      },
+      activeElem: 'table',
     } 
   },
   asyncComputed: {
+    // async static_rows() {
+    //   if (this.shouldGet) {
+    //      this.data =  await this.getData(`reports-${this.search.sid}`);
+    //       console.log('update report')
+    //     // let statistic = '';
+    //     // this.rows = [];
+    //     // if (this.data.data.length != 0) {
+    //     //   console.log('create data report')
+    //     //   this.shema = this.data.shema;
+    //     //   this.data = this.data.data;
+    //     //   // let text = '';
+    //     //   // Object.keys(this.shema).forEach( (item,i) => {
+    //     //   //   statistic = this.createStatistic(item);
+    //     //   //   text = `${item}&nbsp;&nbsp;&nbsp;[${this.shema[item]}]`;
+    //     //   //   this.rows.push({'id': i,'text': text,'static': statistic});
+    //     //   // })
+    //     // }
+    //      this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
+    //     return true
+    //   }    
+    // }, 
+
+    // async getDataRest() {
+    //   console.log(this.shouldGet)
+    //   if (this.shouldGet) {
+        
+    //     // let res =  await this.getDataAsynchrony();
+    //     // if (res) {    
+    //     //   return res
+    //     // }
+    //    // await this.getDataAsynchrony()
+     
+    //     this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
+        
+        
+        
+    //   }
+    //  // return 'done'
+    //  //return []
+    //   return await this.getDataAsynchrony()
+      
+    // },
+
+
     async static_rows() {
       if (this.shouldGet) {
-        this.data =  await this.getData(`reports-${this.search.sid}`);
-        let statistic = '';
-        this.rows = [];
-        if (this.data.data.length != 0) {
-          this.shema = this.data.shema;
-          this.data = this.data.data;
-          let text = '';
-          Object.keys(this.shema).forEach( (item,i) => {
-            statistic = this.createStatistic(item);
-            text = `${item}&nbsp;&nbsp;&nbsp;[${this.shema[item]}]`;
-            this.rows.push({'id': i,'text': text,'static': statistic});
-          })
-        }
-        this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
-        return true
-      }    
+  
+        this.getData();
+      }  
+      this.$store.commit('setShould', { idDash: 'reports',  id: 'table', status: false}); 
+      return true  
     }, 
+
   },
   computed: { 
+    // getDataRest:  function() {
+    //   if (this.shouldGet) {
+    //     console.log(this.getDataAsynchrony());
+    //   }
+    //   return 'done'
+    // },
     shouldGet: function() {  // понимаем нужно ли запрашивтаь данные с реста
       return this.$store.getters.getShouldGet({id: 'table', idDash: 'reports'})
     },
@@ -287,6 +359,7 @@ export default {
         this.$set(this.aboutElem[item],'icon',settings.reports[item].icon);
         this.$set(this.aboutElem[item],'key',i);
       })
+      this.activeElem = 'table';
       return this.$store.getters.getReportElement
     }, 
     theme: function() {
@@ -300,6 +373,44 @@ export default {
     },
   }, 
   methods: {
+    getData: function() {
+
+      let blob = new Blob([`onmessage=${this.getDataFromDb().toString()}`], { type: "text/javascript" }); // создаем blob объект чтобы с его помощью использовать функцию для web worker
+
+      let blobURL = window.URL.createObjectURL(blob); // создаем ссылку из нашего blob ресурса
+
+      let worker = new Worker(blobURL); // создаем новый worker и передаем ссылку на наш blob объект
+
+      worker.onmessage = function(event) { // при успешном выполнении функции что передали в blob изначально сработает этот код
+
+  
+        let statistic = '';
+        this.rows = [];
+        if (event.data.data.length != 0) {
+          
+          this.shema = event.data.shema;
+          this.data = event.data.data;
+
+          let text = '';
+          Object.keys(this.shema).forEach( (item,i) => {
+            
+            statistic = this.createStatistic(item,event.data.data);
+            
+            text = `${item}&nbsp;&nbsp;&nbsp;[${this.shema[item]}]`;
+            this.rows.push({'id': i,'text': text,'static': statistic});
+
+            
+          })
+        }
+
+        worker.terminate();
+
+      }.bind(this);
+
+      worker.postMessage(`reports-${this.search.sid}`);   // запускаем воркер на выполнение
+
+
+    },
     launchSearch: async function() {
 
       this.search.sid = this.hashCode(this.search.original_otl);
@@ -307,6 +418,7 @@ export default {
       this.$store.auth.getters.putLog(`Запущен запрос  ${this.search.sid}`);
 
       this.loading = true;
+      console.log('launch search')
       let response = await this.$store.getters.getDataApi({search: this.search, idDash: 'reports'});
       // вызывая метод в хранилище  
 
@@ -316,6 +428,7 @@ export default {
         this.data = [];
         this.rows = [];
       } else {  // если все нормально
+        console.log('data ready')
     
         let responseDB = this.$store.getters.putIntoDB(response, this.search.sid, 'reports');
         responseDB
@@ -335,30 +448,30 @@ export default {
       return otl.split('').reduce((prevHash, currVal) =>
         (((prevHash << 5) - prevHash) + currVal.charCodeAt(0))|0, 0);
     },
-    getData: function(searсhID) {   // асинхронная функция для получения даных с реста
-        
-      let db = null;
-      //let result = null;
+    getDataFromDb: function() {
+      return function(event)  {
+        let db = null;
 
-      let request = indexedDB.open("EVA",1);  
+        let searchSid = event.data;
 
-      request.onerror = function(event) {
-        console.log("error: ",event);
-      };
+        let request = indexedDB.open("EVA",1);  
 
-      request.onupgradeneeded = event => {
-        console.log('create');
-        db = event.target.result;
-        if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
-          db.createObjectStore('searches'); // create it
-        }
-
-        request.onsuccess = event => {
-          db = request.result;
-          console.log("successEvent: " + db);
+        request.onerror = function(event) {
+          console.log("error: ",event);
         };
-      }
-      let promise = new Promise((resolve, reject) => {
+
+        request.onupgradeneeded = event => {
+          console.log('create');
+          db = event.target.result;
+          if (!db.objectStoreNames.contains('searches')) { // if there's no "books" store
+            db.createObjectStore('searches'); // create it
+          }
+
+          request.onsuccess = event => {
+            db = request.result;
+            console.log("successEvent: " + db);
+          };
+        }
 
         request.onsuccess =  event => {
 
@@ -370,14 +483,14 @@ export default {
           let searches = transaction.objectStore("searches"); // (2)
 
 
-          let query = searches.get(String(searсhID)); // (3) return store.get('Ire Aderinokun');
+          let query = searches.get(String(searchSid)); // (3) return store.get('Ire Aderinokun');
 
 
           query.onsuccess = event => { // (4)
             if (query.result) {
-              resolve(query.result);
+              self.postMessage(query.result);  // сообщение которое будет передаваться как результат выполнения функции
             } else {
-              resolve([]);
+              self.postMessage([]);  // сообщение которое будет передаваться как результат выполнения функции
             }
           };
 
@@ -386,11 +499,10 @@ export default {
           };
     
 
-        };    
+        };   
 
-      });
 
-      return promise
+      }
     },
     openSettings: function() {
       this.modal = true;
@@ -409,6 +521,7 @@ export default {
           this.$set(this.aboutElem[item],'show',false);
           this.$set(this.aboutElem[item],'color',this.color.text);
         } else {
+          this.activeElem = item;
           this.$set(this.aboutElem[item],'show',true);
           this.$set(this.aboutElem[item],'color',this.color.controls);
         }
@@ -424,11 +537,11 @@ export default {
       }
       this.$store.commit('setOptions',  { idDash: 'reports', id: 'multiLine', options: {united: this.unitedData.united} });
     },
-    createStatistic: function(key) {
+    createStatistic: function(key,data) {
       let how_much = {};
       let result = [];
-      let length = this.data.length;
-      this.data.forEach( item => {
+      let length = data.length;
+      data.forEach( item => {
         if (how_much[item[key]]) {
           how_much[item[key]]++;
         } else {
@@ -445,6 +558,7 @@ export default {
           }
         );
       })
+      
                
       return result 
 
@@ -454,13 +568,18 @@ export default {
       this.modal = false;
     },
     openStatistic: function(statistic) {
-      if (this.statisticKey == statistic.text) {
-        this.showStatistic = !this.showStatistic;
+      if (this.showStatistic) {
+        if (this.statisticKey == statistic.text) {
+          this.showStatistic = false;
+        } else {
+          this.statisticKey = statistic.text;
+          this.statistic = statistic.static;
+        }
       } else {
         this.showStatistic = true;
         this.statisticKey = statistic.text;
         this.statistic = statistic.static;
-      } 
+      }
     },
     calcSize: function() {
       let size = this.$refs.vis.$el.getBoundingClientRect();

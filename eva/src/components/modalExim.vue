@@ -29,6 +29,7 @@
             outlined 
             class="select-exp" 
             :label="labelExp[element]" 
+            @click="changeColor"
           /> 
           <v-btn 
             small  
@@ -166,7 +167,8 @@ export default {
         list.unshift('Выбрать все');
         this.elements[this.element] = list;
       }
-    }
+    },
+    
   },
   methods: {
     exportDash: async function() {
@@ -206,25 +208,38 @@ export default {
         this.msgImp.color = 'controlsActive';
         this.msgImp.opacity = '1';
       } else {
-        let formData =  new FormData();
-        if (this.element == 'dash') {
-          formData.append('group', this.curName);
-          formData.append('body', this.file);
-        } else {
-          formData.append('body', this.file);
-        }
-        let response = await this.$store.getters.importDash({element: this.element,formData: formData});
-        try {
-          let res = JSON.parse(response);  // тут проверяем может ли распарситься ответ от сервера
-          this.msgImp.text = 'Импорт прошел успешно';
-          this.msgImp.color = 'controls';
-          this.msgImp.opacity = '1';
-        }
-        catch {
-          this.msgImp.text = 'Импортировать не удалось';
+        let extantion = this.file.name.split('.');
+        extantion = extantion[extantion.length-1];
+        if (extantion != this.element) {
+          if (this.element == 'group') {
+            this.msgImp.text = 'Выберите файл c группами';
+          } else {
+            this.msgImp.text = 'Выберите файл c дашбордами';
+          }
           this.msgImp.color = 'controlsActive';
           this.msgImp.opacity = '1';
-        } 
+        } else {
+
+          let formData =  new FormData();
+          if (this.element == 'dash') {
+            formData.append('group', this.curName);
+            formData.append('body', this.file);
+          } else {
+            formData.append('body', this.file);
+          }
+          let response = await this.$store.getters.importDash({element: this.element,formData: formData});
+          try {
+            let res = JSON.parse(response);  // тут проверяем может ли распарситься ответ от сервера
+            this.msgImp.text = 'Импорт прошел успешно';
+            this.msgImp.color = 'controls';
+            this.msgImp.opacity = '1';
+          }
+          catch {
+            this.msgImp.text = 'Импортировать не удалось';
+            this.msgImp.color = 'controlsActive';
+            this.msgImp.opacity = '1';
+          } 
+        }
       }
       setTimeout( () => {
         this.msgImp.opacity = '0'; 
@@ -239,6 +254,18 @@ export default {
     },
     closeModal: function() {
       this.$emit('closeModal');
+    },
+    changeColor: function() {
+      if (document.querySelectorAll('.v-menu__content').length != 0){
+        
+        document.querySelectorAll('.v-menu__content').forEach( item => {
+          
+          item.style.boxShadow = `0 5px 5px -3px ${this.color.border},0 8px 10px 1px ${this.color.border},0 3px 14px 2px ${this.color.border}`;
+          item.style.background = this.color.back;
+          item.style.color = this.color.text;
+          item.style.border = `1px solid ${this.color.border}`;
+        })
+      }
     },
   },
 }

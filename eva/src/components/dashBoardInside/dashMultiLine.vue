@@ -13,7 +13,7 @@
       v-show="!dataLoading" 
       :class="props.class" 
       class="dash-multi" 
-      :data-status="getDataStart"
+      :data-status="change"
     />
     <div 
       v-show="dataLoading"
@@ -64,6 +64,8 @@ export default {
     idFrom: null,
     idDashFrom: null,
     dataLoadingFrom: null,
+    activeElemFrom: null,
+    dataReport: null,
   },
   data () {
     return {
@@ -97,10 +99,10 @@ export default {
     idDash: function() { 
       return this.idDashFrom
     },
-    dataRest: function() {
-      this.props.legends = [];
-      return this.dataRestFrom
-    },
+    // dataRest: function() {
+    //   this.props.legends = [];
+    //   return this.dataRestFrom
+    // },
     color: function() {
       return this.colorFrom
     },
@@ -130,85 +132,115 @@ export default {
     //   }
     //   return true
     // },
-    getDataStart: function() {
+    change: function() {
+      if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0 && this.width != 0 && this.height != 0) {
+        this.props.legends = [];
+        if (this.dataReport) {
+          
+          if (this.activeElemFrom == this.id) {
+            this.getDataAsynchrony();
+          } else {
 
-      //console.log('asdasdd')
-
-      let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
-      sizeLine['width'] = this.width;
-      sizeLine['height'] = this.height;
-
-      if (sizeLine.width > 0 && sizeLine.height > 0) {  // если размеры получены выше нуля
-        
-        if (this.dataRest.length > 0) {  // если данные от родителя тоже пришли
-          if(this.dataRest.error) {  // сомтрим если с ошибкой
-            this.props.message = this.dataRest.error; // то выводим сообщение о ошибке
-          } else {  // если нет
-            
-            let time = false;
-            let onlyNum = true;
-            let key = Object.keys(this.dataRest[0])[0];
-            typeof(this.dataRest[0][key]) != 'number' ? onlyNum = false : false
-
-            if (onlyNum){  // если все-таки число
-              if(this.dataRest[0][key] > 1000000000 && this.dataRest[0][key] < 2000000000) {
-                time = true;
-              }
-
-              this.props.nodata = false; // то убираем соощение о отсутствии данных
-              this.props.result = this.dataRest;  // заносим все данные в переменную
-              let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
-              let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
-              let metricsOpt = [];
-              if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
-                metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
-              }
-              if (this.props.legends.length == 0) {
-                this.metrics = [];
-                
-                let metricsName = Object.keys(this.props.result[0]).filter( item => {
-                  if (item.indexOf('caption') == -1 && item.indexOf('annotation') == -1) {
-                    return item
-                  }
-                }); 
-                                          
-                if (metricsName.length > 0) {
-                  this.metrics = [...[],...metricsName];
-                  metricsName.splice(0,1)
-
-                              
-                  this.createLegends(metricsName);
-
-                  let timeOut = setTimeout( function tick() {
-                    if (this.$refs && this.props.legends.length > 0 ) {    
-                      clearTimeout(timeOut);
-                      this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
-                    }  else {
-                      timeOut = setTimeout(tick.bind(this), 100); 
-                    }
-                  }.bind(this), 0);
-
-                } else {
-                  this.props.message = 'Данные не подходят для построения графика';
-                  this.props.nodata = true; 
-                }
-
-              } else {
-                this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
-              }
-
-            } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
-              this.props.nodata = true;  // показываем сообщение о некорректности данных
-              this.props.result = [];  // очищаем массив результатов
-              this.props.message = "К сожалению данные не подходят к линейному графику";  // выводим сообщение
-              d3.select(this.$el.querySelector('.dash-multi')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
+            let graphics = d3.select(this.$el.querySelector('.dash-multi')).selectAll('svg').nodes(); // получаем область в которой будем рисовтаь график 
+      
+            if(graphics.length != 0){  // если график уже есть
+              graphics[0].remove(); // удаляем его
             }
           }
+        } else {
+          this.getDataAsynchrony();
         }
-      }         
-      return 'done'
+        
+      }
+      return true  
+    },
+    // getDataStart: function() {
+
+    //   //console.log('asdasdd')
+
+    //   if (this.width != 0 && this.height != 0 && this.dataRest.length > 0) {   // если размеры получены выше нуля и  если данные от родителя тоже пришли
+    //     this.getDataAsynchrony(); // вызываем функцию в которой будет происходить асинхронная отрисовка графика
+    //   }
+ 
+    //   return 'done'
+
+    //   // let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
+    //   // sizeLine['width'] = this.width;
+    //   // sizeLine['height'] = this.height;
+
+    //   // if (sizeLine.width > 0 && sizeLine.height > 0) {  // если размеры получены выше нуля
+        
+    //   //   if (this.dataRest.length > 0) {  // если данные от родителя тоже пришли
+    //   //     if(this.dataRest.error) {  // сомтрим если с ошибкой
+    //   //       this.props.message = this.dataRest.error; // то выводим сообщение о ошибке
+    //   //     } else {  // если нет
+    //   //       console.log('multilinechart is obtain data')
+            
+    //   //       let time = false;
+    //   //       let onlyNum = true;
+    //   //       let key = Object.keys(this.dataRest[0])[0];
+    //   //       typeof(this.dataRest[0][key]) != 'number' ? onlyNum = false : false
+
+    //   //       if (onlyNum){  // если все-таки число
+    //   //         if(this.dataRest[0][key] > 1000000000 && this.dataRest[0][key] < 2000000000) {
+    //   //           time = true;
+    //   //         }
+
+    //   //         this.props.nodata = false; // то убираем соощение о отсутствии данных
+    //   //         this.props.result = this.dataRest;  // заносим все данные в переменную
+    //   //         let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
+    //   //         let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
+    //   //         let metricsOpt = [];
+    //   //         if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
+    //   //           metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
+    //   //         }
+    //   //         if (this.props.legends.length == 0) {
+    //   //           this.metrics = [];
+                
+    //   //           let metricsName = Object.keys(this.props.result[0]).filter( item => {
+    //   //             if (item.indexOf('caption') == -1 && item.indexOf('annotation') == -1) {
+    //   //               return item
+    //   //             }
+    //   //           }); 
+                                          
+    //   //           if (metricsName.length > 0) {
+    //   //             this.metrics = [...[],...metricsName];
+    //   //             metricsName.splice(0,1)
+
+                              
+    //   //             this.createLegends(metricsName);
+
+    //   //             let timeOut = setTimeout( function tick() {
+    //   //               if (this.$refs && this.props.legends.length > 0 ) {    
+    //   //                 clearTimeout(timeOut);
+    //   //                 this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
+    //   //               }  else {
+    //   //                 timeOut = setTimeout(tick.bind(this), 100); 
+    //   //               }
+    //   //             }.bind(this), 0);
+
+    //   //           } else {
+    //   //             this.props.message = 'Данные не подходят для построения графика';
+    //   //             this.props.nodata = true; 
+    //   //           }
+
+    //   //         } else {
+    //   //           this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
+    //   //         }
+
+    //   //       } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
+    //   //         this.props.nodata = true;  // показываем сообщение о некорректности данных
+    //   //         this.props.result = [];  // очищаем массив результатов
+    //   //         this.props.message = "К сожалению данные не подходят к линейному графику";  // выводим сообщение
+    //   //         d3.select(this.$el.querySelector('.dash-multi')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
+    //   //       }
+    //   //     }
+    //   //   }
+    //   // }    
+    //   //  console.log('multilinechart done')     
+    //   // return 'done'
     
-    }
+    // }
 
   },
   watch: {
@@ -217,10 +249,92 @@ export default {
     }
   },
   methods: {
+    getDataAsynchrony: function() {
+      let united = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).united;
+      let lastDot = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).lastDot;
+      let metricsOpt = [];
+      if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics) {
+        metricsOpt = [...[],...this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metrics];
+      }
+      let prom = new Promise( resolve => { // создаем promise чтобы затем отрисовать график асинхронно
+
+     
+        let sizeLine = {'width': 0,'height': 0};  // получаем размеры от родителя
+        sizeLine['width'] = this.width;
+        sizeLine['height'] = this.height;
+
+        if(this.dataRestFrom.error) {  // смотрим если с ошибкой
+          this.props.message = this.dataRestFrom.error; // то выводим сообщение о ошибке
+        } else {  // если нет
+
+          resolve(sizeLine) // передаем в результат размеры графика
+        
+        } 
+
+      })
+
+      prom.then( (sizeLine) => { 
+        
+        let time = false;
+        let onlyNum = true;
+        let key = Object.keys(this.dataRestFrom[0])[0];
+        typeof(this.dataRestFrom[0][key]) != 'number' ? onlyNum = false : false
+
+        if (onlyNum){  // если все-таки число
+          if(this.dataRestFrom[0][key] > 1000000000 && this.dataRestFrom[0][key] < 2000000000) {
+            time = true;
+          }
+
+          this.props.nodata = false; // то убираем соощение о отсутствии данных
+          this.props.result = this.dataRestFrom;  // заносим все данные в переменную
+          
+          if (this.props.legends.length == 0) {
+            this.metrics = [];
+            
+            let metricsName = Object.keys(this.props.result[0]).filter( item => {
+              if (item.indexOf('caption') == -1 && item.indexOf('annotation') == -1) {
+                return item
+              }
+            }); 
+                                      
+            if (metricsName.length > 0) {
+              this.metrics = [...[],...metricsName];
+              metricsName.splice(0,1)
+
+                          
+              this.createLegends(metricsName);
+
+              let timeOut = setTimeout( function tick() {
+                if (this.$refs && this.props.legends.length > 0 ) {    
+                  clearTimeout(timeOut);
+                  this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
+                }  else {
+                  timeOut = setTimeout(tick.bind(this), 100); 
+                }
+              }.bind(this), 0);
+
+            } else {
+              this.props.message = 'Данные не подходят для построения графика';
+              this.props.nodata = true; 
+            }
+
+          } else {
+            this.createLineChart(this.props,this,sizeLine,time,united,lastDot,metricsOpt);
+          }
+
+        } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
+          this.props.nodata = true;  // показываем сообщение о некорректности данных
+          this.props.result = [];  // очищаем массив результатов
+          this.props.message = "К сожалению данные не подходят к линейному графику";  // выводим сообщение
+          d3.select(this.$el.querySelector('.dash-multi')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
+        }
+      });
+    },
     setMetrics: function() {
       this.$store.commit('setMetricsMulti', {metrics: this.metrics, idDash: this.idDash, id: this.id });
     },
     createLineChart: function (props,that,sizeLine,time,united,lastDot,metricsOpt) {  // создает график
+    
       let colors = [this.color.controls,this.color.text,this.color.controlsActive,'#660099','#3366FF','#e5194a',]; // основные используемые цвета
       let colorLine = this.colorLegends;
   
@@ -766,7 +880,7 @@ export default {
             
         let step = ((height-20)/metricsName.length).toFixed(5);
         let startY = [20];
-        let otstupProcent;
+        let maxYTop,minYBottom;
         y = [];
         line = [];
         AllLinesWithBreak = [];
@@ -831,8 +945,7 @@ export default {
           }
 
 
-          otstupProcent = (20*max[i])/100;
-
+          
           let metricOPt = {};
           if (metricsOpt.length != 0) {
 
@@ -857,6 +970,9 @@ export default {
             }
           }
 
+          maxYTop = maxY + 0.1*Math.abs(maxY);
+          minYBottom = minY-0.1*Math.abs(minY);
+
           // svg.append("defs").append("svg:clipPath")
           //   .attr("id", `clip-${that.id}-${i}`)
           //   .append("svg:rect")
@@ -865,11 +981,16 @@ export default {
           //   .attr("x", 0)
           //   .attr("y", startY);
           let tickvals = [];
-          if (minY < 0) {
-            tickvals = [minY,0,maxY];
+          if (minYBottom == maxYTop) {
+            tickvals = [minYBottom];
           } else {
-            tickvals = [maxY];
+            if (minYBottom < 0) {
+              tickvals = [minYBottom,0,maxYTop];
+            } else {
+              tickvals = [minYBottom,maxYTop];
+            }
           }
+          
 
           
 
@@ -881,7 +1002,7 @@ export default {
             
 
             y.push(d3.scaleLinear()
-              .domain([minY, maxY+otstupProcent])
+              .domain([minYBottom, maxYTop])
               .range([ parseFloat(step)+20,startY[i] ]));
 
             //console.log(y[i].ticks())
@@ -933,7 +1054,7 @@ export default {
           } else {
             
             y.push(d3.scaleLinear()
-              .domain([minY, maxY+otstupProcent])
+              .domain([minYBottom, maxYTop])
               .range([ parseFloat(step*(i+1))+20, startY[i] ]));
 
             // добавляем ось Y
@@ -1376,7 +1497,8 @@ export default {
                 if (time) {
                   return z.bandwidth()
                 } else { 
-                  return x.bandwidth()} 
+                  return x.bandwidth()
+                } 
               })
               .attr("height", function(d,j) { 
                 if (lastDot) {
@@ -1522,7 +1644,6 @@ export default {
         let group = svg
           .append("g")
           .attr("class","vetical-line-group");
-        
 
         group
           .append("line")
@@ -1532,7 +1653,7 @@ export default {
           .attr("x2", x(d[xMetric]*secondTransf))
           .attr("y2", height)
           .attr("xVal", d[xMetric]*secondTransf)
-          .attr("stroke", colors[i])
+          .attr("stroke", colorLine[i])
           .style("opacity", "0.7")
 
         group
@@ -1542,7 +1663,7 @@ export default {
           .attr("r", 5)
           .attr("xVal", d[xMetric]*secondTransf)
           .attr("opacity", "0.7")
-          .attr("fill", colors[i])
+          .attr("fill", colorLine[i])
           .attr("class","dot-vertical")
           .on("mouseover", function() {
             tooltip
@@ -1892,8 +2013,8 @@ export default {
             this.$store.commit('letEventSet', {events: events, idDash: this.idDash,  });
           } else if (item.action == 'go') {
             if (action != 'select') {
-              this.$store.commit('letEventGo', {event: item, idDash: this.idDash });
-              this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
+              this.$store.commit('letEventGo', {event: item, idDash: this.idDash, route: this.$router, store: this.$store });
+             // this.$router.push(`/dashboards/${item.target.toLowerCase()}`);
             }
           }
         })

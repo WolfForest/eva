@@ -12,9 +12,8 @@
       </div>
       <div 
         class="title-edit" 
-        :style="editSwitch"
       >
-        <v-tooltip 
+        <!-- <v-tooltip 
           bottom 
           :color="color.controlsActive" 
         >
@@ -29,6 +28,22 @@
             </v-icon> 
           </template>
           <span>Поменять режим отображения</span>
+        </v-tooltip> -->
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive" 
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class="edit" 
+              :style="{color:'#DADADA'}"
+              v-on="on"
+              @click="gearShow = !gearShow"
+            >
+              {{ gear }}
+            </v-icon> 
+          </template>
+          <span>Открыть настройки дашборда</span>
         </v-tooltip>
       </div>
     </div>
@@ -228,6 +243,22 @@
             </v-icon>
           </template>
           <span>Экспортировать ИД</span>
+        </v-tooltip>
+        <v-tooltip 
+          bottom 
+          :color="color.controlsActive"
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon 
+              class=" search-clock" 
+              :color="color.controls" 
+              v-on="on"
+              @click="modalPaperSid=sear.sid,modalPaper=true"
+            >
+              {{ paper }}
+            </v-icon>
+          </template>
+          <span>Создать отчет</span>
         </v-tooltip>
         <v-tooltip 
           bottom 
@@ -601,12 +632,25 @@
       :dataSidFrom="scheduleSid"
       @cancel="activeSchedule=false" 
     />
+    <dash-settings 
+      :color-from="color" 
+      :gear-from="gearShow"
+      :idDashFrom="idDashFrom"
+      @changeMode="setEditMode"
+    />
+    <modal-paper 
+      :color="color" 
+      :active="modalPaper"
+      :sid=" modalPaperSid"
+      :id-dash="idDash"
+      @cancelModal="cancelModal"
+    />
   </div>
 </template>
 
 <script>
 
-import { mdiPlusBox, mdiPlay, mdiEye, mdiArrowDownBold, mdiContentSave, mdiAccount,    mdiHomeVariantOutline,  mdiSettings, mdiHelpCircleOutline, mdiClockOutline,  mdiDatabase,mdiTableEdit,mdiCodeTags, mdiTrashCanOutline, mdiMinusBox, mdiToolbox ,   mdiPencil,  mdiVariable, mdiCheckBold,  mdiSwapVerticalBold } from '@mdi/js'
+import { mdiPlusBox, mdiPlay, mdiEye, mdiFileDocumentOutline,  mdiArrowDownBold, mdiContentSave, mdiAccount,    mdiHomeVariantOutline,  mdiSettings, mdiHelpCircleOutline, mdiClockOutline,  mdiDatabase,mdiTableEdit,mdiCodeTags, mdiTrashCanOutline, mdiMinusBox, mdiToolbox ,   mdiPencil,  mdiVariable, mdiCheckBold,  mdiSwapVerticalBold } from '@mdi/js'
 
 //import { match } from 'minimatch'
 
@@ -646,6 +690,7 @@ export default {
       play: mdiPlay,
       clock: mdiClockOutline,
       download: mdiArrowDownBold,
+      paper: mdiFileDocumentOutline,
       help_elem: true,
       help_coral: 'fill:teal',
       opencode: false,
@@ -657,6 +702,7 @@ export default {
       opensave: false,
       openexim: false,
       sign: true,
+      gearShow: false,
       gear: mdiSettings,
       exim: mdiSwapVerticalBold,
       home: mdiHomeVariantOutline,
@@ -706,6 +752,8 @@ export default {
       colorErrorSave: '',
       createSearchBtn: '',
       disabledDS: {},
+      modalPaperSid: '',
+      modalPaper: false,
     }
   },
   computed: {
@@ -772,13 +820,13 @@ export default {
         return `fill:#DADADA`;
       }
     },
-    editSwitch: function() {
-      if (this.edit_elem) {
-        return  'opacity:1';
-      } else {
-        return 'opacity:0.5';
-      }
-    },
+    // editSwitch: function() {
+    //   if (this.edit_elem) {
+    //     return  'opacity:1';
+    //   } else {
+    //     return 'opacity:0.5';
+    //   }
+    // },
     textareaEv: function() {
       let eventFull = this.$store.getters.getEventFull(this.idDash);
       if (eventFull != ''){
@@ -827,6 +875,7 @@ export default {
     },
     cancelModal: function() {
       this.activeModal  = false;
+      this.modalPaper =false;
     },
     openSchedule: function(id) {
       this.scheduleSid = id;
@@ -1130,7 +1179,7 @@ export default {
         let csvContent = "data:text/csv;charset=utf-8,"; // задаем кодировку csv файла
         let keys = Object.keys(res[0]); // получаем ключи для заголовков столбцов
         csvContent += encodeURIComponent(keys.join(',') + "\n"); // добавляем ключи в файл
-        csvContent += encodeURIComponent(res.map( item =>  Object.values(item).join(",")).join("\n")); // добовляем все значения по клюам в файл
+        csvContent += encodeURIComponent(res.map( item =>  Object.values(item).join(",")).join("\n")); // добовляем все значения по ключам в файл
         let link = this.$refs.blockCode.appendChild(document.createElement("a")); // создаем ссылку
         link.setAttribute('href',csvContent); // указываем ссылке что надо скачать наш файл csv
         link.setAttribute("download", `${this.idDash}-${sid}.xlsx`); // указываем имя файла 
@@ -1193,17 +1242,31 @@ export default {
         this.avatar = null;  // и у нас тоже его очищаем
 
         // Создаем новый элемнет на дашборде (стандартные настройки любого элемента)
-
+ 
         this.$set(this.newDashBoard,type,{});
         this.$set(this.newDashBoard[type],'name_elem',type[0].toUpperCase() + type.substring(1));
 
+        let step = JSON.parse(JSON.stringify(this.$store.getters.getSizeGrid(this.idDash)));
+        step.vert = Math.round(screen.width/Number(step.vert));
+        step.hor = Math.round(screen.height/Number(step.hor));
 
-        this.$set(this.newDashBoard[type],'width',settings.size[type].width);
-        this.$set(this.newDashBoard[type],'height',settings.size[type].height); 
+        let size = this.calcGrid(settings.size[type].height, settings.size[type].width,step,'size');
+
+        this.$set(this.newDashBoard[type],'width',size.vert);
+        this.$set(this.newDashBoard[type],'height',size.hor); 
+
+        let pos = this.calcGrid(coord.top, coord.left,step,'pos');
+        
+        this.$set(this.newDashBoard[type],'top',pos.hor+pageYOffset);
+        this.$set(this.newDashBoard[type],'left',pos.vert);
+
+        // this.$set(this.newDashBoard[type],'width',settings.size[type].width);
+        // this.$set(this.newDashBoard[type],'height',settings.size[type].height); 
        
-        let size ={top: coord.top, left: coord.left};
-        this.$set(this.newDashBoard[type],'top',size.top+pageYOffset);
-        this.$set(this.newDashBoard[type],'left',size.left);
+        // let size ={top: coord.top, left: coord.left};
+        // this.$set(this.newDashBoard[type],'top',size.top+pageYOffset);
+        // this.$set(this.newDashBoard[type],'left',size.left);
+
         this.$set(this.newDashBoard[type],'should',false);
         this.$set(this.newDashBoard[type],'search',-1);
         this.$set(this.newDashBoard[type],'switch',false);
@@ -1216,9 +1279,19 @@ export default {
       }
 
     },
-    calcSizePx(size,key) {
-      return `${((size*100)/screen[key]).toFixed(1)}%`
+    calcGrid: function(top,left,step,action){
+      let size = {},header;
+      screen.width > 1400 ? header = 50 : header = 40;
+      action == 'size' ? header = 0 : false;
+      size.vert = Math.round(left/step.vert);
+      //size.vert = leftCoord*step.vert;
+      size.hor = Math.round((top-header)/step.hor);
+      //size.hor = (topCoord*step.hor)+header;
+      return size
     },
+    // calcSizePx(size,key) {
+    //   return `${((size*100)/screen[key]).toFixed(1)}%`
+    // },
     checkPos: function(size) {
       let result = {top: 0, left: 0};
       let clientWidth = document.querySelector('#app').clientWidth;
@@ -1256,10 +1329,11 @@ export default {
     setEvents: function() {
       if (this.textarea_event != null  && this.textarea_event != '') {
         let events = this.textarea_event.split('\n');
-        let reg,body,bodyArray,element,doing;
+        let reg,body,bodyArray,element,doing,originItem;
 
         if (events.length != 0) {
           events.forEach( item => {  
+            originItem = item;
             item =  item.replace(/\s/g, ''); 
             if (item != ''){
               reg = new RegExp( /^[\s+]?[\w]+\(/, "g");
@@ -1269,11 +1343,13 @@ export default {
               
               body = body.slice(1, body.length-1);      
               bodyArray = body.split(',');
+              
               bodyArray.forEach( (elem,i) => {
                 if(elem.indexOf('(') != -1) {
                   element = bodyArray.splice(0, i);
                 }
               })
+              
 
               if (this.event.event == 'OnDataCompare') { 
                 if (element.length > 2 && element[1].indexOf('[') == -1){
@@ -1318,12 +1394,17 @@ export default {
               doing = reg.exec(body)[0];
               doing = doing.split('(');
               this.$set(this.event,'action',doing[0]);
-              if (doing[0].toLowerCase() === 'set'.toLowerCase()) {
+              if (doing[0].toLowerCase() == 'set'.toLowerCase()) {
                 doing = doing[1].slice(0, doing[1].length-1).split(',');
                 this.$set(this.event,'target',doing[0]);
                 doing.splice(0,1);
                 doing = doing.join(',');
-                doing = doing.match(/[^\[]+(?=\])/g);
+                if (doing.indexOf('[') != -1 && doing.indexOf(']') != -1) {
+                  doing = doing.match(/[^\[]+(?=\])/g);
+                } else {
+                  doing = doing.split(',');
+                }
+                
                 if (doing == null) {
                   this.$set(this.event,'prop',['']);
                   this.$set(this.event,'value',['']);
@@ -1332,12 +1413,23 @@ export default {
                   this.$set(this.event,'value',doing[1].split(','));
                 } 
               
-              } else if(doing[0].toLowerCase() === 'go'.toLowerCase()) {///go
+              } else if(doing[0].toLowerCase() == 'go'.toLowerCase()) {///go
                 doing = doing[1].slice(0, doing[1].length-1).split(',');
                 this.$set(this.event,'target',doing[0]);
-                this.$set(this.event,'prop',[doing[1]]);
-                this.$set(this.event,'value',[doing[2]]);  
-              } else if(doing[0].toLowerCase() === 'open'.toLowerCase()){//open
+                let prop,value;
+                if (doing[1].indexOf('[') != -1) {
+                  doing.splice(0,1);
+                  doing = doing.join(',');
+                  doing = doing.match(/[^\[]+(?=\])/g);
+                  prop = doing[0].split(',');
+                  value = doing[1].split(',');
+                }else {
+                  prop = [doing[1]];
+                  value = [doing[2]];
+                }
+                this.$set(this.event,'prop',prop);
+                this.$set(this.event,'value',value);  
+              } else if(doing[0].toLowerCase() == 'open'.toLowerCase()){//open
                 doing = doing[1].slice(0, doing[1].length-1).split(',');
 
                 this.$set(this.event,'target',doing[0]);
@@ -1349,6 +1441,21 @@ export default {
 
                 this.$set(this.event,'header',doing[5]);
 
+              } else if (doing[0].toLowerCase() == 'changeReport'.toLowerCase()) {
+                
+                doing = originItem.split(doing[0])[1];
+                doing =  doing.replace(/\(/g, '').replace(/\)/g, '').split(','); 
+                this.$set(this.event,'sid',doing[0]);
+                if (doing[1].indexOf('[') != -1) {
+                  doing.splice(0, 1);
+                  let files = doing.map( item => {
+                    return item.replace('[', '').replace(']', '')
+                  })
+                  this.$set(this.event,'file',files);
+                } else {
+                  this.$set(this.event,'file',[doing[1]]);
+                }
+                
               }
               this.events.push(this.event);
               this.event ={};

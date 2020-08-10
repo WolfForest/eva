@@ -93,7 +93,28 @@ export default {
       this.clear = 'Очистить';
     },
     getLog: async function() {
-      this.text =  await this.$store.auth.getters.getLog('front');
+      let front = await this.$store.auth.getters.getLog('front'); // получаем все логи для фронта
+      let sizeFront = new Blob([front]).size; // смотрим их размер в байтах
+      let border = 50000; // предел размера в байтах должен быть приблизителньо 5 мегабайт
+      if (sizeFront > border) { // если размер логов больше предела
+        this.text = await this.containLog(front,sizeFront,border); // то вызовем функцию которая сократит наши логи до 5 мегабайт
+      } else { // если логов меньше 5 мегабайт
+        this.text = front; // то просто выведем их
+      }
+    },
+    containLog: async function(text,biLength,border) { // функция которая сократит логи до предела
+      let length, procent; // переменные длины строки и 5 % от этой длины
+      while (biLength > border) {  // пока размер текста в байтах превышает наш порог
+        length = text.length; // запоминаем длину текста
+        procent = Math.ceil(length*0.05); // берем 5 % от этой длины
+        text = text.slice(0, length-procent); // затем берем текст без этих пяти процентов
+        biLength = new Blob([text]).size // и смотрим его размер, чтобы понять стоит ли еще урезать
+      }
+      // когда уже все урезали, у нас может обрезаться на полуслове последний лог
+      text = text.split('<br>'); // чтобы этого избежать мы разобьем строку в массив по переносу строки
+      text.pop(); // удалим последний элемент, который может быть обрезан
+      text = text.join("<br>"); // и снова склеим
+      return text // получили строку не превышающию 5 мегабайт
     },
     sendToBack: async function() {
 

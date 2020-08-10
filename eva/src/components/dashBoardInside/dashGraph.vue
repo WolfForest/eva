@@ -787,10 +787,22 @@ export default {
       event.target.style.opacity = '0'; // скрываем кнопку сохранить
     },
     stepByStep: function(data) { // функция выоплняющяя все шаги по созаднию графа
+
+
+      let prom = new Promise( resolve => { // создаем promise чтобы затем отрисовать график асинхронно
       
-      let elem = this.$refs.graph; // получаем элемент графа
-    
-      if(elem) {  // если он уже создался на странице
+        let elem = this.$refs.graph; // получаем элемент графа
+      
+        if(elem) {  // если он уже создался на странице
+
+          resolve(elem)
+
+        }
+
+      });
+
+      prom.then( elem => { // как раз тут делаем асинхронность
+        console.log('create graph')
         
         this.prepareGraph(data); // сперва подготовливаем данные
             
@@ -805,8 +817,7 @@ export default {
           this.createGraph(elem);  // собственно отрисовываем сам граф
 
         }
-
-      }
+      })
 
     }
   }, 

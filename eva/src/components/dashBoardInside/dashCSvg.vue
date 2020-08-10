@@ -7,7 +7,8 @@
     <div 
       v-show="noMsg==1"
       ref="csvg"
-      class="csvg-block"  
+      class="csvg-block" 
+      :data-change="change" 
       :style="{width:`${widthFrom-40}px`,height:`${heightFrom-otstupBottom}px`}" 
       v-html="svg"
     />
@@ -134,6 +135,8 @@ export default {
     heightFrom: null, // выоста родительского компонента
     tooltipFrom: null, // объект тултипа
     dataModeFrom: null, // выключена ли шапка или включена
+    activeElemFrom: null,
+    dataReport: null,
   },
   data () {
     return {
@@ -196,7 +199,30 @@ export default {
       this.captures = idsButton;
 
       return options.change
-    }
+    },
+    change: function() {
+      if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0  && this.dataRestFrom[0].svg_filename && this.dataRestFrom[0].svg_filename != '') {
+        if (this.dataReport) {
+          
+          if (this.activeElemFrom == this.id) {
+            this.dataFrom = this.dataRestFrom[0];
+            this.getSvg(this.dataRestFrom[0].svg_filename);
+            this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id }); 
+          } else {
+            this.svg = '';
+          }
+        } else {
+          this.dataFrom = this.dataRestFrom[0];
+          this.getSvg(this.dataRestFrom[0].svg_filename);
+          this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id }); 
+        }
+        
+      }
+      if (screen.width <= 1600) {
+        this.otstupBottom = 30;
+      }
+      return true  
+    },
 
   },  
   watch: { 
@@ -209,19 +235,19 @@ export default {
       } else {
         this.otstupBottom = 10; 
       }
-      this.checkSize();
+     // this.checkSize();
     },
-    dataRestFrom: function(dataRest) {
+    // dataRestFrom: function(dataRest) {
         
-      if (dataRest.length != 0 && dataRest[0].svg_filename && dataRest[0].svg_filename != '') {
-        this.dataFrom = dataRest[0];
-        this.getSvg(dataRest[0].svg_filename);
-        this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id }); 
-      }
-      if (screen.width <= 1600) {
-        this.otstupBottom = 30;
-      }
-    },
+    //   if (dataRest.length != 0 && dataRest[0].svg_filename && dataRest[0].svg_filename != '') {
+    //     this.dataFrom = dataRest[0];
+    //     this.getSvg(dataRest[0].svg_filename);
+    //     this.$store.commit('setActions', {actions: this.actions, idDash: this.idDash, id: this.id }); 
+    //   }
+    //   if (screen.width <= 1600) {
+    //     this.otstupBottom = 30;
+    //   }
+    // },
     widthFrom: function() {
       this.checkSize();
     },
@@ -238,6 +264,7 @@ export default {
       this.$emit('setLoading',true);
       let response = await  this.$store.getters.getSvg(svg);
       if (response != '') {
+        console.log('create svg')
         this.$emit('setLoading',false);
         this.svg = response;
         this.noMsg = 1;
@@ -250,8 +277,8 @@ export default {
         this.$emit('setLoading',false);
       }
     },
-    checkSize: function() {
-      if (this.svg != 'Нет данных для отображения') {
+    checkSize: function() {this.$refs.csvg
+      if (this.svg != 'Нет данных для отображения' && this.svg != '') {
         let timeOut = setTimeout( function tick() {
           if (this.$refs.csvg.querySelector('svg') != null ) {
             clearTimeout(timeOut);

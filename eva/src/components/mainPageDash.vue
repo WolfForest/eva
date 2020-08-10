@@ -329,7 +329,7 @@ export default {
     setPermissions: function(event) { 
       if (event.includes('admin_all')) {
         this.adminRoot = true;
-      }       
+      }   
     },
     closeModal: function() {
       this.modalCreateGroup=false;

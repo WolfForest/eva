@@ -16,11 +16,7 @@ export default {
 
   data () {
     return {
-<<<<<<< HEAD
-      version: 'v 1.40.18',
-=======
-      version: 'v 1.40.19 [underlineButton]',
->>>>>>> develop
+      version: '1.51.0',
       color: { },
     } 
   },

@@ -5,15 +5,18 @@
       class="dash-tile" 
       :style="{height:`${height-otstupBottom}px`}"
     >
-      <div class="tile-block">
+      <div 
+        class="tile-block"
+        :data-status="change"
+      >
         <div 
-          v-for="i in dataRest.length" 
+          v-for="i in dataTile.length" 
           :key="i"
           class="tile" 
-          :style="{backgroundColor:dataRest[i-1].color,border: `3px inset ${borderColor(dataRest[i-1].border)}`,width:widthTile,height:heightTile}"
-          @click="setClick(dataRest[i-1])"
+          :style="{backgroundColor:dataTile[i-1].color,border: `3px inset ${borderColor(dataTile[i-1].border)}`,width:widthTile,height:heightTile}"
+          @click="setClick(dataTile[i-1])"
         >
-          <p v-html="checkName(dataRest[i-1].caption)" />
+          <p v-html="checkName(dataTile[i-1].caption)" />
         </div>
       </div>
     </div>
@@ -39,6 +42,8 @@ export default {
     sizeTileFrom: null,  // размер плиток 
     heightFrom: null,  // высота родительского элемента
     dataModeFrom: null,  // включена ли шапка
+    activeElemFrom: null,
+    dataReport: null,
   },
   data () {
     return {
@@ -51,6 +56,7 @@ export default {
       captures: {},
       noMsg: false,
       msgText: '',
+      dataTile: [],
     } 
   },
   computed: {  // осоновные параметры, которые чатсо меняются и которы следует отслеживать
@@ -60,8 +66,20 @@ export default {
     idDash: function() { 
       return this.idDashFrom
     },
-    dataRest: function() {
-      let data = [];
+    // dataRest: function() {
+    //   if (!this.dataRestFrom.length || this.dataRestFrom.length == 0) {
+    //     this.noMsg = true;
+    //     this.msgText = "Нет данных для отображения";
+    //   } else if (!this.dataRestFrom[0].caption || !this.dataRestFrom[0].color) {
+    //     this.noMsg = true;
+    //     this.msgText = "Ожидается поле caption и color";
+    //   } else {
+    //     this.pushDataAsynchrony();
+        
+    //   }
+    //   return 'done'
+    // },
+    change: function() {
       if (!this.dataRestFrom.length || this.dataRestFrom.length == 0) {
         this.noMsg = true;
         this.msgText = "Нет данных для отображения";
@@ -69,13 +87,20 @@ export default {
         this.noMsg = true;
         this.msgText = "Ожидается поле caption и color";
       } else {
-        this.noMsg = false;
-        this.dataRestFrom.forEach( (item) => {
-          data.push({...{},...item})
-        })
-        this.captures = Object.keys(this.dataRestFrom[0]);
+        if (this.dataReport) {
+          
+          if (this.activeElemFrom == this.id) {
+            this.pushDataAsynchrony();
+          } else {
+            this.dataTile = [];
+          }
+        } else {
+          this.pushDataAsynchrony();
+        }
+        
+        
       }
-      return data
+      return true
     },
     otstupBottom: function() {
       let otstup = null;
@@ -109,6 +134,24 @@ export default {
     },
   },
   methods: {
+    pushDataAsynchrony: function () { 
+
+      let prom = new Promise( resolve => { // создаем promise чтобы затем отрисовать график асинхронно
+        resolve();
+      });
+
+      prom.then( () => { // как раз тут делаем асинхронность
+        this.dataTile = [];
+        this.noMsg = false;
+        this.dataRestFrom.forEach( (item) => {
+          this.dataTile.push({...{},...item})
+        })
+        this.captures = Object.keys(this.dataRestFrom[0]);
+      })
+
+     
+
+    },
     setClick: function(item) {
 
       let tockens = this.$store.getters.getTockens(this.idDash);
