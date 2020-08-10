@@ -6,7 +6,7 @@
     left
     class="left-dash-setting"
     :color="colorFrom.text"
-     style="{background: colorFrom.backElement, borderTop:`2px solid ${colorFrom.panel}`,borderBottom:`2px solid ${colorFrom.panel}`}"
+    :style="{background: colorFrom.backElement, borderTop:`2px solid ${colorFrom.panel}`,borderBottom:`2px solid ${colorFrom.panel}`}"
     :permissions="permissions"
   >
     <div
