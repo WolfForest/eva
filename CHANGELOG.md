@@ -40,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - add new event for download search in file on click element
 
+- check datasource in index db and if haven`t start search
+
 ## [1.44.26] [newSetting]
 ### Adde
 
