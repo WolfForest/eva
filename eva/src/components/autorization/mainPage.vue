@@ -55,7 +55,7 @@
               />
             </v-card-text>
           </v-card>
-          <v-card  
+        <v-card  
             class="product-block-itself" 
             :style="{backgroundColor:color.backElement}"
             @click="openPaper"
