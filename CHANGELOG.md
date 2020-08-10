@@ -38,6 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - add action click and capture inverse for button component
 
+- add new event for download search in file on click element
+
 ## [1.44.26] [newSetting]
 ### Adde
 

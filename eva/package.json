@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "webpack-dev-server --watch-poll --mode development",
     "build": "webpack --mode production",
-    "test": "jest  --config=jest.config.js --no-cache",
-    "debug": "node --debug-brk --inspect ./node_modules/jest/bin/jest -i"
+    "test": "jest  --config=jest.config.js --no-cache"
   },
   "browserslist": [
     "> 1%",
@@ -57,7 +56,7 @@
     "@mdi/js": "^4.5.95",
     "d3": "^5.12.0",
     "file-saver": "^2.0.2",
-    "jointjs": "^3.1.1",
+    "jointjs": "^3.2.0",
     "vue": "^2.6.10",
     "vue-async-computed": "^3.7.0",
     "vue-ctk-date-time-picker": "^2.4.0",

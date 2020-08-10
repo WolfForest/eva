@@ -1465,7 +1465,7 @@ export default {
 
                 this.$set(this.event,'header',doing[5]);
 
-              } else if (doing[0].toLowerCase() == 'changeReport'.toLowerCase()) {
+              } else if (doing[0].toLowerCase() == 'changeReport'.toLowerCase()) { // changeReport
                 
                 doing = originItem.split(doing[0])[1];
                 doing =  doing.replace(/\(/g, '').replace(/\)/g, '').split(','); 
@@ -1480,7 +1480,12 @@ export default {
                   this.$set(this.event,'file',[doing[1]]);
                 }
                 
-              }
+              } else if (doing[0].toLowerCase() == 'exportSearch'.toLowerCase()) { // changeReport
+
+                doing =  doing[1].replace(/\)/g, '').replace(/\[/g, '').replace(/\]/g, '').split(',');
+                this.$set(this.event,'searches',doing);
+                
+              } 
               this.events.push(this.event);
               this.event ={};
             }
