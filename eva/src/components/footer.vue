@@ -16,7 +16,7 @@ export default {
 
   data () {
     return {
-      version: '1.50.1 [gridDash]',
+      version: '1.51.0',
       color: { },
     } 
   },
