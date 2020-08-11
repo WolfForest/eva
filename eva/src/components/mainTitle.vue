@@ -112,17 +112,12 @@ export default {
       letElements: false,
       prepared: false,
       colorChange: false,
-      heightOverlay: '100vh',
-      vertical: 60,
-      horizontal: 60,
       permissions: [],
       deltaHorizontal: 0,//сколько надо увеличить высоту overlay-grid,по первое знач-500,
       startClientHeight: 0,
       startClientWidth: 0,
       verticalCell: 0,
       horizontalCell: 0
-
-
     }
   },   
   computed: {
