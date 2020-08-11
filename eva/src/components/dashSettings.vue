@@ -6,12 +6,8 @@
     left
     class="left-dash-setting"
     :color="colorFrom.text"
-<<<<<<< HEAD
-    :style="{background: colorFrom.backElement}"
-    :permissions="permissions"
-=======
     :style="{background: colorFrom.backElement, borderTop:`2px solid ${colorFrom.panel}`,borderBottom:`2px solid ${colorFrom.panel}`}"
->>>>>>> c34c3850f456b80ae8818993d4edcfe0d86ba82b
+    :permissions="permissions"
   >
     <div
       class="line-setting"
