@@ -2,26 +2,30 @@
   <v-navigation-drawer
     v-model="gearShow"
     fixed
-    class="theme-setting"
     width="300"
     left
+    class="left-dash-setting"
     :color="colorFrom.text"
+<<<<<<< HEAD
     :style="{background: colorFrom.backElement}"
     :permissions="permissions"
+=======
+    :style="{background: colorFrom.backElement, borderTop:`2px solid ${colorFrom.panel}`,borderBottom:`2px solid ${colorFrom.panel}`}"
+>>>>>>> c34c3850f456b80ae8818993d4edcfe0d86ba82b
   >
     <div
       class="line-setting"
       :style="{background: colorFrom.panel}"
     />
     <div class="setting">
-      <div class="labelSetting">
+      <div class="labelSetting" :style="{color: colorFrom.text}">
         Поменять режим отображения
       </div>
       <v-switch  
         v-model="mode" 
         class="switch" 
         :color="colorFrom.controls" 
-        :style="{color:colorFrom.text,}" 
+        :style="{color:colorFrom.text}" 
         :label="String(mode)" 
       />
       <div 
@@ -30,7 +34,7 @@
       />
     </div>
     <div class="setting">
-      <div class="labelSetting">
+      <div class="labelSetting" :style="{color: colorFrom.text}">
         Размер сетки
       </div>
       <div class="sizeGrid">
@@ -44,6 +48,7 @@
           class="sizeGridItem"  
           hide-details
           @blur="sendSizeGrid"
+          @keyup.enter="sendSizeGrid"
         />
         <v-text-field 
           v-model="sizeGrid.hor" 
@@ -55,6 +60,7 @@
           class="sizeGridItem"  
           hide-details
           @blur="sendSizeGrid"
+          @keyup.enter="sendSizeGrid"
         />
       </div>
       <div 
@@ -63,7 +69,7 @@
       />
     </div>
     <div class="setting">
-      <div class="labelSetting">
+      <div class="labelSetting" :style="{color: colorFrom.text}">
         Перемещать/ изменять размер компонента
       </div>
       <v-switch  
@@ -80,7 +86,7 @@
     </div>
     
     <div class="setting">
-      <div class="labelSetting">
+      <div class="labelSetting" :style="{color: colorFrom.text}">
         Показывать сетку
       </div>
       <v-switch  
