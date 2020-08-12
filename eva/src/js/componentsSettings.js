@@ -1,6 +1,6 @@
 
 import {  mdiGraph, mdiGestureTap, mdiBrush, mdiChartLine,   mdiPoll, mdiViewGrid, 
-  mdiCardTextOutline, mdiChartGantt, mdiChartMultiline,  mdiNumeric,  mdiTableLarge,  mdiFormatListBulleted,  mdiCalendarMonth, } from '@mdi/js'
+  mdiCardTextOutline, mdiChartGantt, mdiChartMultiline,  mdiNumeric,  mdiTableLarge,  mdiFormatListBulleted,  mdiCalendarMonth, mdiGraphql, } from '@mdi/js'
 
 export default {  
   tools: [
@@ -10,13 +10,14 @@ export default {
     {name: 'Cтолбцовая диаграмма', img: mdiPoll , type: 'barchart'},
     {name: 'Выпадающий список', img: mdiFormatListBulleted, type: 'select'},
     {name: 'Выбор времени', img: mdiCalendarMonth, type: 'picker'},
-    {name: 'Граф', img: mdiGraph , type: 'graph'},
+    {name: 'Граф', img: mdiGraphql , type: 'egraph'},
     {name: 'Диаграмма Гантта', img: mdiChartGantt, type: 'guntt'},
     {name: 'Плитка', img: mdiViewGrid , type: 'tile'},
     {name: 'Изображение', img: mdiBrush , type: 'csvg'},
     {name: 'Число', img: mdiNumeric, type: 'single'},
     {name: 'Кнопка', img: mdiGestureTap , type: 'button'},
     {name: 'Текстовый блок', img: mdiCardTextOutline , type: 'textarea'},
+    {name: 'Граф_old', img: mdiGraph , type: 'graph'},
   ],
   size: {
     picker: {
@@ -70,7 +71,11 @@ export default {
     csvg: {
       width: 500,
       height: 400
-    }  
+    },
+    egraph: {
+      width: 930,
+      height: 850
+    },  
   },
   icons: {
     table: mdiTableLarge,
@@ -86,6 +91,7 @@ export default {
     barchart: mdiPoll,
     tile: mdiViewGrid,
     csvg: mdiBrush,
+    egraph: mdiGraphql
   }, 
   options: {
     lineChart: ['visible','level','boxShadow','lastDot'],
@@ -100,7 +106,8 @@ export default {
     textarea: ['visible','level'],
     guntt: ['visible','level','timeFormat'],
     tile: ['visible','level','widthTile','heightTile'],
-    csvg: ['visible','level','tooltip']
+    csvg: ['visible','level','tooltip'],
+    egraph: ['visible','level']
   },
   reporstElements: ['table','lineChart','multiLine','barchart','guntt','tile','csvg'],
   reports: {
@@ -135,6 +142,10 @@ export default {
     csvg: {
       tooltip: 'Изображение',
       icon: mdiBrush
+    },
+    egraph: {
+      tooltip: 'Граф',
+      icon: mdiGraphql
     },
   }
 }
