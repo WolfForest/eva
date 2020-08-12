@@ -195,13 +195,12 @@ export default {
         } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
           this.nodata = true;  // показываем сообщение о некорректности данных
           this.message = "К сожалению данные не подходят к диаграмме";  // выводим сообщение
-          this.legends = [];
           d3.select(this.$el.querySelector('.dash-piechart')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
         }
       })
     },
     createLegend: function(data,metrics) {
-
+      this.legends = [];
       data.forEach( (item,i) => {
         this.legends.push({color: this.colors.neitral[i], label: `#${item[metrics[0]]} - ${item[metrics[1]]}%`})
       })
@@ -209,7 +208,7 @@ export default {
     },
     createPieChart: function (dataFrom,that,sizeLine,metrics,legendsSize) {  // создает диаграмму
   
-      
+      d3.select(this.$el.querySelector('.dash-piechart')).selectAll('svg').remove();
       
       let width = sizeLine['width']-40; // отступ по бокам
       let height = sizeLine['height']-35; // минус шапка
@@ -251,8 +250,10 @@ export default {
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
       let data = {};
+      let selectedDefault = [];
       dataFrom.forEach( item => {
         data[item[metrics[0]]] = item[metrics[1]];
+        selectedDefault.push(item[metrics[2]])
       });
 
       let color = d3.scaleOrdinal() // устанавливаем цветовую схему для pie chart
@@ -285,7 +286,13 @@ export default {
           .innerRadius(0)
           .outerRadius(radius)
         )
-        .attr('class','piepart')
+        .attr('class',function(d) {
+          if (selectedDefault[d.index] == 1) {
+            return 'piepart piepartSelect'
+          } else {
+            return 'piepart'
+          }
+        })
         .attr('fill', function(d){ return(color(d.data.key)) })
         .attr("stroke", that.color.text)
         .style("stroke-width", "1px")
@@ -333,8 +340,6 @@ export default {
           this.setTocken();
         },1500)
       }
-
-
       
 
     },
