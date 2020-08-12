@@ -47,17 +47,14 @@
           </v-btn>
         </div> 
       </v-card>
-      <v-content 
-        id="content" 
-        style="margin-bottom:40px"
-      >
+      <v-content id="content">
         <v-container class="dash-container">
-          <div
+           <div
             v-if="gridShow"
             class="overlay-grid"
-            :data-grid="sizeGrid"
-            :style="{background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${vertical}px ${vertical}px,
-            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontal}px ${horizontal}px`,height:heightOverlay}"
+            :data-grid="true"
+             :style="{height: `calc(100vh - ${headerTop}px + ${deltaHorizontal}px)`,top:`${headerTop}px` ,background: `linear-gradient(-90deg, ${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${verticalCell}px ${verticalCell}px,
+            rgba(0, 0, 0, 0) linear-gradient(${color.text} 1px, transparent 1px) repeat scroll 0% 0% / ${horizontalCell}px ${horizontalCell}px`}"
           />
           <move-able 
             v-for="elem in elements" 
@@ -66,7 +63,10 @@
             :colorFrom="color" 
             :idDashFrom="idDash" 
             :dataElem="elem" 
-            :dataPageFrom="page" 
+            :dataPageFrom="page"
+            :horizontalCell="horizontalCell"
+            :verticalCell="verticalCell"
+             
           />
           <modal-delete 
             :colorFrom="color" 
@@ -112,9 +112,13 @@ export default {
       letElements: false,
       prepared: false,
       colorChange: false,
-      heightOverlay: '100vh',
-      vertical: 60,
-      horizontal: 60,
+      deltaHorizontal:0,//сколько надо увеличить высоту overlay-grid,по первое знач-500,
+      startClientHeight:0,
+      startClientWidth:0,
+      verticalCell:0,
+      horizontalCell:0
+
+
     }
   },   
   computed: {
@@ -140,6 +144,13 @@ export default {
         return '0px'
       }
     },
+    headerTop: function (){
+      if(document.body.clientWidth <=1400){
+        return 40
+      } else {
+        return 50
+      }
+    },
     theme: function() {
       return this.$store.getters.getTheme
     },
@@ -150,27 +161,22 @@ export default {
         return 'flex'
       }
     },
-    sizeGrid: function() {
-      let grid = this.$store.getters.getSizeGrid(this.idDash);
-      if (grid.vert != '') {
-        this.vertical = this.calcSizeGrid(grid.vert,'vert');
-      }
-      if (grid.hor != '') {
-        this.horizontal = this.calcSizeGrid(grid.hor,'hor');
-      }
-      return true
-    },
     gridShow: function() {
       let gridShow = this.$store.getters.getGridShow(this.idDash);
       gridShow == 'true' ? gridShow = true : gridShow = false;
       return gridShow;
     },
+    getSizeGrid: function(){
+      return this.$store.getters.getSizeGrid(this.idDash)
+    }
   },  
   watch: {
     theme: function (theme) {
       this.color = themes[theme];
-      
     },
+     getSizeGrid: function() {
+       this.calcSizeCell()
+     }
   },
   methods: {
     hash: function(elem) {
@@ -181,16 +187,6 @@ export default {
     },
     openSettings: function() {
       this.showSetting = !this.showSetting;
-    },
-    calcSizeGrid: function(numb, type) {
-      let size = 0;
-      if (type == 'vert') {
-        size = Math.round(screen.width/Number(numb));
-      } else {
-        size = Math.round(screen.height/Number(numb));
-      }
-      return size
-
     },
     setPermissions: function(event) { 
       if (event.includes('admin_all')) {
@@ -218,24 +214,43 @@ export default {
         } 
         this.prepared = true;
       })
+    },
+    createStartClient: function(){ 
+      //первоначальные значения высоты и ширины
+      this.startClientHeight = document.body.clientHeight - this.headerTop
+      this.startClientWidth = document.body.clientWidth
+    },
+    calcSizeCell: function(){
+      //размер ячейки
+      let grid = this.$store.getters.getSizeGrid(this.idDash);
+      this.verticalCell = Number((this.startClientWidth /grid.vert).toFixed(1));
+      this.horizontalCell = Number((this.startClientHeight/ grid.hor).toFixed(1));
+    },
+    addScrollListener: function(){ 
+      let otstup = 0;
+      window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)       
+      if (document.querySelector('.aplication')) {
+        if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
+          //добавляем размер
+          otstup = this.horizontalCell;
+        } else {
+          otstup = 0;
+          //просто сработало событие
+        }
+        let _maxHeigth = (Math.round(document.querySelector('.aplication').clientHeight/this.horizontalCell)) * this.horizontalCell
+        this.deltaHorizontal = (_maxHeigth - this.startClientHeight)
+
+        document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
+      }
+    })
+
     }
   },
   mounted() {
-    let otstup = 0;
-    
-    window.addEventListener('scroll' , () => {  // при увеличении экрана в высоту (вообще коненчо срабатывает при скролле страницы)
-      if (document.querySelector('.aplication')) {
-        
-        if (document.body.scrollHeight > document.body.clientHeight) { // если высота скролируемого экрана больше чем клиентского
-          otstup = 40;
-        } else {
-          otstup = 0;
-        }
-        document.querySelector('.aplication').style.height =  `${document.body.scrollHeight+otstup}px`; // в любом случае расширяем контейнер до размеров экрана
-        this.heightOverlay = `${document.body.clientHeight-50}px`;
-      }
-    })
-    this.heightOverlay = `${document.body.clientHeight-50}px`;
+    this.createStartClient();
+    this.calcSizeCell();
+    this.addScrollListener(); 
+
     this.color = themes[this.theme];
   }
 }
@@ -281,10 +296,8 @@ export default {
 
     .overlay-grid {
       position: absolute;
-      top: 50px;
       left: 0;
       width: 100%;
-      height: 100%;
       opacity: 0.2;
       transition: all ease 0.3s
     }

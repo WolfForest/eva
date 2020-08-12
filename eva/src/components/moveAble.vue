@@ -1,13 +1,14 @@
 <template>
   <vue-draggable-resizable 
     ref="dragres"
+    :key="reload"
     :w="width" 
     :h="height" 
     :x="left" 
     :y="top" 
     :draggable="dragRes" 
     :resizable="dragRes" 
-    :data-grid="sizeGrid"
+    :data-grid="true"
     :grid="props.grid"
     :style="{zIndex:props.zIndex, outlineColor: color.controlsActive, background: color.controlsActive, opacity:opacity }" 
     @resizestop="sendSize"
@@ -37,6 +38,8 @@ export default {
     dataElem: null,
     colorFrom: null,
     dataPageFrom: null,
+    verticalCell:null,
+    horizontalCell:null
   },
   data () {
     return {
@@ -44,7 +47,8 @@ export default {
       top: 0,
       left: 0,
       width: 0, // 0 не должен быть, по умолчанию беруться эти настройки
-      height: 0, 
+      height: 0,
+      reload: 0,
       props: {
         vue_drag: false,
         zIndex: 1,
@@ -69,28 +73,21 @@ export default {
     dragRes: function() {
       let dragRes = this.$store.getters.getDragResize(this.idDash);
       dragRes == 'true' ? dragRes = true : dragRes = false;
-      this.moveLater(); // функция которая перезапишет правильные позиции элемента
       return dragRes;
     },
-    sizeGrid: function() {
-      let grid = this.$store.getters.getSizeGrid(this.idDash);
-      if (grid.vert != '') {
-        this.props.grid[0] = this.calcSizeGrid(grid.vert,'vert');
+    headerTop: function (){
+      if(document.body.clientWidth <=1400){
+        return 40
+      } else {
+        return 50
       }
-      if (grid.hor != '') {
-        this.props.grid[1] = this.calcSizeGrid(grid.hor,'hor');
-      }
-      this.drawElement();
-      return true
     },
   },
   watch: {
-    top: function() {
-      if (this.top < 0) {
-        this.top = 50;
-      } 
-
-      this.moveLater(); // функция которая перезапишет правильные позиции элемента
+    top: function(val) {
+       if(val <= this.headerTop){
+         val = this.headerTop
+       }
     },
     left: function() {
       let clientWidth = document.querySelector('#app').clientWidth;
@@ -101,148 +98,72 @@ export default {
       if ((this.left+this.width) >  clientWidth) {
         this.left = clientWidth - this.width;
       } 
-
-      this.moveLater(); // функция которая перезапишет правильные позиции элемента
     },
+    verticalCell: function(){
+      this.reload ++ 
+      this.createGrid()
+      this.drawElement()
+    },
+    horizontalCell: function(){
+      this.reload ++ 
+      this.createGrid()
+      this.drawElement()
+    }
   },
   methods: {
-    calcSizeGrid: function(numb, type) {
-      let size = 0;
-      if (type == 'vert') {
-        size = Math.round(screen.width/Number(numb));
-      } else {
-        size = Math.round(screen.height/Number(numb));
-      }
-      return size
-
-    },
     drawElement: function() {
-      this.step = JSON.parse(JSON.stringify(this.$store.getters.getSizeGrid(this.idDash)));
-      this.step.vert = Math.round(screen.width/Number(this.step.vert));
-      this.step.hor = Math.round(screen.height/Number(this.step.hor));
-     
-      let header;
-      screen.width > 1400 ? header = 50 : header = 40;
       let pos = this.$store.getters.getPosDash({idDash: this.idDash, id: this.id});
-      
-      this.left = pos.left*this.step.vert;
-      this.top = (pos.top*this.step.hor)+header;
+
+      this.left = pos.left*this.verticalCell;
+      this.top = pos.top*this.horizontalCell + this.headerTop;
+
       let size = this.$store.getters.getSizeDash({idDash: this.idDash, id: this.id});
-      let width = size.width*this.step.vert;
-      let height = size.height*this.step.hor;
-      this.width = width;
-      this.height =height;
 
+      let width = size.width*this.verticalCell;
+      let height = size.height*this.horizontalCell;
+
+      this.width  = width;
+      this.height = height;
     },
-    moveLater: function() {
-      if(this.$refs.dragres) {
-        setTimeout( () => { // нужно запускать немного с задержкой, чтобы точно обновить после работы плагина
-          this.$refs.dragres.$el.style.transform = `translate(${this.left}px, ${this.top}px)`;
-        },150)
-      }
-    },
-    // onResize: function (x, y, width, height) {  // получаем позицию и размер элемента
-    //   this.props.top = y
-    //   this.props.left = x
-    //   this.props.width = width
-    //   this.props.height = height
-      
-    // },
-    // onDrag: function (x, y) {   // получаем позицию элемнета
-      
-    //   this.props.top = y
-    //   this.props.left = x
-    //   document.querySelector('.aplication').style.height =  `${document.body.scrollHeight}px`; // растягиваем контейнер на высоту страницы
-    // },
-    // dragStopped: function(left,top) {
-      
-      
-    //   //let result = {top: 0, left: 0};
-    //   let clientWidth = document.querySelector('#app').clientWidth;
-    //   if (top < 50) {
-    //     this.props.top = 70;
-    //   } 
-    //   if (left < 0) {
-    //     this.props.left = 20;
-    //   } 
-    //   if ((left+this.props.width) >  clientWidth) {
-    //     this.props.left = clientWidth - this.props.width - 20
-    //   } 
-    // },
-    // resize(newRect) {  // если перемещение разрешено то будем заносить позицию и размер для смены даных о элементе
-    //   if (this.props.draggable) {
-    //     this.props.width = newRect.width;
-    //     this.props.height = newRect.height;
-    //     this.props.top = newRect.top;
-    //     this.props.left = newRect.left;
-    //   }
-    // },
-    // moveSwitch() {  // переключает возможность транспортировки
-    //   this.props.draggable = !this.props.draggable;
-    // },
     sendMove(x,y) {  // отправляем позицию элемнета в хранилище
-      let topFrom = y;
       let leftFrom = x;
-      //let clientWidth = document.querySelector('#app').clientWidth;
-   
-      if (leftFrom < 0) {
-        leftFrom = 0;
-      } 
-      // if ((left+this.props.width) >  clientWidth) {   ПОДУМАТЬ ОБ ЭТОМ
-      //   this.props.left = clientWidth - this.props.width - 20
-      // } 
-      let header;
-      screen.width > 1400 ? header = 50 : header = 40;
-      let top = Math.round((topFrom-header)/this.step.hor);
-      let left =  Math.round(leftFrom/this.step.vert);
-      // if (top < 0) {
-      //   top = 0;
-      // } 
-      // console.log(top)
+      let topFrom = y;
+      
+      let top = Math.round((topFrom - this.headerTop)/this.horizontalCell)
+      if (top < 0 ) { 
+        top = 0
+      }
+
+      let left =  Math.round(leftFrom/this.verticalCell);
+      if (left < 0 ) {
+        left = 0
+      }
+
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
 
     },
-    // resizeSwitch() {  // переключаем возможность изменения размеров элемента
-    //   this.props.resizable = !this.props.resizable;
-    //   this.props.vue_drag_none = !this.props.vue_drag_none;
-    // },
     sendSize(x,y,width,height) {  // отправляем размер элемента
-      let header;
-      screen.width > 1400 ? header = 50 : header = 40;
-      let top = Math.round((y-header)/this.step.hor);
-      let left =  Math.round(x/this.step.vert);
+    //для количества ячеек по высоте  округляем до целого
+      let top = Math.round((y - this.headerTop)/this.horizontalCell)
+      let left =  Math.round(x/this.verticalCell);
       this.$store.commit('setPosDash', {top: top,left: left, id: this.id, idDash: this.idDash});
-      let newWidth = Math.round(width/this.step.vert);
-      let newHeight = Math.round(height/this.step.hor);
+
+      let newWidth =  Math.round(width/this.verticalCell);
+      let newHeight = Math.round(height/this.horizontalCell);
       this.$store.commit('setSizeDash', {width: newWidth, height: newHeight, id: this.id, idDash: this.idDash});
       
     },
-    // calcSizeProc(size,key) {
-    //   let newSize = size;
-    //   if (!Number(size)) {
-    //     newSize = (parseFloat(size)*screen[key])/100;
-    //   }
-    //   return Number(newSize.toFixed(1))
-    // },
-    // calcSizePx(size,key) {
-    //   return `${((size*100)/screen[key]).toFixed(1)}%`
-    // },
     changeOpacity(event){
       this.opacity = event;
+    },
+    createGrid(){
+      this.props.grid = [this.verticalCell, this.horizontalCell]
     }
+
   },
   created() {
+    this.createGrid()
     this.drawElement()
-  },
-  updated() {
-    
-    // setTimeout( ()=>{
-    //   //this.$refs.dragres.$el.style.height = '800px';
-    //   this.props.height = 800;
-    // },2000)
-    // if(this.$refs.dragres) {
-    //   //this.$refs.dragres.$el.style.transform = `translate(${this.props.left}px, ${this.props.top}px)`;
-    // }
   }
 }
 </script>
