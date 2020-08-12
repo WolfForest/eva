@@ -1,6 +1,6 @@
 
 import {  mdiGraph, mdiGestureTap, mdiBrush, mdiChartLine,   mdiPoll, mdiViewGrid, 
-  mdiCardTextOutline, mdiChartGantt, mdiChartMultiline,  mdiNumeric,  mdiTableLarge,  mdiFormatListBulleted,  mdiCalendarMonth, } from '@mdi/js'
+  mdiCardTextOutline, mdiChartGantt, mdiChartMultiline,  mdiNumeric,  mdiTableLarge, mdiChartPie,  mdiFormatListBulleted,  mdiCalendarMonth, } from '@mdi/js'
 
 export default {  
   tools: [
@@ -8,6 +8,7 @@ export default {
     {name: 'Линейный график', img: mdiChartLine, type: 'lineChart'},
     {name: 'Мультилинейный график', img: mdiChartMultiline, type: 'multiLine'},
     {name: 'Cтолбцовая диаграмма', img: mdiPoll , type: 'barchart'},
+    {name: 'Круговая диаграмма', img: mdiChartPie, type: 'piechart'},
     {name: 'Выпадающий список', img: mdiFormatListBulleted, type: 'select'},
     {name: 'Выбор времени', img: mdiCalendarMonth, type: 'picker'},
     {name: 'Граф', img: mdiGraph , type: 'graph'},
@@ -30,6 +31,10 @@ export default {
     lineChart: {
       width: 700,
       height: 400
+    },
+    piechart: {
+      width: 600,
+      height: 550,
     },
     graph: {
       width: 1000,
@@ -76,6 +81,7 @@ export default {
     table: mdiTableLarge,
     lineChart: mdiChartLine,
     multiLine: mdiChartMultiline,
+    piechart: mdiChartPie,
     graph: mdiGraph,
     guntt: mdiChartGantt,
     select: mdiFormatListBulleted,
@@ -90,6 +96,7 @@ export default {
   options: {
     lineChart: ['visible','level','boxShadow','lastDot'],
     multiLine: ['visible','level','boxShadow','united','lastDot','metrics'], 
+    piechart: ['visible','level'],
     barchart: ['visible','level','boxShadow'],
     table: ['visible','level','boxShadow','rowcolor','columncolor','cellcolor'],
     select: ['visible','level','boxShadow','multiple'],
@@ -102,7 +109,7 @@ export default {
     tile: ['visible','level','widthTile','heightTile'],
     csvg: ['visible','level','tooltip']
   },
-  reporstElements: ['table','lineChart','multiLine','barchart','guntt','tile','csvg'],
+  reporstElements: ['table','multiLine','piechart','guntt','tile','csvg'],
   reports: {
     table: {
       tooltip: 'Таблица',
@@ -115,6 +122,10 @@ export default {
     multiLine: {
       tooltip: 'Мультилинейный график',
       icon: mdiChartMultiline
+    },
+    piechart: {
+      tooltip: 'Круговая диаграмма',
+      icon: mdiChartPie
     },
     barchart: {
       tooltip: 'Столбцовая диаграмма',
