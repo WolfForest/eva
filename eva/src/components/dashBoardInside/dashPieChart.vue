@@ -31,7 +31,6 @@
         :data-change="change"
       />
       <div 
-        v-if="showLegend"
         ref="legends"
         class="legend-block-pie" 
       >
@@ -86,12 +85,13 @@ export default {
       colors: {
         neitral: ['#650075','#5F27FF','#003CFF'],
         indicted: ['#FF7F37','#EB2F2F','#920000'],
+        custom: []
       },
       legends: [],
       positionLegends: 'row nowrap',
       selectedValue: [],
       timeout: '',
-      tolate: false
+      tolate: false,
     } 
   },
   computed: {  // осоновные параметры, которые чатсо меняются и которы следует отслеживать
@@ -107,6 +107,10 @@ export default {
     color: function() {
       return this.colorFrom
     },
+    metrics: function() {
+      let metrics = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).metricsRelation.relations;
+      return metrics
+    },
     dataLoading: function() {
       return this.dataLoadingFrom
     },
@@ -115,12 +119,6 @@ export default {
     },
     height: function() {
       return this.heightFrom
-    },
-    position: function() {
-      return 'right'
-    },
-    showLegend: function() {
-      return true
     },
     change: function() {
       if (this.dataRestFrom && Object.keys(this.dataRestFrom).length != 0 && this.width != 0 && this.height != 0) {
@@ -155,7 +153,14 @@ export default {
         if(this.dataRestFrom.error) {  // смотрим если с ошибкой
           this.message = this.dataRestFrom.error; // то выводим сообщение о ошибке
         } else {  // если нет
-
+          this.$store.commit('setMetricsPie', {metrics: Object.keys(this.dataRestFrom[0]), idDash: this.idDash, id: this.id });
+          this.$store.commit('setThemePie', {themes: {
+            neitral: ['#650075','#5F27FF','#003CFF'],
+            indicted: ['#FF7F37','#EB2F2F','#920000'],
+            custom: [],
+          },
+          idDash: this.idDash, id: this.id
+          });
           resolve(sizeLine) // передаем в результат размеры графика
         
         } 
@@ -164,23 +169,43 @@ export default {
 
       prom.then( (sizeLine) => { // как раз тут делаем асинхронность
         let onlyNum = true;
-        let metrics = ['category','value','selected'];
+        let metrics = this.metrics;
+        let showlegend = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).showlegend;
+        if (showlegend == undefined) {
+          showlegend = true;
+        }
+        let positionlegend = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).positionlegend;
+        if (positionlegend == undefined) {
+          positionlegend = 'right'
+        }
+        let colorsPie = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).colorsPie;
+        if (colorsPie == undefined) {
+          colorsPie = {
+            theme: 'neitral',
+            colors: '',
+            nametheme: '',
+          }
+        }
+        if (this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).themes)  {
+          this.colors = this.$store.getters.getOptions({idDash: this.idDash, id: this.id}).themes;
+        }
         typeof(this.dataRestFrom[0][metrics[1]]) != 'number' ? onlyNum = false : false
         if (onlyNum){  // если все-таки число
           this.nodata = false; // то убираем соощение о отсутствии данных
           if (this.dataRestFrom.length > 20) {  // если элемнетов больше 20
             this.nodata = true;  // показываем сообщение о некорректности данных
+            this.legends = [];
             this.message = "К сожалению данных слишком много для построения диаграммы";  // выводим сообщение
             d3.select(this.$el.querySelector('.dash-piechart')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
           } else {
-            this.createLegend(this.dataRestFrom,metrics);
+            this.createLegend(this.dataRestFrom,metrics,showlegend,colorsPie);
             let legendsSize = {};
             if (this.legends.length > 0) {
               let timeOut = setTimeout( function tick() {  // важно чтобы наш график построился толкьо после того когда создался блок с легендой
                   
                 if (this.$refs.legends.getBoundingClientRect().width != 0) { 
                   legendsSize = {width: Math.round(this.$refs.legends.getBoundingClientRect().width), height: Math.round(this.$refs.legends.getBoundingClientRect().height)};
-                  this.createPieChart(this.dataRestFrom,this,sizeLine,metrics,legendsSize); // и собственно создаем график
+                  this.createPieChart(this.dataRestFrom,this,sizeLine,metrics,legendsSize,positionlegend,colorsPie); // и собственно создаем график
                   clearTimeout(timeOut);
                 } else {
                   timeOut = setTimeout(tick.bind(this), 100); 
@@ -189,24 +214,26 @@ export default {
 
             } else {
               legendsSize = {width: 0, height: 0};
-              this.createPieChart(this.dataRestFrom,this,sizeLine,metrics,legendsSize); // и собственно создаем график
+              this.createPieChart(this.dataRestFrom,this,sizeLine,metrics,legendsSize,positionlegend,colorsPie); // и собственно создаем график
             }
           }
         } else {  // если первое значение первого элемнета (подразумеваем что это time не число)
           this.nodata = true;  // показываем сообщение о некорректности данных
           this.message = "К сожалению данные не подходят к диаграмме";  // выводим сообщение
+          this.legends = [];
           d3.select(this.$el.querySelector('.dash-piechart')).selectAll('svg').remove(); // и еще график очищаем, чтобы не мешался
         }
       })
     },
-    createLegend: function(data,metrics) {
+    createLegend: function(data,metrics,showlegend,colorsPie) {
       this.legends = [];
-      data.forEach( (item,i) => {
-        this.legends.push({color: this.colors.neitral[i], label: `#${item[metrics[0]]} - ${item[metrics[1]]}%`})
-      })
-
+      if (showlegend) {
+        data.forEach( (item,i) => {
+          this.legends.push({color: this.colors[colorsPie.theme][i], label: `#${item[metrics[0]]} - ${item[metrics[1]]}%`})
+        })
+      }
     },
-    createPieChart: function (dataFrom,that,sizeLine,metrics,legendsSize) {  // создает диаграмму
+    createPieChart: function (dataFrom,that,sizeLine,metrics,legendsSize,positionlegend,colorsPie) {  // создает диаграмму
   
       d3.select(this.$el.querySelector('.dash-piechart')).selectAll('svg').remove();
       
@@ -214,9 +241,8 @@ export default {
       let height = sizeLine['height']-35; // минус шапка
       let margin = 40; // отступ от контейнера
 
-      let position = this.position;
 
-      switch(position){
+      switch(positionlegend ){
 
       case 'right':
         this.positionLegends = 'row nowrap';
@@ -258,7 +284,7 @@ export default {
 
       let color = d3.scaleOrdinal() // устанавливаем цветовую схему для pie chart
         .domain(data)
-        .range(that.colors.neitral)
+        .range(that.colors[colorsPie.theme])
 
       let tooltip = d3.select(this.$el.querySelector('.dash-piechart'))
         .append("div")

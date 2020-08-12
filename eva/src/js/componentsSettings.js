@@ -96,7 +96,7 @@ export default {
   options: {
     lineChart: ['visible','level','boxShadow','lastDot'],
     multiLine: ['visible','level','boxShadow','united','lastDot','metrics'], 
-    piechart: ['visible','level'],
+    piechart: ['visible','level','metricsRelation','showlegend','positionlegend', 'colorsPie','themes'],
     barchart: ['visible','level','boxShadow'],
     table: ['visible','level','boxShadow','rowcolor','columncolor','cellcolor'],
     select: ['visible','level','boxShadow','multiple'],
