@@ -673,6 +673,23 @@ export default {  // приблизительный объект хранили�
       //Vue.set(state[dash.idDash][dash.id], 'metrics',[]);
       state[dash.idDash][dash.id].metrics = metrics;
     },
+    setMetricsPie: (state,dash) => {
+      let metrics = [...[],...dash.metrics];
+      if (!state[dash.idDash][dash.id].options.metricsRelation) {
+        state[dash.idDash][dash.id].options.metricsRelation = {};
+        state[dash.idDash][dash.id].options.metricsRelation['relations'] = metrics;
+        state[dash.idDash][dash.id].options.metricsRelation['namesMetric'] = ['Категория','Процентное соотношение','Выбрано'];
+      }
+      state[dash.idDash][dash.id].options.metricsRelation['metrics'] = metrics;
+     
+    },
+    setThemePie: (state,dash) => {
+      let themes = {...{},...dash.themes};
+      if (!state[dash.idDash][dash.id].options.themes) {
+        state[dash.idDash][dash.id].options.themes  = themes;
+      }
+      
+    },
     setSizeGrid: (state,sizeGrid) => {
       if (!state[sizeGrid.id].grid) {
         Vue.set(state[sizeGrid.id], 'grid', {});

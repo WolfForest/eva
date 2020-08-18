@@ -28,6 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - new plugin, whom create papers (reports) from template and give link on download and preview
 
 - add set token in single
+
+- new component pie chart
+
 ## [1.44.26] [newSetting]
 ### Adde
 
