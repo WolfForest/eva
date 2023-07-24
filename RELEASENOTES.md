@@ -1,10 +1,17 @@
-# [1.144.0] - 2023-07-20
+# [1.144.0] - 2023-07-24
 
 ### Added
 - Button: Added event "click(visualisation-id, download(sid))"
 
 ### Fixed
 - Waterfall: Fixed resize after change tab
+
+# [1.143.0] - 2023-07-20
+
+### Added
+- Waterfall:
+  - Added legend
+  - Added grouping bars
 
 # [1.142.0] - 2023-07-14
 
@@ -570,7 +577,7 @@
 - Changing the position of edge signatures in the Graph component
 
 ### Fixed
-- Changes in ports and standard elements in the Constructor-schemes component
+-- Changes in ports and standard elements in the Constructor-schemes component
 - Component graph breaks after restart
 - Problem with association tokens with Select visualisation
 - When exporting dashboards without selected elements, the resulting page wasn't found
