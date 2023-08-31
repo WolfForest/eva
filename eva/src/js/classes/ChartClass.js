@@ -176,8 +176,9 @@ export default class ChartClass {
 
     // если ось х вышла за границу слева
     const { x } = this.svg.select('g.xAxis').node().getBBox();
-    if (x < 0) {
-      this.maxYLeftAxisWidth = -x + 22;
+    const xOffset = -x + 22;
+    if (x < 0 && this.maxYLeftAxisWidth < xOffset) {
+      this.maxYLeftAxisWidth = xOffset;
     }
 
     const rotate = options.xAxis.textRotate ? ` rotate(${options.xAxis.textRotate})` : '';
@@ -306,7 +307,7 @@ export default class ChartClass {
       className += ` axis-y-${metric.n}`;
     });
     yGroupItem.attr('class', `y${axisPosition}Axis axis-y ${className}`);
-    xOffset[axisPosition] += yGroupItem.node().getBBox().width;
+    xOffset[axisPosition] += yGroupItem.node().getBBox().width + 2;
 
     /// create Y axes
     const linearMetrics = metrics.filter((metric) => (['line', 'scatter'].includes(metric.type)));
