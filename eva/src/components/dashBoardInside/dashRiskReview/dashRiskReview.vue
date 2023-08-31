@@ -484,7 +484,6 @@ export default {
         second: false,
       };
     },
-
     isLegendShow() {
       return !this.isDataError
       && this.filteredData?.length > 0
@@ -834,7 +833,7 @@ export default {
       handler(val, oldVal) {
         const isUpdatedValue = JSON.stringify(val) !== JSON.stringify(oldVal);
         if (isUpdatedValue) {
-          this.redraw();
+          this.redraw(this.filteredData);
         }
       },
     },
@@ -850,6 +849,7 @@ export default {
         this.$nextTick(() => {
           this.getLegendHeight();
           this.render();
+          this.updateActionCapture(this.filteredData);
         });
       });
     }
