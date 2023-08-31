@@ -1,3 +1,22 @@
+# [1.148.0] - 2023-08-31
+
+### Added
+- Notification window
+- Risk-review: Added placeholder on field options
+- Auto-resize dashboard tree panel
+
+### Changed
+- Risk-review: Changed color-picker in options panel.
+- Removed saving notifications between sessions
+
+### Fixed
+- TableV2: Fixed color on hover\select row
+- Multiline: Data goes off the Y axis
+- Prefix and suffix not working on components: Gantt, Tables, PieChart, Multiline, Tune, Tiles, Heatmap, TextArea, timePicker, ScatterPlot, Map, YGraph
+- Risk-review:
+  - Fixed suffixed \[_title], \[_list_title]
+  - Fixed work of tokens
+
 # [1.147.0] - 2023-08-22
 
 ### Added

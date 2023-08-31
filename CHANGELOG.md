@@ -8,10 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- notify modal
 
+### Changed
+
+### Fixed
+
+## [1.148.0]
+
+### Added
+- notify modal
 - Risk-review: Added placeholder on field options
 - Added auto-resize dashboard tree panel
+
 ### Changed
 - Risk-review: Changed color-picker in options panel.
 - remove saving notify between sessions
@@ -21,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Risk-review: Fixed suffixed \[_title], \[_list_title] 
 - Risk-review: Fixed work of tokens
 - Multiline: Data goes off the Y axis
+- Prefix and suffix not working on components: Gantt, Tables, PieChart, Multiline, Tune, Tiles, Heatmap, TextArea, timePicker, ScatterPlot, Map, YGraph
 
 
 ## [1.147.0]
@@ -45,7 +54,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Risk-review: Fixed visible single bar
-- Prefix and suffix not working on components: Gantt, Tables, PieChart, Multiline, Tune, Tiles, Heatmap, TextArea, timePicker, ScatterPlot, Map, YGraph
 
 ## [1.146.0]
 
