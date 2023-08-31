@@ -1282,7 +1282,7 @@ export default {
           } = this.dashFromStore[elem].actions.find(({ name }) => name === action) || {};
           capture.forEach((item) => result.add(item));
         }
-        return [...result];
+        return [{ text: '--', value: null }, ...result];
       };
     },
     blockToolStyle() {
