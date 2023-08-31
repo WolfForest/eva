@@ -371,6 +371,16 @@ export default {
     optionsFromStore() {
       return this.dashFromStore[this.idFrom].options;
     },
+    firstTitleFromOtl() {
+      return this.dataRestFromWIthOrder?.length > 0
+        ? (this.dataRestFromWIthOrder[0][this.metricKeys.firstTitle] || '')
+        : '';
+    },
+    secondTitleFromOtl() {
+      return this.dataRestFromWIthOrder?.length > 0
+        ? (this.dataRestFromWIthOrder[0][this.metricKeys.secondTitle] || '')
+        : '';
+    },
     isVisibleResidualImpactPanel() {
       return this.optionsFromStore[this.metricKeys.residualMetric];
     },
@@ -403,10 +413,10 @@ export default {
           ? this.optionsFromStore[this.metricKeys.residualMetric]
           : false,
         [this.metricKeys.firstTitle]: this.optionsFromStore[this.metricKeys.firstTitle]
-        || '',
+        || this.firstTitleFromOtl || '',
         leftValueColor: this.leftValueColor,
         [this.metricKeys.secondTitle]: this.optionsFromStore[this.metricKeys.secondTitle]
-        || '',
+        || this.secondTitleFromOtl || '',
         rightValueColor: this.rightValueColor,
       };
       if (metricOptions) {
@@ -416,7 +426,11 @@ export default {
         // eslint-disable-next-line no-restricted-syntax
         for (const metric of metricOptions) {
           if (metricIDListFromData.includes(metric.id)) {
-            resultMetricList.push(metric);
+            resultMetricList.push({
+              ...metric,
+              fill: this.hexToHexa(metric.fill),
+              textColor: this.hexaToHex(metric.textColor),
+            });
           }
         }
         // eslint-disable-next-line no-restricted-syntax
@@ -435,9 +449,17 @@ export default {
       return structuredClone(result);
     },
     leftValueColor() {
-      return this.optionsFromStore.leftValueColor || '#FF0000';
+      const color = this.optionsFromStore.leftValueColor;
+      if (color) {
+        return this.hexaToHex(color);
+      }
+      return '#FF0000';
     },
     rightValueColor() {
+      const color = this.optionsFromStore.rightValueColor;
+      if (color) {
+        return this.hexaToHex(color);
+      }
       return this.optionsFromStore.rightValueColor || '#00FF00';
     },
     isListValid() {
@@ -462,7 +484,6 @@ export default {
         second: false,
       };
     },
-
     isLegendShow() {
       return !this.isDataError
       && this.filteredData?.length > 0
@@ -595,17 +616,17 @@ export default {
               // Добавляем вторую основную метрику в список метрик, если её там еще нет
               metricList.push(secondMainMetric);
             }
-            if (field.startsWith(metricKeys.firstTitle)) {
+            if (field === metricKeys.firstTitle) {
               // Достаем заголовок блока первой основной метрики
               params[metricKeys.firstTitle] = element[field];
-            } else if (field.startsWith(metricKeys.secondTitle)) {
+            } else if (field === metricKeys.secondTitle) {
               // Достаем заголовок блока второй основной метрики
               params[metricKeys.secondTitle] = element[field];
             } else {
-              if (field.startsWith(metricKeys.firstListTitle)) {
+              if (field === metricKeys.firstListTitle) {
                 // Достаем заголовок для списка в блоке первой основной метрики
                 firstList[metricKeys.firstListTitle] = element[field];
-              } else if (field.startsWith(metricKeys.secondListTitle)) {
+              } else if (field === metricKeys.secondListTitle) {
                 // Достаем заголовок для списка в блоке второй основной метрики
                 secondList[metricKeys.secondListTitle] = element[field];
               }
@@ -670,8 +691,12 @@ export default {
               value: 'line',
             },
           ],
-          fill: oldSettings?.fill || savedSettings?.fill || defaultMetricFill,
-          textColor: oldSettings?.textColor || savedSettings?.textColor || defaultMetricFill,
+          fill: this.hexToHexa(oldSettings?.fill)
+              || this.hexToHexa(savedSettings?.fill)
+              || this.hexToHexa(defaultMetricFill),
+          textColor: this.hexaToHex(oldSettings?.textColor)
+              || this.hexaToHex(savedSettings?.textColor)
+              || this.hexaToHex(defaultMetricFill),
           textOffset: oldSettings?.textOffset || savedSettings?.textOffset || 10,
           textPosY: oldSettings?.textPosY || savedSettings?.textPosY || 'center',
           textPosYItems: [
@@ -749,8 +774,11 @@ export default {
       if (this.optionsFromStore[this.metricKeys.firstTitle]) {
         return this.optionsFromStore[this.metricKeys.firstTitle];
       }
-      if (this.getDataForHtmlTemplate) {
+      if (this.getDataForHtmlTemplate && this.getDataForHtmlTemplate[this.metricKeys.firstTitle]) {
         return this.getDataForHtmlTemplate[this.metricKeys.firstTitle];
+      }
+      if (this.firstTitleFromOtl) {
+        return this.firstTitleFromOtl;
       }
       return '';
     },
@@ -758,8 +786,11 @@ export default {
       if (this.optionsFromStore[this.metricKeys.secondTitle]) {
         return this.optionsFromStore[this.metricKeys.secondTitle];
       }
-      if (this.getDataForHtmlTemplate) {
+      if (this.getDataForHtmlTemplate && this.getDataForHtmlTemplate[this.metricKeys.secondTitle]) {
         return this.getDataForHtmlTemplate[this.metricKeys.secondTitle];
+      }
+      if (this.secondTitleFromOtl) {
+        return this.secondTitleFromOtl;
       }
       return '';
     },
@@ -802,7 +833,7 @@ export default {
       handler(val, oldVal) {
         const isUpdatedValue = JSON.stringify(val) !== JSON.stringify(oldVal);
         if (isUpdatedValue) {
-          this.redraw();
+          this.redraw(this.filteredData);
         }
       },
     },
@@ -818,6 +849,7 @@ export default {
         this.$nextTick(() => {
           this.getLegendHeight();
           this.render();
+          this.updateActionCapture(this.filteredData);
         });
       });
     }
@@ -848,10 +880,12 @@ export default {
           ? this.optionsFromStore[this.metricKeys.residualMetric]
           : false,
         [this.metricKeys.firstTitle]: this.optionsFromStore[this.metricKeys.firstTitle]
-        || '',
+            || this.firstTitleFromOtl
+            || '',
         leftValueColor: this.leftValueColor,
         [this.metricKeys.secondTitle]: this.optionsFromStore[this.metricKeys.secondTitle]
-        || '',
+            || this.secondTitleFromOtl
+            || '',
         rightValueColor: this.rightValueColor,
       };
       if (metricOptions) {
@@ -969,27 +1003,31 @@ export default {
       });
     },
 
-    setTokens(data) {
-      const { tockens: tokens } = this.$store.state[this.idDashFrom];
-      if (tokens) {
-        tokens.forEach(({
-          name,
-          action,
-          capture,
-          elem,
-        }) => {
-          if (elem === this.idFrom) {
-            if (action === 'click' && data[capture]) {
-              this.$store.commit('setTocken', {
-                token: { name, action, capture },
-                idDash: this.idDashFrom,
-                value: data[capture],
-                store: this.$store,
-              });
-            }
-          }
-        });
+    hexToHexa(color) {
+      if (color && typeof color === 'string') {
+        if (color.startsWith('#') && color.length === 7) {
+          return `${color}FF`;
+        }
       }
+      return color;
+    },
+
+    hexaToHex(color) {
+      if (color && typeof color === 'string') {
+        if (color.startsWith('#') && color.length === 9) {
+          return color.substring(0, color.length - 2);
+        }
+      }
+      return color;
+    },
+
+    setTokens(data) {
+      this.$store.commit('tokenAction', {
+        idDash: this.idDashFrom,
+        elem: this.idFrom,
+        action: 'click',
+        value: data,
+      });
     },
 
     toDivide(value) {
@@ -1041,6 +1079,12 @@ export default {
 
   &__svg {
     grid-area: svg;
+    .bar-elem {
+      cursor: pointer;
+    }
+    .bar-text-caption {
+      pointer-events: none;
+    }
   }
 
   &__right-description {

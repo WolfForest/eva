@@ -174,6 +174,13 @@ export default class ChartClass {
           .tickValues((ticksEnabled && ticks === 0) ? this.data.map((item) => `${item[this.xMetric]}`) : null),
       );
 
+    // если ось х вышла за границу слева
+    const { x } = this.svg.select('g.xAxis').node().getBBox();
+    const xOffset = -x + 22;
+    if (x < 0 && this.maxYLeftAxisWidth < xOffset) {
+      this.maxYLeftAxisWidth = xOffset;
+    }
+
     const rotate = options.xAxis.textRotate ? ` rotate(${options.xAxis.textRotate})` : '';
 
     // rotate x axis text
@@ -300,7 +307,7 @@ export default class ChartClass {
       className += ` axis-y-${metric.n}`;
     });
     yGroupItem.attr('class', `y${axisPosition}Axis axis-y ${className}`);
-    xOffset[axisPosition] += yGroupItem.node().getBBox().width;
+    xOffset[axisPosition] += yGroupItem.node().getBBox().width + 2;
 
     /// create Y axes
     const linearMetrics = metrics.filter((metric) => (['line', 'scatter'].includes(metric.type)));
@@ -876,7 +883,13 @@ export default class ChartClass {
       .attr('cy', (d) => this.y[metric.yAxisLink || metric.name](d[metric.name]))
       .attr('r', metric.dotSize)
       .attr('fill', metric.color)
-      .on('click', (d) => this.clickChart([d[this.xMetric], d[metric.name]]))
+      .on('click', (d) => this.clickChart({
+        ...d,
+        pointX: d[this.xMetric],
+        pointY: d[metric.name],
+        start: d[this.xMetric],
+        end: d[metric.name],
+      }))
       .on('mouseover', (d, i, elems) => {
         d3.select(elems[i]).style('opacity', 1);
         const lineXPos = this.x(d[this.xMetric]);
@@ -1183,7 +1196,13 @@ export default class ChartClass {
         return Math.abs(this.y[yName](d[0]) - this.y[yName](d[1]));
       })
       .attr('width', barWidth)
-      .on('click', (d) => this.clickChart([d.data[this.xMetric], d[1] - d[0]]))
+      .on('click', (d) => this.clickChart({
+        ...d.data,
+        pointX: d.data[this.xMetric],
+        pointY: d[1] - d[0],
+        start: d.data[this.xMetric],
+        end: d[1] - d[0],
+      }))
       .on('mouseleave', () => {
         this.hideTooltip();
         this.hideLineDot();
@@ -1270,7 +1289,13 @@ export default class ChartClass {
           : (zeroHeight - valHeight);
       })
       .attr('fill', (d) => d.color)
-      .on('click', (d) => this.clickChart([d.data[this.xMetric], d.value]))
+      .on('click', (d) => this.clickChart({
+        ...d.data,
+        pointX: d.data[this.xMetric],
+        pointY: d.value,
+        start: d.data[this.xMetric],
+        end: d.value,
+      }))
       .on('mousemove', (d) => {
         const { metric } = d;
         const lineXPos = this.x(d.data[this.xMetric]);
