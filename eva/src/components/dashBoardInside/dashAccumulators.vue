@@ -139,7 +139,7 @@ export default {
       dataFieldMax: null, // поле с данными
       dataFieldValue: null, // поле с данными
       dataFieldLabel: null, // поле с данными
-      isOpen: true,
+      isOpen: false,
     };
   },
   computed: {
