@@ -16,21 +16,21 @@
       />
       <div v-if="needSetField">
         <v-select
-          v-model="dataFieldLabel"
+          v-model="columnOptions.label"
           :dark="isDarkTheme"
           :items="fieldList"
           label="Столбец подписей"
           outlined
         />
         <v-select
-          v-model="dataFieldValue"
+          v-model="columnOptions.value"
           :dark="isDarkTheme"
           :items="fieldList"
           label="Столбец значений"
           outlined
         />
         <v-select
-          v-model="dataFieldMax"
+          v-model="columnOptions.max"
           :dark="isDarkTheme"
           :items="fieldList"
           label="Столбец максимумов"
@@ -129,17 +129,14 @@ export default {
         plus: mdiPlus,
         minus: mdiMinus,
       },
-      actions: [
-        {
-          name: 'change',
-          capture: [],
-        },
-      ],
+      actions: [],
       sliderValue: 0,
-      dataFieldMax: null, // поле с данными
-      dataFieldValue: null, // поле с данными
-      dataFieldLabel: null, // поле с данными
-      isOpen: true,
+      columnOptions: {
+        label: '',
+        value: '',
+        max: '',
+      },
+      isOpen: false,
     };
   },
   computed: {
@@ -170,13 +167,6 @@ export default {
           },
         }]);
       }
-      if (!this.dashFromStore.options.pieType) {
-        this.$store.commit('setState', [{
-          object: this.dashFromStore.options,
-          prop: 'pieType',
-          value: 'pie',
-        }]);
-      }
       if (!this.dashFromStore.options.metrics) {
         this.$store.commit('setState', [{
           object: this.dashFromStore.options,
@@ -187,15 +177,12 @@ export default {
       return this.dashFromStore.options;
     },
     newValues() {
-      if (
-        this.dataFieldMax
-        && this.dataFieldValue
-        && this.dataFieldLabel
-      ) {
+      const { value, label, max } = this.columnOptions;
+      if (max && value && label) {
         return this.dataRestFrom.map((item, index) => ({
-          label: item[this.dataFieldLabel],
-          value: item[this.dataFieldValue],
-          max: item[this.dataFieldMax],
+          label: item[label],
+          value: item[value],
+          max: item[max],
           color: this.getFillColor(item, index),
         }));
       }
@@ -212,9 +199,6 @@ export default {
         return this.sizeFrom.height - 147;
       }
       return 60;
-    },
-    circularWidth() {
-      return this.circularSize / 10;
     },
     circularResize() {
       return this.circularSize > 400 && this.sizeFrom.height > 775 && this.sizeFrom.width > 775;
@@ -234,21 +218,9 @@ export default {
     dashFromStore() {
       return this.$store.state[this.idDashFrom][this.idFrom];
     },
-    getElementSelected() {
-      return this.dashFromStore?.selected;
-    },
-    storedElement() {
-      // TODO: разобраться для чего это здесь
-      // eslint-disable-next-line no-unused-expressions
-      this.isFullScreen; // << dont remove
-      return this.dashFromStore;
-    },
     needSetField() {
-      return ((!this.dataFieldLabel
-          || !this.dataFieldValue
-          || !this.dataFieldMax)
-          && !this.loading)
-          || this.isOpen;
+      const { value, label, max } = this.columnOptions;
+      return this.isOpen || (!this.loading && (!label || !value || !max));
     },
     theme() {
       return this.colorFrom;
@@ -262,9 +234,6 @@ export default {
       }
       return Object.keys(this.dataRestFrom[0]).filter((key) => key[0] !== '_');
     },
-    changedInputData() {
-      return this.$store.state[this.idDashFrom][this.idFrom]?.switch;
-    },
     getStyles() {
       return `${this.customStyle}${this.needSetField ? ' zoom: 1' : ` zoom: ${this.htmlZoom}`}`;
     },
@@ -273,56 +242,17 @@ export default {
     },
   },
   watch: {
-    getElementSelected(selected) {
-      if (selected) {
-        this.dataFieldLabel = selected?.elem.label || null;
-        this.dataFieldValue = selected?.elem.value || null;
-        this.dataFieldMax = selected?.elem.max || null;
-      }
-    },
-    changedInputData() {
-      this.dataField = null;
-      this.value = '';
-      this.$store.commit('setSelected', {
-        element: 'elemDeep',
-        idDash: this.idDashFrom,
-        id: this.idFrom,
-        value: '',
-      });
-    },
     dataRestFrom: {
-      handler(newVal, oldVal) {
+      handler() {
         this.setMetrics();
-        if (newVal.length > 0 && oldVal?.length > 0) {
-          this.dataFieldMax = null;
-          this.dataFieldValue = null;
-          this.dataFieldLabel = null;
-        }
       },
       deep: true,
-      immediate: true,
     },
-    dataFieldMax() {
-      this.setSelected();
-    },
-    dataFieldValue() {
-      this.setSelected();
-    },
-    dataFieldLabel() {
-      this.setSelected();
-    },
-    dataField(value) {
-      this.$nextTick(() => {
-        if (typeof value !== 'undefined') {
-          this.$store.commit('setSelected', {
-            element: 'elem',
-            idDash: this.idDashFrom,
-            id: this.idFrom,
-            value,
-          });
-          this.changeValue();
-        }
-      });
+    columnOptions: {
+      handler() {
+        this.setSelected();
+      },
+      deep: true,
     },
   },
   mounted() {
@@ -335,7 +265,6 @@ export default {
   },
   methods: {
     ...mapActions(['actionGetElementSelected']),
-    ...mapMutations(['setElementSelected']),
     setMetrics() {
       const metrics = this.dataRestFrom.map((item) => ({
         // eslint-disable-next-line no-eval
@@ -367,47 +296,28 @@ export default {
       return this.theme.$primary_button;
     },
     setSelected() {
-      if (this.dataFieldMax
-        && this.dataFieldValue
-        && this.dataFieldLabel
-      ) {
+      const { value, label, max } = this.columnOptions;
+      if (max && value && label) {
         this.$store.commit('setSelected', {
           element: 'elem',
           idDash: this.idDashFrom,
           id: this.idFrom,
           value: {
-            label: this.dataFieldLabel,
-            value: this.dataFieldValue,
-            max: this.dataFieldMax,
+            label,
+            value,
+            max,
           },
         });
         this.isOpen = false;
       }
     },
-    setToken() {
-      this.$store.state[this.idDashFrom]?.tockens?.forEach((token) => {
-        if (token.elem === this.idFrom && token.action === 'change') {
-          this.$store.commit('setTocken', {
-            token: {
-              name: token.name,
-              action: 'change',
-              capture: '',
-            },
-            idDash: this.idDashFrom,
-            value: this.value,
-          });
-        }
-      });
-    },
     loadSelectedValue() {
       this.actionGetElementSelected({
         idDash: this.idDashFrom,
         id: this.idFrom,
-      }).then((selected) => {
-        if (selected) {
-          this.dataFieldLabel = selected?.elem.label || null;
-          this.dataFieldValue = selected?.elem.value || null;
-          this.dataFieldMax = selected?.elem.max || null;
+      }).then(({ elem }) => {
+        if (elem) {
+          this.columnOptions = elem;
         }
       });
     },

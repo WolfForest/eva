@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Dash-options: The primitives library has been returned to the settings
+- Accumulators: sometimes the settings fly off and the size is reset
 
 ## [1.148.0]
 
