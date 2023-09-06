@@ -37,7 +37,6 @@
             class="search-block-codemirror"
             style="position:relative; max-height: calc(100% - 24px); height: calc(100% - 24px);"
             @keyup.ctrl.\="addLineBreaks"
-            @ready="onCmReady"
             @input="isChanged = true"
           />
         </div>
@@ -115,8 +114,12 @@
               </DTPicker>
             </div>
 
-            <v-expansion-panels class="expansion-panels">
+            <v-expansion-panels
+              v-model="isTimeOutOpen"
+              class="expansion-panels"
+            >
               <v-expansion-panel
+                value="isTimeOutOpen"
                 :style="{
                   backgroundColor: theme.$main_bg,
                   color: theme.$main_text,
@@ -196,12 +199,12 @@
             </v-checkbox>
           </div>
 
-          <div class="d-inline-flex align-center">
+          <div class="">
             <v-checkbox
               v-model="search.parametrs.isNotifyOnFinish"
               hide-details
               :color="theme.$primary_button"
-              style="padding-top: 0; margin-top: 0; margin-right: 15px"
+              style="padding-top: 0; margin-top: 0; margin-right: 15px; padding-bottom: 20px;"
             >
               <template v-slot:label>
                 <span :style="`color: ${theme.$secondary_text} !important`">
@@ -325,6 +328,7 @@ export default {
       twf: '',
       pickerIcon: mdiCalendarMonth,
       isChanged: false,
+      isTimeOutOpen: ['isTimeOutOpen'],
       // CodeMirrorOptions
       cmOption: {
         tabSize: 4,
@@ -388,6 +392,7 @@ export default {
       } else {
         this.isChanged = false;
       }
+      this.isTimeOutOpen = undefined;
     },
     dataSearchFrom() {
       this.currentSid = this.dataSearchFrom?.sid;
@@ -403,11 +408,19 @@ export default {
     this.currentSid = this.dataSearchFrom?.sid;
     if (this.active) {
       this.setData();
+      this.isChanged = false;
     }
   },
   methods: {
     setData() {
       this.search = JSON.parse(JSON.stringify(this.dataSearch));
+      if (this.$refs.search) {
+        this.$nextTick(() => {
+          // eslint-disable-next-line no-underscore-dangle
+          this.$refs.search._data.cminstance.doc.clearHistory();
+          this.isChanged = false;
+        });
+      }
       if (this.search.parametrs.isStartImmediately === undefined) {
         this.$set(this.search.parametrs, 'isStartImmediately', true);
       }
