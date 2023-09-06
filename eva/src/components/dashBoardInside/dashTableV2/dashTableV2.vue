@@ -1516,11 +1516,13 @@ export default {
   }
 
   .tabulator-row{
+    -webkit-print-color-adjust: exact;
     display: flex;
     align-items: stretch !important;
     color: var(--main_text);
     background-color: transparent;
     border-bottom: 1px solid var(--main_border);
+
     &.on-data-compare-color {
       background-color: transparent;
     }
@@ -1533,6 +1535,7 @@ export default {
       }
     }
     .tabulator-cell {
+      -webkit-print-color-adjust: exact;
       display: inline-flex;
       flex: 1 1 auto;
       align-items: center;
