@@ -1,7 +1,7 @@
 # [1.149.0] - 2023-09-07
 
 ### Added
-- Word break to notify in notify modal
+- Text wrapping in notifications modal
 - Multiline: added single y-axis
 - Gauge: added display in the labels of the value after the comma
 
