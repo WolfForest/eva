@@ -575,6 +575,7 @@ export default {
   cursor: pointer
   font-size: 14px
   min-height: 30px
+  -webkit-print-color-adjust: exact
   > div
     display: inline-block
     padding: 2px 16px 2px 0

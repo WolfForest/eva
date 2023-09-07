@@ -344,6 +344,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    -webkit-print-color-adjust: exact;
   }
 
   &__label {
