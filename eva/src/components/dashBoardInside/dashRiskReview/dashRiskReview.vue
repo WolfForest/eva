@@ -465,18 +465,22 @@ export default {
     isListValid() {
       if (this.getDataForHtmlTemplate?.length > 0) {
         const allFirstListItems = [];
+        const allFirstListTitles = [];
         const allSecondListItems = [];
+        const allSecondListTitles = [];
         this.getDataForHtmlTemplate.forEach((element) => {
           if (element?.firstList) {
             allFirstListItems.push(...element.firstList.items);
+            allFirstListTitles.push(element.firstList[this.metricKeys.firstListTitle]);
           }
           if (element?.secondList) {
             allSecondListItems.push(...element.secondList.items);
+            allSecondListTitles.push(element.secondList[this.metricKeys.secondListTitle]);
           }
         });
         return {
-          first: allFirstListItems.length > 0,
-          second: allSecondListItems.length > 0,
+          first: allFirstListItems.length > 0 || allFirstListTitles.length > 0,
+          second: allSecondListItems.length > 0 || allSecondListTitles.length > 0,
         };
       }
       return {
