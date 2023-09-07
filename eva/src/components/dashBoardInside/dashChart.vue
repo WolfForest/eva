@@ -241,17 +241,17 @@ export default {
       // add new metrics config
       const newMetrics = this.metrics.filter((i) => existsMetrics.indexOf(i) < 0);
       if (newMetrics.length) {
-        // metricsByGroup.push([]);
+        if (metricsByGroup.length === 0) {
+          metricsByGroup.push([]);
+        }
         newMetrics.forEach((metricName, nN) => {
           const metric = this.getOldMetricConfig(metricName);
           if (!this.options.useGroups && metricsByGroup[metricsByGroup.length - 1].length > 0) {
             metricsByGroup.push([]);
           }
-          // metricsByGroup[metricsByGroup.length - 1].push(metric);
           if (this.options.commonAxisY) {
             metricsByGroup[0].push(metric);
           } else {
-            metricsByGroup.push([]);
             metricsByGroup[metricsByGroup.length - 1].push(metric);
           }
           // если тащим настройки со старого мультилайна то добавим группы для не united графиков
