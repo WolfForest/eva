@@ -1,5 +1,6 @@
 <template>
   <v-dialog
+    transition="fade-transition"
     :value="modalValue"
     v-bind="$attrs"
     :persistent="persistent"

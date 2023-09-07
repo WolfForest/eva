@@ -8,10 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- word break to notify in notify modal
 - Multiline: added single y-axis
 - Gauge: added display in the labels of the value after the comma
 
 ### Changed
+- textarea to code editor in DS's create modal
 
 ### Fixed
 - Dash-options: The primitives library has been returned to the settings
