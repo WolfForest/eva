@@ -38,7 +38,6 @@
             style="position:relative; max-height: calc(100% - 24px); height: calc(100% - 24px);"
             @keyup.ctrl.\="addLineBreaks"
             @input="isChanged = true"
-            @ready="onCmReady"
           />
         </div>
 
@@ -391,13 +390,6 @@ export default {
       if (val) {
         this.setData();
       } else {
-        if (this.$refs.search) {
-          this.$nextTick(() => {
-            // eslint-disable-next-line no-underscore-dangle
-            this.$refs.search._data.cminstance.doc.clearHistory();
-            this.isChanged = false;
-          });
-        }
         this.isChanged = false;
       }
       this.isTimeOutOpen = undefined;
@@ -420,15 +412,6 @@ export default {
     }
   },
   methods: {
-    onCmReady() {
-      this.$refs.search.$el.addEventListener('keypress', (event) => {
-        if (event.ctrlKey && event.keyCode === 10) {
-          this.launchSearch();
-        } else if (event.ctrlKey && event.keyCode === 28) {
-          this.addLineBreaks();
-        }
-      });
-    },
     setData() {
       this.search = JSON.parse(JSON.stringify(this.dataSearch));
       if (this.$refs.search) {
