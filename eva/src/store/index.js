@@ -1448,6 +1448,13 @@ export default new Vuex.Store({
         result.then((stateFrom) => {
           if (stateFrom && stateFrom?.name) {
             const dashBodyObj = JSON.parse(stateFrom?.body || '{}');
+            if (dashBodyObj.elements) {
+              dashBodyObj.elements.forEach((elem) => {
+                if (dashBodyObj[elem].search === undefined) {
+                  dashBodyObj[elem].search = -1;
+                }
+              });
+            }
             if (!state[id]) {
               commit('setState', [
                 {
