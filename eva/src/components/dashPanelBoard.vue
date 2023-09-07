@@ -1580,7 +1580,7 @@ export default {
       this.activeModal = !this.activeModal;
       this.newSearch = {
         sid: null,
-        original_otl: null,
+        original_otl: '',
         limit: 1000,
         parametrs: {
           tws: 0,
