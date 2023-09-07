@@ -223,16 +223,18 @@ export default {
         idDash: this.idDash,
       });
 
-      const newWidth = Math.round(width / this.verticalCell);
-      const newHeight = Math.round(height / this.horizontalCell);
-      this.height = height;
-      this.width = width;
-      this.$store.commit('setSizeDash', {
-        width: newWidth,
-        height: newHeight,
-        id: this.id,
-        idDash: this.idDash,
-      });
+      if (width && height) {
+        const newWidth = Math.round(width / this.verticalCell);
+        const newHeight = Math.round(height / this.horizontalCell);
+        this.height = height;
+        this.width = width;
+        this.$store.commit('setSizeDash', {
+          width: newWidth,
+          height: newHeight,
+          id: this.id,
+          idDash: this.idDash,
+        });
+      }
     },
     changeOpacity(event) {
       this.opacity = event;

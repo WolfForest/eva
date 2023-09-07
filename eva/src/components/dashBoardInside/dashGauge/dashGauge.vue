@@ -171,7 +171,6 @@ export default {
           .filter((value, index, self) => (self.indexOf(value) === index))
           .sort((a, b) => ((a > b) ? 1 : (a < b) ? -1 : 0)),
         color: this.theme.$main_text, // Optional: Label text color
-        fractionDigits: 0, // Optional: Numerical precision. 0=round off.
       };
     },
     pointer() {

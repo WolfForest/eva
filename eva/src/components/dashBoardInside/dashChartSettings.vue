@@ -29,6 +29,17 @@
               class="float-end"
             >
             </v-checkbox>
+            <v-checkbox
+              v-model="commonAxisY"
+              label="Единая ось Y"
+              persistent-placeholder
+              :disabled="!useGroups"
+              dense
+              outlined
+              hide-details
+              color="blue"
+              class="float-end"
+            />
           </v-col>
         </v-row>
       </v-card-title>
@@ -699,6 +710,10 @@ export default {
         { text: 'С накоплением', value: 'accumulation' },
       ]),
     },
+    dataRestFrom: {
+      type: Array,
+      required: true,
+    },
   },
   data: () => ({
     mdiClose,
@@ -741,6 +756,7 @@ export default {
       { value: '3', text: 'Каждое 3' },
       { value: '10', text: 'Указать число' },
     ],
+    commonAxisY: false,
   }),
   computed: {
     isOpen: {
@@ -776,10 +792,25 @@ export default {
           });
         });
       }
+
+      if (this.commonAxisY) {
+        metricsByGroup.forEach((group, i) => {
+          const max = this.getMaxValueYAxis(this.dataRestFrom, metricsByGroup[i]);
+          group.forEach((metric) => {
+            if (!metric.yAxisLink && metric.yAxisLink !== metric.name) {
+              metric.yAxisLink = max.key;
+              if (metric.yAxisLink === metric.name) {
+                delete metric.yAxisLink;
+              }
+            }
+          });
+        });
+      }
       return {
         metricsByGroup,
         xAxis: { ...this.xAxis },
         useGroups: this.useGroups,
+        commonAxisY: this.commonAxisY,
       };
     },
 
@@ -813,6 +844,9 @@ export default {
 
     receivedSettings() {
       this.makeMetricsOrderList();
+    },
+    useGroups(val) {
+      if (!val) this.commonAxisY = false;
     },
   },
   mounted() {
@@ -864,12 +898,33 @@ export default {
         ...this.receivedSettings.xAxis,
       }));
       this.useGroups = !!this.receivedSettings.useGroups;
+      this.commonAxisY = !!this.receivedSettings.commonAxisY;
       this.metricsByGroup = [...JSON.parse(JSON.stringify(this.receivedSettings.metricsByGroup))];
       this.metricsByGroup.push([]);
     },
 
     colorPickerInputChange() {
       this.colorPickerInputMode = !this.colorPickerInputMode;
+    },
+    getMaxValueYAxis(dataRest, metricsByGroup) {
+      const max = {
+        key: '',
+        value: 0,
+      };
+      // eslint-disable-next-line no-restricted-syntax
+      for (const item of dataRest) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const key of Object.keys(item)) {
+          if (key !== '_time' && metricsByGroup.find((metric) => metric.name === key)) {
+            const value = item[key];
+            if (max.value < value) {
+              max.value = value;
+              max.key = key;
+            }
+          }
+        }
+      }
+      return max;
     },
   },
 };

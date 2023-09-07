@@ -1353,6 +1353,17 @@ export default {
       placeholder: 'residual',
       default: 'residual',
     },
+    // fullWidthGroup
+    {
+      group: 'Библиотека примитивов',
+      option: 'primitives',
+    },
+    {
+      optionGroup: 'primitives',
+      option: 'primitivesLibrary',
+      elem: 'code-editor',
+      isFullWidth: true,
+    },
     // formGenerator
     {
       group: 'Исходные данные для формы',

@@ -68,7 +68,7 @@ export default class RIskReviewClass {
       const orderList = dataRest.map((el, index) => (typeof el._order !== 'undefined'
       // eslint-disable-next-line no-underscore-dangle
         ? el._order
-        : index)).sort();
+        : index)).sort((a, b) => a - b);
       let counter = 0;
       const uniqueOrderList = [...new Set(orderList)];
       if (orderList.length !== uniqueOrderList.length) {

@@ -1,3 +1,19 @@
+# [1.149.0] - 2023-09-07
+
+### Added
+- Text wrapping in notifications modal
+- Multiline: added single y-axis
+- Gauge: added display in the labels of the value after the comma
+
+### Changed
+- Textarea to code editor in DS's create modal
+
+### Fixed
+- Dash-options: The primitives library has been returned to the settings
+- Accumulators: sometimes the settings fly off and the size is reset
+- Printer page size and colors
+- RiskReview: fixed display of more than 10 elements
+
 # [1.148.0] - 2023-08-31
 
 ### Added
