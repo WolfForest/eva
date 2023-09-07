@@ -783,7 +783,7 @@ export default {
 
     currentSettings() {
       const metricsByGroup = [...this.metricsByGroupNoEmpty];
-      if (!this.useGroups || !this.commonAxisY) {
+      if (!this.useGroups) {
         metricsByGroup.forEach((group) => {
           group.forEach((metric) => {
             if (metric.yAxisLink) {
@@ -791,7 +791,9 @@ export default {
             }
           });
         });
-      } else if (this.commonAxisY) {
+      }
+
+      if (this.commonAxisY) {
         metricsByGroup.forEach((group, i) => {
           const max = this.getMaxValueYAxis(this.dataRestFrom, metricsByGroup[i]);
           group.forEach((metric) => {
