@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+- change color of log`s icon when DS has finish with error
 - Dash-options: The primitives library has been returned to the settings
 
 ## [1.148.0]
