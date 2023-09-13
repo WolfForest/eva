@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Event click for component accumulator
+- Event click for component frequency graph
 
 ### Changed
 

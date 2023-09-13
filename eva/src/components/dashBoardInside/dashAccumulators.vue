@@ -56,6 +56,7 @@
                 +`${color} ${value/max*100}%, `
                 +`${theme.$secondary_border} ${value/max*100}%);`
             "
+            @click="onClickElem(dataRestFrom[index])"
           >
             <div class="dash-accumulator__label">
               {{ label }}
@@ -129,7 +130,9 @@ export default {
         plus: mdiPlus,
         minus: mdiMinus,
       },
-      actions: [],
+      actions: [
+        { name: 'click', capture: [] },
+      ],
       sliderValue: 0,
       columnOptions: {
         label: '',
@@ -319,6 +322,14 @@ export default {
         if (elem) {
           this.columnOptions = elem;
         }
+      });
+    },
+    onClickElem(obj) {
+      this.$store.commit('tokenAction', {
+        idDash: this.idDashFrom,
+        elem: this.idFrom,
+        action: 'click',
+        value: obj,
       });
     },
   },
