@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+- fix panel background flickering when changing background to transparent
 
 ## [1.149.0]
 
