@@ -203,7 +203,7 @@ export default {
       mdiMagnifyMinusOutline,
       size: {
         width: 500,
-        height: 500,
+        height: 400,
       },
       settings: {
         showTitle: true,
@@ -388,10 +388,10 @@ export default {
     calcSize() {
       const size = this.$refs.vis.getBoundingClientRect();
       this.size.width = Math.round(size.width) - 16;
-      if (Math.round(size.height) - 66 < 500) {
-        this.size.height = 500;
+      if (Math.round(size.height) - 166 < 400) {
+        this.size.height = 400;
       } else {
-        this.size.height = Math.round(size.height) - 66;
+        this.size.height = Math.round(size.height) - 166;
       }
     },
     setActiveElem(elemName) {
@@ -417,7 +417,10 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 100px);
+  @media print {
+    height: auto;
+  }
   .theme--light.v-icon {
     color: inherit !important;
   }
