@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+- change color of log`s icon when DS has finish with error
 - fix panel background flickering when changing background to transparent
 
 ## [1.149.0]
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - textarea to code editor in DS's create modal
 
 ### Fixed
+
 - Dash-options: The primitives library has been returned to the settings
 - Accumulators: sometimes the settings fly off and the size is reset
 - Printer page size and colors

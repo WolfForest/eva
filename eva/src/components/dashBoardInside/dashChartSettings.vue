@@ -27,8 +27,7 @@
               hide-details
               color="blue"
               class="float-end"
-            >
-            </v-checkbox>
+            />
             <v-checkbox
               v-model="commonAxisY"
               label="Единая ось Y"
@@ -64,8 +63,8 @@
           >
             <v-divider
               v-if="useGroups"
-              :color="theme.$main_bg"/>
-
+              :color="theme.$main_bg"
+            />
             <!-- Metrics -->
             <v-expansion-panels
               v-model="panelMetric[groupNumber]"
@@ -266,8 +265,8 @@
                       />
                       <div class="row mt-0 mb-1">
                         <div
-                          class="col col-auto py-0"
                           v-if="metric.type === 'line'"
+                          class="col col-auto py-0"
                         >
                           <v-checkbox
                             v-model="metric.showPeakDots"
@@ -578,7 +577,9 @@
                 <div class="col-8 py-0">
                   <v-checkbox
                     v-model="xAxis.ticksEnabled"
-                    :label="`Количество тиков оси X: ${xAxis.ticks === 0 ? 'каждая точка' : xAxis.ticks}`"
+                    :label="`Количество тиков оси X: ${
+                      xAxis.ticks === 0 ? 'каждая точка' : xAxis.ticks
+                    }`"
                     persistent-placeholder
                     dense
                     outlined
