@@ -16,7 +16,6 @@
     :class-name-active="!dataMod && !dragRes || !dragRes ? 'none' : 'active'"
     :style="{
       outlineColor: theme.$accent_ui_color,
-      backgroundColor: panelBackHide ? null : theme.$accent_ui_color,
     }"
     @resizestop="sendSize"
     @dragstop="sendMove"

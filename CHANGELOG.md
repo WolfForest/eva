@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - change color of log`s icon when DS has finish with error
+- fix panel background flickering when changing background to transparent
 
 ## [1.149.0]
 
