@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+- fix panel background flickering when changing background to transparent
 
 ## [1.149.0]
 
@@ -28,7 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Accumulators: sometimes the settings fly off and the size is reset
 - Printer page size and colors
 - RiskReview: fixed display of more than 10 elements
-- fix panel background flickering when changing background to transparent
 
 ## [1.148.0]
 
