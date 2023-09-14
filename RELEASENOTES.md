@@ -1,3 +1,13 @@
+# [1.150.0] - 2023-09-14
+
+### Added
+- Implemented a 'click' event for the accumulator component
+- Implemented a 'click' event for the frequency graph component
+
+### Fixed
+- Change the color of the log icon when the Data Source has encountered an error
+- Resolve the issue of the panel background flickering when changing it to a transparent background
+
 # [1.149.0] - 2023-09-07
 
 ### Added

@@ -8,10 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Event click for component accumulator
-- Event click for component frequency graph
 
 ### Changed
+
+### Fixed
+
+## [1.150.0]
+
+### Added
+- Event click for component accumulator
+- Event click for component frequency graph
 
 ### Fixed
 - change color of log`s icon when DS has finish with error
@@ -28,7 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - textarea to code editor in DS's create modal
 
 ### Fixed
-
 - Dash-options: The primitives library has been returned to the settings
 - Accumulators: sometimes the settings fly off and the size is reset
 - Printer page size and colors
