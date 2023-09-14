@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [1.150.0]
+
+### Added
+- Event click for component accumulator
+- Event click for component frequency graph
+
+### Fixed
+- change color of log`s icon when DS has finish with error
+- fix panel background flickering when changing background to transparent
+
 ## [1.149.0]
 
 ### Added
