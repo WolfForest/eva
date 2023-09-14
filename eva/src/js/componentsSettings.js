@@ -215,7 +215,7 @@ export default {
     },
     textarea: {
       width: 400,
-      height: 80,
+      height: 100,
     },
     tile: {
       width: 470,
