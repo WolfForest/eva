@@ -32,12 +32,13 @@
               @change="isChanged = true"
             />
           </div>
-          <div class="option-item">
+          <div class="option-item stack-top">
             <div
               class="name-option main item"
               :style="{
                 color: theme.$title,
                 borderBottom: `1px solid ${theme.$main_border}`,
+                borderColor: theme.$main_border,
               }"
             >
               Название
@@ -47,6 +48,7 @@
               :style="{
                 color: theme.$title,
                 borderBottom: `1px solid ${theme.$main_border}`,
+                borderColor: theme.$main_border,
               }"
             >
               Описание
