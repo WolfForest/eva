@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The action buttons in the component settings are stuck to the bottom edge of the modal window
 
 ### Fixed
+- cSvg component does not set the click token value.
 
 ## [1.150.0]
 
