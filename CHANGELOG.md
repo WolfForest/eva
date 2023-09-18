@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - cSvg component does not set the click token value.
+- Wrong text in the table when loading the dashboard "data is not displayed due to settings"
 
 ## [1.150.0]
 

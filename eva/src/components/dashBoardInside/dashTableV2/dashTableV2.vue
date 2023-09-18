@@ -296,7 +296,7 @@ export default {
         { name: 'mouseover', capture: [] },
       ],
       isDownloadModal: false,
-      isLoading: false,
+      isLoading: true,
       downloadFiles: {
         downloadCSV: 'CSV',
         downloadJSON: 'JSON',
@@ -810,7 +810,7 @@ export default {
       }
       this.tabulator = new Tabulator(this.$refs[this.idFrom], {
         addRowPos: 'top',
-        placeholder: 'Данные не отображаются из-за настроек', // display message to user on empty table
+        placeholder: 'Нет данных для отображения', // display message to user on empty table
         popupContainer: `#${this.idFrom}`,
         maxHeight: '100%',
         height: '100%',
