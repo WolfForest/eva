@@ -581,7 +581,7 @@ export default {
     },
     getTokens: {
       handler() {
-        this.redrawTable();
+        this.updateColumnDefinition();
       },
       deep: true,
     },
