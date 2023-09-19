@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Generation of component ID. The order of suffixes of the component ID suffixes added to the dashboard was incorrect in some cases.
+- cSvg component does not set the click token value.
 
 ## [1.150.0]
 
