@@ -27,6 +27,11 @@ import {
 } from '@mdi/js';
 
 export default {
+  // монтируются скрытыми если они находятся на не активной вкладке
+  mountableOnAnyTab: [
+    'textarea',
+    'select',
+  ],
   tools: [
     { name: 'Выпадающий список', img: mdiFormatListBulleted, type: 'select' },
     { name: 'Динамическая форма', img: mdiInboxMultipleOutline, type: 'dynamicForm' },
