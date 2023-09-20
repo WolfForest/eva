@@ -536,9 +536,7 @@ export default {
     dataRestFrom: {
       handler(val) {
         if (this.isValidSchema) {
-          if (this.idDashFrom === 'reports') {
-            this.updateDataInTable(val);
-          }
+          this.updateDataInTable(val);
           this.onDataCompare();
         }
       },
