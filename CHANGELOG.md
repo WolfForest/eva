@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The action buttons in the component settings are stuck to the bottom edge of the modal window
+- cSvg: reset image when there is no filename in the data source.
 
 ### Fixed
 - Generation of component ID. The order of suffixes of the component ID suffixes added to the dashboard was incorrect in some cases.
