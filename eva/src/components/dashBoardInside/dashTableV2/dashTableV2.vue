@@ -553,8 +553,10 @@ export default {
       deep: true,
     },
     getOptions: {
-      handler() {
-        this.redrawTable();
+      handler(val, oldVal) {
+        if (JSON.stringify(val) !== JSON.stringify(oldVal)) {
+          this.redrawTable();
+        }
       },
       deep: true,
     },
