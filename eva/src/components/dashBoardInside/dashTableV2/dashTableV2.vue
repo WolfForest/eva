@@ -192,7 +192,7 @@ export default {
         { name: 'mouseover', capture: [] },
       ],
       isDownloadModal: false,
-      isLoading: false,
+      isLoading: true,
       downloadFiles: {
         downloadCSV: 'CSV',
         downloadJSON: 'JSON',
@@ -456,9 +456,7 @@ export default {
     dataRestFrom: {
       handler(val) {
         if (this.isValidSchema) {
-          if (this.idDashFrom === 'reports') {
-            this.updateDataInTable(val);
-          }
+          this.updateDataInTable(val);
           this.onDataCompare();
         }
       },
@@ -473,8 +471,10 @@ export default {
       deep: true,
     },
     getOptions: {
-      handler() {
-        this.redrawTable();
+      handler(val, oldVal) {
+        if (JSON.stringify(val) !== JSON.stringify(oldVal)) {
+          this.redrawTable();
+        }
       },
       deep: true,
     },
@@ -501,7 +501,7 @@ export default {
     },
     getTokens: {
       handler() {
-        this.redrawTable();
+        this.updateColumnDefinition();
       },
       deep: true,
     },
@@ -727,7 +727,7 @@ export default {
       }
       this.tabulator = new Tabulator(this.$refs[this.idFrom], {
         addRowPos: 'top',
-        placeholder: 'Данные не отображаются из-за настроек', // display message to user on empty table
+        placeholder: 'Нет данных для отображения', // display message to user on empty table
         popupContainer: `#${this.idFrom}`,
         maxHeight: '100%',
         height: '100%',
