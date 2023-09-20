@@ -1,3 +1,18 @@
+# [1.151.0] - 2023-09-21
+
+### Added
+- For TableV2, added support for handling "_columnOptions" in DS for configuring column options.
+- Introducing new column types in TableV2: riskAcc, riskFact, riskSum.
+
+### Changed
+- Adjusted the position of action buttons in the component settings to align with the bottom edge of the modal window.
+- Improved the behavior of the cSvg component by resetting the image when no filename is provided in the data source.
+
+### Fixed
+- Resolved an issue with the generation of component IDs. The order of component ID suffixes added to the dashboard was incorrect in some cases.
+- Fixed the cSvg component, which was not setting the click token value.
+- Addressed an issue with Select and Textarea components where the default value was not set when the component was on a different tab.
+
 # [1.150.0] - 2023-09-14
 
 ### Added
