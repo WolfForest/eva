@@ -27,6 +27,11 @@ import {
 } from '@mdi/js';
 
 export default {
+  // монтируются скрытыми если они находятся на не активной вкладке
+  mountableOnAnyTab: [
+    'textarea',
+    'select',
+  ],
   tools: [
     { name: 'Выпадающий список', img: mdiFormatListBulleted, type: 'select' },
     { name: 'Динамическая форма', img: mdiInboxMultipleOutline, type: 'dynamicForm' },
@@ -359,6 +364,7 @@ export default {
     table: [
       'boxShadow',
       'tableOptions',
+      'headerMultiline',
       'selectableRow',
       'lastResult',
       'movableColumns',
@@ -836,6 +842,13 @@ export default {
       option: 'enableDecimalPlacesLimits',
       optionGroup: 'tableOptions',
       description: 'Включить форматирование чисел',
+      elem: 'switch',
+      default: false,
+    },
+    {
+      option: 'headerMultiline',
+      optionGroup: 'tableOptions',
+      description: 'Включить многострочные заголовки стоблцов',
       elem: 'switch',
       default: false,
     },

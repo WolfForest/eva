@@ -178,6 +178,10 @@ export default {
       type: Array,
       required: true,
     }, // данные полученые после выполнения запроса
+    loading: {
+      type: Boolean,
+      required: true,
+    },
     colorFrom: {
       type: Object,
       required: true,
@@ -380,10 +384,15 @@ export default {
             id: this.id,
           });
         }
+      } else if (!this.loading) {
+        this.resetSvg();
       }
       if (window.screen.width <= 1600) {
         this.marginBottom = 30;
       }
+    },
+    async resetSvg() {
+      this.svg = '';
     },
     async getSvg(svg) {
       this.$emit('setLoading', true);
