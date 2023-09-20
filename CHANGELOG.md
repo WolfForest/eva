@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- TableV2: handling "_columnOptions" in DS for setting columns options
+- TableV2: added new column types: riskAcc, riskFact, riskSum
 
 ### Changed
 - The action buttons in the component settings are stuck to the bottom edge of the modal window

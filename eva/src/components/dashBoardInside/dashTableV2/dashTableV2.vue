@@ -119,113 +119,9 @@ import {
   mdiClose,
 } from '@mdi/js';
 import { throttle } from '@/js/utils/throttle';
-
-// eslint-disable-next-line func-names
-const colorFixed = function (cell) {
-  cell.getElement().style.backgroundColor = this.sanitizeHTML(cell.getValue());
-
-  return '&nbsp;';
-};
-
-// eslint-disable-next-line func-names
-const headerFilter = function (cell/* , onRendered, success, cancel , editorParams */) {
-  const vueComponent = this;
-  const filterId = vueComponent.persistenceFilterId;
-  const field = cell.getField();
-  const elementId = `${filterId}-${field}`;
-
-  const container = document.createElement('div');
-  container.id = elementId;
-  container.classList.add('dash-table-v2-container__filter-container');
-
-  // create and style select element
-  const select = document.createElement('select');
-  select.id = `${elementId}-select`;
-  select.classList.add('dash-table-v2-container__filter-select');
-  const filters = vueComponent.searchSchema[field] === 'STRING'
-    ? ['', '>', '<', '=', '==', '>=', '<=', '!=']
-    : ['', '>', '<', '=', '>=', '<=', '!='];
-  filters.forEach((item) => {
-    const option = document.createElement('option');
-    option.classList.add('dash-table-v2-container__filter-select-option');
-    option.value = item;
-    option.textContent = item;
-    select.appendChild(option);
-  });
-  select.placeholder = 'Знак';
-  select.style.padding = '4px';
-  select.style.boxSizing = 'border-box';
-
-  // create and style text input element
-  const textInput = document.createElement('input');
-  textInput.id = `${elementId}-textInput`;
-  textInput.type = 'text';
-  textInput.classList.add('dash-table-v2-container__filter-input');
-
-  let selectValue = '';
-  let textValue = '';
-
-  function buildValues() {
-    vueComponent.persistenceFilterWriter(
-      filterId,
-      field,
-      {
-        filterType: {
-          el: select.id,
-          value: selectValue,
-        },
-        filterValue: {
-          el: textInput.id,
-          value: textValue,
-        },
-      },
-    );
-  }
-
-  function updateTextValue(value) {
-    if (value !== '') {
-      textValue = Number.isNaN(+value) ? value : +value;
-    } else {
-      textValue = value;
-    }
-    const maxWidth = container.offsetWidth - select.offsetWidth;
-    const length = textInput.value.length && textInput.value.length > 1
-      ? textInput.value.length + 2
-      : 3;
-    textInput.style.maxWidth = `${maxWidth - 10}px`;
-    textInput.style.width = `calc(${length} * 1ch)`;
-  }
-
-  // add event listeners
-  select.addEventListener('change', (e) => {
-    selectValue = e.target.value;
-    updateTextValue(textInput?.value);
-    buildValues();
-  });
-
-  textInput.addEventListener('input', (e) => {
-    updateTextValue(e.target.value);
-    selectValue = select.value;
-    buildValues();
-  });
-
-  // append elements to container
-  container.appendChild(select);
-  container.appendChild(textInput);
-
-  return container;
-};
-
-// eslint-disable-next-line func-names
-const sorterFn = function (a, b/* , aRow, bRow, column, dir, sorterParams */) {
-  // a, b - the two values being compared
-  // aRow, bRow - the row components for the values being compared
-  // (useful if you need to access additional fields in the row data for the sort)
-  // column - the column component for the column being sorted
-  // dir - the direction of the sort ("asc" or "desc")
-  // sorterParams - sorterParams object from column definition array
-  return a - b; // you must return the difference between the two values
-};
+import {
+  formaterForNumbers, getFormatter, headerFilter, sorterFn,
+} from '@/js/utils/tableUtils';
 
 export default {
   name: 'DashTableV2',
@@ -310,6 +206,14 @@ export default {
     };
   },
   computed: {
+    dataForTable() {
+      // eslint-disable-next-line no-underscore-dangle
+      if (this.dataRestFrom[0]?._columnOptions) {
+        return this.dataRestFrom.slice(1);
+      }
+
+      return this.dataRestFrom;
+    },
     isResized() {
       return this.dashFromStore.tableOptions.columnResized;
     },
@@ -347,25 +251,35 @@ export default {
         numberFormat,
         decimalPlacesLimits,
       } = this.$store.getters['app/userSettings'];
+      const schemaKeys = Object.keys(this.searchSchema);
       if (this.isValidSchema) {
-        Object.keys(this.searchSchema).forEach((column) => {
-          columnOptions[column] = {
-            headerFilter: this.defaultFilterAllColumns,
-            headerMenu: true,
-            frozen: this.frozenColumns.includes(column),
-            formatter: (enableDecimalPlacesLimits) ? (cell) => {
-              const num = cell.getValue();
-              if (typeof num === 'number') {
-                return num.toLocaleString(numberFormat, {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: decimalPlacesLimits || 10,
-                });
-              }
-              return num;
-            } : undefined,
-          };
+        schemaKeys.forEach((column) => {
+          if (column !== '_columnOptions') {
+            columnOptions[column] = {
+              headerFilter: this.defaultFilterAllColumns,
+              headerMenu: true,
+              frozen: this.frozenColumns.includes(column),
+              formatter: (enableDecimalPlacesLimits)
+                ? formaterForNumbers(numberFormat, decimalPlacesLimits)
+                : undefined,
+            };
+          }
         });
       }
+
+      if (schemaKeys.includes('_columnOptions')) {
+        // eslint-disable-next-line no-underscore-dangle
+        const columnOptionsFromDs = JSON.parse(this.dataRestFrom[0]._columnOptions.replaceAll("'", '"'));
+        const columnOptionsFromDsKeys = Object.keys(columnOptionsFromDs);
+        columnOptionsFromDsKeys.forEach((column) => {
+          if (schemaKeys.includes(column)) {
+            Object.keys(columnOptionsFromDs[column]).forEach((prop) => {
+              columnOptions[column][prop] = columnOptionsFromDs[column][prop];
+            });
+          }
+        });
+      }
+
       return columnOptions;
     },
     columns() {
@@ -394,9 +308,15 @@ export default {
         let column = {
           field: key,
           title: options?.title || key,
+          headerWordWrap: this.getOptions?.headerMultiline ?? false,
           resizable: 'header',
           frozen: options?.frozen || false,
-          headerFilter: options?.headerFilter ? headerFilter.bind(this) : false,
+          // eslint-disable-next-line no-nested-ternary
+          headerFilter: options?.headerFilter
+            ? options?.headerFilter === true
+              ? headerFilter.bind(this)
+              : options?.headerFilter
+            : false,
           headerFilterLiveFilter: false,
           editor: options?.editor || false,
           sorter: this.searchSchema[key] === 'STRING' ? 'string' : sorterFn,
@@ -411,7 +331,7 @@ export default {
         };
 
         if (options?.formatter) {
-          column.formatter = options.formatter === 'color' ? colorFixed : options.formatter;
+          column.formatter = getFormatter(options.formatter);
         }
 
         if (options?.formatter === 'tickCross') {
@@ -638,10 +558,7 @@ export default {
   },
   methods: {
     setTableOption(module, option, value) {
-      // console.log('1', this.idFrom, this.tabulator);
       this.tabulator[module].setOption(option, value);
-      // console.log('2', this.idFrom, this.tabulator);
-      // this.tabulator.setData(this.dataRestFrom);
     },
     clearFrozenColumns() {
       this.$store.commit('setState', [{
@@ -913,7 +830,7 @@ export default {
       this.$store.commit('setState', [{
         object: this.getOptions,
         prop: 'fieldList',
-        value: fieldList,
+        value: fieldList.filter((el) => el !== '_columnOptions'),
       }]);
     },
     headerMenu() {
@@ -1239,6 +1156,7 @@ export default {
               const fields = this.idDashFrom === 'reports' ? Object.keys(this.searchSchema) : this.fields;
               const updatedData = fields.map((key) => {
                 const el = data.find((item) => item?.field === key);
+
                 if (this.isResized) {
                   return el;
                 }
@@ -1411,6 +1329,17 @@ export default {
 .dash-table-v2-container {
   padding: 10px;
 
+  .tabulator-col-title-wrap {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-clamp: 3;
+    box-orient: vertical;
+  }
   .title {
 
     color: var(--main_text);

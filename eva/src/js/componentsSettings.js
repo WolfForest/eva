@@ -364,6 +364,7 @@ export default {
     table: [
       'boxShadow',
       'tableOptions',
+      'headerMultiline',
       'selectableRow',
       'lastResult',
       'movableColumns',
@@ -841,6 +842,13 @@ export default {
       option: 'enableDecimalPlacesLimits',
       optionGroup: 'tableOptions',
       description: 'Включить форматирование чисел',
+      elem: 'switch',
+      default: false,
+    },
+    {
+      option: 'headerMultiline',
+      optionGroup: 'tableOptions',
+      description: 'Включить многострочные заголовки стоблцов',
       elem: 'switch',
       default: false,
     },
