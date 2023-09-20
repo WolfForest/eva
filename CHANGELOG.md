@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Generation of component ID. The order of suffixes of the component ID suffixes added to the dashboard was incorrect in some cases.
 - cSvg component does not set the click token value.
+- Wrong text in the table when loading the dashboard "data is not displayed due to settings"
+- Table: Changing the token causes a reset to the first page.
 - Select, Textarea: If the component is on a different tab, the default value is not set.
 
 ## [1.150.0]
