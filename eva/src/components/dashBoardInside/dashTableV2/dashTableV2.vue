@@ -471,10 +471,8 @@ export default {
       deep: true,
     },
     getOptions: {
-      handler(val, oldVal) {
-        if (JSON.stringify(val) !== JSON.stringify(oldVal)) {
-          this.redrawTable();
-        }
+      handler() {
+        this.redrawTable();
       },
       deep: true,
     },
