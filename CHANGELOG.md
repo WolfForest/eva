@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [1.151.0]
+
+### Added
+- TableV2: handling "_columnOptions" in DS for setting columns options
+- TableV2: added new column types: riskAcc, riskFact, riskSum
+
+### Changed
+- The action buttons in the component settings are stuck to the bottom edge of the modal window
+- cSvg: reset image when there is no filename in the data source.
+
+### Fixed
+- Generation of component ID. The order of suffixes of the component ID suffixes added to the dashboard was incorrect in some cases.
+- cSvg component does not set the click token value.
+- Wrong text in the table when loading the dashboard "data is not displayed due to settings"
+- Table: Changing the token causes a reset to the first page.
+- Select, Textarea: If the component is on a different tab, the default value is not set.
+
 ## [1.150.0]
 
 ### Added

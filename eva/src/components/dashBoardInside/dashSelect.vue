@@ -387,19 +387,18 @@ export default {
     },
     dataRestDeep() {
       this.updateSelectAllItem();
+      const {
+        defaultSourceDataUpdates = false,
+      } = this.dashFromStore.options;
+      if (defaultSourceDataUpdates) {
+        this.setDefaultValue();
+        this.setTocken();
+      }
     },
     // Загрузился ИД для дефотла
     changedDataDefaultLoading(val, oldVal) {
-      const {
-        multiple,
-      } = this;
       if (val === false && val !== oldVal) {
-        const defaultValue = this.getDefaultValue();
-        if (defaultValue != null && this.dataRestDeep.includes(defaultValue)) {
-          this.elemDeep[String(multiple)] = multiple
-            ? [defaultValue]
-            : defaultValue;
-        }
+        this.setDefaultValue();
         this.setTocken();
       }
     },
@@ -434,6 +433,17 @@ export default {
     }
   },
   methods: {
+    setDefaultValue() {
+      const defaultValue = this.getDefaultValue();
+      const {
+        multiple,
+      } = this;
+      if (defaultValue != null && this.dataRestDeep.includes(defaultValue)) {
+        this.elemDeep[String(multiple)] = multiple
+          ? [defaultValue]
+          : defaultValue;
+      }
+    },
     updateSelectAllItem() {
       if (this.multiple) {
         if (this.elemDeep.true.length !== this.dataRestDeep.length) {

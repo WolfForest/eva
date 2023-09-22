@@ -610,7 +610,7 @@ export default new Vuex.Store({
       const stateElements = spaceName
         ? state[idDash][`elements${spaceName}`]
         : state[idDash]?.elements;
-      const elements = stateElements.filter((item) => item.indexOf(id) !== -1);
+      const elements = stateElements.filter((item) => item.indexOf(id) === 0);
       // и если есть
       if (elements.length > 0) {
         // флаг чтобы понимать есть ли такой элемнет уже
