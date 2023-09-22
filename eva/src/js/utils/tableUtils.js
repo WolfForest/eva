@@ -1,5 +1,5 @@
 // eslint-disable-next-line func-names
-export const colorFixed = function (cell) {
+export const colorFixed = () => (cell) => {
   cell.getElement().style.backgroundColor = this.sanitizeHTML(cell.getValue());
 
   return '&nbsp;';
@@ -105,8 +105,8 @@ export const sorterFn = function (a, b/* , aRow, bRow, column, dir, sorterParams
   return a - b; // you must return the difference between the two values
 };
 
-export const formaterForNumbers = (numberFormat, decimalPlacesLimits) => (cell) => {
-  const num = cell.getValue();
+export const formaterForNumbers = ({ numberFormat, decimalPlacesLimits }) => (cell) => {
+  const num = +cell.getValue();
   if (typeof num === 'number') {
     return num.toLocaleString(numberFormat, {
       minimumFractionDigits: 0,
@@ -116,22 +116,26 @@ export const formaterForNumbers = (numberFormat, decimalPlacesLimits) => (cell) 
   return num;
 };
 
-export const riskSum = function (cell, formatterParams) { // plain text value
+export const riskSum = ({ numberFormat, decimalPlacesLimits }) => (cell) => { // plain text value
   const value = cell.getValue();
   if (!value) return value;
 
   const numberColor = +value >= 0 ? '#067185' : '#c30f0f';
 
+  const formattedNum = numberFormat ? (+value).toLocaleString(numberFormat, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: decimalPlacesLimits || 10,
+  }) : value;
   const div = document.createElement('div');
   div.style.whiteSpace = 'pre-line';
   div.style.lineHeight = '1';
   div.style.color = numberColor;
-  div.innerHTML = value;
+  div.innerHTML = `${formattedNum}`;
 
   return div;
 };
 
-export const riskFact = (cell) => { // plain text value
+export const riskFact = ({ numberFormat, decimalPlacesLimits }) => (cell) => { // plain text value
   const value = cell.getValue();
   if (!value) return value;
   const cellValArray = value.split(';');
@@ -141,7 +145,11 @@ export const riskFact = (cell) => { // plain text value
       try {
         const [_, text, number] = item.match(pattern);
         const numberColor = +number >= 0 ? '#067185' : '#c30f0f';
-        return `${acc} ${text}(<span style="color:${numberColor}">${number}</span>)\n\r`;
+        const formattedNum = numberFormat ? (+number).toLocaleString(numberFormat, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: decimalPlacesLimits || 10,
+        }) : number;
+        return `${acc} ${text}(<span style="color:${numberColor}">${formattedNum}</span>)\n\r`;
       } catch (e) {
         return acc;
       }
@@ -158,7 +166,7 @@ export const riskFact = (cell) => { // plain text value
   }
 };
 
-export const riskAcc = (cell) => {
+export const riskAcc = ({ numberFormat, decimalPlacesLimits }) => (cell) => {
   const value = cell.getValue();
   if (!value) return value;
 
@@ -190,7 +198,11 @@ export const riskAcc = (cell) => {
     column.appendChild(columnAcc);
 
     const valueDiv = document.createElement('div');
-    valueDiv.innerHTML = accValue;
+
+    valueDiv.innerHTML = numberFormat ? `${(+accValue).toLocaleString(numberFormat, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: decimalPlacesLimits || 10,
+    })}` : accValue;
     column.appendChild(valueDiv);
   });
 
@@ -202,8 +214,9 @@ export const customFormatters = new Map([
   ['riskAcc', riskAcc],
   ['riskSum', riskSum],
   ['color', colorFixed],
+  ['formaterForNumbers', formaterForNumbers],
 ]);
 
-export const getFormatter = (formatter) => (customFormatters.has(formatter)
-  ? customFormatters.get(formatter)
+export const getFormatter = (formatter, numbersFormats) => (customFormatters.has(formatter)
+  ? customFormatters.get(formatter)(numbersFormats)
   : formatter);

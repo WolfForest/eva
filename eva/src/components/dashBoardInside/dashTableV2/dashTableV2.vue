@@ -244,13 +244,18 @@ export default {
       offset += this.title ? 33 : 0;
       return `calc(100% - ${offset}px)`;
     },
-    columnOptions() {
-      const columnOptions = {};
-      const { enableDecimalPlacesLimits } = this;
+    numbersFormats() {
       const {
         numberFormat,
         decimalPlacesLimits,
       } = this.$store.getters['app/userSettings'];
+      return {
+        numberFormat,
+        decimalPlacesLimits,
+      };
+    },
+    columnOptions() {
+      const columnOptions = {};
       const schemaKeys = Object.keys(this.searchSchema);
       if (this.isValidSchema) {
         schemaKeys.forEach((column) => {
@@ -259,8 +264,8 @@ export default {
               headerFilter: this.defaultFilterAllColumns,
               headerMenu: true,
               frozen: this.frozenColumns.includes(column),
-              formatter: (enableDecimalPlacesLimits)
-                ? formaterForNumbers(numberFormat, decimalPlacesLimits)
+              formatter: (this.enableDecimalPlacesLimits)
+                ? getFormatter('formaterForNumbers', this.numbersFormats)
                 : undefined,
             };
           }
@@ -331,7 +336,10 @@ export default {
         };
 
         if (options?.formatter) {
-          column.formatter = getFormatter(options.formatter);
+          column.formatter = getFormatter(
+            options.formatter,
+            this.enableDecimalPlacesLimits ? this.numbersFormats : {},
+          );
         }
 
         if (options?.formatter === 'tickCross') {
