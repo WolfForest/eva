@@ -796,14 +796,12 @@ export default {
         }
       });
       this.tabulator.on('tableBuilt', () => {
-        setTimeout(() => {
-          this.isLoading = false;
-          if (this.checkFieldList(this.fields, Object.keys(this.searchSchema))) {
-            this.clearPersistenceFilter();
-          } else {
-            this.persistenceFilterReader();
-          }
-        }, 500);
+        this.isLoading = false;
+        if (this.checkFieldList(this.fields, Object.keys(this.searchSchema))) {
+          this.clearPersistenceFilter();
+        } else {
+          this.persistenceFilterReader();
+        }
       });
       this.tabulator.on('dataSorted', (sorters/* , rows */) => {
         // sorters - array of the sorters currently applied
