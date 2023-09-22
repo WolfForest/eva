@@ -1,4 +1,4 @@
-# [1.151.0] - 2023-09-21
+# [1.151.0] - 2023-09-22
 
 ### Added
 - For TableV2, added support for handling "_columnOptions" in DS for configuring column options.
@@ -11,7 +11,7 @@
 ### Fixed
 - Resolved an issue with the generation of component IDs. The order of component ID suffixes added to the dashboard was incorrect in some cases.
 - Fixed the cSvg component, which was not setting the click token value.
-- Wrong text in the table when loading the dashboard "data is not displayed due to settings"
+- Wrong text in the table when loading the dashboard "data is not displayed due to settings".
 - Table: Changing the token causes a reset to the first page.
 - Addressed an issue with Select and Textarea components where the default value was not set when the component was on a different tab.
 
