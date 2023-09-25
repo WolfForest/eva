@@ -17,17 +17,87 @@
       <div
         class="textarea-block grid-container"
       >
-        <v-text-field
-          v-model="search.sid"
-          :color="theme.$primary_button"
-          :style="{ color: theme.$main_text }"
-          class="textarea-item textarea-item-name top"
-          outlined
-          label="Имя ИД"
-          placeholder="Sid"
-          hide-details
-          @input="isChanged = true"
-        />
+        <div style="min-width: 740px;">
+          <v-row>
+            <v-col>
+              <v-text-field
+                v-model="search.sid"
+                :color="theme.$primary_button"
+                :style="{ color: theme.$main_text }"
+                class="textarea-item textarea-item-name top"
+                outlined
+                label="Имя ИД"
+                placeholder="Sid"
+                hide-details
+                @input="isChanged = true"
+              />
+            </v-col>
+            <v-col class="pl-0">
+              <div style="height: 40px;">
+                <v-expansion-panels
+                  v-model="isTimeOutOpen"
+                  class="expansion-panels d-inline-block"
+                >
+                  <v-expansion-panel
+                    value="isTimeOutOpen"
+                    :style="{
+                      backgroundColor: theme.$main_bg,
+                      color: theme.$main_text,
+                      border: `1px solid ${theme.$main_border}`,
+                    }"
+                  >
+                    <v-expansion-panel-header>
+                      Дополнительные параметры
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content class="order-expansion">
+                      <v-text-field
+                        v-model="search.parametrs.timeout"
+                        :color="theme.$primary_button"
+                        :style="{ color: theme.$main_text }"
+                        class="textarea-item"
+                        outlined
+                        label="Timeout"
+                        hide-details
+                        @input="isChanged = true"
+                      />
+                      <v-text-field
+                        v-model="search.parametrs.cache_ttl"
+                        :color="theme.$primary_button"
+                        :style="{ color: theme.$main_text }"
+                        class="textarea-item"
+                        outlined
+                        label="Cache_ttl"
+                        hide-details
+                        @input="isChanged = true"
+                      />
+                      <v-text-field
+                        v-model="search.parametrs.field_extraction"
+                        :color="theme.$primary_button"
+                        :style="{ color: theme.$main_text }"
+                        class="textarea-item"
+                        outlined
+                        label="Field_extraction"
+                        hide-details
+                        @input="isChanged = true"
+                      />
+                      <v-text-field
+                        v-model="search.parametrs.preview"
+                        :color="theme.$primary_button"
+                        :style="{ color: theme.$main_text }"
+                        class="textarea-item"
+                        outlined
+                        label="Preview"
+                        hide-details
+                        @input="isChanged = true"
+                      />
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels>
+              </div>
+            </v-col>
+          </v-row>
+        </div>
+
         <div class="code ">
           <div>Текст ИД</div>
           <codemirror
@@ -43,7 +113,7 @@
         </div>
 
         <div class="bottom-left ">
-          <div class="times-block justify-space-between">
+          <div class="times-block ">
             <div class="time-block">
               <v-text-field
                 v-model="search.parametrs.tws"
@@ -115,66 +185,7 @@
               </DTPicker>
             </div>
 
-            <v-expansion-panels
-              v-model="isTimeOutOpen"
-              class="expansion-panels"
-            >
-              <v-expansion-panel
-                value="isTimeOutOpen"
-                :style="{
-                  backgroundColor: theme.$main_bg,
-                  color: theme.$main_text,
-                  border: `1px solid ${theme.$main_border}`,
-                }"
-              >
-                <v-expansion-panel-header>
-                  Дополнительные параметры
-                </v-expansion-panel-header>
-                <v-expansion-panel-content class="order-expansion">
-                  <v-text-field
-                    v-model="search.parametrs.timeout"
-                    :color="theme.$primary_button"
-                    :style="{ color: theme.$main_text }"
-                    class="textarea-item"
-                    outlined
-                    label="Timeout"
-                    hide-details
-                    @input="isChanged = true"
-                  />
-                  <v-text-field
-                    v-model="search.parametrs.cache_ttl"
-                    :color="theme.$primary_button"
-                    :style="{ color: theme.$main_text }"
-                    class="textarea-item"
-                    outlined
-                    label="Cache_ttl"
-                    hide-details
-                    @input="isChanged = true"
-                  />
-                  <v-text-field
-                    v-model="search.parametrs.field_extraction"
-                    :color="theme.$primary_button"
-                    :style="{ color: theme.$main_text }"
-                    class="textarea-item"
-                    outlined
-                    label="Field_extraction"
-                    hide-details
-                    @input="isChanged = true"
-                  />
-                  <v-text-field
-                    v-model="search.parametrs.preview"
-                    :color="theme.$primary_button"
-                    :style="{ color: theme.$main_text }"
-                    class="textarea-item"
-                    outlined
-                    label="Preview"
-                    hide-details
-                    @input="isChanged = true"
-                  />
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
-            <div class="limit-block">
+            <div class="limit-block ml-5">
               <v-text-field
                 v-model="search.limit"
                 :color="theme.$accent_ui_color"
@@ -189,6 +200,7 @@
             <v-checkbox
               v-model="search.parametrs.isStartImmediately"
               hide-details
+              class="ml-5"
               style="margin-top: 0; padding-top: 0 "
               :color="theme.$primary_button"
             >
