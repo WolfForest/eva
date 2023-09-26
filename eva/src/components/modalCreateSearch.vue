@@ -597,7 +597,7 @@ export default {
   height: 90vh;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: min-content 64% min-content;
+  grid-template-rows: min-content calc(100% - 260px) min-content;
   gap: 15px 0;
   grid-template-areas:
     "top top top top"
