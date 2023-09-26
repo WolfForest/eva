@@ -8,6 +8,7 @@
     :color="theme.$main_text"
     min-height="90vh"
     max-height="90vh"
+    add-class="min-width-m"
     @cancelModal="cancelModal"
   >
     <v-card

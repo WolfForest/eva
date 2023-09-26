@@ -11,7 +11,7 @@
     <div
       ref="modalWithConfirm"
       tabindex="99999"
-      class="modal-persistent"
+      :class="`modal-persistent ${addClass}`"
     >
       <slot name="activator" />
       <slot />
@@ -50,6 +50,11 @@ export default {
     theme: {
       type: Object,
       required: true,
+    },
+    addClass: {
+      type: String,
+      default: '',
+      required: false,
     },
   },
   data() {
@@ -98,5 +103,6 @@ export default {
   height: 100%
   max-width: 100%
   max-height: 100%
-  min-width: 900px
+  &.min-width-m
+    min-width: 900px
 </style>
