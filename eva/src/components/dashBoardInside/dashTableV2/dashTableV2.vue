@@ -120,7 +120,7 @@ import {
 } from '@mdi/js';
 import { throttle } from '@/js/utils/throttle';
 import {
-  formaterForNumbers, getFormatter, headerFilter, sorterFn,
+  getFormatter, headerFilter, sorterFn,
 } from '@/js/utils/tableUtils';
 
 export default {
@@ -508,8 +508,10 @@ export default {
       deep: true,
     },
     getTokens: {
-      handler() {
-        this.updateColumnDefinition();
+      handler(val, oldVal) {
+        if (JSON.stringify(val) !== JSON.stringify(oldVal)) {
+          this.updateColumnDefinition();
+        }
       },
       deep: true,
     },
@@ -1174,11 +1176,13 @@ export default {
                   visible: el.visible,
                 };
               });
-              this.$store.commit('setState', [{
-                object: this.dashFromStore.tableOptions,
-                prop: `${id}-${type}`,
-                value: structuredClone(updatedData),
-              }]);
+              if (JSON.stringify(updatedData) !== JSON.stringify(dataFromStore)) {
+                this.$store.commit('setState', [{
+                  object: this.dashFromStore.tableOptions,
+                  prop: `${id}-${type}`,
+                  value: structuredClone(updatedData),
+                }]);
+              }
             }
           } else {
             this.sorters = data;

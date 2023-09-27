@@ -187,12 +187,8 @@ export const riskAcc = ({ numberFormat, decimalPlacesLimits }) => (cell) => {
 
     const columnAcc = document.createElement('div');
     columnAcc.style.backgroundColor = index === 0 ? '#c30f0f' : '#067185';
-    if (whatBigger === index) {
-      columnAcc.style.width = '50%';
-    } else {
-      const width = accValue / (parts[whatBigger] / 100) / 2;
-      columnAcc.style.width = `${width}%`;
-    }
+    const width = accValue / (parts[whatBigger] / 100) / 2;
+    columnAcc.style.width = `${width > 0 ? width : 1}%`;
 
     columnAcc.innerHTML = '';
     column.appendChild(columnAcc);
