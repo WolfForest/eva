@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+- Changed the position of input elements in the data source popup
+- Fixed the color of the search button in the text block
+
+### Fixed
+
+## [1.151.0]
+
+### Added
 - TableV2: handling "_columnOptions" in DS for setting columns options
 - TableV2: added new column types: riskAcc, riskFact, riskSum
 - TableV2: added number formatting for new column types (riskAcc, riskFact, riskSum)

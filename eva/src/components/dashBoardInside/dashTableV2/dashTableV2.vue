@@ -203,6 +203,7 @@ export default {
       sorters: [],
       timeout: null,
       timer: 0,
+      savedFields: [],
     };
   },
   computed: {
@@ -479,10 +480,8 @@ export default {
       deep: true,
     },
     getOptions: {
-      handler(val, oldVal) {
-        if (JSON.stringify(val) !== JSON.stringify(oldVal)) {
-          this.redrawTable();
-        }
+      handler() {
+        this.redrawTable();
       },
       deep: true,
     },
@@ -499,14 +498,6 @@ export default {
         this.redrawTable();
       }
     },
-    frozenColumns: {
-      handler(val, oldVal) {
-        if (JSON.stringify(val) !== JSON.stringify(oldVal)) {
-          this.updateTable();
-        }
-      },
-      deep: true,
-    },
     getTokens: {
       handler(val, oldVal) {
         if (JSON.stringify(val) !== JSON.stringify(oldVal)) {
@@ -514,26 +505,6 @@ export default {
         }
       },
       deep: true,
-    },
-    selectableRow(val, oldVal) {
-      if (val !== oldVal) {
-        this.redrawTable();
-      }
-    },
-    movableColumns(val, oldVal) {
-      if (val !== oldVal) {
-        this.redrawTable();
-      }
-    },
-    saveMovedColumnPosition(val, oldVal) {
-      if (val !== oldVal) {
-        this.redrawTable();
-      }
-    },
-    defaultFilterAllColumns(val, oldVal) {
-      if (val !== oldVal) {
-        this.updateColumnDefinition();
-      }
     },
     loading(val) {
       if (!val) {
@@ -808,14 +779,12 @@ export default {
         }
       });
       this.tabulator.on('tableBuilt', () => {
-        setTimeout(() => {
-          this.isLoading = false;
-          if (this.checkFieldList(this.fields, Object.keys(this.searchSchema))) {
-            this.clearPersistenceFilter();
-          } else {
-            this.persistenceFilterReader();
-          }
-        }, 500);
+        this.isLoading = false;
+        if (this.checkFieldList(this.fields, Object.keys(this.searchSchema))) {
+          this.clearPersistenceFilter();
+        } else {
+          this.persistenceFilterReader();
+        }
       });
       this.tabulator.on('dataSorted', (sorters/* , rows */) => {
         // sorters - array of the sorters currently applied
@@ -830,7 +799,7 @@ export default {
       });
     },
     updateFieldListInStore(fieldList) {
-      if (!this.fields) {
+      if (!this.fields?.length > 0) {
         this.$store.commit('setState', [{
           object: this.getOptions,
           prop: 'fieldList',
@@ -840,7 +809,7 @@ export default {
       this.$store.commit('setState', [{
         object: this.getOptions,
         prop: 'fieldList',
-        value: fieldList.filter((el) => el !== '_columnOptions'),
+        value: structuredClone(fieldList.filter((el) => el !== '_columnOptions')),
       }]);
     },
     headerMenu() {
@@ -1176,13 +1145,11 @@ export default {
                   visible: el.visible,
                 };
               });
-              if (JSON.stringify(updatedData) !== JSON.stringify(dataFromStore)) {
-                this.$store.commit('setState', [{
-                  object: this.dashFromStore.tableOptions,
-                  prop: `${id}-${type}`,
-                  value: structuredClone(updatedData),
-                }]);
-              }
+              this.$store.commit('setState', [{
+                object: this.dashFromStore.tableOptions,
+                prop: `${id}-${type}`,
+                value: structuredClone(updatedData),
+              }]);
             }
           } else {
             this.sorters = data;

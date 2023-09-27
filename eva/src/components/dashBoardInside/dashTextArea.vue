@@ -32,7 +32,7 @@
       <v-btn
         v-if="searchBtn"
         small
-        :color="color.controls"
+        :color="color.$accent_ui_color"
         class="accept-btn"
         @click="acceptTextArea"
       >

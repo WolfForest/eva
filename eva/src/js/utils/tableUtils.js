@@ -106,9 +106,9 @@ export const sorterFn = function (a, b/* , aRow, bRow, column, dir, sorterParams
 };
 
 export const formaterForNumbers = ({ numberFormat, decimalPlacesLimits }) => (cell) => {
-  const num = +cell.getValue();
-  if (typeof num === 'number') {
-    return num.toLocaleString(numberFormat, {
+  const num = cell.getValue();
+  if (typeof num === 'number' || !Number.isNaN(Number(num))) {
+    return Number(num).toLocaleString(numberFormat, {
       minimumFractionDigits: 0,
       maximumFractionDigits: decimalPlacesLimits || 10,
     });
