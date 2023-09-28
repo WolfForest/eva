@@ -13,6 +13,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [1.152.0]
+
+### Added
+- TableV2: added number formatting for new column types (riskAcc, riskFact, riskSum)
+
+### Changed
+- Changed the position of input elements in the data source popup
+- Fixed the color of the search button in the text block
+- TableV2: Changed the color of values and graphs in the table to a brighter color
+- TableV2: Changed checking of values for graphs in the table, now you can specify values without floating point.
+
+### Fixed
+- Translated errors when uploading a file to the server
+- Data Research: Problem with reloading the selected visualization
+- TableV2: Fixed handling of null values in cells with charts.
+- TableV2: Fixed incorrect table behavior when saving a dashboard. (Column order was changed to default)
+- TableV2: Fixed the operation of moving columns.
+- TableV2: Fixed formatting of numbers.(previously applied not only to numbers)
+
 ## [1.151.0]
 
 ### Added

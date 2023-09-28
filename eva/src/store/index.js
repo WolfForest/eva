@@ -944,14 +944,16 @@ export default new Vuex.Store({
     },
     createReportSearch(state) {
       if (!state.reports) {
-        Vue.set(state, 'reports', {});
-        Vue.set(state.reports, 'elements', settings.reporstElements);
-        Vue.set(state.reports, 'searches', {});
-        Vue.set(state.reports, 'userSettings', {});
+        Vue.set(state, 'reports', {
+          elements: settings.reporstElements,
+          searches: {},
+          userSettings: {},
+        });
         settings.reporstElements.forEach((item) => {
-          Vue.set(state.reports, item, {});
-          Vue.set(state.reports[item], 'search', '');
-          Vue.set(state.reports[item], 'should', false);
+          Vue.set(state.reports, item, {
+            search: '',
+            should: false,
+          });
         });
       }
     },

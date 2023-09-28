@@ -1,3 +1,24 @@
+# [1.152.0] - 2023-09-28
+
+### Added
+- TableV2: added number formatting for new column types (riskAcc, riskFact, riskSum)
+
+### Changed
+- Adjusted the position of input elements in the data source popup.
+- Corrected the color of the search button in the text block.
+- TableV2:
+  - Brightened the color of values and graphs in the table.
+  - Improved the checking of values for graphs in the table, now allowing the specification of values without floating points.
+
+### Fixed
+- Translated error messages during file upload to the server.
+- Fixed an issue in Data Research where the selected visualization would not reload properly.
+- TableV2:
+  - Addressed the handling of null values in cells with charts.
+  - Resolved incorrect table behavior when saving a dashboard (column order now remains unchanged).
+  - Fixed the operation of column movement.
+  - Corrected number formatting (previously applied to non-numeric values as well).
+
 # [1.151.0] - 2023-09-22
 
 ### Added
