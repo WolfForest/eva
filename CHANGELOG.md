@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TableV2: Changed checking of values for graphs in the table, now you can specify values without floating point.
 
 ### Fixed
+- Data Research: Problem with reloading the selected visualization
 - TableV2: Fixed handling of null values in cells with charts.
 - TableV2: Fixed incorrect table behavior when saving a dashboard. (Column order was changed to default)
 - TableV2: Fixed the operation of moving columns.
