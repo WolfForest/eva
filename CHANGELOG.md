@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the color of the search button in the text block
 
 ### Fixed
+- TableV2: Fixed handling of null values in cells with charts.
+- TableV2: Fixed incorrect table behavior when saving a dashboard. (Column order was changed to default)
+- TableV2: Fixed the operation of moving columns.
+- TableV2: Fixed formatting of numbers.(previously applied not only to numbers)
 
 ## [1.151.0]
 
@@ -32,8 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Wrong text in the table when loading the dashboard "data is not displayed due to settings"
 - Table: Changing the token causes a reset to the first page.
 - Select, Textarea: If the component is on a different tab, the default value is not set.
-- TableV2: Fixed handling of null values in cells with charts.
-- TableV2: Fixed incorrect table behavior when saving a dashboard. (Column order was changed to default)
 
 ## [1.150.0]
 

@@ -227,7 +227,7 @@ export default {
     },
     fields() {
       if (this.isValidSchema) {
-        return this.getOptions?.fieldList || [];
+        return this.dashFromStore?.fieldList || [];
       }
       return [];
     },
@@ -441,11 +441,6 @@ export default {
         this.redrawTable();
       }
     },
-    fields(val, oldVal) {
-      if (val?.length && JSON.stringify(val) !== JSON.stringify(oldVal)) {
-        this.setAction(this.searchSchema);
-      }
-    },
     searchSchema: {
       handler(value) {
         if (Object.keys(value)?.length > 0 && this.idDashFrom !== 'reports') {
@@ -453,6 +448,7 @@ export default {
             ? this.checkFieldList(Object.keys(value), structuredClone(this.fields))
             : true;
           if (isUpdatedValue) {
+            this.setAction(value);
             this.setColumnResized(false);
             this.clearFrozenColumns();
             this.clearPersistenceFilter();
@@ -801,13 +797,13 @@ export default {
     updateFieldListInStore(fieldList) {
       if (!this.fields?.length > 0) {
         this.$store.commit('setState', [{
-          object: this.getOptions,
+          object: this.dashFromStore,
           prop: 'fieldList',
           value: [],
         }]);
       }
       this.$store.commit('setState', [{
-        object: this.getOptions,
+        object: this.dashFromStore,
         prop: 'fieldList',
         value: structuredClone(fieldList.filter((el) => el !== '_columnOptions')),
       }]);
