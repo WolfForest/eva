@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Changed the position of input elements in the data source popup
 - Fixed the color of the search button in the text block
+- TableV2: Changed the color of values and graphs in the table to a brighter color
+- TableV2: Changed checking of values for graphs in the table, now you can specify values without floating point.
 
 ### Fixed
 - TableV2: Fixed handling of null values in cells with charts.

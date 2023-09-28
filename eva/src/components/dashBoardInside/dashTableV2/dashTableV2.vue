@@ -207,6 +207,17 @@ export default {
     };
   },
   computed: {
+    optionsForTable() {
+      return {
+        selectableRow: this.getOptions?.selectableRow,
+        movableColumns: this.getOptions?.movableColumns,
+        saveMovedColumnPosition: this.getOptions?.saveMovedColumnPosition,
+        defaultFilterAllColumns: this.getOptions?.defaultFilterAllColumns,
+        enableDecimalPlacesLimits: this.getOptions?.enableDecimalPlacesLimits,
+        headerMultiline: this.getOptions?.headerMultiline,
+        frozenColumns: this.getOptions?.frozenColumns,
+      };
+    },
     dataForTable() {
       // eslint-disable-next-line no-underscore-dangle
       if (this.dataRestFrom[0]?._columnOptions) {
@@ -227,7 +238,10 @@ export default {
     },
     fields() {
       if (this.isValidSchema) {
-        return this.dashFromStore?.fieldList || [];
+        if (this.dashFromStore?.fieldList?.length > 0) {
+          return this.dashFromStore?.fieldList;
+        }
+        return Object.keys(this.searchSchema);
       }
       return [];
     },
@@ -369,13 +383,13 @@ export default {
         }
 
         const options = this.columnOptions[key];
-        const columnFromStore = columnsFromStore?.find((el) => el.field === key);
+        const columnFromStore = columnsFromStore?.find((el) => el?.field === key);
 
         return [...acc, processColumn(key, options, columnFromStore)];
       };
 
       const generateDefaultColumns = (acc, key) => {
-        const columnFromStore = columnsFromStore?.find((el) => el.field === key);
+        const columnFromStore = columnsFromStore?.find((el) => el?.field === key);
 
         return [...acc, processColumn(key, null, columnFromStore)];
       };
@@ -408,22 +422,25 @@ export default {
       return this.getOptions?.enableDecimalPlacesLimits;
     },
     visibleColumns() {
-      return this.getOptions?.titles || [];
+      if (this.getOptions?.titles?.length > 0) {
+        return this.getOptions?.titles.filter((title) => title !== '_columnOptions');
+      }
+      return [];
     },
     selectableRow() {
-      return !!this.getOptions?.selectableRow;
+      return !!this.optionsForTable?.selectableRow;
     },
     movableColumns() {
-      return this.getOptions?.movableColumns || false;
+      return this.optionsForTable?.movableColumns || false;
     },
     defaultFilterAllColumns() {
       if (this.idDashFrom === 'reports') {
         return true;
       }
-      return this.getOptions?.defaultFilterAllColumns || false;
+      return this.optionsForTable?.defaultFilterAllColumns || false;
     },
     saveMovedColumnPosition() {
-      return !!this.getOptions?.saveMovedColumnPosition;
+      return !!this.optionsForTable?.saveMovedColumnPosition;
     },
     isValidSchema() {
       if (this.searchSchema) {
@@ -475,9 +492,11 @@ export default {
       },
       deep: true,
     },
-    getOptions: {
-      handler() {
-        this.redrawTable();
+    optionsForTable: {
+      handler(val, oldVal) {
+        if (JSON.stringify(val) !== JSON.stringify(oldVal)) {
+          this.redrawTable();
+        }
       },
       deep: true,
     },
@@ -518,7 +537,7 @@ export default {
         if (this.checkFieldList(this.fields, Object.keys(this.searchSchema))) {
           this.setColumnResized(false);
           this.clearFrozenColumns();
-          this.updateFieldListInStore(Object.keys(this.searchSchema));
+          this.updateFieldListInStore(this.fields);
         }
       }
     }
@@ -552,8 +571,10 @@ export default {
       }]);
     },
     checkFieldList(arr, oldArr) {
-      const sortedOldArr = [...oldArr].sort().join(',');
-      const sortedArr = [...arr].sort().join(',');
+      const filteredArr = arr.filter((key) => key !== '_columnOptions');
+      const filteredOldArr = oldArr.filter((key) => key !== '_columnOptions');
+      const sortedOldArr = [...filteredOldArr].sort().join(',');
+      const sortedArr = [...filteredArr].sort().join(',');
       return sortedArr !== sortedOldArr;
     },
     openDownloadModal() {
@@ -802,10 +823,11 @@ export default {
           value: [],
         }]);
       }
+      const filteredList = structuredClone(fieldList.filter((el) => el !== '_columnOptions'));
       this.$store.commit('setState', [{
         object: this.dashFromStore,
         prop: 'fieldList',
-        value: structuredClone(fieldList.filter((el) => el !== '_columnOptions')),
+        value: filteredList,
       }]);
     },
     headerMenu() {
@@ -1129,7 +1151,7 @@ export default {
             const dataFromStore = this.dashFromStore.tableOptions[`${id}-${type}`];
             if (JSON.stringify(dataFromStore) !== JSON.stringify(data)) {
               const fields = this.idDashFrom === 'reports' ? Object.keys(this.searchSchema) : this.fields;
-              const updatedData = fields.map((key) => {
+              const updatedData = fields.filter((key) => key !== '_columnOptions').map((key) => {
                 const el = data.find((item) => item?.field === key);
 
                 if (this.isResized) {

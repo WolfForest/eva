@@ -123,7 +123,7 @@ export const riskSum = ({ numberFormat, decimalPlacesLimits }) => (cell) => { //
   const value = cell.getValue();
   if (!value) return value;
 
-  const numberColor = +value >= 0 ? '#067185' : '#c30f0f';
+  const numberColor = +value >= 0 ? '#00d7ff' : '#ff0000';
 
   const formattedNum = numberFormat ? (+value).toLocaleString(numberFormat, {
     minimumFractionDigits: 0,
@@ -142,12 +142,12 @@ export const riskFact = ({ numberFormat, decimalPlacesLimits }) => (cell) => { /
   const value = cell.getValue();
   if (!value) return value;
   const cellValArray = value.split(';');
-  const pattern = /([^()]+)\s*\((-?\d+\.\d+)\)/;
+  const pattern = /([^()]+)\s*\((-?\d+(\.\d+)?)\)/;
   try {
     const result = cellValArray.reduce((acc, item) => {
       try {
         const [_, text, number] = item.match(pattern);
-        const numberColor = +number >= 0 ? '#067185' : '#c30f0f';
+        const numberColor = +number >= 0 ? '#00d6ff' : '#ff0000';
         const formattedNum = numberFormat ? (+number).toLocaleString(numberFormat, {
           minimumFractionDigits: 0,
           maximumFractionDigits: decimalPlacesLimits || 10,
@@ -189,7 +189,7 @@ export const riskAcc = ({ numberFormat, decimalPlacesLimits }) => (cell) => {
     container.appendChild(column);
 
     const columnAcc = document.createElement('div');
-    columnAcc.style.backgroundColor = index === 0 ? '#c30f0f' : '#067185';
+    columnAcc.style.backgroundColor = index === 0 ? '#ff0000' : '#00d6ff';
     const width = accValue / (parts[whatBigger] / 100) / 2;
     columnAcc.style.width = `${width > 0 ? width : 1}%`;
 
