@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+
+### Fixed
+
+## [1.152.0]
+
+### Added
+- TableV2: added number formatting for new column types (riskAcc, riskFact, riskSum)
+
+### Changed
 - Changed the position of input elements in the data source popup
 - Fixed the color of the search button in the text block
 - TableV2: Changed the color of values and graphs in the table to a brighter color
@@ -28,7 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - TableV2: handling "_columnOptions" in DS for setting columns options
 - TableV2: added new column types: riskAcc, riskFact, riskSum
-- TableV2: added number formatting for new column types (riskAcc, riskFact, riskSum)
 
 ### Changed
 - The action buttons in the component settings are stuck to the bottom edge of the modal window
