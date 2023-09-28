@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the color of the search button in the text block
 
 ### Fixed
+- Data Research: Problem with reloading the selected visualization
 
 ## [1.151.0]
 
