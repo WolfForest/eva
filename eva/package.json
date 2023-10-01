@@ -100,6 +100,7 @@
     "vue-svg-loader": "0.16.0",
     "vue-template-compiler": "2.6.14",
     "vue2-teleport": "1.0.1",
+    "vue3-apexcharts": "^1.4.4",
     "vuedraggable": "2.24.3",
     "vuejs-jwt": "1.1.0",
     "vuetify": "2.6.3",
