@@ -172,6 +172,24 @@ export default {
         + '| Total 2 | | True | |\n',
     },
     { name: 'Таблица (old)', img: mdiTableLarge, type: 'tableOld' },
+    {
+      name: 'Polar Area',
+      img: mdiChartPie,
+      type: 'polarArea',
+      dataSourceDescription:
+        '#### Обязательные поля:\n'
+        + '- ```value``` - Столбец со значением, (можно изменить в настр.), число\n'
+        + '- ```label``` - Заголовок метрики (можно изменить в настр.), строка\n'
+        + '#### Дополнительные поля:\n'
+        + '- ```color``` - Цвет столбца, строка\n'
+        + 'Цвет необходимо указывать во всех строках в формате #ffffff, иначе будет задействован стандартный набор\n'
+        + '#### Пример данных:\n'
+        + '| label | value | color |\n'
+        + '| :--- | :---: | ---: |\n'
+        + '| Label 1 | 10 | #0000ff |\n'
+        + '| Label 2 | 2 | #ff0000 |\n'
+        + '| Label 3 | 6 | #ffdd00 |\n',
+    },
   ],
   size: {
     picker: {
@@ -294,6 +312,10 @@ export default {
       width: 1440,
       height: 420,
     },
+    polarArea: {
+      width: 600,
+      height: 420,
+    },
   },
   icons: {
     table: mdiTableLargePlus,
@@ -326,6 +348,7 @@ export default {
     gauge: mdiGauge,
     waterfall: mdiFinance,
     riskReview: mdiScaleBalance,
+    polarArea: mdiChartPie,
   },
   commonOptions: [
     'panelSettings',
@@ -532,6 +555,9 @@ export default {
       'listTextSuffix',
       'listValueSuffix',
       'residualMetric',
+    ],
+    polarArea: [
+
     ],
   },
   optionFields: [
@@ -1410,6 +1436,7 @@ export default {
     'gauge',
     'waterfall',
     'riskReview',
+    'polarArea',
   ],
   reports: {
     table: {
@@ -1487,6 +1514,10 @@ export default {
     riskReview: {
       tooltip: 'Детализация рисков',
       icon: mdiScaleBalance,
+    },
+    polarArea: {
+      tooltip: 'Polar area',
+      icon: mdiChartPie,
     },
   },
   excludes: {
