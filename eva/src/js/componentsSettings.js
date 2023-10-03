@@ -23,7 +23,7 @@ import {
   mdiInboxMultipleOutline,
   mdiGauge,
   mdiFinance, mdiScaleBalance,
-  mdiTableLargePlus,
+  mdiTableLargePlus, mdiChartBar,
 } from '@mdi/js';
 
 export default {
@@ -190,6 +190,24 @@ export default {
         + '| Label 2 | 2 | #ff0000 |\n'
         + '| Label 3 | 6 | #ffdd00 |\n',
     },
+    {
+      name: 'Columns',
+      img: mdiChartBar,
+      type: 'columns',
+      dataSourceDescription:
+        '#### Обязательные поля:\n'
+        + '- ```label``` - Заголовок метрики (можно изменить в настр.), строка\n'
+        + '- ```value``` - Столбец со значением, (можно изменить в настр.), число\n'
+        + '#### Дополнительные поля:\n'
+        + '- ```group``` - Группа (можно изменить в настр.), строка\n'
+        + '#### Пример данных:\n'
+        + '| label | value | group |\n'
+        + '| :--- | :---: | ---: |\n'
+        + '| Label 1 | 10 | Group 1 |\n'
+        + '| Label 2 | 2 | Group 1 |\n'
+        + '| Label 1 | 6 | Group 2 |\n'
+        + '| Label 2 | 8 | Group 2 |\n',
+    },
   ],
   size: {
     picker: {
@@ -316,6 +334,10 @@ export default {
       width: 600,
       height: 420,
     },
+    columns: {
+      width: 600,
+      height: 420,
+    },
   },
   icons: {
     table: mdiTableLargePlus,
@@ -349,6 +371,7 @@ export default {
     waterfall: mdiFinance,
     riskReview: mdiScaleBalance,
     polarArea: mdiChartPie,
+    columns: mdiChartBar,
   },
   commonOptions: [
     'panelSettings',
@@ -557,6 +580,9 @@ export default {
       'residualMetric',
     ],
     polarArea: [
+
+    ],
+    columns: [
 
     ],
   },
@@ -1437,6 +1463,7 @@ export default {
     'waterfall',
     'riskReview',
     'polarArea',
+    'columns',
   ],
   reports: {
     table: {
@@ -1518,6 +1545,10 @@ export default {
     polarArea: {
       tooltip: 'Polar area',
       icon: mdiChartPie,
+    },
+    columns: {
+      tooltip: 'Columns',
+      icon: mdiChartBar,
     },
   },
   excludes: {

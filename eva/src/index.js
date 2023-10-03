@@ -184,6 +184,7 @@ Vue.directive('blur', {
 });
 
 Vue.component('dash-polarArea', require('./components/dashBoardInside/dashPolarArea/dashPolarArea.vue').default);
+Vue.component('dash-columns', require('./components/dashBoardInside/dashColumns/dashColumns.vue').default);
 
 
 moment.locale('ru');
