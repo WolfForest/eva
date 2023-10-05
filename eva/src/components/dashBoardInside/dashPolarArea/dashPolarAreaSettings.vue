@@ -18,53 +18,66 @@
       <v-card-text class="content groups-multiline-settings">
 
         <h3>Настройки данных</h3>
-        <v-text-field
-          v-model="options.fields.value"
-          class="mb-6 mt-2"
-          outlined
-          label="Поле со значением"
-          hide-details
-          dense
-          @change="isChanged = true"
-        />
-        <v-text-field
-          v-model="options.fields.label"
-          class="mb-6 mt-2"
-          outlined
-          label="Поле с названием"
-          hide-details
-          dense
-          @change="isChanged = true"
-        />
+        <v-row>
+          <v-col>
+            <v-text-field
+              v-model="options.fields.value"
+              class="mb-6 mt-2"
+              outlined
+              label="Поле со значением"
+              hide-details
+              dense
+              @change="isChanged = true"
+            />
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="options.fields.label"
+              class="mb-6 mt-2"
+              outlined
+              label="Поле с названием"
+              hide-details
+              dense
+              @change="isChanged = true"
+            />
+          </v-col>
+        </v-row>
 
         <h3>Настройки оформления</h3>
-        <h4>Тип диаграммы</h4>
-        <v-select
-          v-model="options.type"
-          dense
-          outlined
-          hide-details
-          :items="[
-            { value: 'polarArea', text: 'Polar Area' },
-            { value: 'donut', text: 'Donut' },
-            { value: 'pie', text: 'Pie' },
-          ]"
-          @change="isChanged = true"
-        />
-        <h4>Расположение легенды</h4>
-        <v-select
-          v-model="options.legend.position"
-          dense
-          outlined
-          hide-details
-          :items="[
-            { value: 'right', text: 'Справа' },
-            { value: 'left', text: 'Слева' },
-            { value: 'top', text: 'Сверху' },
-            { value: 'bottom', text: 'Снизу' },
-          ]"
-          @change="isChanged = true"
-        />
+        <v-row>
+          <v-col>
+            <h4>Тип диаграммы</h4>
+            <v-select
+              v-model="options.type"
+              dense
+              outlined
+              hide-details
+              :items="[
+                { value: 'polarArea', text: 'Polar Area' },
+                { value: 'donut', text: 'Donut' },
+                { value: 'pie', text: 'Pie' },
+              ]"
+              @change="isChanged = true"
+            />
+          </v-col>
+          <v-col>
+            <h4>Расположение легенды</h4>
+            <v-select
+              v-model="options.legend.position"
+              dense
+              outlined
+              hide-details
+              :items="[
+                { value: 'right', text: 'Справа' },
+                { value: 'left', text: 'Слева' },
+                { value: 'top', text: 'Сверху' },
+                { value: 'bottom', text: 'Снизу' },
+              ]"
+              @change="isChanged = true"
+            />
+          </v-col>
+        </v-row>
+
         <h4>Тема</h4>
         <v-select
           v-model="options.theme"

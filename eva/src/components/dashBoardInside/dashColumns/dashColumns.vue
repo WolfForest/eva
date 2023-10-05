@@ -144,7 +144,7 @@ export default {
       const { fields } = this.preparedOptions;
       return this.dataRestFrom
         .reduce((acc, item) => {
-          const group = item[fields.group] || 'Нет группы';
+          const group = item[fields.group] || '';
           if (!acc.includes(group)) {
             acc.push(group);
           }

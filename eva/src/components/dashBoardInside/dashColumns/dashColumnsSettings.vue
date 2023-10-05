@@ -18,34 +18,42 @@
       <v-card-text class="content groups-multiline-settings">
 
         <h3>Настройки данных</h3>
-        <v-text-field
-          v-model="options.fields.value"
-          class="mb-6 mt-2"
-          outlined
-          label="Поле со значением"
-          hide-details
-          dense
-          @change="isChanged = true"
-        />
-        <v-text-field
-          v-model="options.fields.label"
-          class="mb-6 mt-2"
-          outlined
-          label="Поле с названием"
-          hide-details
-          dense
-          @change="isChanged = true"
-        />
-        <v-text-field
-          v-model="options.fields.group"
-          class="mb-6 mt-2"
-          outlined
-          label="Поле с группой"
-          hide-details
-          dense
-          @change="isChanged = true"
-        />
-        <v-row class="mt-1">
+        <v-row>
+          <v-col>
+            <v-text-field
+              v-model="options.fields.value"
+              class="mb-6 mt-2"
+              outlined
+              label="Поле со значением"
+              hide-details
+              dense
+              @change="isChanged = true"
+            />
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="options.fields.label"
+              class="mb-6 mt-2"
+              outlined
+              label="Поле с названием"
+              hide-details
+              dense
+              @change="isChanged = true"
+            />
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="options.fields.group"
+              class="mb-6 mt-2"
+              outlined
+              label="Поле с группой"
+              hide-details
+              dense
+              @change="isChanged = true"
+            />
+          </v-col>
+        </v-row>
+        <v-row class="mt-0">
           <v-col>
             <v-checkbox
               v-model="options.stacked"
@@ -106,24 +114,42 @@
             />
           </v-col>
         </v-row>
-        <v-row class="mb-4">
+        <v-row class="my-0">
         </v-row>
 
         <h3>Настройки оформления</h3>
-        <h4>Расположение легенды</h4>
-        <v-select
-          v-model="options.legend.position"
-          dense
-          outlined
-          hide-details
-          :items="[
-            { value: 'right', text: 'Справа' },
-            { value: 'left', text: 'Слева' },
-            { value: 'top', text: 'Сверху' },
-            { value: 'bottom', text: 'Снизу' },
-          ]"
-          @change="isChanged = true"
-        />
+        <v-row>
+          <v-col>
+            <h4>Расположение оси X</h4>
+            <v-select
+              v-model="options.xaxisPosition"
+              dense
+              outlined
+              hide-details
+              :items="[
+                { value: 'top', text: 'Сверху' },
+                { value: 'bottom', text: 'Снизу' },
+              ]"
+              @change="isChanged = true"
+            />
+          </v-col>
+          <v-col>
+            <h4>Расположение легенды</h4>
+            <v-select
+              v-model="options.legend.position"
+              dense
+              outlined
+              hide-details
+              :items="[
+                { value: 'right', text: 'Справа' },
+                { value: 'left', text: 'Слева' },
+                { value: 'top', text: 'Сверху' },
+                { value: 'bottom', text: 'Снизу' },
+              ]"
+              @change="isChanged = true"
+            />
+          </v-col>
+        </v-row>
         <h4>Тема</h4>
         <v-select
           v-model="options.theme"
@@ -134,18 +160,6 @@
             { value: 'monochrome', text: 'Монохромная' },
             { value: 'colored', text: 'Цветная' },
           ]"
-          @change="isChanged = true"
-        />
-        <h4>Расположение оси X</h4>
-        <v-select
-          v-model="options.xaxisPosition"
-          dense
-          outlined
-          hide-details
-          :items="[
-                { value: 'top', text: 'Сверху' },
-                { value: 'bottom', text: 'Снизу' },
-              ]"
           @change="isChanged = true"
         />
 
