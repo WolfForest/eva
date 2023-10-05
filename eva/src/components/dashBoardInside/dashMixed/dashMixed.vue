@@ -5,7 +5,7 @@
     style="height: calc(100% - 40px);"
   >
     <div
-      class="polar-area"
+      class="dash-columns"
       :class="{
         small: box.isSmall,
       }"
@@ -22,16 +22,17 @@
       <vue-apex-charts
         ref="chart"
         class="chart"
-        :type="preparedOptions.type"
+        type="line"
         :width="box.width"
         height="100%"
         :options="chartOptions"
         :series="series"
       />
-      <DashPolarAreaSettings
+      <DashMixedSettings
         ref="settings"
         v-model="isSettingsComponentOpen"
         :received-settings="options"
+        :current-metrics="metrics"
         @save="saveSettings"
         @close="closeSettings"
       />
@@ -43,12 +44,12 @@
 import { mapGetters } from 'vuex';
 import { mdiSettings } from '@mdi/js';
 import VueApexCharts from 'vue-apexcharts';
-import DashPolarAreaSettings from "@/components/dashBoardInside/dashPolarArea/dashPolarAreaSettings.vue";
+import DashMixedSettings from '@/components/dashBoardInside/dashMixed/dashMixedSettings.vue';
 
 export default {
-  name: 'DashPolarArea',
+  name: 'DashDashMixed',
   components: {
-    DashPolarAreaSettings,
+    DashMixedSettings,
     VueApexCharts
   },
   props: {
@@ -101,7 +102,7 @@ export default {
     return {
       isSettingsComponentOpen: false,
       defaultOptions: {
-        type: 'polarArea',
+        type: 'bar',
         fields: {
           value: 'value',
           label: 'label',
@@ -109,11 +110,23 @@ export default {
         legend: {
           position: 'right',
         },
+        bar: {
+          horizontal: false,
+          columnWidth: '65%',
+          columnWidthPercent: 65,
+        },
         yaxis: {
           show: true,
         },
         theme: 'monochrome',
-        hidePlotArea: false,
+        chart: {
+          stacked: false,
+          stackType: 'normal',
+          toolbar: {
+            show: false,
+          },
+        },
+        metrics: {},
       }
     };
   },
@@ -129,9 +142,53 @@ export default {
     dashFromStore() {
       return this.$store.state[this.idDashFrom][this.idFrom];
     },
+    groups() {
+      const { fields } = this.preparedOptions;
+      return this.dataRestFrom
+        .reduce((acc, item) => {
+          const group = item[fields.group] || '';
+          if (!acc.includes(group)) {
+            acc.push(group);
+          }
+          return acc;
+        }, [])
+    },
+    metrics() {
+      const { fields } = this.preparedOptions;
+      return this.dataRestFrom
+        .reduce((acc, item) => {
+          const group = item[fields.label];
+          if (!!group && !acc.includes(group)) {
+            acc.push(group);
+          }
+          return acc;
+        }, [])
+    },
     series() {
       const { fields } = this.preparedOptions;
-      return this.dataRestFrom.map((d) => d[fields.value] || 0)
+      return this.dataRestFrom
+        .reduce((acc, item, i) => {
+          const label = item[fields.label];
+          const value = item[fields.value] || 0;
+          const arr = acc.find(({ name }) => name === label);
+          if (arr) {
+            arr.data.push(value);
+          } else {
+            const {
+              type = 'column',
+              color = undefined,
+              colorEnabled = false,
+            } = this.preparedOptions.metrics[label] || {};
+            console.log(color)
+            acc.push({
+              name: label,
+              type,
+              data: [ value ],
+              color: colorEnabled ? color?.hexa : undefined,
+            });
+          }
+          return acc;
+        }, [])
     },
     colors() {
       const { theme } = this.preparedOptions;
@@ -150,7 +207,7 @@ export default {
       const { width, height } = this.sizeFrom;
       return {
         width: Math.round(width) - 30,
-        height: Math.round(height) - 50,
+        height: Math.round(height) - 62,
       };
     },
     preparedOptions() {
@@ -161,34 +218,32 @@ export default {
     },
     chartOptions() {
       const {
-        fields,
-        yaxis,
+        xaxisPosition,
+        stacked,
+        stackType,
+        dataLabelsEnabled,
+        bar,
         theme,
-        hidePlotArea,
       } = this.preparedOptions;
       return {
         legend: this.preparedOptions.legend,
-        labels: this.dataRestFrom.map((d) => d[fields.label] || '...'),
-        stroke: {
-          width: 1,
-          colors: this.colors, // ['#fff']
-        },
-        fill: {
-          opacity: .9,
-          colors: this.colors,
-        },
-        yaxis,
-        plotOptions: {
-          polarArea: {
-            rings: {
-              strokeWidth: hidePlotArea ? 0 : 1,
-              strokeColor: '#e8e8e8',
-            },
-            spokes: {
-              strokeWidth: hidePlotArea ? 0 : 1,
-              connectorColors: '#e8e8e8',
-            },
+        xaxis: {
+          categories: this.groups,
+          position: xaxisPosition,
+          axisBorder: {
+            show: true
           },
+        },
+        plotOptions: {
+          bar,
+        },
+        dataLabels: {
+          enabled: dataLabelsEnabled,
+        },
+        stroke: {
+          show: true,
+          width: 2,
+          curve: 'smooth'
         },
         theme: {
           mode: this.isThemeDark ? 'dark' : 'light',
@@ -199,21 +254,27 @@ export default {
           }
         },
         chart: {
+          type: 'line',
+          height: this.box.height,
+          stacked,
+          stackType,
+          toolbar: {
+            show: false,
+          },
           animations: {
             enabled: false,
           },
-          background: 'rgba(0,0,0,0)'
-        }
+          background: 'rgba(0,0,0,0)',
+        },
       }
     }
   },
   watch: {
     box(val, old) {
       if (JSON.stringify(val) !== JSON.stringify(old)) {
-        this.resize();
         setTimeout(() => {
           this.resize();
-        }, 50)
+        }, 10)
       }
     },
     theme() {
@@ -222,15 +283,18 @@ export default {
     fullScreenMode() {
       this.resize();
     },
+    chartOptions() {
+      this.$nextTick(() => {
+        this.resize();
+      })
+    },
   },
   mounted() {
-    this.$nextTick(() => {
-      this.resize();
-    })
+    this.resize();
   },
   methods: {
     resize() {
-      this.$refs.chart.refresh()
+      this.$refs.chart?.refresh()
     },
 
     saveOptions(options) {
@@ -256,7 +320,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.polar-area {
+.dash-columns {
   display: flex;
   flex-direction: column;
   height: 100%;

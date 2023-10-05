@@ -23,7 +23,9 @@ import {
   mdiInboxMultipleOutline,
   mdiGauge,
   mdiFinance, mdiScaleBalance,
-  mdiTableLargePlus, mdiChartBar,
+  mdiTableLargePlus,
+  mdiChartBar,
+  mdiChartMultiple,
 } from '@mdi/js';
 
 export default {
@@ -208,6 +210,24 @@ export default {
         + '| Label 1 | 6 | Group 2 |\n'
         + '| Label 2 | 8 | Group 2 |\n',
     },
+    {
+      name: 'Mixed',
+      img: mdiChartMultiple,
+      type: 'mixed',
+      dataSourceDescription:
+        '#### Обязательные поля ****:\n'
+        + '- ```label``` - Заголовок метрики (можно изменить в настр.), строка\n'
+        + '- ```value``` - Столбец со значением, (можно изменить в настр.), число\n'
+        + '#### Дополнительные поля:\n'
+        + '- ```group``` - Группа (можно изменить в настр.), строка\n'
+        + '#### Пример данных:\n'
+        + '| label | value | group |\n'
+        + '| :--- | :---: | ---: |\n'
+        + '| Label 1 | 10 | Group 1 |\n'
+        + '| Label 2 | 2 | Group 1 |\n'
+        + '| Label 1 | 6 | Group 2 |\n'
+        + '| Label 2 | 8 | Group 2 |\n',
+    },
   ],
   size: {
     picker: {
@@ -338,6 +358,10 @@ export default {
       width: 600,
       height: 420,
     },
+    mixed: {
+      width: 600,
+      height: 420,
+    },
   },
   icons: {
     table: mdiTableLargePlus,
@@ -372,6 +396,7 @@ export default {
     riskReview: mdiScaleBalance,
     polarArea: mdiChartPie,
     columns: mdiChartBar,
+    mixed: mdiChartMultiple,
   },
   commonOptions: [
     'panelSettings',
@@ -583,6 +608,9 @@ export default {
 
     ],
     columns: [
+
+    ],
+    mixed: [
 
     ],
   },
@@ -1464,6 +1492,7 @@ export default {
     'riskReview',
     'polarArea',
     'columns',
+    'mixed',
   ],
   reports: {
     table: {
@@ -1549,6 +1578,10 @@ export default {
     columns: {
       tooltip: 'Columns',
       icon: mdiChartBar,
+    },
+    mixed: {
+      mixed: 'Mixed',
+      icon: mdiChartMultiple,
     },
   },
   excludes: {
