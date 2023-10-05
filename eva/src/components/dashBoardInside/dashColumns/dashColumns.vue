@@ -131,6 +131,8 @@ export default {
   computed: {
     ...mapGetters({
       theme: 'getTheme',
+      isThemeDark: 'isThemeDark',
+      themeColors: 'themeColors',
     }),
     ...mapGetters('app', [
       'userSettings',
@@ -167,23 +169,6 @@ export default {
           return acc;
         }, [])
     },
-    defaultColors() {
-      return [
-        this.theme.$grass,
-        this.theme.$forest,
-        this.theme.$blue,
-        this.theme.$plum,
-        this.theme.$purple,
-        this.theme.$orange,
-        this.theme.$peach,
-        this.theme.$raspberry,
-        this.theme.$coral,
-        this.theme.$beet,
-        this.theme.$sun,
-        this.theme.$kiwi,
-        this.theme.$sea,
-      ];
-    },
     colors() {
       const { theme } = this.preparedOptions;
       if (theme === 'monochrome') {
@@ -193,7 +178,7 @@ export default {
         .map((d) => d.color)
         .filter((color) => /^#[0-9a-f]{6}/i.test(`${color}`));
       if (colors.length !== this.dataRestFrom.length) {
-        return this.defaultColors
+        return this.themeColors
       }
       return colors;
     },
@@ -201,7 +186,7 @@ export default {
       const { width, height } = this.sizeFrom;
       return {
         width: Math.round(width) - 30,
-        height: Math.round(height) - 50,
+        height: Math.round(height) - 62,
       };
     },
     preparedOptions() {
@@ -243,9 +228,10 @@ export default {
           colors: ['transparent']
         },
         theme: {
+          mode: this.isThemeDark ? 'dark' : 'light',
           monochrome: {
             enabled: theme === 'monochrome',
-            shadeTo: 'light',
+            shadeTo: this.isThemeDark ? 'dark' : 'light',
             shadeIntensity: 0.6
           }
         },
@@ -257,6 +243,10 @@ export default {
           toolbar: {
             show: false,
           },
+          animations: {
+            enabled: false,
+          },
+          background: 'rgba(0,0,0,0)',
         },
       }
     }
@@ -286,11 +276,10 @@ export default {
   },
   methods: {
     resize() {
-      this.$refs.chart.refresh()
+      this.$refs.chart?.refresh()
     },
 
     saveOptions(options) {
-      console.log(options)
       this.$store.commit('setOptions', {
         id: this.idFrom,
         idDash: this.idDashFrom,

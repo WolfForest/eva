@@ -120,6 +120,8 @@ export default {
   computed: {
     ...mapGetters({
       theme: 'getTheme',
+      isThemeDark: 'isThemeDark',
+      themeColors: 'themeColors',
     }),
     ...mapGetters('app', [
       'userSettings',
@@ -131,23 +133,6 @@ export default {
       const { fields } = this.preparedOptions;
       return this.dataRestFrom.map((d) => d[fields.value] || 0)
     },
-    defaultColors() {
-      return [
-        this.theme.$grass,
-        this.theme.$forest,
-        this.theme.$blue,
-        this.theme.$plum,
-        this.theme.$purple,
-        this.theme.$orange,
-        this.theme.$peach,
-        this.theme.$raspberry,
-        this.theme.$coral,
-        this.theme.$beet,
-        this.theme.$sun,
-        this.theme.$kiwi,
-        this.theme.$sea,
-      ];
-    },
     colors() {
       const { theme } = this.preparedOptions;
       if (theme === 'monochrome') {
@@ -157,7 +142,7 @@ export default {
         .map((d) => d.color)
         .filter((color) => /^#[0-9a-f]{6}/i.test(`${color}`));
       if (colors.length !== this.dataRestFrom.length) {
-        return this.defaultColors
+        return this.themeColors
       }
       return colors;
     },
@@ -206,11 +191,18 @@ export default {
           },
         },
         theme: {
+          mode: this.isThemeDark ? 'dark' : 'light',
           monochrome: {
             enabled: theme === 'monochrome',
-            shadeTo: 'light',
+            shadeTo: this.isThemeDark ? 'dark' : 'light',
             shadeIntensity: 0.6
           }
+        },
+        chart: {
+          animations: {
+            enabled: false,
+          },
+          background: 'rgba(0,0,0,0)'
         }
       }
     }
@@ -218,6 +210,7 @@ export default {
   watch: {
     box(val, old) {
       if (JSON.stringify(val) !== JSON.stringify(old)) {
+        this.resize();
         setTimeout(() => {
           this.resize();
         }, 10)
