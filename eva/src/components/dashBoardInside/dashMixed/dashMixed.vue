@@ -2,7 +2,6 @@
   <portal
     :to="idFrom"
     :disabled="!fullScreenMode"
-    style="height: calc(100% - 40px);"
   >
     <div
       class="dash-columns"
@@ -10,6 +9,7 @@
         small: box.isSmall,
       }"
       v-bind="$attrs"
+      @dblclick="onDblclick"
     >
       <v-icon
         v-if="dataModeFrom && !fullScreenMode"
@@ -20,19 +20,20 @@
         {{ icons.mdiSettings }}
       </v-icon>
       <vue-apex-charts
+        v-if="showChart"
         ref="chart"
         class="chart"
         type="line"
-        :width="box.width"
-        height="100%"
         :options="chartOptions"
         :series="series"
+        :height="box.height"
+        @mousemove.stop
       />
       <DashMixedSettings
         ref="settings"
         v-model="isSettingsComponentOpen"
         :received-settings="options"
-        :current-metrics="metrics"
+        :current-metrics="metricLabels"
         @save="saveSettings"
         @close="closeSettings"
       />
@@ -116,9 +117,10 @@ export default {
           columnWidthPercent: 65,
         },
         yaxis: {
-          show: true,
+          show: false,
+          min: 0,
+          max: 1300,
         },
-        theme: 'monochrome',
         chart: {
           stacked: false,
           stackType: 'normal',
@@ -126,8 +128,9 @@ export default {
             show: false,
           },
         },
-        metrics: {},
-      }
+        metricsOptions: [],
+      },
+      showChart: true,
     };
   },
   computed: {
@@ -153,7 +156,7 @@ export default {
           return acc;
         }, [])
     },
-    metrics() {
+    metricLabels() {
       const { fields } = this.preparedOptions;
       return this.dataRestFrom
         .reduce((acc, item) => {
@@ -166,42 +169,35 @@ export default {
     },
     series() {
       const { fields } = this.preparedOptions;
-      return this.dataRestFrom
+      const series = this.dataRestFrom
         .reduce((acc, item, i) => {
-          const label = item[fields.label];
+          const {
+            type = 'column',
+            replacedLabel = '',
+          } = this.preparedOptions.metricsOptions.find((metric) => metric.label === item[fields.label]) || {};
+          const label = replacedLabel || item[fields.label];
           const value = item[fields.value] || 0;
           const arr = acc.find(({ name }) => name === label);
           if (arr) {
             arr.data.push(value);
           } else {
-            const {
-              type = 'column',
-              color = undefined,
-              colorEnabled = false,
-            } = this.preparedOptions.metrics[label] || {};
-            console.log(color)
             acc.push({
+              nativeName: item[fields.label],
               name: label,
               type,
               data: [ value ],
-              color: colorEnabled ? color?.hexa : undefined,
             });
           }
           return acc;
-        }, [])
-    },
-    colors() {
-      const { theme } = this.preparedOptions;
-      if (theme === 'monochrome') {
-        return undefined;
-      }
-      const colors = this.dataRestFrom
-        .map((d) => d.color)
-        .filter((color) => /^#[0-9a-f]{6}/i.test(`${color}`));
-      if (colors.length !== this.dataRestFrom.length) {
-        return this.themeColors
-      }
-      return colors;
+        }, []);
+      return series
+        .sort((a, b) => a.nativeName > b.nativeName ? 1 : -1)
+        .map((item, i) => {
+          return {
+            ...item,
+            color: this.arrColors[i],
+          }
+        })
     },
     box() {
       const { width, height } = this.sizeFrom;
@@ -216,6 +212,15 @@ export default {
         ...this.options,
       }
     },
+    arrColors() {
+      return this.metricLabels
+        .sort((a, b) => a > b ? 1 : -1)
+        .map((label, i) => {
+          const metric = this.preparedOptions.metricsOptions
+            .find(d => d.label === label);
+          return metric?.colorEnabled ? metric.color.hexa : this.themeColors[i];
+        });
+    },
     chartOptions() {
       const {
         xaxisPosition,
@@ -223,7 +228,6 @@ export default {
         stackType,
         dataLabelsEnabled,
         bar,
-        theme,
       } = this.preparedOptions;
       return {
         legend: this.preparedOptions.legend,
@@ -234,6 +238,13 @@ export default {
             show: true
           },
         },
+        yaxis: {
+          labels: {
+            formatter: function(val) {
+              return val.toString();
+            }
+          }
+        },
         plotOptions: {
           bar,
         },
@@ -243,23 +254,31 @@ export default {
         stroke: {
           show: true,
           width: 2,
-          curve: 'smooth'
+          curve: 'smooth',
+          colors: this.arrColors,
+        },
+        fill: {
+          colors: this.arrColors,
         },
         theme: {
           mode: this.isThemeDark ? 'dark' : 'light',
-          monochrome: {
-            enabled: theme === 'monochrome',
-            shadeTo: this.isThemeDark ? 'dark' : 'light',
-            shadeIntensity: 0.6
-          }
         },
         chart: {
           type: 'line',
+          width: this.box.width,
           height: this.box.height,
           stacked,
           stackType,
           toolbar: {
-            show: false,
+            // show: false,
+            offsetX: -26,
+            tools: {
+              zoomin: true,
+              zoomout: true,
+              download: false,
+              pan: true,
+              reset: true,
+            },
           },
           animations: {
             enabled: false,
@@ -270,31 +289,30 @@ export default {
     }
   },
   watch: {
-    box(val, old) {
-      if (JSON.stringify(val) !== JSON.stringify(old)) {
-        setTimeout(() => {
-          this.resize();
-        }, 10)
-      }
-    },
-    theme() {
+    box() {
       this.resize();
     },
     fullScreenMode() {
       this.resize();
     },
-    chartOptions() {
+    /* chartOptions() {
       this.$nextTick(() => {
         this.resize();
       })
-    },
+    }, */
   },
   mounted() {
-    this.resize();
   },
   methods: {
+    onDblclick() {
+      this.$refs.chart?.resetSeries()
+    },
     resize() {
-      this.$refs.chart?.refresh()
+      this.showChart = false;
+      setTimeout(() => {
+        this.showChart = true
+        this.$refs.chart?.refresh()
+      }, 100)
     },
 
     saveOptions(options) {
@@ -321,16 +339,11 @@ export default {
 
 <style scoped lang="scss">
 .dash-columns {
-  display: flex;
-  flex-direction: column;
   height: 100%;
-  justify-content: center;
-  justify-items: center;
-  align-items: center;
   color: var(--main_text);
   .options-icon {
     position: absolute;
-    top: 40px;
+    top: 38px;
     right: 8px;
     z-index: 100;
   }

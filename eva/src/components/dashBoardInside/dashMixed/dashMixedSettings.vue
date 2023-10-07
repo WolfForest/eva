@@ -64,20 +64,6 @@
               @change="isChanged = true"
             />
           </v-col>
-          <v-col>
-            <v-select
-              v-model="options.stackType"
-              dense
-              outlined
-              hide-details
-              :disabled="!options.stacked"
-              :items="[
-                { value: 'normal', text: 'Нормальный' },
-                { value: '100%', text: '100%' },
-              ]"
-              @change="isChanged = true"
-            />
-          </v-col>
         </v-row>
         <v-row class="mt-1">
           <v-col cols="12" class="py-0">
@@ -91,21 +77,10 @@
             />
           </v-col>
           <v-col>
-            <v-checkbox
-              v-model="options.bar.horizontal"
-              label="Горизонтальный график"
-              dense
-              hide-details
-              color="blue"
-              @change="isChanged = true"
-            />
-          </v-col>
-          <v-col>
             <v-slider
               v-model="options.bar.columnWidthPercent"
               color="blue"
               label="Ширина столбцов"
-              :disabled="options.bar.horizontal"
               min="2"
               max="100"
               thumb-size="25px"
@@ -150,22 +125,18 @@
             />
           </v-col>
         </v-row>
-        <h4>Тема</h4>
-        <v-select
-          v-model="options.theme"
-          dense
-          outlined
-          hide-details
-          :items="[
-            { value: 'monochrome', text: 'Монохромная' },
-            { value: 'colored', text: 'Цветная' },
-          ]"
-          @change="isChanged = true"
-        />
 
         <h3 class="mt-5 mb-1">Настройка метрик</h3>
         <div class="border-rounded mb-4">
-          <div v-for="metric in options.metrics" class="metric-item my-2">
+          <div v-for="(metric, i) in options.metricsOptions" class="metric-item my-2">
+            <v-btn
+              v-if="oldMetrics.includes(metric.label)"
+              icon
+              small
+              class="icon-delete"
+              title="Удалить"
+              @click="deleteMetric(metric.label)"
+            >❌</v-btn>
             <h4>Метрика: {{ metric.label }}</h4>
             <v-row>
               <v-col cols="5">
@@ -184,7 +155,7 @@
                   @input="$emit('isChanged', true); isChanged = true"
                 />
                 <v-text-field
-                  v-model="metric.label"
+                  v-model="metric.replacedLabel"
                   class="my-2"
                   outlined
                   label="Новое название"
@@ -203,7 +174,7 @@
                   @change="isChanged = true"
                 />
               </v-col>
-              <v-col>
+              <v-col class="pt-0">
                 <v-color-picker
                   v-model="metric.color"
                   :disabled="!metric.colorEnabled"
@@ -215,7 +186,7 @@
                 />
               </v-col>
             </v-row>
-            <hr>
+            <hr v-if="options.metricsOptions.length !== i+1">
           </div>
         </div>
       </v-card-text>
@@ -291,7 +262,6 @@ export default {
       legend: {
         position: 'right'
       },
-      theme: 'monochrome',
       stacked: false,
       stackType: 'normal', // 100%
       dataLabelsEnabled: false,
@@ -301,7 +271,7 @@ export default {
         columnWidth: '65%',
         columnWidthPercent: 65,
       },
-      metrics: [],
+      metricsOptions: [],
     },
     options: {
       fields: {
@@ -312,7 +282,6 @@ export default {
       legend: {
         position: ''
       },
-      theme: '',
       stacked: false,
       stackType: '',
       dataLabelsEnabled: false,
@@ -322,7 +291,7 @@ export default {
         columnWidth: '',
         columnWidthPercent: 0,
       },
-      metrics: [],
+      metricsOptions: [],
     },
     isChanged: false,
   }),
@@ -343,6 +312,12 @@ export default {
         this.$emit('updateModalValue', val);
       },
     },
+    savedLabels() {
+      return this.options.metricsOptions.map((item) => item.label);
+    },
+    oldMetrics() {
+      return this.savedLabels.filter(label => !this.currentMetrics.includes(label));
+    }
   },
   watch: {
     isOpen(val) {
@@ -364,18 +339,25 @@ export default {
         ...structuredClone(this.defaultOptions),
         ...structuredClone(this.receivedSettings),
       }
-      const { metrics: savedMetrics } = this.options;
-      let metrics = this.currentMetrics.sort().reduce((obj, label) => {
-        const type = savedMetrics[label]?.type || 'column';
-        obj[label] = {
-          label,
-          type,
-          color: null,
-          colorEnabled: false,
+      const { metrics: savedMetrics = {} } = this.options;
+      let metrics = this.currentMetrics.sort().reduce((acc, label) => {
+        if (!this.savedLabels.includes(label)) {
+          const type = savedMetrics[label]?.type || 'column';
+          acc.push({
+            label,
+            type,
+            color: null,
+            colorEnabled: false,
+            replacedLabel: '',
+          })
         }
-        return obj
-      }, ({}));
-      this.options.metrics = { ...metrics, ...this.options.metrics }
+        return acc;
+      }, []);
+      this.options.metricsOptions = [...this.options.metricsOptions, ...metrics];
+    },
+
+    deleteMetric(label) {
+      this.options.metricsOptions = this.options.metricsOptions.filter(item => item.label !== label);
     },
 
     save() {
@@ -399,4 +381,14 @@ export default {
   border: 2px solid var(--main_border)
   border-radius: 8px
   padding: 8px
+.metric-item
+  position: relative
+  .icon-delete
+    position: absolute
+    top: -5px
+    right: -4px
+    padding: 4px
+    z-index: 1
+    &:hover
+      color: red
 </style>

@@ -213,6 +213,13 @@ export default {
             show: true
           },
         },
+        yaxis: {
+          labels: {
+            formatter: function(val) {
+              return val.toString();
+            }
+          }
+        },
         plotOptions: {
           bar,
         },
