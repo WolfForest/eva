@@ -24,6 +24,8 @@ import {
   mdiGauge,
   mdiFinance, mdiScaleBalance,
   mdiTableLargePlus,
+  mdiChartBar,
+  mdiChartMultiple,
 } from '@mdi/js';
 
 export default {
@@ -172,6 +174,61 @@ export default {
         + '| Total 2 | | True | |\n',
     },
     { name: 'Таблица (old)', img: mdiTableLarge, type: 'tableOld' },
+    {
+      name: 'Polar Area',
+      img: mdiChartPie,
+      type: 'polarArea',
+      dataSourceDescription:
+        '#### Обязательные поля:\n'
+        + '- ```value``` - Столбец со значением, (можно изменить в настр.), число\n'
+        + '- ```label``` - Заголовок метрики (можно изменить в настр.), строка\n'
+        + '#### Дополнительные поля:\n'
+        + '- ```color``` - Цвет столбца, строка\n'
+        + 'Цвет необходимо указывать во всех строках в формате #ffffff, иначе будет задействован стандартный набор\n'
+        + '#### Пример данных:\n'
+        + '| label | value | color |\n'
+        + '| :--- | :---: | ---: |\n'
+        + '| Label 1 | 10 | #0000ff |\n'
+        + '| Label 2 | 2 | #ff0000 |\n'
+        + '| Label 3 | 6 | #ffdd00 |\n',
+    },
+    {
+      name: 'Columns',
+      img: mdiChartBar,
+      type: 'columns',
+      dataSourceDescription:
+        '#### Обязательные поля:\n'
+        + '- ```label``` - Заголовок метрики (можно изменить в настр.), строка\n'
+        + '- ```value``` - Столбец со значением, (можно изменить в настр.), число\n'
+        + '#### Дополнительные поля:\n'
+        + '- ```group``` - Группа (можно изменить в настр.), строка\n'
+        + '- ```category``` - Категория, строка\n'
+        + '#### Пример данных:\n'
+        + '| label | value | group |\n'
+        + '| :--- | :---: | ---: |\n'
+        + '| Label 1 | 10 | Group 1 |\n'
+        + '| Label 2 | 2 | Group 1 |\n'
+        + '| Label 1 | 6 | Group 2 |\n'
+        + '| Label 2 | 8 | Group 2 |\n',
+    },
+    {
+      name: 'Mixed',
+      img: mdiChartMultiple,
+      type: 'mixed',
+      dataSourceDescription:
+        '#### Обязательные поля ****:\n'
+        + '- ```label``` - Заголовок метрики (можно изменить в настр.), строка\n'
+        + '- ```value``` - Столбец со значением, (можно изменить в настр.), число\n'
+        + '#### Дополнительные поля:\n'
+        + '- ```group``` - Группа (можно изменить в настр.), строка\n'
+        + '#### Пример данных:\n'
+        + '| label | value | group |\n'
+        + '| :--- | :---: | ---: |\n'
+        + '| Label 1 | 10 | Group 1 |\n'
+        + '| Label 2 | 2 | Group 1 |\n'
+        + '| Label 1 | 6 | Group 2 |\n'
+        + '| Label 2 | 8 | Group 2 |\n',
+    },
   ],
   size: {
     picker: {
@@ -294,6 +351,18 @@ export default {
       width: 1440,
       height: 420,
     },
+    polarArea: {
+      width: 600,
+      height: 420,
+    },
+    columns: {
+      width: 600,
+      height: 420,
+    },
+    mixed: {
+      width: 600,
+      height: 420,
+    },
   },
   icons: {
     table: mdiTableLargePlus,
@@ -326,6 +395,9 @@ export default {
     gauge: mdiGauge,
     waterfall: mdiFinance,
     riskReview: mdiScaleBalance,
+    polarArea: mdiChartPie,
+    columns: mdiChartBar,
+    mixed: mdiChartMultiple,
   },
   commonOptions: [
     'panelSettings',
@@ -532,6 +604,15 @@ export default {
       'listTextSuffix',
       'listValueSuffix',
       'residualMetric',
+    ],
+    polarArea: [
+
+    ],
+    columns: [
+
+    ],
+    mixed: [
+
     ],
   },
   optionFields: [
@@ -1410,6 +1491,9 @@ export default {
     'gauge',
     'waterfall',
     'riskReview',
+    'polarArea',
+    'columns',
+    'mixed',
   ],
   reports: {
     table: {
@@ -1487,6 +1571,18 @@ export default {
     riskReview: {
       tooltip: 'Детализация рисков',
       icon: mdiScaleBalance,
+    },
+    polarArea: {
+      tooltip: 'Polar area',
+      icon: mdiChartPie,
+    },
+    columns: {
+      tooltip: 'Columns',
+      icon: mdiChartBar,
+    },
+    mixed: {
+      tooltip: 'Mixed',
+      icon: mdiChartMultiple,
     },
   },
   excludes: {

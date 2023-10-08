@@ -1,3 +1,11 @@
+# [1.152.1] - 2023-10-09
+
+### Added
+- Apexcharts library
+- Visualization: Polar area
+- Visualization: Columns
+- Visualization: Mixed
+
 # [1.152.0] - 2023-09-28
 
 ### Added

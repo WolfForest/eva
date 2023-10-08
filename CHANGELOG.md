@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [1.152.1]
+
+### Added
+- Apexcharts library
+- Visualization: Polar area
+- Visualization: Columns
+- Visualization: Mixed
+
 ## [1.152.0]
 
 ### Added

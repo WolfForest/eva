@@ -2264,6 +2264,26 @@ export default new Vuex.Store({
     getTheme(state) {
       return state.theme.settings;
     },
+    isThemeDark(state) {
+      return state.theme.name.indexOf('light') === -1;
+    },
+    themeColors(state) {
+      return [
+        state.theme.settings.$grass,
+        state.theme.settings.$forest,
+        state.theme.settings.$blue,
+        state.theme.settings.$plum,
+        state.theme.settings.$purple,
+        state.theme.settings.$orange,
+        state.theme.settings.$peach,
+        state.theme.settings.$raspberry,
+        state.theme.settings.$coral,
+        state.theme.settings.$beet,
+        state.theme.settings.$sun,
+        state.theme.settings.$kiwi,
+        state.theme.settings.$sea,
+      ];
+    },
   },
   modules: {
     auth,

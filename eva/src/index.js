@@ -183,6 +183,11 @@ Vue.directive('blur', {
   },
 });
 
+Vue.component('dash-polarArea', require('./components/dashBoardInside/dashPolarArea/dashPolarArea.vue').default);
+Vue.component('dash-columns', require('./components/dashBoardInside/dashColumns/dashColumns.vue').default);
+Vue.component('dash-mixed', require('./components/dashBoardInside/dashMixed/dashMixed.vue').default);
+
+
 moment.locale('ru');
 
 Vue.config.productionTip = true;
