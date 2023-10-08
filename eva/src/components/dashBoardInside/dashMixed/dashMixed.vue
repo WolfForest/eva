@@ -295,11 +295,6 @@ export default {
     fullScreenMode() {
       this.resize();
     },
-    /* chartOptions() {
-      this.$nextTick(() => {
-        this.resize();
-      })
-    }, */
   },
   mounted() {
   },

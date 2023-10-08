@@ -107,6 +107,7 @@ export default {
           value: 'value',
           label: 'label',
           group: 'group',
+          category: 'category',
         },
         legend: {
           position: 'right',
@@ -154,18 +155,33 @@ export default {
           return acc;
         }, [])
     },
+    categories() {
+      const { fields } = this.preparedOptions;
+      return this.dataRestFrom
+        .reduce((acc, item) => {
+          const category = item[fields.category || 'category'];
+          if (category && !acc.includes(category)) {
+            acc.push(category);
+          }
+          return acc;
+        }, [])
+    },
     series() {
       const { fields } = this.preparedOptions;
       return this.dataRestFrom
         .reduce((acc, item) => {
           const label = item[fields.label];
           const value = item[fields.value] || 0;
+          const group = item[fields.group] || undefined;
+          const category = item[fields.category] || undefined;
           const arr = acc.find(({ name }) => name === label);
           if (arr) {
             arr.data.push(value);
           } else {
             acc.push({
               name: label,
+              group,
+              category,
               data: [ value ]
             });
           }
@@ -210,7 +226,7 @@ export default {
       return {
         legend: this.preparedOptions.legend,
         xaxis: {
-          categories: this.groups,
+          categories: this.categories || this.groups,
           position: xaxisPosition,
           axisBorder: {
             show: true

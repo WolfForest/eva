@@ -409,7 +409,7 @@
             class="options-block"
           >
             <template
-              v-for="(item, index) in metric"
+              v-for="(item, index) in metrics"
             >
               <div
                 :key="`${index}title`"
@@ -1260,7 +1260,6 @@ export default {
     loadComponentsSettings() {
       const localOptions = {};
       this.optionsByComponents = settings.options;
-      console.log(localOptions)
       this.fieldsForRender = settings.optionFields.map((field) => {
         const items = typeof field.items === 'function'
           ? field.items.call(this)
@@ -1606,7 +1605,6 @@ export default {
         path: this.idDash,
         element: this.element,
       }).then((options) => {
-        console.log(options)
         let localOptions = {};
         if (options) {
           if (options.color) {
