@@ -1580,7 +1580,7 @@ export default {
       icon: mdiChartBar,
     },
     mixed: {
-      mixed: 'Mixed',
+      tooltip: 'Mixed',
       icon: mdiChartMultiple,
     },
   },

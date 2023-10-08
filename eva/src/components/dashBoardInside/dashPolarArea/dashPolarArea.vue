@@ -20,6 +20,7 @@
         {{ icons.mdiSettings }}
       </v-icon>
       <vue-apex-charts
+        v-if="showChart"
         ref="chart"
         class="chart"
         :type="preparedOptions.type"
@@ -114,7 +115,8 @@ export default {
         },
         theme: 'monochrome',
         hidePlotArea: false,
-      }
+      },
+      showChart: true,
     };
   },
   computed: {
@@ -224,13 +226,14 @@ export default {
     },
   },
   mounted() {
-    this.$nextTick(() => {
-      this.resize();
-    })
   },
   methods: {
     resize() {
-      this.$refs.chart.refresh()
+      this.showChart = false;
+      setTimeout(() => {
+        this.showChart = true
+        this.$refs.chart?.refresh()
+      }, 100)
     },
 
     saveOptions(options) {

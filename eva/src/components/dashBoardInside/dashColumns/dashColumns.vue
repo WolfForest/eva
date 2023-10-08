@@ -20,6 +20,7 @@
         {{ icons.mdiSettings }}
       </v-icon>
       <vue-apex-charts
+        v-if="showChart"
         ref="chart"
         class="chart"
         type="bar"
@@ -105,6 +106,7 @@ export default {
         fields: {
           value: 'value',
           label: 'label',
+          group: 'group',
         },
         legend: {
           position: 'right',
@@ -125,7 +127,8 @@ export default {
             show: false,
           },
         },
-      }
+      },
+      showChart: true,
     };
   },
   computed: {
@@ -283,7 +286,11 @@ export default {
   },
   methods: {
     resize() {
-      this.$refs.chart?.refresh()
+      this.showChart = false;
+      setTimeout(() => {
+        this.showChart = true
+        this.$refs.chart?.refresh()
+      }, 100)
     },
 
     saveOptions(options) {
